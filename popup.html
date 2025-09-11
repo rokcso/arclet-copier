@@ -85,6 +85,26 @@
                 background: #28a745;
             }
 
+            .markdown-btn {
+                background: #6f42c1;
+                color: white;
+                margin-top: 8px;
+                transition: all 0.3s ease;
+            }
+
+            .markdown-btn:hover {
+                background: #5a2d91;
+            }
+
+            .markdown-btn.success {
+                background: #28a745;
+                transform: scale(0.98);
+            }
+
+            .markdown-btn.success:hover {
+                background: #28a745;
+            }
+
             .settings-btn {
                 background: #f8f9fa;
                 color: #495057;
@@ -172,6 +192,9 @@
 
         <div class="buttons">
             <button class="copy-btn" id="copyBtn">复制 URL</button>
+            <button class="markdown-btn" id="markdownBtn">
+                复制为 Markdown
+            </button>
         </div>
 
         <div class="status" id="status">已复制到剪贴板！</div>

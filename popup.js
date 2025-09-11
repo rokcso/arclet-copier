@@ -3,22 +3,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   const EXTENSION_NAME = "Arclet Copier";
   const MESSAGES = {
     URL_COPIED: "URL 已复制到剪贴板！",
+    MARKDOWN_COPIED: "Markdown 链接已复制到剪贴板！",
     NO_URL: "无法获取 URL",
     GET_URL_FAILED: "获取 URL 失败",
     LOADING: "获取 URL 中...",
     COPY_BTN_DEFAULT: "复制 URL",
     COPY_BTN_SUCCESS: "已复制！",
+    MARKDOWN_BTN_DEFAULT: "复制为 Markdown",
+    MARKDOWN_BTN_SUCCESS: "已复制！",
   };
 
   // DOM elements
   const elements = {
     urlDisplay: document.getElementById("urlDisplay"),
     copyBtn: document.getElementById("copyBtn"),
+    markdownBtn: document.getElementById("markdownBtn"),
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
   };
 
   let currentUrl = "";
+  let currentTitle = "";
 
   // 加载设置
   async function loadSettings() {
@@ -47,6 +52,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 获取页面标题
+  async function getPageTitle(tabId) {
+    try {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId },
+        func: () => document.title,
+      });
+      return results[0]?.result || "";
+    } catch (error) {
+      console.error("获取页面标题失败:", error);
+      return "";
+    }
+  }
+
   // 获取当前页面URL
   async function getCurrentUrl() {
     try {
@@ -57,6 +76,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (tab && tab.url) {
         currentUrl = tab.url;
+
+        // 获取页面标题
+        if (tab.id) {
+          currentTitle = await getPageTitle(tab.id);
+        }
+
         updateUrlDisplay();
       } else {
         handleError(MESSAGES.NO_URL);
@@ -71,6 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function handleError(message) {
     elements.urlDisplay.textContent = message;
     elements.copyBtn.disabled = true;
+    elements.markdownBtn.disabled = true;
   }
 
   // 更新URL显示
@@ -166,6 +192,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // 创建 markdown 链接格式
+  function createMarkdownLink(url, title) {
+    const processedUrl = processUrl(url, elements.removeParamsToggle.checked);
+    const linkTitle = title || new URL(url).hostname;
+    return `[${linkTitle}](${processedUrl})`;
+  }
+
+  // 复制 markdown 链接
+  async function copyMarkdown() {
+    const markdownLink = createMarkdownLink(currentUrl, currentTitle);
+
+    try {
+      // 首先尝试现代clipboard API
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(markdownLink);
+        console.log("Popup markdown clipboard API copy successful");
+      } else {
+        fallbackCopy(markdownLink);
+      }
+
+      showMarkdownButtonSuccess();
+      showMarkdownNotification();
+    } catch (error) {
+      console.error("Markdown复制失败:", error);
+      try {
+        fallbackCopy(markdownLink);
+        showMarkdownButtonSuccess();
+        showMarkdownNotification();
+      } catch (fallbackError) {
+        console.error("Markdown降级复制也失败:", fallbackError);
+      }
+    }
+  }
+
   // 显示按钮复制成功状态
   function showButtonSuccess() {
     const originalText = elements.copyBtn.textContent;
@@ -179,6 +239,45 @@ document.addEventListener("DOMContentLoaded", async () => {
       elements.copyBtn.classList.remove("success");
       elements.copyBtn.textContent = originalText;
     }, 1500);
+  }
+
+  // 显示 markdown 按钮复制成功状态
+  function showMarkdownButtonSuccess() {
+    const originalText = elements.markdownBtn.textContent;
+
+    // 添加成功样式和文本
+    elements.markdownBtn.classList.add("success");
+    elements.markdownBtn.textContent = MESSAGES.MARKDOWN_BTN_SUCCESS;
+
+    // 1.5秒后恢复原状
+    setTimeout(() => {
+      elements.markdownBtn.classList.remove("success");
+      elements.markdownBtn.textContent = originalText;
+    }, 1500);
+  }
+
+  // 显示 markdown 通知
+  function showMarkdownNotification() {
+    try {
+      const notificationOptions = {
+        type: "basic",
+        iconUrl: "icons/icon48.png",
+        title: EXTENSION_NAME,
+        message: MESSAGES.MARKDOWN_COPIED,
+      };
+
+      chrome.notifications.create(notificationOptions, (notificationId) => {
+        if (chrome.runtime.lastError) {
+          console.error("Markdown通知创建失败:", chrome.runtime.lastError);
+          showLocalStatus();
+        } else {
+          console.log("Markdown通知创建成功:", notificationId);
+        }
+      });
+    } catch (error) {
+      console.error("Markdown通知 API 调用失败:", error);
+      showLocalStatus();
+    }
   }
 
   // 显示复制成功状态
@@ -196,6 +295,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 事件监听器
   elements.copyBtn.addEventListener("click", copyUrl);
+  elements.markdownBtn.addEventListener("click", copyMarkdown);
 
   elements.removeParamsToggle.addEventListener("change", () => {
     saveSettings();
