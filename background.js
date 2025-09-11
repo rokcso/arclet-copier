@@ -46,19 +46,59 @@ async function getCurrentTab() {
 
 // 获取用户设置
 async function getUserSettings() {
-  const settings = await chrome.storage.sync.get(["removeParams"]);
-  return settings.removeParams || false;
+  const settings = await chrome.storage.sync.get([
+    "removeParams",
+    "silentCopyFormat",
+  ]);
+  return {
+    removeParams: settings.removeParams || false,
+    silentCopyFormat: settings.silentCopyFormat || "url",
+  };
+}
+
+// 获取页面标题
+async function getPageTitle(tabId) {
+  try {
+    const results = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: () => document.title,
+    });
+    return results[0]?.result || "";
+  } catch (error) {
+    console.error("获取页面标题失败:", error);
+    return "";
+  }
+}
+
+// 创建 markdown 链接格式
+function createMarkdownLink(url, title, removeParams) {
+  const processedUrl = processUrl(url, removeParams);
+  const linkTitle = title || new URL(url).hostname;
+  return `[${linkTitle}](${processedUrl})`;
 }
 
 // 处理URL复制功能
 async function handleCopyUrl() {
   try {
     const tab = await getCurrentTab();
-    const removeParams = await getUserSettings();
-    const processedUrl = processUrl(tab.url, removeParams);
+    const settings = await getUserSettings();
 
-    await copyToClipboard(processedUrl);
-    showNotification(EXTENSION_NAME, MESSAGES.URL_COPIED);
+    let contentToCopy;
+    let successMessage;
+
+    if (settings.silentCopyFormat === "markdown") {
+      // 获取页面标题并创建 markdown 链接
+      const title = await getPageTitle(tab.id);
+      contentToCopy = createMarkdownLink(tab.url, title, settings.removeParams);
+      successMessage = "Markdown 链接已复制到剪贴板！";
+    } else {
+      // 默认复制 URL
+      contentToCopy = processUrl(tab.url, settings.removeParams);
+      successMessage = MESSAGES.URL_COPIED;
+    }
+
+    await copyToClipboard(contentToCopy);
+    showNotification(EXTENSION_NAME, successMessage);
   } catch (error) {
     console.error("复制 URL 失败:", error);
     const message =

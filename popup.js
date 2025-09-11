@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     markdownBtn: document.getElementById("markdownBtn"),
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
+    silentCopyFormat: document.getElementById("silentCopyFormat"),
   };
 
   let currentUrl = "";
@@ -27,14 +28,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 加载设置
   async function loadSettings() {
-    const result = await chrome.storage.sync.get(["removeParams"]);
+    const result = await chrome.storage.sync.get([
+      "removeParams",
+      "silentCopyFormat",
+    ]);
     elements.removeParamsToggle.checked = result.removeParams || false;
+    elements.silentCopyFormat.value = result.silentCopyFormat || "url";
   }
 
   // 保存设置
   async function saveSettings() {
     await chrome.storage.sync.set({
       removeParams: elements.removeParamsToggle.checked,
+      silentCopyFormat: elements.silentCopyFormat.value,
     });
   }
 
@@ -300,6 +306,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   elements.removeParamsToggle.addEventListener("change", () => {
     saveSettings();
     updateUrlDisplay();
+  });
+
+  elements.silentCopyFormat.addEventListener("change", () => {
+    saveSettings();
   });
 
   // 键盘快捷键

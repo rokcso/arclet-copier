@@ -180,6 +180,23 @@
             input:checked + .slider:before {
                 transform: translateX(20px);
             }
+
+            .format-select {
+                padding: 4px 8px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                background: white;
+                font-size: 12px;
+                color: #333;
+                cursor: pointer;
+                min-width: 80px;
+            }
+
+            .format-select:focus {
+                outline: none;
+                border-color: #007bff;
+                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            }
         </style>
     </head>
     <body>
@@ -205,6 +222,14 @@
                 <input type="checkbox" id="removeParamsToggle" />
                 <span class="slider"></span>
             </label>
+        </div>
+
+        <div class="quick-setting">
+            <span>静默复制格式</span>
+            <select id="silentCopyFormat" class="format-select">
+                <option value="url">URL</option>
+                <option value="markdown">Markdown</option>
+            </select>
         </div>
 
         <script src="popup.js"></script>
