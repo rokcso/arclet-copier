@@ -1,6 +1,6 @@
 {
   "name": "arclet-copier",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "快速复制当前页面的 URL，支持参数过滤功能",
   "scripts": {
     "build": "node build.js",
@@ -11,7 +11,18 @@
     "url-copier",
     "productivity"
   ],
-  "author": "Your Name",
+  "author": {
+    "name": "rokcso",
+    "url": "https://rokcso.com/"
+  },
+  "homepage": "https://github.com/rokcso/arclet-copier",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rokcso/arclet-copier.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rokcso/arclet-copier/issues"
+  },
   "license": "MIT",
   "devDependencies": {}
 }

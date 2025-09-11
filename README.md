@@ -30,7 +30,7 @@
 
 1. **克隆仓库**
    ```bash
-   git clone https://github.com/你的用户名/arclet-copier.git
+   git clone https://github.com/rokcso/arclet-copier.git
    cd arclet-copier
    ```
 
@@ -65,8 +65,6 @@
 - **Popup 操作**：正常工作，可以复制链接
 - **快捷键操作**：会提示"当前页面为系统页面，请点击扩展图标使用复制功能"
 
-## 开发者信息
-
 ### 项目结构
 
 ```
@@ -91,7 +89,7 @@ arclet-copier/
 
 ```bash
 # 克隆项目
-git clone https://github.com/你的用户名/arclet-copier.git
+git clone https://github.com/rokcso/arclet-copier.git
 cd arclet-copier
 
 # 运行打包脚本
