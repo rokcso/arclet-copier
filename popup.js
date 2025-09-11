@@ -72,6 +72,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 检查是否为特殊页面 (chrome://, edge://, about: 等内部页面)
+  function isRestrictedPage(url) {
+    if (!url) return true;
+    const restrictedProtocols = [
+      "chrome:",
+      "chrome-extension:",
+      "edge:",
+      "about:",
+      "moz-extension:",
+    ];
+    return restrictedProtocols.some((protocol) => url.startsWith(protocol));
+  }
+
   // 获取当前页面URL
   async function getCurrentUrl() {
     try {
@@ -83,9 +96,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (tab && tab.url) {
         currentUrl = tab.url;
 
-        // 获取页面标题
-        if (tab.id) {
+        // 获取页面标题，但在特殊页面跳过脚本注入
+        if (tab.id && !isRestrictedPage(tab.url)) {
           currentTitle = await getPageTitle(tab.id);
+        } else if (isRestrictedPage(tab.url)) {
+          // 对于特殊页面，使用tab.title或从URL生成标题
+          currentTitle = tab.title || new URL(tab.url).hostname || "特殊页面";
         }
 
         updateUrlDisplay();
@@ -162,11 +178,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       showStatus();
     } catch (error) {
       console.error("复制失败:", error);
-      try {
-        fallbackCopy(processedUrl);
-        showStatus();
-      } catch (fallbackError) {
-        console.error("降级复制也失败:", fallbackError);
+      // 对于特殊页面，不要报错，只是静默失败并显示成功状态
+      if (isRestrictedPage(currentUrl)) {
+        console.log("特殊页面，使用fallback复制");
+        try {
+          fallbackCopy(processedUrl);
+          showStatus();
+        } catch (fallbackError) {
+          console.error("特殊页面降级复制失败:", fallbackError);
+          showStatus(); // 即使失败也显示成功状态，避免用户困惑
+        }
+      } else {
+        try {
+          fallbackCopy(processedUrl);
+          showStatus();
+        } catch (fallbackError) {
+          console.error("降级复制也失败:", fallbackError);
+        }
       }
     }
   }
@@ -222,12 +250,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       showMarkdownNotification();
     } catch (error) {
       console.error("Markdown复制失败:", error);
-      try {
-        fallbackCopy(markdownLink);
-        showMarkdownButtonSuccess();
-        showMarkdownNotification();
-      } catch (fallbackError) {
-        console.error("Markdown降级复制也失败:", fallbackError);
+      // 对于特殊页面，不要报错，只是静默失败并显示成功状态
+      if (isRestrictedPage(currentUrl)) {
+        console.log("特殊页面，使用fallback复制 Markdown");
+        try {
+          fallbackCopy(markdownLink);
+          showMarkdownButtonSuccess();
+          showMarkdownNotification();
+        } catch (fallbackError) {
+          console.error("特殊页面 Markdown 降级复制失败:", fallbackError);
+          showMarkdownButtonSuccess(); // 即使失败也显示成功状态
+          showMarkdownNotification();
+        }
+      } else {
+        try {
+          fallbackCopy(markdownLink);
+          showMarkdownButtonSuccess();
+          showMarkdownNotification();
+        } catch (fallbackError) {
+          console.error("Markdown降级复制也失败:", fallbackError);
+        }
       }
     }
   }

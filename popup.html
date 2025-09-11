@@ -132,9 +132,12 @@
                 align-items: center;
                 justify-content: space-between;
                 padding: 8px 0;
-                border-top: 1px solid #eee;
-                margin-top: 12px;
                 font-size: 13px;
+            }
+
+            .quick-setting:first-of-type {
+                margin-top: 12px;
+                border-top: 1px solid #eee;
             }
 
             .switch {
@@ -143,10 +146,8 @@
                 height: 24px;
             }
 
-            .switch input {
-                opacity: 0;
-                width: 0;
-                height: 0;
+            input:checked + .slider:before {
+                transform: translateX(20px);
             }
 
             .slider {

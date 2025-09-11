@@ -7,6 +7,7 @@ const MESSAGES = {
   COPY_FAILED: "复制失败，请重试",
   NO_URL: "无法获取当前页面 URL",
   NO_TAB: "无法获取当前标签页",
+  RESTRICTED_PAGE: "当前页面为系统页面，请点击扩展图标使用复制功能",
 };
 
 // 监听键盘快捷键命令
@@ -56,9 +57,27 @@ async function getUserSettings() {
   };
 }
 
+// 检查是否为特殊页面 (chrome://, edge://, about: 等内部页面)
+function isRestrictedPage(url) {
+  if (!url) return true;
+  const restrictedProtocols = [
+    "chrome:",
+    "chrome-extension:",
+    "edge:",
+    "about:",
+    "moz-extension:",
+  ];
+  return restrictedProtocols.some((protocol) => url.startsWith(protocol));
+}
+
 // 获取页面标题
-async function getPageTitle(tabId) {
+async function getPageTitle(tabId, url) {
   try {
+    // 如果是特殊页面，跳过脚本注入
+    if (isRestrictedPage(url)) {
+      return "";
+    }
+
     const results = await chrome.scripting.executeScript({
       target: { tabId },
       func: () => document.title,
@@ -81,6 +100,13 @@ function createMarkdownLink(url, title, removeParams) {
 async function handleCopyUrl() {
   try {
     const tab = await getCurrentTab();
+
+    // 检查是否为特殊页面
+    if (isRestrictedPage(tab.url)) {
+      showNotification(EXTENSION_NAME, MESSAGES.RESTRICTED_PAGE);
+      return;
+    }
+
     const settings = await getUserSettings();
 
     let contentToCopy;
@@ -88,7 +114,7 @@ async function handleCopyUrl() {
 
     if (settings.silentCopyFormat === "markdown") {
       // 获取页面标题并创建 markdown 链接
-      const title = await getPageTitle(tab.id);
+      const title = await getPageTitle(tab.id, tab.url);
       contentToCopy = createMarkdownLink(tab.url, title, settings.removeParams);
       successMessage = "Markdown 链接已复制到剪贴板！";
     } else {
@@ -172,6 +198,11 @@ async function copyToClipboard(text) {
 
     if (!tab.id) {
       throw new Error(MESSAGES.NO_TAB);
+    }
+
+    // 对于特殊页面，这个函数不应该被调用，但如果被调用了就直接抛错
+    if (isRestrictedPage(tab.url)) {
+      throw new Error("Cannot inject script into restricted page");
     }
 
     await chrome.scripting.executeScript({
