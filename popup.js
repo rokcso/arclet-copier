@@ -1,21 +1,33 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const urlDisplay = document.getElementById("urlDisplay");
-  const copyBtn = document.getElementById("copyBtn");
-  const status = document.getElementById("status");
-  const removeParamsToggle = document.getElementById("removeParamsToggle");
+  // Constants
+  const EXTENSION_NAME = "Arclet Copier";
+  const MESSAGES = {
+    URL_COPIED: "URL 已复制到剪贴板！",
+    NO_URL: "无法获取 URL",
+    GET_URL_FAILED: "获取 URL 失败",
+    LOADING: "获取 URL 中...",
+  };
+
+  // DOM elements
+  const elements = {
+    urlDisplay: document.getElementById("urlDisplay"),
+    copyBtn: document.getElementById("copyBtn"),
+    status: document.getElementById("status"),
+    removeParamsToggle: document.getElementById("removeParamsToggle"),
+  };
 
   let currentUrl = "";
 
   // 加载设置
   async function loadSettings() {
     const result = await chrome.storage.sync.get(["removeParams"]);
-    removeParamsToggle.checked = result.removeParams || false;
+    elements.removeParamsToggle.checked = result.removeParams || false;
   }
 
   // 保存设置
   async function saveSettings() {
     await chrome.storage.sync.set({
-      removeParams: removeParamsToggle.checked,
+      removeParams: elements.removeParamsToggle.checked,
     });
   }
 
@@ -40,110 +52,132 @@ document.addEventListener("DOMContentLoaded", async () => {
         active: true,
         currentWindow: true,
       });
+
       if (tab && tab.url) {
         currentUrl = tab.url;
         updateUrlDisplay();
       } else {
-        urlDisplay.textContent = "无法获取 URL";
-        copyBtn.disabled = true;
+        handleError(MESSAGES.NO_URL);
       }
     } catch (error) {
       console.error("获取 URL 失败:", error);
-      urlDisplay.textContent = "获取 URL 失败";
-      copyBtn.disabled = true;
+      handleError(MESSAGES.GET_URL_FAILED);
     }
+  }
+
+  // 处理错误状态
+  function handleError(message) {
+    elements.urlDisplay.textContent = message;
+    elements.copyBtn.disabled = true;
   }
 
   // 更新URL显示
   function updateUrlDisplay() {
-    const processedUrl = processUrl(currentUrl, removeParamsToggle.checked);
-    urlDisplay.textContent = processedUrl;
+    const processedUrl = processUrl(
+      currentUrl,
+      elements.removeParamsToggle.checked,
+    );
+    elements.urlDisplay.textContent = processedUrl;
+  }
+
+  // 创建临时复制元素
+  function createTempCopyElement(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "-9999px";
+    textArea.setAttribute("readonly", "");
+    return textArea;
+  }
+
+  // 使用execCommand复制的备用方法
+  function fallbackCopy(text) {
+    const textArea = createTempCopyElement(text);
+    document.body.appendChild(textArea);
+
+    textArea.select();
+    textArea.setSelectionRange(0, 99999);
+
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textArea);
+
+    if (!successful) {
+      throw new Error("execCommand copy failed");
+    }
+
+    console.log("Popup execCommand copy successful");
   }
 
   // 复制URL到剪贴板
   async function copyUrl() {
-    try {
-      const processedUrl = processUrl(currentUrl, removeParamsToggle.checked);
+    const processedUrl = processUrl(
+      currentUrl,
+      elements.removeParamsToggle.checked,
+    );
 
-      // 直接使用clipboard API（popup环境下有用户手势，应该可以工作）
+    try {
+      // 首先尝试现代clipboard API
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(processedUrl);
         console.log("Popup clipboard API copy successful");
       } else {
-        throw new Error("Clipboard API not available");
+        fallbackCopy(processedUrl);
       }
 
       showStatus();
     } catch (error) {
       console.error("复制失败:", error);
-      // 降级处理：使用execCommand方法
       try {
-        const processedUrl = processUrl(currentUrl, removeParamsToggle.checked);
-
-        const textArea = document.createElement("textarea");
-        textArea.value = processedUrl;
-        textArea.style.position = "fixed";
-        textArea.style.left = "-9999px";
-        textArea.style.top = "-9999px";
-        textArea.setAttribute("readonly", "");
-        document.body.appendChild(textArea);
-
-        textArea.select();
-        textArea.setSelectionRange(0, 99999);
-
-        const successful = document.execCommand("copy");
-        document.body.removeChild(textArea);
-
-        if (successful) {
-          showStatus();
-          console.log("Popup execCommand copy successful");
-        } else {
-          throw new Error("execCommand copy failed");
-        }
+        fallbackCopy(processedUrl);
+        showStatus();
       } catch (fallbackError) {
         console.error("降级复制也失败:", fallbackError);
       }
     }
   }
 
+  // 显示状态提示
+  function showLocalStatus() {
+    elements.status.classList.add("show");
+    setTimeout(() => {
+      elements.status.classList.remove("show");
+    }, 1500);
+  }
+
+  // 创建通知
+  function createNotification() {
+    const notificationOptions = {
+      type: "basic",
+      iconUrl: "icons/icon48.png",
+      title: EXTENSION_NAME,
+      message: MESSAGES.URL_COPIED,
+    };
+
+    chrome.notifications.create(notificationOptions, (notificationId) => {
+      if (chrome.runtime.lastError) {
+        console.error("通知创建失败:", chrome.runtime.lastError);
+        showLocalStatus();
+      } else {
+        console.log("通知创建成功:", notificationId);
+      }
+    });
+  }
+
   // 显示复制成功状态
   function showStatus() {
-    // 使用Chrome通知API显示全局通知
     try {
-      chrome.notifications.create(
-        {
-          type: "basic",
-          iconUrl: "icons/icon48.png",
-          title: "Arclet Copier",
-          message: "URL 已复制到剪贴板！",
-        },
-        (notificationId) => {
-          if (chrome.runtime.lastError) {
-            console.error("通知创建失败:", chrome.runtime.lastError);
-            // 降级到原来的状态提示
-            status.classList.add("show");
-            setTimeout(() => {
-              status.classList.remove("show");
-            }, 1500);
-          } else {
-            console.log("通知创建成功:", notificationId);
-          }
-        },
-      );
+      createNotification();
     } catch (error) {
       console.error("通知 API 调用失败:", error);
-      // 降级到原来的状态提示
-      status.classList.add("show");
-      setTimeout(() => {
-        status.classList.remove("show");
-      }, 1500);
+      showLocalStatus();
     }
   }
 
   // 事件监听器
-  copyBtn.addEventListener("click", copyUrl);
+  elements.copyBtn.addEventListener("click", copyUrl);
 
-  removeParamsToggle.addEventListener("change", () => {
+  elements.removeParamsToggle.addEventListener("change", () => {
     saveSettings();
     updateUrlDisplay();
   });
