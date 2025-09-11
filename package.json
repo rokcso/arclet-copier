@@ -1,0 +1,17 @@
+{
+  "name": "arclet-copier",
+  "version": "0.1.0",
+  "description": "快速复制当前页面的 URL，支持参数过滤功能",
+  "scripts": {
+    "build": "node build.js",
+    "package": "node build.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "url-copier",
+    "productivity"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {}
+}

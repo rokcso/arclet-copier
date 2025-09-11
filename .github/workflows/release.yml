@@ -1,0 +1,94 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: |
+        # 如果有 package.json 就安装依赖，否则跳过
+        if [ -f "package.json" ]; then
+          npm install
+        fi
+
+    - name: Build extension
+      run: |
+        # 获取版本号
+        VERSION=$(node -p "require('./manifest.json').version")
+        echo "Building version: $VERSION"
+
+        # 创建构建目录
+        mkdir -p dist
+        BUILD_DIR="dist/arclet-copier-v$VERSION"
+        mkdir -p "$BUILD_DIR"
+
+        # 复制文件
+        cp manifest.json "$BUILD_DIR/"
+        cp background.js "$BUILD_DIR/"
+        cp popup.html "$BUILD_DIR/"
+        cp popup.js "$BUILD_DIR/"
+        cp styles.css "$BUILD_DIR/"
+        cp -r icons "$BUILD_DIR/"
+
+        # 创建 ZIP 文件
+        cd dist
+        zip -r "arclet-copier-v$VERSION.zip" "arclet-copier-v$VERSION/"
+
+        echo "BUILD_VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ env.BUILD_VERSION }}
+        release_name: Arclet Copier v${{ env.BUILD_VERSION }}
+        body: |
+          ## 🚀 Arclet Copier v${{ env.BUILD_VERSION }}
+
+          ### 📦 安装方法
+          1. 下载下方的 `arclet-copier-v${{ env.BUILD_VERSION }}.zip` 文件
+          2. 解压到本地文件夹
+          3. 打开 Chrome 浏览器，访问 `chrome://extensions/`
+          4. 开启右上角的"开发者模式"
+          5. 点击"加载已解压的扩展程序"，选择解压后的文件夹
+
+          ### ✨ 功能特色
+          - 🔗 一键复制 URL，支持参数过滤
+          - 📝 支持 Markdown 链接格式复制
+          - ⚡ 快捷键支持（Ctrl+Shift+C / Cmd+Shift+C）
+          - 🛡️ 针对 Chrome 系统页面优化
+
+          ### 🎯 使用说明
+          - **Popup 操作**：点击扩展图标使用界面功能
+          - **快捷键**：Windows/Linux 使用 `Ctrl+Shift+C`，Mac 使用 `Cmd+Shift+C`
+          - **设置**：在 popup 界面可配置参数过滤和复制格式
+
+          有问题请在 [Issues](https://github.com/${{ github.repository }}/issues) 中反馈。
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/arclet-copier-v${{ env.BUILD_VERSION }}.zip
+        asset_name: arclet-copier-v${{ env.BUILD_VERSION }}.zip
+        asset_content_type: application/zip

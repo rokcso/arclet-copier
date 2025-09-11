@@ -1,0 +1,42 @@
+# 操作系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE 和编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 依赖目录 (如果使用 npm)
+node_modules/
+npm-debug.log
+
+# 构建输出
+dist/
+build/
+*.zip
+*.crx
+
+# 临时文件
+tmp/
+temp/
+
+# 环境文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
