@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                width: 320px;
+                padding: 16px;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    sans-serif;
+                margin: 0;
+            }
+
+            .header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .header img {
+                width: 24px;
+                height: 24px;
+                margin-right: 8px;
+            }
+
+            .header h1 {
+                margin: 0;
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+            }
+
+            .url-display {
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 12px;
+                margin-bottom: 12px;
+                word-break: break-all;
+                font-size: 12px;
+                color: #666;
+                max-height: 120px;
+                overflow-y: auto;
+            }
+
+            .buttons {
+                margin-bottom: 12px;
+            }
+
+            button {
+                width: 100%;
+                padding: 8px 12px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.2s;
+            }
+
+            .copy-btn {
+                background: #007bff;
+                color: white;
+            }
+
+            .copy-btn:hover {
+                background: #0056b3;
+            }
+
+            .copy-btn:disabled {
+                background: #6c757d;
+                cursor: not-allowed;
+            }
+
+            .settings-btn {
+                background: #f8f9fa;
+                color: #495057;
+                border: 1px solid #dee2e6;
+            }
+
+            .settings-btn:hover {
+                background: #e9ecef;
+            }
+
+            .status {
+                text-align: center;
+                font-size: 12px;
+                color: #28a745;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .status.show {
+                opacity: 1;
+            }
+
+            .quick-setting {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-top: 1px solid #eee;
+                margin-top: 12px;
+                font-size: 13px;
+            }
+
+            .switch {
+                position: relative;
+                width: 44px;
+                height: 24px;
+            }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: 0.3s;
+                border-radius: 24px;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 18px;
+                width: 18px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                transition: 0.3s;
+                border-radius: 50%;
+            }
+
+            input:checked + .slider {
+                background-color: #007bff;
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(20px);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <img src="icons/icon32.png" alt="Arclet Copier" />
+            <h1>Arclet Copier</h1>
+        </div>
+
+        <div class="url-display" id="urlDisplay">获取 URL 中...</div>
+
+        <div class="buttons">
+            <button class="copy-btn" id="copyBtn">复制 URL</button>
+        </div>
+
+        <div class="status" id="status">已复制到剪贴板！</div>
+
+        <div class="quick-setting">
+            <span>去除 URL 参数</span>
+            <label class="switch">
+                <input type="checkbox" id="removeParamsToggle" />
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <script src="popup.js"></script>
+    </body>
+</html>

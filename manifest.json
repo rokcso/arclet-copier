@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Arclet Copier",
+  "version": "1.0.0",
+  "description": "快速复制当前页面的 URL，支持参数过滤功能",
+  "permissions": ["activeTab", "storage", "notifications", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "copy-url": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+C",
+        "mac": "Command+Shift+C"
+      },
+      "description": "静默复制"
+    }
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "64": "icons/icon64.png",
+    "128": "icons/icon128.png",
+    "256": "icons/icon256.png"
+  }
+}
