@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     NO_URL: "无法获取 URL",
     GET_URL_FAILED: "获取 URL 失败",
     LOADING: "获取 URL 中...",
+    COPY_BTN_DEFAULT: "复制 URL",
+    COPY_BTN_SUCCESS: "已复制！",
   };
 
   // DOM elements
@@ -164,8 +166,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // 显示按钮复制成功状态
+  function showButtonSuccess() {
+    const originalText = elements.copyBtn.textContent;
+
+    // 添加成功样式和文本
+    elements.copyBtn.classList.add("success");
+    elements.copyBtn.textContent = MESSAGES.COPY_BTN_SUCCESS;
+
+    // 1.5秒后恢复原状
+    setTimeout(() => {
+      elements.copyBtn.classList.remove("success");
+      elements.copyBtn.textContent = originalText;
+    }, 1500);
+  }
+
   // 显示复制成功状态
   function showStatus() {
+    // 显示按钮交互效果
+    showButtonSuccess();
+
     try {
       createNotification();
     } catch (error) {

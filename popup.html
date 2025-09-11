@@ -63,6 +63,8 @@
             .copy-btn {
                 background: #007bff;
                 color: white;
+                position: relative;
+                transition: all 0.3s ease;
             }
 
             .copy-btn:hover {
@@ -72,6 +74,15 @@
             .copy-btn:disabled {
                 background: #6c757d;
                 cursor: not-allowed;
+            }
+
+            .copy-btn.success {
+                background: #28a745;
+                transform: scale(0.98);
+            }
+
+            .copy-btn.success:hover {
+                background: #28a745;
             }
 
             .settings-btn {
