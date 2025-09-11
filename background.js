@@ -222,7 +222,7 @@ async function copyToClipboard(text) {
 function showNotification(title, message) {
   const notificationOptions = {
     type: "basic",
-    iconUrl: "icons/icon48.png",
+    iconUrl: "icons/icon128.png",
     title,
     message,
   };

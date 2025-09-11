@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function createNotification() {
     const notificationOptions = {
       type: "basic",
-      iconUrl: "icons/icon48.png",
+      iconUrl: "icons/icon128.png",
       title: EXTENSION_NAME,
       message: MESSAGES.URL_COPIED,
     };
@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const notificationOptions = {
         type: "basic",
-        iconUrl: "icons/icon48.png",
+        iconUrl: "icons/icon128.png",
         title: EXTENSION_NAME,
         message: MESSAGES.MARKDOWN_COPIED,
       };
