@@ -50,13 +50,12 @@
                     var(--arc-background) 0%,
                     var(--arc-surface) 100%
                 );
-                min-height: 100vh;
             }
 
             .header {
                 display: flex;
                 align-items: center;
-                margin-bottom: 20px;
+                margin-bottom: 12px;
                 padding-bottom: 16px;
                 border-bottom: 1px solid var(--arc-border);
             }
@@ -143,6 +142,8 @@
                 transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative;
                 overflow: hidden;
+                min-height: 48px;
+                box-sizing: border-box;
             }
 
             .action-button::before {
@@ -313,8 +314,8 @@
             }
 
             .markdown-icon {
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
                 opacity: 0.8;
             }
 
