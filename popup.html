@@ -411,6 +411,149 @@
                     );
                 }
             }
+
+            /* QR Code Button */
+            .qr-btn {
+                background: #ffffff;
+                color: var(--arc-text-primary);
+                border: 1px solid #d1d5db;
+                box-shadow:
+                    0 1px 3px 0 rgb(0 0 0 / 0.1),
+                    0 1px 2px 0 rgb(0 0 0 / 0.06);
+            }
+
+            .qr-btn:hover {
+                background: #f2f2f2;
+                color: var(--arc-primary);
+            }
+
+            .qr-icon {
+                width: 16px;
+                height: 16px;
+                opacity: 0.8;
+            }
+
+            /* QR Code Modal */
+            .qr-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 2000;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            }
+
+            .qr-modal.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .qr-modal-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(4px);
+            }
+
+            .qr-modal-content {
+                position: relative;
+                background: var(--arc-background);
+                border-radius: var(--arc-radius-lg);
+                box-shadow: var(--arc-shadow-lg);
+                max-width: 400px;
+                width: 90%;
+                max-height: 90vh;
+                overflow: hidden;
+                transform: scale(0.9);
+                transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                border: 1px solid var(--arc-border);
+            }
+
+            .qr-modal.show .qr-modal-content {
+                transform: scale(1);
+            }
+
+            .qr-modal-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 20px 24px;
+                border-bottom: 1px solid var(--arc-border);
+            }
+
+            .qr-modal-header h3 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 600;
+                color: var(--arc-text-primary);
+                font-family: "Playfair Display", serif;
+            }
+
+            .qr-modal-close {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border: none;
+                background: transparent;
+                color: var(--arc-text-muted);
+                cursor: pointer;
+                border-radius: var(--arc-radius-sm);
+                transition: all 0.2s ease;
+                padding: 0;
+            }
+
+            .qr-modal-close:hover {
+                background: var(--arc-secondary);
+                color: var(--arc-text-primary);
+            }
+
+            .qr-modal-body {
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .qr-code-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+                background: var(--arc-surface);
+                border-radius: var(--arc-radius);
+                border: 1px solid var(--arc-border);
+            }
+
+            .qr-code-container canvas {
+                border-radius: var(--arc-radius-sm);
+            }
+
+            .qr-url-display {
+                font-size: 12px;
+                font-family:
+                    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace;
+                color: var(--arc-text-secondary);
+                text-align: center;
+                word-break: break-all;
+                max-width: 100%;
+                line-height: 1.4;
+                padding: 8px 12px;
+                background: var(--arc-surface);
+                border-radius: var(--arc-radius-sm);
+                border: 1px solid var(--arc-border);
+            }
         </style>
     </head>
     <body>
@@ -559,6 +702,18 @@
                     </svg>
                     <span data-i18n="copyAsMarkdown">Copy as Markdown</span>
                 </button>
+                <button class="action-button qr-btn" id="qrBtn">
+                    <svg
+                        class="qr-icon"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path
+                            d="M3 3h7v7H3V3zm2 2v3h3V5H5zm8-2h7v7h-7V3zm2 2v3h3V5h-3zM3 11h7v7H3v-7zm2 2v3h3v-3H5zm13-2h3v2h-3v-2zm0 4h3v2h-3v-2zm-4-4h2v3h-2v-3zm-4 0h2v3h-2v-3zm4 4h2v3h-2v-3zm-4 0h2v3h-2v-3zm8 0h3v2h-3v-2zm0 4h3v3h-3v-3zm-4 0h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h3v3H7v-3z"
+                        />
+                    </svg>
+                    <span data-i18n="generateQR">Generate QR Code</span>
+                </button>
             </div>
 
             <div class="settings">
@@ -603,8 +758,38 @@
             <div class="status-notification" id="status">
                 <span class="notification-text"></span>
             </div>
+
+            <!-- QR Code Modal -->
+            <div class="qr-modal" id="qrModal">
+                <div class="qr-modal-overlay" id="qrModalOverlay"></div>
+                <div class="qr-modal-content">
+                    <div class="qr-modal-header">
+                        <h3 data-i18n="qrCodeTitle">QR Code</h3>
+                        <button class="qr-modal-close" id="qrModalClose">
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="qr-modal-body">
+                        <div
+                            class="qr-code-container"
+                            id="qrCodeContainer"
+                        ></div>
+                        <div class="qr-url-display" id="qrUrlDisplay"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <script src="qrcode.min.js"></script>
         <script src="popup.js"></script>
     </body>
 </html>

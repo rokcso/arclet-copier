@@ -82,5 +82,11 @@
   },
   "silentCopyFormatChanged": {
     "message": "静默复制格式已更改"
+  },
+  "generateQR": {
+    "message": "生成二维码"
+  },
+  "qrCodeTitle": {
+    "message": "二维码"
   }
 }

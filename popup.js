@@ -34,11 +34,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     urlDisplay: document.getElementById("urlDisplay"),
     copyBtn: document.getElementById("copyBtn"),
     markdownBtn: document.getElementById("markdownBtn"),
+    qrBtn: document.getElementById("qrBtn"),
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
     languageSelect: document.getElementById("languageSelect"),
     version: document.getElementById("version"),
+    qrModal: document.getElementById("qrModal"),
+    qrModalOverlay: document.getElementById("qrModalOverlay"),
+    qrModalClose: document.getElementById("qrModalClose"),
+    qrCodeContainer: document.getElementById("qrCodeContainer"),
+    qrUrlDisplay: document.getElementById("qrUrlDisplay"),
   };
 
   let currentUrl = "";
@@ -408,9 +414,60 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 生成二维码
+  function generateQRCode(url) {
+    // 清空容器
+    elements.qrCodeContainer.innerHTML = "";
+
+    // 创建二维码
+    new QRCode(elements.qrCodeContainer, {
+      text: url,
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+
+    // 显示URL
+    elements.qrUrlDisplay.textContent = url;
+  }
+
+  // 显示二维码模态框
+  function showQRModal() {
+    const toggleSwitch = elements.removeParamsToggle;
+    const removeParams = toggleSwitch.classList.contains("active");
+    const processedUrl = processUrl(currentUrl, removeParams);
+
+    generateQRCode(processedUrl);
+    elements.qrModal.classList.add("show");
+  }
+
+  // 隐藏二维码模态框
+  function hideQRModal() {
+    elements.qrModal.classList.remove("show");
+  }
+
+  // 初始化二维码模态框事件
+  function initializeQRModal() {
+    // 点击关闭按钮
+    elements.qrModalClose.addEventListener("click", hideQRModal);
+
+    // 点击遮罩层关闭
+    elements.qrModalOverlay.addEventListener("click", hideQRModal);
+
+    // 按ESC键关闭
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && elements.qrModal.classList.contains("show")) {
+        hideQRModal();
+      }
+    });
+  }
+
   // 事件监听器
   elements.copyBtn.addEventListener("click", copyUrl);
   elements.markdownBtn.addEventListener("click", copyMarkdown);
+  elements.qrBtn.addEventListener("click", showQRModal);
 
   elements.silentCopyFormat.addEventListener(
     "change",
@@ -429,6 +486,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 初始化
   loadVersion(); // Load version from manifest
   initializeToggleSwitch();
+  initializeQRModal(); // Initialize QR modal
   await loadSettings();
   await initializeI18n(); // Load UI with saved language
   await getCurrentUrl();

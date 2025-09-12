@@ -19,6 +19,7 @@ const filesToInclude = [
   "popup.js",
   "offscreen.html",
   "offscreen.js",
+  "qrcode.min.js",
   "styles.css",
   "icons/",
   "_locales/",

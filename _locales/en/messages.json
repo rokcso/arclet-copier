@@ -82,5 +82,11 @@
   },
   "silentCopyFormatChanged": {
     "message": "Silent copy format changed"
+  },
+  "generateQR": {
+    "message": "Generate QR Code"
+  },
+  "qrCodeTitle": {
+    "message": "QR Code"
   }
 }
