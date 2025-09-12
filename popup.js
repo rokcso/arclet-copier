@@ -38,10 +38,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
     languageSelect: document.getElementById("languageSelect"),
+    version: document.getElementById("version"),
   };
 
   let currentUrl = "";
   let currentTitle = "";
+
+  // Load version from manifest
+  function loadVersion() {
+    const manifest = chrome.runtime.getManifest();
+    if (manifest && manifest.version) {
+      elements.version.textContent = `v${manifest.version}`;
+    }
+  }
 
   // Initialize localization
   async function initializeI18n(locale) {
@@ -418,6 +427,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // 初始化
+  loadVersion(); // Load version from manifest
   initializeToggleSwitch();
   await loadSettings();
   await initializeI18n(); // Load UI with saved language
