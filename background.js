@@ -73,9 +73,10 @@ function isRestrictedPage(url) {
 // 获取页面标题
 async function getPageTitle(tabId, url) {
   try {
-    // 如果是特殊页面，跳过脚本注入
+    // 对于受限页面，尝试从tab信息获取标题
     if (isRestrictedPage(url)) {
-      return "";
+      const tab = await chrome.tabs.get(tabId);
+      return tab.title || new URL(url).hostname || "";
     }
 
     const results = await chrome.scripting.executeScript({
@@ -85,7 +86,12 @@ async function getPageTitle(tabId, url) {
     return results[0]?.result || "";
   } catch (error) {
     console.error("获取页面标题失败:", error);
-    return "";
+    // 获取标题失败时，尝试从URL生成标题
+    try {
+      return new URL(url).hostname || "";
+    } catch {
+      return "";
+    }
   }
 }
 
@@ -100,13 +106,6 @@ function createMarkdownLink(url, title, removeParams) {
 async function handleCopyUrl() {
   try {
     const tab = await getCurrentTab();
-
-    // 检查是否为特殊页面
-    if (isRestrictedPage(tab.url)) {
-      showNotification(EXTENSION_NAME, MESSAGES.RESTRICTED_PAGE);
-      return;
-    }
-
     const settings = await getUserSettings();
 
     let contentToCopy;
@@ -162,58 +161,48 @@ function createCopyElement(text) {
   return textarea;
 }
 
-// 执行复制操作的内容脚本
-function copyContentScript(textToCopy) {
+// 复制到剪贴板 - 使用 offscreen document
+async function copyToClipboard(text) {
   try {
-    const textarea = document.createElement("textarea");
-    textarea.value = textToCopy;
-    textarea.style.position = "fixed";
-    textarea.style.left = "-9999px";
-    textarea.style.top = "-9999px";
-    textarea.style.opacity = "0";
-    textarea.setAttribute("readonly", "");
-    document.body.appendChild(textarea);
+    // 确保 offscreen document 存在
+    await ensureOffscreenDocument();
 
-    textarea.select();
-    textarea.setSelectionRange(0, 99999);
+    // 向 offscreen document 发送复制消息
+    const response = await chrome.runtime.sendMessage({
+      action: "copy",
+      text: text,
+    });
 
-    const success = document.execCommand("copy");
-    document.body.removeChild(textarea);
-
-    if (!success) {
-      throw new Error("execCommand failed");
+    if (!response || !response.success) {
+      throw new Error(response?.error || "Offscreen copy failed");
     }
 
-    return true;
+    console.log("Offscreen copy successful");
   } catch (error) {
-    console.error("Content script copy failed:", error);
-    throw error;
+    console.error("复制失败:", error);
+    throw new Error("复制操作失败");
   }
 }
 
-// 复制到剪贴板 - 使用content script注入
-async function copyToClipboard(text) {
+// 确保 offscreen document 存在
+async function ensureOffscreenDocument() {
   try {
-    const tab = await getCurrentTab();
-
-    if (!tab.id) {
-      throw new Error(MESSAGES.NO_TAB);
-    }
-
-    // 对于特殊页面，这个函数不应该被调用，但如果被调用了就直接抛错
-    if (isRestrictedPage(tab.url)) {
-      throw new Error("Cannot inject script into restricted page");
-    }
-
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: copyContentScript,
-      args: [text],
+    // 检查是否已存在 offscreen document
+    const existingContexts = await chrome.runtime.getContexts({
+      contextTypes: ["OFFSCREEN_DOCUMENT"],
     });
 
-    console.log("Content script copy successful");
+    if (existingContexts.length === 0) {
+      // 创建 offscreen document
+      await chrome.offscreen.createDocument({
+        url: chrome.runtime.getURL("offscreen.html"),
+        reasons: ["CLIPBOARD"],
+        justification: "复制文本到剪贴板",
+      });
+      console.log("Offscreen document created");
+    }
   } catch (error) {
-    console.error("Content script 复制失败:", error);
+    console.error("Failed to create offscreen document:", error);
     throw error;
   }
 }

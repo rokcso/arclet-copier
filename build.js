@@ -17,6 +17,8 @@ const filesToInclude = [
   "background.js",
   "popup.html",
   "popup.js",
+  "offscreen.html",
+  "offscreen.js",
   "styles.css",
   "icons/",
 ];

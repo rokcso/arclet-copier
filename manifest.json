@@ -5,7 +5,14 @@
   "description": "快速复制当前页面的 URL，支持参数过滤功能和 Markdown 链接格式化",
   "author": "rokcso",
   "homepage_url": "https://rokcso.com/",
-  "permissions": ["activeTab", "storage", "notifications", "scripting"],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "notifications",
+    "scripting",
+    "offscreen",
+    "clipboardWrite"
+  ],
   "background": {
     "service_worker": "background.js"
   },
