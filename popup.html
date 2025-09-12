@@ -3,234 +3,491 @@
     <head>
         <meta charset="utf-8" />
         <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap");
+
+            :root {
+                --arc-primary: #6366f1;
+                --arc-primary-hover: #4f46e5;
+                --arc-secondary: #f1f5f9;
+                --arc-success: #10b981;
+                --arc-background: #ffffff;
+                --arc-surface: #f8fafc;
+                --arc-border: #e2e8f0;
+                --arc-text-primary: #1e293b;
+                --arc-text-secondary: #64748b;
+                --arc-text-muted: #94a3b8;
+                --arc-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+                --arc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+                --arc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+                --arc-radius: 12px;
+                --arc-radius-sm: 8px;
+                --arc-radius-lg: 16px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
             body {
-                width: 320px;
-                padding: 16px;
-                font-family:
-                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                    sans-serif;
+                width: 380px;
+                padding: 0;
                 margin: 0;
+                font-family:
+                    "Inter",
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
+                font-weight: 400;
+                line-height: 1.5;
+                background: var(--arc-background);
+                overflow-x: hidden;
+            }
+
+            .container {
+                padding: 24px;
+                background: linear-gradient(
+                    135deg,
+                    var(--arc-background) 0%,
+                    var(--arc-surface) 100%
+                );
+                min-height: 100vh;
             }
 
             .header {
                 display: flex;
                 align-items: center;
-                margin-bottom: 16px;
-                padding-bottom: 12px;
-                border-bottom: 1px solid #eee;
+                margin-bottom: 28px;
+                position: relative;
             }
 
-            .header img {
-                width: 24px;
-                height: 24px;
-                margin-right: 8px;
+            .header::after {
+                content: "";
+                position: absolute;
+                bottom: -14px;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(
+                    90deg,
+                    var(--arc-border) 0%,
+                    transparent 100%
+                );
+            }
+
+            .header-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: var(--arc-radius-sm);
+                margin-right: 12px;
+                box-shadow: var(--arc-shadow-sm);
+                background: var(--arc-background);
+                padding: 4px;
             }
 
             .header h1 {
                 margin: 0;
-                font-size: 16px;
-                font-weight: 600;
-                color: #333;
+                font-family: "Playfair Display", serif;
+                font-size: 20px;
+                font-weight: 500;
+                color: var(--arc-text-primary);
+                letter-spacing: -0.01em;
+            }
+
+            .url-section {
+                margin-bottom: 24px;
+            }
+
+            .url-label {
+                display: block;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--arc-text-secondary);
+                margin-bottom: 8px;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
             }
 
             .url-display {
-                background: #f5f5f5;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                padding: 12px;
-                margin-bottom: 12px;
+                background: var(--arc-surface);
+                border: 1.5px solid var(--arc-border);
+                border-radius: var(--arc-radius);
+                padding: 16px;
                 word-break: break-all;
-                font-size: 12px;
-                color: #666;
+                font-size: 13px;
+                font-family:
+                    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace;
+                color: var(--arc-text-primary);
                 max-height: 120px;
                 overflow-y: auto;
+                line-height: 1.6;
+                transition: all 0.2s ease;
+                position: relative;
             }
 
-            .buttons {
-                margin-bottom: 12px;
+            .url-display:hover {
+                border-color: var(--arc-primary);
+                box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
             }
 
-            button {
+            .url-display::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .url-display::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .url-display::-webkit-scrollbar-thumb {
+                background: var(--arc-border);
+                border-radius: 2px;
+            }
+
+            .actions {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 24px;
+            }
+
+            .action-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
                 width: 100%;
-                padding: 8px 12px;
+                padding: 14px 20px;
                 border: none;
-                border-radius: 4px;
+                border-radius: var(--arc-radius);
                 cursor: pointer;
                 font-size: 14px;
-                transition: background-color 0.2s;
+                font-weight: 500;
+                font-family: inherit;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .action-button::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent
+                );
+                transition: left 0.6s;
+            }
+
+            .action-button:hover::before {
+                left: 100%;
             }
 
             .copy-btn {
-                background: #007bff;
+                background: var(--arc-primary);
                 color: white;
-                position: relative;
-                transition: all 0.3s ease;
+                box-shadow: var(--arc-shadow-md);
             }
 
             .copy-btn:hover {
-                background: #0056b3;
+                background: var(--arc-primary-hover);
+                transform: translateY(-1px);
+                box-shadow: var(--arc-shadow-lg);
             }
 
-            .copy-btn:disabled {
-                background: #6c757d;
-                cursor: not-allowed;
+            .copy-btn:active {
+                transform: translateY(0);
             }
 
             .copy-btn.success {
-                background: #28a745;
+                background: var(--arc-success);
                 transform: scale(0.98);
             }
 
-            .copy-btn.success:hover {
-                background: #28a745;
+            .copy-btn.success::after {
+                content: "✓";
+                position: absolute;
+                right: 16px;
+                font-size: 16px;
             }
 
             .markdown-btn {
-                background: #6f42c1;
-                color: white;
-                margin-top: 8px;
-                transition: all 0.3s ease;
+                background: var(--arc-surface);
+                color: var(--arc-text-primary);
+                border: 1.5px solid var(--arc-border);
             }
 
             .markdown-btn:hover {
-                background: #5a2d91;
+                background: var(--arc-background);
+                border-color: var(--arc-primary);
+                color: var(--arc-primary);
+                transform: translateY(-1px);
+                box-shadow: var(--arc-shadow-md);
             }
 
             .markdown-btn.success {
-                background: #28a745;
+                background: var(--arc-success);
+                color: white;
+                border-color: var(--arc-success);
                 transform: scale(0.98);
             }
 
-            .markdown-btn.success:hover {
-                background: #28a745;
+            .markdown-btn.success::after {
+                content: "✓";
+                position: absolute;
+                right: 16px;
+                font-size: 16px;
             }
 
-            .settings-btn {
-                background: #f8f9fa;
-                color: #495057;
-                border: 1px solid #dee2e6;
-            }
-
-            .settings-btn:hover {
-                background: #e9ecef;
-            }
-
-            .status {
-                text-align: center;
-                font-size: 12px;
-                color: #28a745;
+            .status-notification {
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-10px);
+                background: #10b981;
+                color: white;
+                padding: 14px 20px;
+                border-radius: 28px;
+                font-size: 14px;
+                font-weight: 500;
                 opacity: 0;
-                transition: opacity 0.3s;
+                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-width: 200px;
+                justify-content: center;
+                white-space: nowrap;
             }
 
-            .status.show {
+            .status-notification.show {
                 opacity: 1;
+                transform: translateX(-50%) translateY(0);
             }
 
-            .quick-setting {
+            .settings {
+                border-top: 1px solid var(--arc-border);
+                padding-top: 20px;
+            }
+
+            .settings-title {
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--arc-text-secondary);
+                margin-bottom: 16px;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
+            }
+
+            .setting-item {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 8px 0;
-                font-size: 13px;
+                padding: 12px 0;
+                border-bottom: 1px solid rgba(226, 232, 240, 0.5);
             }
 
-            .quick-setting:first-of-type {
-                margin-top: 12px;
-                border-top: 1px solid #eee;
+            .setting-item:last-child {
+                border-bottom: none;
             }
 
-            .switch {
+            .setting-label {
+                font-size: 14px;
+                color: var(--arc-text-primary);
+                font-weight: 400;
+            }
+
+            .toggle-switch {
                 position: relative;
-                width: 44px;
+                width: 48px;
                 height: 24px;
-            }
-
-            input:checked + .slider:before {
-                transform: translateX(20px);
-            }
-
-            .slider {
-                position: absolute;
+                background: var(--arc-border);
+                border-radius: 12px;
                 cursor: pointer;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #ccc;
-                transition: 0.3s;
-                border-radius: 24px;
+                transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            .slider:before {
-                position: absolute;
+            .toggle-switch::after {
                 content: "";
-                height: 18px;
-                width: 18px;
-                left: 3px;
-                bottom: 3px;
-                background-color: white;
-                transition: 0.3s;
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                width: 20px;
+                height: 20px;
+                background: white;
                 border-radius: 50%;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: var(--arc-shadow-sm);
             }
 
-            input:checked + .slider {
-                background-color: #007bff;
+            .toggle-switch.active {
+                background: var(--arc-primary);
             }
 
-            input:checked + .slider:before {
-                transform: translateX(20px);
+            .toggle-switch.active::after {
+                transform: translateX(24px);
             }
 
             .format-select {
-                padding: 4px 8px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                background: white;
-                font-size: 12px;
-                color: #333;
+                padding: 8px 12px;
+                border: 1.5px solid var(--arc-border);
+                border-radius: var(--arc-radius-sm);
+                background: var(--arc-background);
+                font-size: 13px;
+                font-weight: 400;
+                color: var(--arc-text-primary);
                 cursor: pointer;
-                min-width: 80px;
+                min-width: 100px;
+                transition: all 0.2s ease;
             }
 
             .format-select:focus {
                 outline: none;
-                border-color: #007bff;
-                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+                border-color: var(--arc-primary);
+                box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+            }
+
+            .format-select:hover {
+                border-color: var(--arc-primary);
+            }
+
+            .button-icon {
+                width: 16px;
+                height: 16px;
+                opacity: 0.8;
+            }
+
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .container > *:not(.status-notification) {
+                animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+            }
+
+            .container > *:nth-child(1):not(.status-notification) {
+                animation-delay: 0.05s;
+            }
+            .container > *:nth-child(2):not(.status-notification) {
+                animation-delay: 0.1s;
+            }
+            .container > *:nth-child(3):not(.status-notification) {
+                animation-delay: 0.15s;
+            }
+            .container > *:nth-child(4):not(.status-notification) {
+                animation-delay: 0.2s;
+            }
+
+            /* 深色模式适配 */
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --arc-background: #0f172a;
+                    --arc-surface: #1e293b;
+                    --arc-border: #334155;
+                    --arc-text-primary: #f1f5f9;
+                    --arc-text-secondary: #cbd5e1;
+                    --arc-text-muted: #64748b;
+                }
+
+                .container {
+                    background: linear-gradient(
+                        135deg,
+                        var(--arc-background) 0%,
+                        var(--arc-surface) 100%
+                    );
+                }
             }
         </style>
     </head>
     <body>
-        <div class="header">
-            <img src="icons/icon256.png" alt="Arclet Copier" />
-            <h1>Arclet Copier</h1>
-        </div>
+        <div class="container">
+            <div class="header">
+                <img
+                    src="icons/icon256.png"
+                    alt="Arclet Copier"
+                    class="header-icon"
+                />
+                <h1>Arclet Copier</h1>
+            </div>
 
-        <div class="url-display" id="urlDisplay">获取 URL 中...</div>
+            <div class="url-section">
+                <label class="url-label">Current URL</label>
+                <div class="url-display" id="urlDisplay">获取 URL 中...</div>
+            </div>
 
-        <div class="buttons">
-            <button class="copy-btn" id="copyBtn">复制 URL</button>
-            <button class="markdown-btn" id="markdownBtn">
-                复制为 Markdown
-            </button>
-        </div>
+            <div class="actions">
+                <button class="action-button copy-btn" id="copyBtn">
+                    <svg
+                        class="button-icon"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path
+                            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+                        />
+                    </svg>
+                    复制 URL
+                </button>
+                <button class="action-button markdown-btn" id="markdownBtn">
+                    <svg
+                        class="button-icon"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path
+                            d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 3.95-.36.1-.74.15-1.13.15-.27 0-.54-.03-.8-.08.54 1.69 2.11 2.95 4 2.98-1.46 1.16-3.31 1.84-5.33 1.84-.35 0-.69-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"
+                        />
+                    </svg>
+                    复制为 Markdown
+                </button>
+            </div>
 
-        <div class="status" id="status">已复制到剪贴板！</div>
+            <div class="settings">
+                <div class="settings-title">Settings</div>
 
-        <div class="quick-setting">
-            <span>去除 URL 参数</span>
-            <label class="switch">
-                <input type="checkbox" id="removeParamsToggle" />
-                <span class="slider"></span>
-            </label>
-        </div>
+                <div class="setting-item">
+                    <span class="setting-label">去除 URL 参数</span>
+                    <div class="toggle-switch" id="removeParamsToggle">
+                        <input type="checkbox" style="display: none" />
+                    </div>
+                </div>
 
-        <div class="quick-setting">
-            <span>静默复制格式</span>
-            <select id="silentCopyFormat" class="format-select">
-                <option value="url">URL</option>
-                <option value="markdown">Markdown</option>
-            </select>
+                <div class="setting-item">
+                    <span class="setting-label">静默复制格式</span>
+                    <select id="silentCopyFormat" class="format-select">
+                        <option value="url">URL</option>
+                        <option value="markdown">Markdown</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="status-notification" id="status">
+                <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="notification-icon"
+                >
+                    <path
+                        d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+                    />
+                </svg>
+                <span class="notification-text"></span>
+            </div>
         </div>
 
         <script src="popup.js"></script>
