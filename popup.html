@@ -57,31 +57,14 @@
                 display: flex;
                 align-items: center;
                 margin-bottom: 28px;
-                position: relative;
-            }
-
-            .header::after {
-                content: "";
-                position: absolute;
-                bottom: -14px;
-                left: 0;
-                right: 0;
-                height: 1px;
-                background: linear-gradient(
-                    90deg,
-                    var(--arc-border) 0%,
-                    transparent 100%
-                );
+                padding-bottom: 20px;
+                border-bottom: 1px solid var(--arc-border);
             }
 
             .header-icon {
                 width: 32px;
                 height: 32px;
-                border-radius: var(--arc-radius-sm);
                 margin-right: 12px;
-                box-shadow: var(--arc-shadow-sm);
-                background: var(--arc-background);
-                padding: 4px;
             }
 
             .header h1 {
@@ -183,18 +166,17 @@
             }
 
             .copy-btn {
-                background: #f9fafc;
-                color: #585efb;
-                border: 1.5px solid var(--arc-border);
-                box-shadow: var(--arc-shadow-sm);
+                background: #ffffff;
+                color: var(--arc-text-secondary);
+                border: 1px solid #d1d5db;
+                box-shadow:
+                    0 1px 3px 0 rgb(0 0 0 / 0.1),
+                    0 1px 2px 0 rgb(0 0 0 / 0.06);
             }
 
             .copy-btn:hover {
-                background: var(--arc-background);
-                border-color: var(--arc-primary);
+                background: #f2f2f2;
                 color: var(--arc-primary);
-                transform: translateY(-1px);
-                box-shadow: var(--arc-shadow-md);
             }
 
             .copy-btn:active {
@@ -202,17 +184,17 @@
             }
 
             .markdown-btn {
-                background: #f9fafc;
-                color: #585efb;
-                border: 1.5px solid var(--arc-border);
+                background: #ffffff;
+                color: var(--arc-text-secondary);
+                border: 1px solid #d1d5db;
+                box-shadow:
+                    0 1px 3px 0 rgb(0 0 0 / 0.1),
+                    0 1px 2px 0 rgb(0 0 0 / 0.06);
             }
 
             .markdown-btn:hover {
-                background: var(--arc-background);
-                border-color: var(--arc-primary);
+                background: #f2f2f2;
                 color: var(--arc-primary);
-                transform: translateY(-1px);
-                box-shadow: var(--arc-shadow-md);
             }
 
             .status-notification {
