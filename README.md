@@ -129,3 +129,10 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 - 支持 Markdown 格式复制
 - 快捷键支持
 - Chrome 系统页面优化
+
+### v1.1.0
+- 🔧 **修复新标签页静默复制问题**: 解决了在新打开的标签页中使用快捷键复制失败的问题
+- 🚀 **采用 Offscreen API**: 使用 Chrome 扩展 Manifest V3 推荐的 Offscreen Documents 替代内容脚本注入
+- ⚡ **提升兼容性**: 不再依赖 `activeTab` 权限激活，支持在任何页面状态下进行静默复制
+- 🛡️ **增强稳定性**: 绕过页面 CSP 限制和加载状态影响，在独立扩展环境中执行复制操作
+- 📝 **权限优化**: 添加 `clipboardWrite` 权限，符合最新的浏览器安全要求
