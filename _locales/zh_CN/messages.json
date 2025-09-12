@@ -1,0 +1,77 @@
+{
+  "extName": {
+    "message": "Arclet Copier"
+  },
+  "extDescription": {
+    "message": "快速复制当前页面的 URL，支持参数过滤功能和 Markdown 链接格式化"
+  },
+  "copyUrlShortcut": {
+    "message": "静默复制"
+  },
+  "currentUrl": {
+    "message": "当前 URL"
+  },
+  "copyUrl": {
+    "message": "复制 URL"
+  },
+  "copyAsMarkdown": {
+    "message": "复制为 Markdown"
+  },
+  "settings": {
+    "message": "设置"
+  },
+  "removeUrlParams": {
+    "message": "去除 URL 参数"
+  },
+  "silentCopyFormat": {
+    "message": "静默复制格式"
+  },
+  "language": {
+    "message": "语言"
+  },
+  "formatUrl": {
+    "message": "URL"
+  },
+  "formatMarkdown": {
+    "message": "Markdown"
+  },
+  "languageEn": {
+    "message": "English"
+  },
+  "languageZh": {
+    "message": "简体中文"
+  },
+  "gettingUrl": {
+    "message": "获取 URL 中..."
+  },
+  "urlCopied": {
+    "message": "URL 已复制到剪贴板！"
+  },
+  "markdownCopied": {
+    "message": "Markdown 链接已复制到剪贴板！"
+  },
+  "noUrl": {
+    "message": "无法获取 URL"
+  },
+  "getUrlFailed": {
+    "message": "获取 URL 失败"
+  },
+  "copyFailed": {
+    "message": "复制失败，请重试"
+  },
+  "noTab": {
+    "message": "无法获取当前标签页"
+  },
+  "restrictedPage": {
+    "message": "当前页面为系统页面，请点击扩展图标使用复制功能"
+  },
+  "markdownLinkCopied": {
+    "message": "Markdown 链接已复制到剪贴板！"
+  },
+  "copied": {
+    "message": "已复制！"
+  },
+  "languageChangeNotification": {
+    "message": "语言切换成功！"
+  }
+}

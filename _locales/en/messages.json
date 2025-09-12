@@ -1,0 +1,77 @@
+{
+  "extName": {
+    "message": "Arclet Copier"
+  },
+  "extDescription": {
+    "message": "Quickly copy current page URL with parameter filtering and Markdown formatting support"
+  },
+  "copyUrlShortcut": {
+    "message": "Silent Copy"
+  },
+  "currentUrl": {
+    "message": "Current URL"
+  },
+  "copyUrl": {
+    "message": "Copy URL"
+  },
+  "copyAsMarkdown": {
+    "message": "Copy as Markdown"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "removeUrlParams": {
+    "message": "Remove URL Parameters"
+  },
+  "silentCopyFormat": {
+    "message": "Silent Copy Format"
+  },
+  "language": {
+    "message": "Language"
+  },
+  "formatUrl": {
+    "message": "URL"
+  },
+  "formatMarkdown": {
+    "message": "Markdown"
+  },
+  "languageEn": {
+    "message": "English"
+  },
+  "languageZh": {
+    "message": "简体中文"
+  },
+  "gettingUrl": {
+    "message": "Getting URL..."
+  },
+  "urlCopied": {
+    "message": "URL copied to clipboard!"
+  },
+  "markdownCopied": {
+    "message": "Markdown link copied to clipboard!"
+  },
+  "noUrl": {
+    "message": "Unable to get URL"
+  },
+  "getUrlFailed": {
+    "message": "Failed to get URL"
+  },
+  "copyFailed": {
+    "message": "Copy failed, please try again"
+  },
+  "noTab": {
+    "message": "Unable to get current tab"
+  },
+  "restrictedPage": {
+    "message": "Current page is a system page, please click the extension icon to use copy function"
+  },
+  "markdownLinkCopied": {
+    "message": "Markdown link copied to clipboard!"
+  },
+  "copied": {
+    "message": "Copied!"
+  },
+  "languageChangeNotification": {
+    "message": "Language changed successfully!"
+  }
+}
