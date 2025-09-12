@@ -335,6 +335,12 @@
                 opacity: 0.8;
             }
 
+            .markdown-icon {
+                width: 18px;
+                height: 18px;
+                opacity: 0.8;
+            }
+
             @keyframes slideIn {
                 from {
                     opacity: 0;
@@ -404,24 +410,31 @@
                 <button class="action-button copy-btn" id="copyBtn">
                     <svg
                         class="button-icon"
-                        viewBox="0 0 24 24"
+                        viewBox="0 0 16 16"
                         fill="currentColor"
                     >
                         <path
-                            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+                            fill-rule="evenodd"
+                            d="M9.929 3.132a2.078 2.078 0 1 1 2.94 2.94l-.65.648a.75.75 0 0 0 1.061 1.06l.649-.648a3.579 3.579 0 0 0-5.06-5.06L6.218 4.72a3.58 3.58 0 0 0 0 5.06a.75.75 0 0 0 1.061-1.06a2.08 2.08 0 0 1 0-2.94zm-.15 3.086a.75.75 0 0 0-1.057 1.064c.816.81.818 2.13.004 2.942l-2.654 2.647a2.08 2.08 0 0 1-2.94-2.944l.647-.647a.75.75 0 0 0-1.06-1.06l-.648.647a3.58 3.58 0 0 0 5.06 5.066l2.654-2.647a3.575 3.575 0 0 0-.007-5.068Z"
+                            clip-rule="evenodd"
                         />
                     </svg>
                     复制 URL
                 </button>
                 <button class="action-button markdown-btn" id="markdownBtn">
-                    <svg
-                        class="button-icon"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                    >
-                        <path
-                            d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 3.95-.36.1-.74.15-1.13.15-.27 0-.54-.03-.8-.08.54 1.69 2.11 2.95 4 2.98-1.46 1.16-3.31 1.84-5.33 1.84-.35 0-.69-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"
-                        />
+                    <svg class="markdown-icon" viewBox="0 0 24 24">
+                        <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                        >
+                            <path
+                                d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                            />
+                            <path d="M7 15V9l2 2l2-2v6m3-2l2 2l2-2m-2 2V9" />
+                        </g>
                     </svg>
                     复制为 Markdown
                 </button>
