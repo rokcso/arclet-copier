@@ -124,11 +124,6 @@
                 position: relative;
             }
 
-            .url-display:hover {
-                border-color: var(--arc-primary);
-                box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
-            }
-
             .url-display::-webkit-scrollbar {
                 width: 4px;
             }
@@ -188,15 +183,18 @@
             }
 
             .copy-btn {
-                background: var(--arc-primary);
-                color: white;
-                box-shadow: var(--arc-shadow-md);
+                background: #f9fafc;
+                color: #585efb;
+                border: 1.5px solid var(--arc-border);
+                box-shadow: var(--arc-shadow-sm);
             }
 
             .copy-btn:hover {
-                background: var(--arc-primary-hover);
+                background: var(--arc-background);
+                border-color: var(--arc-primary);
+                color: var(--arc-primary);
                 transform: translateY(-1px);
-                box-shadow: var(--arc-shadow-lg);
+                box-shadow: var(--arc-shadow-md);
             }
 
             .copy-btn:active {
@@ -204,8 +202,8 @@
             }
 
             .markdown-btn {
-                background: var(--arc-surface);
-                color: var(--arc-text-primary);
+                background: #f9fafc;
+                color: #585efb;
                 border: 1.5px solid var(--arc-border);
             }
 
