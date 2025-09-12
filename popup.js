@@ -269,7 +269,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         fallbackCopy(markdownLink);
       }
 
-      showMarkdownButtonSuccess();
       showArcNotification(MESSAGES.MARKDOWN_COPIED);
     } catch (error) {
       console.error("Markdown复制失败:", error);
@@ -278,7 +277,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("特殊页面，使用fallback复制 Markdown");
         try {
           fallbackCopy(markdownLink);
-          showMarkdownButtonSuccess();
           showArcNotification(MESSAGES.MARKDOWN_COPIED);
         } catch (fallbackError) {
           console.error("特殊页面 Markdown 降级复制失败:", fallbackError);
@@ -287,7 +285,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else {
         try {
           fallbackCopy(markdownLink);
-          showMarkdownButtonSuccess();
           showArcNotification(MESSAGES.MARKDOWN_COPIED);
         } catch (fallbackError) {
           console.error("Markdown降级复制也失败:", fallbackError);
@@ -297,39 +294,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 显示按钮复制成功状态
-  function showButtonSuccess() {
-    const button = elements.copyBtn;
-    const originalHTML = button.innerHTML;
-
-    // 添加成功样式
-    button.classList.add("success");
-
-    // 0.5秒后恢复原状
-    setTimeout(() => {
-      button.classList.remove("success");
-      button.innerHTML = originalHTML;
-    }, 500);
-  }
-
-  // 显示 markdown 按钮复制成功状态
-  function showMarkdownButtonSuccess() {
-    const button = elements.markdownBtn;
-    const originalHTML = button.innerHTML;
-
-    // 添加成功样式
-    button.classList.add("success");
-
-    // 0.5秒后恢复原状
-    setTimeout(() => {
-      button.classList.remove("success");
-      button.innerHTML = originalHTML;
-    }, 500);
-  }
 
   // 显示复制成功状态
   function showStatus() {
     // 显示按钮交互效果
-    showButtonSuccess();
 
     // 显示Arc风格通知
     showArcNotification(MESSAGES.URL_COPIED);
