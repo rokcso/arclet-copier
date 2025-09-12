@@ -1,17 +1,33 @@
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
-  const EXTENSION_NAME = "Arclet Copier";
-  const MESSAGES = {
-    URL_COPIED: "URL 已复制到剪贴板！",
-    MARKDOWN_COPIED: "Markdown 链接已复制到剪贴板！",
-    NO_URL: "无法获取 URL",
-    GET_URL_FAILED: "获取 URL 失败",
-    LOADING: "获取 URL 中...",
-    COPY_BTN_DEFAULT: "复制 URL",
-    COPY_BTN_SUCCESS: "已复制！",
-    MARKDOWN_BTN_DEFAULT: "复制为 Markdown",
-    MARKDOWN_BTN_SUCCESS: "已复制！",
-  };
+  const EXTENSION_NAME = chrome.i18n.getMessage("extName");
+
+  // Locale data
+  let currentLocale = "zh_CN";
+  let localeMessages = {};
+
+  // Load locale messages
+  async function loadLocaleMessages(locale) {
+    try {
+      const response = await fetch(
+        chrome.runtime.getURL(`_locales/${locale}/messages.json`),
+      );
+      const messages = await response.json();
+      return messages;
+    } catch (error) {
+      console.error("Failed to load locale messages:", error);
+      return {};
+    }
+  }
+
+  // i18n helper function
+  function getMessage(key, substitutions = []) {
+    if (localeMessages[key] && localeMessages[key].message) {
+      return localeMessages[key].message;
+    }
+    // Fallback to Chrome i18n API
+    return chrome.i18n.getMessage(key, substitutions) || key;
+  }
 
   // DOM elements
   const elements = {
@@ -21,10 +37,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
+    languageSelect: document.getElementById("languageSelect"),
   };
 
   let currentUrl = "";
   let currentTitle = "";
+
+  // Initialize localization
+  async function initializeI18n(locale) {
+    if (locale) {
+      currentLocale = locale;
+    }
+
+    // Load messages for current locale
+    localeMessages = await loadLocaleMessages(currentLocale);
+
+    // Apply localization to all elements with data-i18n attribute
+    const i18nElements = document.querySelectorAll("[data-i18n]");
+    i18nElements.forEach((element) => {
+      const key = element.getAttribute("data-i18n");
+      const message = getMessage(key);
+      if (message && message !== key) {
+        if (element.tagName === "INPUT" && element.type === "text") {
+          element.placeholder = message;
+        } else {
+          element.textContent = message;
+        }
+      }
+    });
+  }
 
   // 初始化切换开关
   function initializeToggleSwitch() {
@@ -53,6 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const result = await chrome.storage.sync.get([
       "removeParams",
       "silentCopyFormat",
+      "language",
     ]);
 
     const removeParams = result.removeParams || false;
@@ -68,6 +110,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     elements.silentCopyFormat.value = result.silentCopyFormat || "url";
+
+    // Load language setting, default to browser language or zh_CN
+    const browserLang = chrome.i18n.getUILanguage();
+    const defaultLang = browserLang.startsWith("zh") ? "zh_CN" : "en";
+    const savedLanguage = result.language || defaultLang;
+    elements.languageSelect.value = savedLanguage;
+    currentLocale = savedLanguage;
   }
 
   // 保存设置
@@ -78,7 +127,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     await chrome.storage.sync.set({
       removeParams: removeParams,
       silentCopyFormat: elements.silentCopyFormat.value,
+      language: elements.languageSelect.value,
     });
+  }
+
+  // Handle language change
+  async function handleLanguageChange() {
+    const newLocale = elements.languageSelect.value;
+    if (newLocale !== currentLocale) {
+      // Update locale and re-initialize UI
+      await initializeI18n(newLocale);
+      await saveSettings();
+
+      // Update URL display with new language
+      updateUrlDisplay();
+
+      // Show notification in new language
+      showArcNotification(
+        getMessage("languageChangeNotification") ||
+          "Language changed successfully!",
+      );
+    }
   }
 
   // 处理URL参数
@@ -143,11 +212,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         updateUrlDisplay();
       } else {
-        handleError(MESSAGES.NO_URL);
+        handleError(getMessage("noUrl"));
       }
     } catch (error) {
       console.error("获取 URL 失败:", error);
-      handleError(MESSAGES.GET_URL_FAILED);
+      handleError(getMessage("getUrlFailed"));
     }
   }
 
@@ -269,7 +338,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         fallbackCopy(markdownLink);
       }
 
-      showArcNotification(MESSAGES.MARKDOWN_COPIED);
+      showArcNotification(getMessage("markdownCopied"));
     } catch (error) {
       console.error("Markdown复制失败:", error);
       // 对于特殊页面，不要报错，只是静默失败并显示成功状态
@@ -277,7 +346,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("特殊页面，使用fallback复制 Markdown");
         try {
           fallbackCopy(markdownLink);
-          showArcNotification(MESSAGES.MARKDOWN_COPIED);
+          showArcNotification(getMessage("markdownCopied"));
         } catch (fallbackError) {
           console.error("特殊页面 Markdown 降级复制失败:", fallbackError);
           // 移除自动显示成功状态，避免在popup打开时误触发
@@ -285,7 +354,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else {
         try {
           fallbackCopy(markdownLink);
-          showArcNotification(MESSAGES.MARKDOWN_COPIED);
+          showArcNotification(getMessage("markdownCopied"));
         } catch (fallbackError) {
           console.error("Markdown降级复制也失败:", fallbackError);
         }
@@ -300,14 +369,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 显示按钮交互效果
 
     // 显示Arc风格通知
-    showArcNotification(MESSAGES.URL_COPIED);
+    showArcNotification(getMessage("urlCopied"));
 
     try {
       const notificationOptions = {
         type: "basic",
         iconUrl: "icons/icon128.png",
         title: EXTENSION_NAME,
-        message: MESSAGES.URL_COPIED,
+        message: getMessage("urlCopied"),
       };
 
       chrome.notifications.create(notificationOptions, (notificationId) => {
@@ -327,6 +396,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   elements.markdownBtn.addEventListener("click", copyMarkdown);
 
   elements.silentCopyFormat.addEventListener("change", saveSettings);
+  elements.languageSelect.addEventListener("change", handleLanguageChange);
 
   // 键盘快捷键
   document.addEventListener("keydown", (e) => {
@@ -339,5 +409,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 初始化
   initializeToggleSwitch();
   await loadSettings();
+  await initializeI18n(); // Load UI with saved language
   await getCurrentUrl();
 });

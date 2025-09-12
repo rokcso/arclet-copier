@@ -21,6 +21,7 @@ const filesToInclude = [
   "offscreen.js",
   "styles.css",
   "icons/",
+  "_locales/",
 ];
 
 console.log(`🏗️  开始构建 Arclet Copier v${version}...`);

@@ -1,14 +1,12 @@
 // Background script for handling keyboard shortcuts and URL copying
 
 // Constants
-const EXTENSION_NAME = "Arclet Copier";
-const MESSAGES = {
-  URL_COPIED: "URL 已复制到剪贴板！",
-  COPY_FAILED: "复制失败，请重试",
-  NO_URL: "无法获取当前页面 URL",
-  NO_TAB: "无法获取当前标签页",
-  RESTRICTED_PAGE: "当前页面为系统页面，请点击扩展图标使用复制功能",
-};
+const EXTENSION_NAME = chrome.i18n.getMessage("extName");
+
+// i18n helper function
+function getMessage(key, substitutions = []) {
+  return chrome.i18n.getMessage(key, substitutions);
+}
 
 // 监听键盘快捷键命令
 chrome.commands.onCommand.addListener(async (command) => {
@@ -39,7 +37,7 @@ async function getCurrentTab() {
   });
 
   if (!tab || !tab.url) {
-    throw new Error(MESSAGES.NO_URL);
+    throw new Error(getMessage("noUrl"));
   }
 
   return tab;
@@ -115,11 +113,11 @@ async function handleCopyUrl() {
       // 获取页面标题并创建 markdown 链接
       const title = await getPageTitle(tab.id, tab.url);
       contentToCopy = createMarkdownLink(tab.url, title, settings.removeParams);
-      successMessage = "Markdown 链接已复制到剪贴板！";
+      successMessage = getMessage("markdownLinkCopied");
     } else {
       // 默认复制 URL
       contentToCopy = processUrl(tab.url, settings.removeParams);
-      successMessage = MESSAGES.URL_COPIED;
+      successMessage = getMessage("urlCopied");
     }
 
     await copyToClipboard(contentToCopy);
@@ -127,9 +125,9 @@ async function handleCopyUrl() {
   } catch (error) {
     console.error("复制 URL 失败:", error);
     const message =
-      error.message === MESSAGES.NO_URL
-        ? MESSAGES.NO_URL
-        : MESSAGES.COPY_FAILED;
+      error.message === getMessage("noUrl")
+        ? getMessage("noUrl")
+        : getMessage("copyFailed");
     showNotification(EXTENSION_NAME, message);
   }
 }
