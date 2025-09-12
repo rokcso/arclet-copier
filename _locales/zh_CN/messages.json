@@ -3,7 +3,7 @@
     "message": "Arclet Copier"
   },
   "extDescription": {
-    "message": "快速复制当前页面的 URL，支持参数过滤功能和 Markdown 链接格式化"
+    "message": "快速复制当前页面的 URL，支持参数过滤功能和 Markdown 链接格式化。"
   },
   "copyUrlShortcut": {
     "message": "静默复制"
@@ -36,19 +36,19 @@
     "message": "Markdown"
   },
   "languageEn": {
-    "message": "English"
+    "message": "🇺🇸 English"
   },
   "languageZh": {
-    "message": "简体中文"
+    "message": "🇨🇳 简体中文"
   },
   "gettingUrl": {
     "message": "获取 URL 中..."
   },
   "urlCopied": {
-    "message": "URL 已复制到剪贴板！"
+    "message": "URL 已复制到剪贴板"
   },
   "markdownCopied": {
-    "message": "Markdown 链接已复制到剪贴板！"
+    "message": "Markdown 链接已复制到剪贴板"
   },
   "noUrl": {
     "message": "无法获取 URL"
@@ -66,12 +66,21 @@
     "message": "当前页面为系统页面，请点击扩展图标使用复制功能"
   },
   "markdownLinkCopied": {
-    "message": "Markdown 链接已复制到剪贴板！"
+    "message": "Markdown 链接已复制到剪贴板"
   },
   "copied": {
-    "message": "已复制！"
+    "message": "已复制"
   },
   "languageChangeNotification": {
-    "message": "语言切换成功！"
+    "message": "语言切换成功"
+  },
+  "removeParamsEnabled": {
+    "message": "已开启 URL 参数过滤"
+  },
+  "removeParamsDisabled": {
+    "message": "已关闭 URL 参数过滤"
+  },
+  "silentCopyFormatChanged": {
+    "message": "静默复制格式已更改"
   }
 }

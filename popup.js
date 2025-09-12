@@ -79,9 +79,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (isActive) {
         toggleSwitch.classList.remove("active");
         if (hiddenInput) hiddenInput.checked = false;
+        showArcNotification(getMessage("removeParamsDisabled"));
       } else {
         toggleSwitch.classList.add("active");
         if (hiddenInput) hiddenInput.checked = true;
+        showArcNotification(getMessage("removeParamsEnabled"));
       }
 
       saveSettings();
@@ -148,6 +150,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           "Language changed successfully!",
       );
     }
+  }
+
+  // Handle silent copy format change
+  async function handleSilentCopyFormatChange() {
+    await saveSettings();
+    showArcNotification(getMessage("silentCopyFormatChanged"));
   }
 
   // 处理URL参数
@@ -274,7 +282,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     setTimeout(() => {
       elements.status.classList.remove("show");
-    }, 500);
+    }, 2000);
   }
 
   // 复制URL到剪贴板
@@ -395,7 +403,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   elements.copyBtn.addEventListener("click", copyUrl);
   elements.markdownBtn.addEventListener("click", copyMarkdown);
 
-  elements.silentCopyFormat.addEventListener("change", saveSettings);
+  elements.silentCopyFormat.addEventListener(
+    "change",
+    handleSilentCopyFormatChange,
+  );
   elements.languageSelect.addEventListener("change", handleLanguageChange);
 
   // 键盘快捷键

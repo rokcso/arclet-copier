@@ -3,7 +3,7 @@
     "message": "Arclet Copier"
   },
   "extDescription": {
-    "message": "Quickly copy current page URL with parameter filtering and Markdown formatting support"
+    "message": "Quickly copy current page URL with parameter filtering and Markdown formatting support."
   },
   "copyUrlShortcut": {
     "message": "Silent Copy"
@@ -36,19 +36,19 @@
     "message": "Markdown"
   },
   "languageEn": {
-    "message": "English"
+    "message": "🇺🇸 English"
   },
   "languageZh": {
-    "message": "简体中文"
+    "message": "🇨🇳 简体中文"
   },
   "gettingUrl": {
     "message": "Getting URL..."
   },
   "urlCopied": {
-    "message": "URL copied to clipboard!"
+    "message": "URL copied to clipboard"
   },
   "markdownCopied": {
-    "message": "Markdown link copied to clipboard!"
+    "message": "Markdown link copied to clipboard"
   },
   "noUrl": {
     "message": "Unable to get URL"
@@ -66,12 +66,21 @@
     "message": "Current page is a system page, please click the extension icon to use copy function"
   },
   "markdownLinkCopied": {
-    "message": "Markdown link copied to clipboard!"
+    "message": "Markdown link copied to clipboard"
   },
   "copied": {
-    "message": "Copied!"
+    "message": "Copied"
   },
   "languageChangeNotification": {
-    "message": "Language changed successfully!"
+    "message": "Language changed successfully"
+  },
+  "removeParamsEnabled": {
+    "message": "URL parameter filtering enabled"
+  },
+  "removeParamsDisabled": {
+    "message": "URL parameter filtering disabled"
+  },
+  "silentCopyFormatChanged": {
+    "message": "Silent copy format changed"
   }
 }
