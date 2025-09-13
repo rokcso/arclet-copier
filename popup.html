@@ -247,7 +247,8 @@
                 position: fixed;
                 top: 20px;
                 left: 50%;
-                transform: translateX(-50%) translateY(-10px);
+                transform: translateX(-50%) scale(0.3);
+                transform-origin: center top;
                 background: #86efac;
                 color: #166534;
                 padding: 12px 16px;
@@ -255,7 +256,7 @@
                 font-size: 14px;
                 font-weight: 600;
                 opacity: 0;
-                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
                 box-shadow: 0 4px 12px rgba(134, 239, 172, 0.4);
                 z-index: 1000;
                 display: flex;
@@ -268,7 +269,7 @@
 
             .status-notification.show {
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
+                transform: translateX(-50%) scale(1);
             }
 
             .settings {
