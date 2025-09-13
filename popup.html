@@ -487,6 +487,10 @@
                 box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
             }
 
+            [data-theme="dark"] .action-button::before {
+                display: none;
+            }
+
             /* 自动检测系统主题 */
             @media (prefers-color-scheme: dark) {
                 :root:not([data-theme]) {
@@ -581,6 +585,10 @@
                     color: #d1fae5;
                     border-color: #10b981;
                     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+                }
+
+                :root:not([data-theme]) .action-button::before {
+                    display: none;
                 }
             }
 
