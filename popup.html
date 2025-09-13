@@ -330,29 +330,31 @@
                 transform: translateX(24px);
             }
 
-            /* 三段URL清理开关 */
+            /* 自适应三段开关 */
             .three-way-switch {
                 position: relative;
-                width: 140px;
                 height: 32px;
                 background: var(--arc-surface);
                 border: 1.5px solid var(--arc-border);
                 border-radius: 16px;
                 cursor: pointer;
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                display: flex;
+                display: inline-flex;
                 align-items: center;
-                justify-content: space-between;
                 padding: 2px;
+                min-width: fit-content;
+
+                /* CSS变量用于动态控制滑块 */
+                --slider-width: 44px;
+                --slider-x: 0px;
             }
 
             .three-way-switch .switch-option {
-                flex: 1;
                 height: 26px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 9px;
+                font-size: 11px;
                 font-weight: 500;
                 color: var(--arc-text-muted);
                 transition: color 0.3s ease;
@@ -362,40 +364,26 @@
                 letter-spacing: 0.01em;
                 text-transform: none;
                 white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                padding: 0 2px;
+                padding: 0 12px;
+                min-width: 40px;
+                box-sizing: border-box;
             }
 
             .three-way-switch .switch-slider {
                 position: absolute;
                 top: 2px;
                 left: 2px;
-                width: 42px;
+                width: var(--slider-width);
                 height: 26px;
                 background: var(--arc-primary);
                 border-radius: 13px;
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 box-shadow: var(--arc-shadow-sm);
                 z-index: 1;
+                transform: translateX(var(--slider-x));
             }
 
-            .three-way-switch[data-value="off"] .switch-slider {
-                transform: translateX(0);
-            }
-
-            .three-way-switch[data-value="smart"] .switch-slider {
-                transform: translateX(47px);
-            }
-
-            .three-way-switch[data-value="aggressive"] .switch-slider {
-                transform: translateX(94px);
-            }
-
-            .three-way-switch[data-value="off"] .switch-option:nth-child(1),
-            .three-way-switch[data-value="smart"] .switch-option:nth-child(2),
-            .three-way-switch[data-value="aggressive"]
-                .switch-option:nth-child(3) {
+            .three-way-switch .switch-option.active {
                 color: white;
                 font-weight: 600;
             }
@@ -545,15 +533,7 @@
                 color: var(--arc-text-muted);
             }
 
-            [data-theme="dark"]
-                .three-way-switch[data-value="off"]
-                .switch-option:nth-child(1),
-            [data-theme="dark"]
-                .three-way-switch[data-value="smart"]
-                .switch-option:nth-child(2),
-            [data-theme="dark"]
-                .three-way-switch[data-value="aggressive"]
-                .switch-option:nth-child(3) {
+            [data-theme="dark"] .three-way-switch .switch-option.active {
                 color: white;
             }
 
@@ -667,14 +647,8 @@
                 }
 
                 :root:not([data-theme])
-                    .three-way-switch[data-value="off"]
-                    .switch-option:nth-child(1),
-                :root:not([data-theme])
-                    .three-way-switch[data-value="smart"]
-                    .switch-option:nth-child(2),
-                :root:not([data-theme])
-                    .three-way-switch[data-value="aggressive"]
-                    .switch-option:nth-child(3) {
+                    .three-way-switch
+                    .switch-option.active {
                     color: white;
                 }
 
@@ -1054,17 +1028,22 @@
                     <span class="setting-label" data-i18n="appearance"
                         >Appearance</span
                     >
-                    <select id="appearanceSelect" class="format-select">
-                        <option value="system" data-i18n="appearanceSystem">
+                    <div
+                        class="three-way-switch"
+                        id="appearanceSwitch"
+                        data-value="system"
+                    >
+                        <div class="switch-option" data-i18n="appearanceSystem">
                             Follow System
-                        </option>
-                        <option value="light" data-i18n="appearanceLight">
+                        </div>
+                        <div class="switch-option" data-i18n="appearanceLight">
                             Light
-                        </option>
-                        <option value="dark" data-i18n="appearanceDark">
+                        </div>
+                        <div class="switch-option" data-i18n="appearanceDark">
                             Dark
-                        </option>
-                    </select>
+                        </div>
+                        <div class="switch-slider"></div>
+                    </div>
                 </div>
 
                 <div class="setting-item">

@@ -93,13 +93,13 @@
     "message": "外观"
   },
   "appearanceSystem": {
-    "message": "跟随系统"
+    "message": "自动"
   },
   "appearanceLight": {
-    "message": "浅色模式"
+    "message": "明亮"
   },
   "appearanceDark": {
-    "message": "深色模式"
+    "message": "黑暗"
   },
   "appearanceChanged": {
     "message": "外观切换成功"

@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
-    appearanceSelect: document.getElementById("appearanceSelect"),
+    appearanceSwitch: document.getElementById("appearanceSwitch"),
     languageSelect: document.getElementById("languageSelect"),
     version: document.getElementById("version"),
     qrModal: document.getElementById("qrModal"),
@@ -151,52 +151,80 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 初始化URL清理选择器
-  function initializeUrlCleaningSelect() {
-    const cleaningSwitch = elements.removeParamsToggle;
-    const switchOptions = cleaningSwitch.querySelectorAll(".switch-option");
+  // 通用三段滑块初始化函数
+  function initializeThreeWaySwitch(switchElement, options, onChange) {
+    if (!switchElement) return;
+
+    const switchOptions = switchElement.querySelectorAll(".switch-option");
+
+    // 计算滑块的自适应位置和宽度
+    function updateSliderPosition() {
+      const currentValue = switchElement.getAttribute("data-value");
+      const currentIndex = options.findIndex(
+        (opt) => opt.value === currentValue,
+      );
+
+      if (currentIndex === -1) return;
+
+      // 清除所有active状态
+      switchOptions.forEach((option) => option.classList.remove("active"));
+
+      // 设置当前选项为active
+      if (switchOptions[currentIndex]) {
+        switchOptions[currentIndex].classList.add("active");
+      }
+
+      // 计算滑块位置和宽度
+      const optionWidth = switchOptions[currentIndex].offsetWidth;
+      const optionLeft = switchOptions[currentIndex].offsetLeft;
+
+      // 更新CSS变量来控制滑块
+      switchElement.style.setProperty("--slider-width", `${optionWidth}px`);
+      switchElement.style.setProperty("--slider-x", `${optionLeft}px`);
+    }
 
     // 为每个选项添加点击事件
     switchOptions.forEach((option, index) => {
       option.addEventListener("click", () => {
-        let mode = "";
-        switch (index) {
-          case 0:
-            mode = "off";
-            break;
-          case 1:
-            mode = "smart";
-            break;
-          case 2:
-            mode = "aggressive";
-            break;
+        const newValue = options[index].value;
+        switchElement.setAttribute("data-value", newValue);
+        updateSliderPosition();
+
+        if (onChange) {
+          onChange(newValue, options[index]);
         }
-
-        // 更新开关状态
-        cleaningSwitch.setAttribute("data-value", mode);
-
-        // 显示通知
-        let notificationKey = "";
-        switch (mode) {
-          case "off":
-            notificationKey = "cleaningDisabled";
-            break;
-          case "smart":
-            notificationKey = "smartCleaningEnabled";
-            break;
-          case "aggressive":
-            notificationKey = "aggressiveCleaningEnabled";
-            break;
-        }
-
-        if (notificationKey) {
-          showArcNotification(getMessage(notificationKey));
-        }
-
-        saveSettings();
-        updateUrlDisplay();
       });
     });
+
+    // 初始化位置
+    updateSliderPosition();
+
+    // 窗口大小变化时重新计算
+    window.addEventListener("resize", updateSliderPosition);
+
+    return { updateSliderPosition };
+  }
+
+  // 初始化URL清理选择器
+  function initializeUrlCleaningSelect() {
+    const cleaningOptions = [
+      { value: "off", key: "cleaningDisabled" },
+      { value: "smart", key: "smartCleaningEnabled" },
+      { value: "aggressive", key: "aggressiveCleaningEnabled" },
+    ];
+
+    initializeThreeWaySwitch(
+      elements.removeParamsToggle,
+      cleaningOptions,
+      (value, option) => {
+        // 显示通知
+        if (option.key) {
+          showArcNotification(getMessage(option.key));
+        }
+        saveSettings();
+        updateUrlDisplay();
+      },
+    );
   }
 
   // 主题相关函数
@@ -217,30 +245,49 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 初始化外观滑块
+  function initializeAppearanceSwitch() {
+    const appearanceOptions = [
+      { value: "system", key: null },
+      { value: "light", key: null },
+      { value: "dark", key: null },
+    ];
+
+    return initializeThreeWaySwitch(
+      elements.appearanceSwitch,
+      appearanceOptions,
+      async (value) => {
+        applyTheme(value);
+        await saveSettings();
+        showArcNotification(
+          getMessage("appearanceChanged") || "Appearance changed successfully!",
+        );
+      },
+    );
+  }
+
   async function initializeTheme() {
     const result = await chrome.storage.sync.get(["appearance"]);
     const savedTheme = result.appearance || "system";
-    elements.appearanceSelect.value = savedTheme;
+
+    // 设置滑块初始值
+    if (elements.appearanceSwitch) {
+      elements.appearanceSwitch.setAttribute("data-value", savedTheme);
+    }
+
     applyTheme(savedTheme);
 
     // 监听系统主题变化
     if (window.matchMedia) {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       mediaQuery.addEventListener("change", () => {
-        if (elements.appearanceSelect.value === "system") {
+        const currentTheme =
+          elements.appearanceSwitch.getAttribute("data-value");
+        if (currentTheme === "system") {
           applyTheme("system");
         }
       });
     }
-  }
-
-  async function handleAppearanceChange() {
-    const selectedTheme = elements.appearanceSelect.value;
-    applyTheme(selectedTheme);
-    await saveSettings();
-    showArcNotification(
-      getMessage("appearanceChanged") || "Appearance changed successfully!",
-    );
   }
 
   // 加载设置
@@ -267,7 +314,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Load appearance setting
     const savedAppearance = result.appearance || "system";
-    elements.appearanceSelect.value = savedAppearance;
+    if (elements.appearanceSwitch) {
+      elements.appearanceSwitch.setAttribute("data-value", savedAppearance);
+    }
 
     // Load language setting, default to browser language or zh_CN
     const browserLang = chrome.i18n.getUILanguage();
@@ -280,11 +329,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 保存设置
   async function saveSettings() {
     const cleaningSelect = elements.removeParamsToggle;
+    const appearanceSwitch = elements.appearanceSwitch;
 
     await chrome.storage.sync.set({
       urlCleaning: cleaningSelect.getAttribute("data-value"),
       silentCopyFormat: elements.silentCopyFormat.value,
-      appearance: elements.appearanceSelect.value,
+      appearance: appearanceSwitch.getAttribute("data-value"),
       language: elements.languageSelect.value,
     });
   }
@@ -669,7 +719,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     "change",
     handleSilentCopyFormatChange,
   );
-  elements.appearanceSelect.addEventListener("change", handleAppearanceChange);
   elements.languageSelect.addEventListener("change", handleLanguageChange);
 
   // 键盘快捷键
@@ -682,10 +731,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 初始化
   loadVersion(); // Load version from manifest
-  initializeUrlCleaningSelect();
+  const urlCleaningSwitch = initializeUrlCleaningSelect();
+  const appearanceSwitch = initializeAppearanceSwitch();
   initializeQRModal(); // Initialize QR modal
   await loadSettings();
   await initializeTheme(); // Initialize theme after loading settings
   await initializeI18n(); // Load UI with saved language
   await getCurrentUrl();
+
+  // 在DOM和本地化完成后重新计算滑块位置
+  setTimeout(() => {
+    if (urlCleaningSwitch && urlCleaningSwitch.updateSliderPosition) {
+      urlCleaningSwitch.updateSliderPosition();
+    }
+    if (appearanceSwitch && appearanceSwitch.updateSliderPosition) {
+      appearanceSwitch.updateSliderPosition();
+    }
+  }, 100);
 });
