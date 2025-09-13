@@ -20,7 +20,7 @@ const filesToInclude = [
   "offscreen.html",
   "offscreen.js",
   "qrcode.min.js",
-  "styles.css",
+  "style.css",
   "icons/",
   "_locales/",
 ];
