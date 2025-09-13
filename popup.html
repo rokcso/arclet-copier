@@ -263,13 +263,28 @@
                 align-items: center;
                 justify-content: center;
                 min-width: 200px;
-                white-space: nowrap;
+                max-width: 323px;
+                width: fit-content;
+                text-align: center;
+                line-height: 1.4;
+                word-wrap: break-word;
+                hyphens: auto;
                 border: 1.5px solid #22c55e;
+                box-sizing: border-box;
             }
 
             .status-notification.show {
                 opacity: 1;
                 transform: translateX(-50%) scale(1);
+            }
+
+            .notification-text {
+                display: block;
+                width: 100%;
+                text-align: center;
+                line-height: 1.4;
+                word-wrap: break-word;
+                white-space: normal;
             }
 
             .settings {
