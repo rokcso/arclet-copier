@@ -153,30 +153,49 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 初始化URL清理选择器
   function initializeUrlCleaningSelect() {
-    const cleaningSelect = elements.removeParamsToggle;
+    const cleaningSwitch = elements.removeParamsToggle;
+    const switchOptions = cleaningSwitch.querySelectorAll(".switch-option");
 
-    cleaningSelect.addEventListener("change", () => {
-      const mode = cleaningSelect.value;
-      let notificationKey = "";
+    // 为每个选项添加点击事件
+    switchOptions.forEach((option, index) => {
+      option.addEventListener("click", () => {
+        let mode = "";
+        switch (index) {
+          case 0:
+            mode = "off";
+            break;
+          case 1:
+            mode = "smart";
+            break;
+          case 2:
+            mode = "aggressive";
+            break;
+        }
 
-      switch (mode) {
-        case "off":
-          notificationKey = "cleaningDisabled";
-          break;
-        case "smart":
-          notificationKey = "smartCleaningEnabled";
-          break;
-        case "aggressive":
-          notificationKey = "aggressiveCleaningEnabled";
-          break;
-      }
+        // 更新开关状态
+        cleaningSwitch.setAttribute("data-value", mode);
 
-      if (notificationKey) {
-        showArcNotification(getMessage(notificationKey));
-      }
+        // 显示通知
+        let notificationKey = "";
+        switch (mode) {
+          case "off":
+            notificationKey = "cleaningDisabled";
+            break;
+          case "smart":
+            notificationKey = "smartCleaningEnabled";
+            break;
+          case "aggressive":
+            notificationKey = "aggressiveCleaningEnabled";
+            break;
+        }
 
-      saveSettings();
-      updateUrlDisplay();
+        if (notificationKey) {
+          showArcNotification(getMessage(notificationKey));
+        }
+
+        saveSettings();
+        updateUrlDisplay();
+      });
     });
   }
 
@@ -239,10 +258,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!cleaningMode && typeof result.removeParams === "boolean") {
       cleaningMode = result.removeParams ? "aggressive" : "off";
     }
-    cleaningMode = cleaningMode || "off";
+    cleaningMode = cleaningMode || "smart";
 
     const cleaningSelect = elements.removeParamsToggle;
-    cleaningSelect.value = cleaningMode;
+    cleaningSelect.setAttribute("data-value", cleaningMode);
 
     elements.silentCopyFormat.value = result.silentCopyFormat || "url";
 
@@ -263,7 +282,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cleaningSelect = elements.removeParamsToggle;
 
     await chrome.storage.sync.set({
-      urlCleaning: cleaningSelect.value,
+      urlCleaning: cleaningSelect.getAttribute("data-value"),
       silentCopyFormat: elements.silentCopyFormat.value,
       appearance: elements.appearanceSelect.value,
       language: elements.languageSelect.value,
@@ -323,7 +342,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 智能处理URL参数
-  function processUrl(url, cleaningMode = "off") {
+  function processUrl(url, cleaningMode = "smart") {
     if (!url || cleaningMode === "off") {
       return url;
     }
@@ -423,7 +442,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 更新URL显示
   function updateUrlDisplay() {
     const cleaningSelect = elements.removeParamsToggle;
-    const cleaningMode = cleaningSelect.value;
+    const cleaningMode = cleaningSelect.getAttribute("data-value");
     const processedUrl = processUrl(currentUrl, cleaningMode);
     elements.urlDisplay.textContent = processedUrl;
   }
@@ -473,7 +492,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 复制URL到剪贴板
   async function copyUrl() {
     const cleaningSelect = elements.removeParamsToggle;
-    const cleaningMode = cleaningSelect.value;
+    const cleaningMode = cleaningSelect.getAttribute("data-value");
     const processedUrl = processUrl(currentUrl, cleaningMode);
 
     try {
@@ -512,7 +531,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 创建 markdown 链接格式
   function createMarkdownLink(url, title) {
     const cleaningSelect = elements.removeParamsToggle;
-    const cleaningMode = cleaningSelect.value;
+    const cleaningMode = cleaningSelect.getAttribute("data-value");
     const processedUrl = processUrl(url, cleaningMode);
     const linkTitle = title || new URL(url).hostname;
     return `[${linkTitle}](${processedUrl})`;
@@ -613,7 +632,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 显示二维码模态框
   function showQRModal() {
     const cleaningSelect = elements.removeParamsToggle;
-    const cleaningMode = cleaningSelect.value;
+    const cleaningMode = cleaningSelect.getAttribute("data-value");
     const processedUrl = processUrl(currentUrl, cleaningMode);
 
     generateQRCode(processedUrl);

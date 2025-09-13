@@ -330,6 +330,76 @@
                 transform: translateX(24px);
             }
 
+            /* 三段URL清理开关 */
+            .three-way-switch {
+                position: relative;
+                width: 140px;
+                height: 32px;
+                background: var(--arc-surface);
+                border: 1.5px solid var(--arc-border);
+                border-radius: 16px;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 2px;
+            }
+
+            .three-way-switch .switch-option {
+                flex: 1;
+                height: 26px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 9px;
+                font-weight: 500;
+                color: var(--arc-text-muted);
+                transition: color 0.3s ease;
+                z-index: 2;
+                position: relative;
+                border-radius: 13px;
+                letter-spacing: 0.01em;
+                text-transform: none;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 0 2px;
+            }
+
+            .three-way-switch .switch-slider {
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                width: 42px;
+                height: 26px;
+                background: var(--arc-primary);
+                border-radius: 13px;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: var(--arc-shadow-sm);
+                z-index: 1;
+            }
+
+            .three-way-switch[data-value="off"] .switch-slider {
+                transform: translateX(0);
+            }
+
+            .three-way-switch[data-value="smart"] .switch-slider {
+                transform: translateX(47px);
+            }
+
+            .three-way-switch[data-value="aggressive"] .switch-slider {
+                transform: translateX(94px);
+            }
+
+            .three-way-switch[data-value="off"] .switch-option:nth-child(1),
+            .three-way-switch[data-value="smart"] .switch-option:nth-child(2),
+            .three-way-switch[data-value="aggressive"]
+                .switch-option:nth-child(3) {
+                color: white;
+                font-weight: 600;
+            }
+
             .format-select {
                 padding: 8px 12px;
                 border: 1.5px solid var(--arc-border);
@@ -466,6 +536,27 @@
                 background: var(--arc-text-primary);
             }
 
+            [data-theme="dark"] .three-way-switch {
+                background: var(--arc-surface);
+                border-color: var(--arc-border);
+            }
+
+            [data-theme="dark"] .three-way-switch .switch-option {
+                color: var(--arc-text-muted);
+            }
+
+            [data-theme="dark"]
+                .three-way-switch[data-value="off"]
+                .switch-option:nth-child(1),
+            [data-theme="dark"]
+                .three-way-switch[data-value="smart"]
+                .switch-option:nth-child(2),
+            [data-theme="dark"]
+                .three-way-switch[data-value="aggressive"]
+                .switch-option:nth-child(3) {
+                color: white;
+            }
+
             [data-theme="dark"] .qr-modal-content {
                 background: var(--arc-background);
                 border-color: var(--arc-border);
@@ -564,6 +655,27 @@
 
                 :root:not([data-theme]) .toggle-switch::after {
                     background: var(--arc-text-primary);
+                }
+
+                :root:not([data-theme]) .three-way-switch {
+                    background: var(--arc-surface);
+                    border-color: var(--arc-border);
+                }
+
+                :root:not([data-theme]) .three-way-switch .switch-option {
+                    color: var(--arc-text-muted);
+                }
+
+                :root:not([data-theme])
+                    .three-way-switch[data-value="off"]
+                    .switch-option:nth-child(1),
+                :root:not([data-theme])
+                    .three-way-switch[data-value="smart"]
+                    .switch-option:nth-child(2),
+                :root:not([data-theme])
+                    .three-way-switch[data-value="aggressive"]
+                    .switch-option:nth-child(3) {
+                    color: white;
                 }
 
                 :root:not([data-theme]) .qr-modal-content {
@@ -905,18 +1017,25 @@
                     <span class="setting-label" data-i18n="urlCleaning"
                         >URL Cleaning</span
                     >
-                    <select id="removeParamsToggle" class="format-select">
-                        <option value="off" data-i18n="cleaningOff">Off</option>
-                        <option value="smart" data-i18n="cleaningSmart">
+                    <div
+                        class="three-way-switch"
+                        id="removeParamsToggle"
+                        data-value="smart"
+                    >
+                        <div class="switch-option" data-i18n="cleaningOff">
+                            Off
+                        </div>
+                        <div class="switch-option" data-i18n="cleaningSmart">
                             Smart
-                        </option>
-                        <option
-                            value="aggressive"
+                        </div>
+                        <div
+                            class="switch-option"
                             data-i18n="cleaningAggressive"
                         >
-                            All Parameters
-                        </option>
-                    </select>
+                            All
+                        </div>
+                        <div class="switch-slider"></div>
+                    </div>
                 </div>
 
                 <div class="setting-item">

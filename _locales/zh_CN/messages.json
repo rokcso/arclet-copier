@@ -111,10 +111,10 @@
     "message": "关闭"
   },
   "cleaningSmart": {
-    "message": "智能清理"
+    "message": "智能"
   },
   "cleaningAggressive": {
-    "message": "清除所有参数"
+    "message": "所有"
   },
   "cleaningDisabled": {
     "message": "已关闭 URL 清理"
