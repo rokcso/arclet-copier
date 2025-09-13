@@ -393,22 +393,168 @@
             }
 
             /* 深色模式适配 */
+            [data-theme="dark"] {
+                --arc-primary: #6366f1;
+                --arc-primary-hover: #5b61f0;
+                --arc-secondary: #1e293b;
+                --arc-success: #10b981;
+                --arc-background: #0f172a;
+                --arc-surface: #1e293b;
+                --arc-border: #334155;
+                --arc-text-primary: #f1f5f9;
+                --arc-text-secondary: #cbd5e1;
+                --arc-text-muted: #64748b;
+                --arc-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+                --arc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+                --arc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+            }
+
+            [data-theme="dark"] .container {
+                background: linear-gradient(
+                    135deg,
+                    var(--arc-background) 0%,
+                    var(--arc-surface) 100%
+                );
+            }
+
+            [data-theme="dark"] .url-display {
+                background: #0f172a;
+                border: 1px solid #334155;
+                color: var(--arc-text-secondary);
+            }
+
+            [data-theme="dark"] .copy-btn,
+            [data-theme="dark"] .markdown-btn,
+            [data-theme="dark"] .qr-btn {
+                background: var(--arc-surface);
+                border: 1px solid var(--arc-border);
+                color: var(--arc-text-primary);
+            }
+
+            [data-theme="dark"] .copy-btn:hover,
+            [data-theme="dark"] .markdown-btn:hover,
+            [data-theme="dark"] .qr-btn:hover {
+                background: #334155;
+                color: var(--arc-primary);
+            }
+
+            [data-theme="dark"] .format-select {
+                background: var(--arc-surface);
+                border-color: var(--arc-border);
+                color: var(--arc-text-primary);
+            }
+
+            [data-theme="dark"] .toggle-switch {
+                background: var(--arc-border);
+            }
+
+            [data-theme="dark"] .toggle-switch::after {
+                background: var(--arc-text-primary);
+            }
+
+            [data-theme="dark"] .qr-modal-content {
+                background: var(--arc-background);
+                border-color: var(--arc-border);
+            }
+
+            [data-theme="dark"] .qr-modal-close:hover {
+                background: var(--arc-surface);
+            }
+
+            [data-theme="dark"] .qr-code-container,
+            [data-theme="dark"] .qr-url-display {
+                background: var(--arc-surface);
+                border-color: var(--arc-border);
+            }
+
+            [data-theme="dark"] .status-notification {
+                background: #065f46;
+                color: #d1fae5;
+                border-color: #10b981;
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            }
+
+            /* 自动检测系统主题 */
             @media (prefers-color-scheme: dark) {
-                :root {
+                :root:not([data-theme]) {
+                    --arc-primary: #6366f1;
+                    --arc-primary-hover: #5b61f0;
+                    --arc-secondary: #1e293b;
+                    --arc-success: #10b981;
                     --arc-background: #0f172a;
                     --arc-surface: #1e293b;
                     --arc-border: #334155;
                     --arc-text-primary: #f1f5f9;
                     --arc-text-secondary: #cbd5e1;
                     --arc-text-muted: #64748b;
+                    --arc-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+                    --arc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+                    --arc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3);
                 }
 
-                .container {
+                :root:not([data-theme]) .container {
                     background: linear-gradient(
                         135deg,
                         var(--arc-background) 0%,
                         var(--arc-surface) 100%
                     );
+                }
+
+                :root:not([data-theme]) .url-display {
+                    background: #0f172a;
+                    border: 1px solid #334155;
+                    color: var(--arc-text-secondary);
+                }
+
+                :root:not([data-theme]) .copy-btn,
+                :root:not([data-theme]) .markdown-btn,
+                :root:not([data-theme]) .qr-btn {
+                    background: var(--arc-surface);
+                    border: 1px solid var(--arc-border);
+                    color: var(--arc-text-primary);
+                }
+
+                :root:not([data-theme]) .copy-btn:hover,
+                :root:not([data-theme]) .markdown-btn:hover,
+                :root:not([data-theme]) .qr-btn:hover {
+                    background: #334155;
+                    color: var(--arc-primary);
+                }
+
+                :root:not([data-theme]) .format-select {
+                    background: var(--arc-surface);
+                    border-color: var(--arc-border);
+                    color: var(--arc-text-primary);
+                }
+
+                :root:not([data-theme]) .toggle-switch {
+                    background: var(--arc-border);
+                }
+
+                :root:not([data-theme]) .toggle-switch::after {
+                    background: var(--arc-text-primary);
+                }
+
+                :root:not([data-theme]) .qr-modal-content {
+                    background: var(--arc-background);
+                    border-color: var(--arc-border);
+                }
+
+                :root:not([data-theme]) .qr-modal-close:hover {
+                    background: var(--arc-surface);
+                }
+
+                :root:not([data-theme]) .qr-code-container,
+                :root:not([data-theme]) .qr-url-display {
+                    background: var(--arc-surface);
+                    border-color: var(--arc-border);
+                }
+
+                :root:not([data-theme]) .status-notification {
+                    background: #065f46;
+                    color: #d1fae5;
+                    border-color: #10b981;
+                    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
                 }
             }
 
@@ -736,6 +882,23 @@
                         <option value="url" data-i18n="formatUrl">URL</option>
                         <option value="markdown" data-i18n="formatMarkdown">
                             Markdown
+                        </option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label" data-i18n="appearance"
+                        >Appearance</span
+                    >
+                    <select id="appearanceSelect" class="format-select">
+                        <option value="system" data-i18n="appearanceSystem">
+                            Follow System
+                        </option>
+                        <option value="light" data-i18n="appearanceLight">
+                            Light
+                        </option>
+                        <option value="dark" data-i18n="appearanceDark">
+                            Dark
                         </option>
                     </select>
                 </div>

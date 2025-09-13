@@ -88,5 +88,20 @@
   },
   "qrCodeTitle": {
     "message": "QR Code"
+  },
+  "appearance": {
+    "message": "Appearance"
+  },
+  "appearanceSystem": {
+    "message": "Follow System"
+  },
+  "appearanceLight": {
+    "message": "Light"
+  },
+  "appearanceDark": {
+    "message": "Dark"
+  },
+  "appearanceChanged": {
+    "message": "Appearance changed successfully"
   }
 }

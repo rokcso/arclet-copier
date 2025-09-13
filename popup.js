@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
+    appearanceSelect: document.getElementById("appearanceSelect"),
     languageSelect: document.getElementById("languageSelect"),
     version: document.getElementById("version"),
     qrModal: document.getElementById("qrModal"),
@@ -106,11 +107,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // 主题相关函数
+  function detectSystemTheme() {
+    return window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  function applyTheme(theme) {
+    const htmlElement = document.documentElement;
+
+    if (theme === "system") {
+      htmlElement.removeAttribute("data-theme");
+    } else {
+      htmlElement.setAttribute("data-theme", theme);
+    }
+  }
+
+  async function initializeTheme() {
+    const result = await chrome.storage.sync.get(["appearance"]);
+    const savedTheme = result.appearance || "system";
+    elements.appearanceSelect.value = savedTheme;
+    applyTheme(savedTheme);
+
+    // 监听系统主题变化
+    if (window.matchMedia) {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      mediaQuery.addEventListener("change", () => {
+        if (elements.appearanceSelect.value === "system") {
+          applyTheme("system");
+        }
+      });
+    }
+  }
+
+  async function handleAppearanceChange() {
+    const selectedTheme = elements.appearanceSelect.value;
+    applyTheme(selectedTheme);
+    await saveSettings();
+    showArcNotification(
+      getMessage("appearanceChanged") || "Appearance changed successfully!",
+    );
+  }
+
   // 加载设置
   async function loadSettings() {
     const result = await chrome.storage.sync.get([
       "removeParams",
       "silentCopyFormat",
+      "appearance",
       "language",
     ]);
 
@@ -128,6 +174,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     elements.silentCopyFormat.value = result.silentCopyFormat || "url";
 
+    // Load appearance setting
+    const savedAppearance = result.appearance || "system";
+    elements.appearanceSelect.value = savedAppearance;
+
     // Load language setting, default to browser language or zh_CN
     const browserLang = chrome.i18n.getUILanguage();
     const defaultLang = browserLang.startsWith("zh") ? "zh_CN" : "en";
@@ -144,6 +194,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await chrome.storage.sync.set({
       removeParams: removeParams,
       silentCopyFormat: elements.silentCopyFormat.value,
+      appearance: elements.appearanceSelect.value,
       language: elements.languageSelect.value,
     });
   }
@@ -419,13 +470,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 清空容器
     elements.qrCodeContainer.innerHTML = "";
 
+    // 根据当前主题选择二维码颜色
+    const isDarkTheme =
+      document.documentElement.getAttribute("data-theme") === "dark" ||
+      (document.documentElement.getAttribute("data-theme") !== "light" &&
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+
     // 创建二维码
     new QRCode(elements.qrCodeContainer, {
       text: url,
       width: 200,
       height: 200,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
+      colorDark: isDarkTheme ? "#f1f5f9" : "#000000",
+      colorLight: isDarkTheme ? "#1e293b" : "#ffffff",
       correctLevel: QRCode.CorrectLevel.M,
     });
 
@@ -473,6 +531,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "change",
     handleSilentCopyFormatChange,
   );
+  elements.appearanceSelect.addEventListener("change", handleAppearanceChange);
   elements.languageSelect.addEventListener("change", handleLanguageChange);
 
   // 键盘快捷键
@@ -488,6 +547,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initializeToggleSwitch();
   initializeQRModal(); // Initialize QR modal
   await loadSettings();
+  await initializeTheme(); // Initialize theme after loading settings
   await initializeI18n(); // Load UI with saved language
   await getCurrentUrl();
 });

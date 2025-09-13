@@ -88,5 +88,20 @@
   },
   "qrCodeTitle": {
     "message": "二维码"
+  },
+  "appearance": {
+    "message": "外观"
+  },
+  "appearanceSystem": {
+    "message": "跟随系统"
+  },
+  "appearanceLight": {
+    "message": "浅色模式"
+  },
+  "appearanceDark": {
+    "message": "深色模式"
+  },
+  "appearanceChanged": {
+    "message": "外观切换成功"
   }
 }
