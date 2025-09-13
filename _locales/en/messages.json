@@ -103,5 +103,26 @@
   },
   "appearanceChanged": {
     "message": "Appearance changed successfully"
+  },
+  "urlCleaning": {
+    "message": "URL Cleaning"
+  },
+  "cleaningOff": {
+    "message": "Off"
+  },
+  "cleaningSmart": {
+    "message": "Smart"
+  },
+  "cleaningAggressive": {
+    "message": "All Parameters"
+  },
+  "cleaningDisabled": {
+    "message": "URL cleaning disabled"
+  },
+  "smartCleaningEnabled": {
+    "message": "Smart cleaning enabled - removes tracking parameters"
+  },
+  "aggressiveCleaningEnabled": {
+    "message": "Aggressive cleaning enabled - removes all parameters"
   }
 }

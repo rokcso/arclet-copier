@@ -103,5 +103,26 @@
   },
   "appearanceChanged": {
     "message": "外观切换成功"
+  },
+  "urlCleaning": {
+    "message": "URL 清理"
+  },
+  "cleaningOff": {
+    "message": "关闭"
+  },
+  "cleaningSmart": {
+    "message": "智能清理"
+  },
+  "cleaningAggressive": {
+    "message": "清除所有参数"
+  },
+  "cleaningDisabled": {
+    "message": "已关闭 URL 清理"
+  },
+  "smartCleaningEnabled": {
+    "message": "已启用智能清理 - 移除跟踪参数"
+  },
+  "aggressiveCleaningEnabled": {
+    "message": "已启用激进清理 - 移除所有参数"
   }
 }

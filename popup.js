@@ -51,6 +51,74 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentUrl = "";
   let currentTitle = "";
 
+  // URL参数分类定义
+  const PARAM_CATEGORIES = {
+    // 跟踪参数 - 可以安全移除
+    TRACKING: [
+      // UTM 系列
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      // 社交媒体跟踪
+      "fbclid",
+      "igshid",
+      "gclid",
+      "msclkid",
+      "dclid",
+      "wbraid",
+      "gbraid",
+      // 分析工具
+      "ref",
+      "referrer",
+      "source",
+      "campaign",
+      "medium",
+      // 其他常见跟踪
+      "spm",
+      "from",
+      "share_from",
+      "tt_from",
+      "tt_medium",
+      "share_token",
+    ],
+
+    // 功能性参数 - 应该保留
+    FUNCTIONAL: [
+      "page",
+      "p",
+      "offset",
+      "limit",
+      "size",
+      "per_page", // 分页
+      "sort",
+      "order",
+      "orderby",
+      "direction",
+      "sort_by", // 排序
+      "q",
+      "query",
+      "search",
+      "keyword",
+      "filter",
+      "s", // 搜索筛选
+      "tab",
+      "view",
+      "mode",
+      "type",
+      "category",
+      "section", // 界面状态
+      "id",
+      "uid",
+      "token",
+      "key",
+      "code",
+      "lang",
+      "locale", // 功能标识
+    ],
+  };
+
   // Load version from manifest
   function loadVersion() {
     const manifest = chrome.runtime.getManifest();
@@ -83,23 +151,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 初始化切换开关
-  function initializeToggleSwitch() {
-    const toggleSwitch = elements.removeParamsToggle;
-    const hiddenInput = toggleSwitch.querySelector('input[type="checkbox"]');
+  // 初始化URL清理选择器
+  function initializeUrlCleaningSelect() {
+    const cleaningSelect = elements.removeParamsToggle;
 
-    toggleSwitch.addEventListener("click", (e) => {
-      e.preventDefault();
-      const isActive = toggleSwitch.classList.contains("active");
+    cleaningSelect.addEventListener("change", () => {
+      const mode = cleaningSelect.value;
+      let notificationKey = "";
 
-      if (isActive) {
-        toggleSwitch.classList.remove("active");
-        if (hiddenInput) hiddenInput.checked = false;
-        showArcNotification(getMessage("removeParamsDisabled"));
-      } else {
-        toggleSwitch.classList.add("active");
-        if (hiddenInput) hiddenInput.checked = true;
-        showArcNotification(getMessage("removeParamsEnabled"));
+      switch (mode) {
+        case "off":
+          notificationKey = "cleaningDisabled";
+          break;
+        case "smart":
+          notificationKey = "smartCleaningEnabled";
+          break;
+        case "aggressive":
+          notificationKey = "aggressiveCleaningEnabled";
+          break;
+      }
+
+      if (notificationKey) {
+        showArcNotification(getMessage(notificationKey));
       }
 
       saveSettings();
@@ -155,22 +228,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadSettings() {
     const result = await chrome.storage.sync.get([
       "removeParams",
+      "urlCleaning",
       "silentCopyFormat",
       "appearance",
       "language",
     ]);
 
-    const removeParams = result.removeParams || false;
-    const toggleSwitch = elements.removeParamsToggle;
-    const hiddenInput = toggleSwitch.querySelector('input[type="checkbox"]');
-
-    if (removeParams) {
-      toggleSwitch.classList.add("active");
-      if (hiddenInput) hiddenInput.checked = true;
-    } else {
-      toggleSwitch.classList.remove("active");
-      if (hiddenInput) hiddenInput.checked = false;
+    // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
+    let cleaningMode = result.urlCleaning;
+    if (!cleaningMode && typeof result.removeParams === "boolean") {
+      cleaningMode = result.removeParams ? "aggressive" : "off";
     }
+    cleaningMode = cleaningMode || "off";
+
+    const cleaningSelect = elements.removeParamsToggle;
+    cleaningSelect.value = cleaningMode;
 
     elements.silentCopyFormat.value = result.silentCopyFormat || "url";
 
@@ -188,11 +260,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 保存设置
   async function saveSettings() {
-    const toggleSwitch = elements.removeParamsToggle;
-    const removeParams = toggleSwitch.classList.contains("active");
+    const cleaningSelect = elements.removeParamsToggle;
 
     await chrome.storage.sync.set({
-      removeParams: removeParams,
+      urlCleaning: cleaningSelect.value,
       silentCopyFormat: elements.silentCopyFormat.value,
       appearance: elements.appearanceSelect.value,
       language: elements.languageSelect.value,
@@ -224,15 +295,63 @@ document.addEventListener("DOMContentLoaded", async () => {
     showArcNotification(getMessage("silentCopyFormatChanged"));
   }
 
-  // 处理URL参数
-  function processUrl(url, removeParams) {
-    if (!removeParams) {
+  // 判断参数是否应该保留
+  function shouldKeepParameter(paramName, cleaningMode) {
+    const lowerParam = paramName.toLowerCase();
+
+    // 功能性参数总是保留
+    if (PARAM_CATEGORIES.FUNCTIONAL.includes(lowerParam)) {
+      return true;
+    }
+
+    // 跟踪参数的处理
+    if (PARAM_CATEGORIES.TRACKING.includes(lowerParam)) {
+      return false; // 跟踪参数总是移除
+    }
+
+    // 根据清理模式处理其他参数
+    switch (cleaningMode) {
+      case "off":
+        return true; // 不清理，保留所有参数
+      case "smart":
+        return true; // 智能清理，保留未知参数（安全第一）
+      case "aggressive":
+        return false; // 激进清理，移除所有非功能性参数
+      default:
+        return true;
+    }
+  }
+
+  // 智能处理URL参数
+  function processUrl(url, cleaningMode = "off") {
+    if (!url || cleaningMode === "off") {
       return url;
     }
 
     try {
       const urlObj = new URL(url);
-      return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+
+      // 激进模式：移除所有查询参数（保持向后兼容）
+      if (cleaningMode === "aggressive") {
+        return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+      }
+
+      // 智能模式：只移除跟踪参数
+      if (cleaningMode === "smart") {
+        const params = new URLSearchParams(urlObj.search);
+        const newParams = new URLSearchParams();
+
+        for (const [key, value] of params.entries()) {
+          if (shouldKeepParameter(key, cleaningMode)) {
+            newParams.append(key, value);
+          }
+        }
+
+        urlObj.search = newParams.toString();
+        return urlObj.toString();
+      }
+
+      return url;
     } catch (error) {
       return url;
     }
@@ -303,9 +422,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 更新URL显示
   function updateUrlDisplay() {
-    const toggleSwitch = elements.removeParamsToggle;
-    const removeParams = toggleSwitch.classList.contains("active");
-    const processedUrl = processUrl(currentUrl, removeParams);
+    const cleaningSelect = elements.removeParamsToggle;
+    const cleaningMode = cleaningSelect.value;
+    const processedUrl = processUrl(currentUrl, cleaningMode);
     elements.urlDisplay.textContent = processedUrl;
   }
 
@@ -353,9 +472,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 复制URL到剪贴板
   async function copyUrl() {
-    const toggleSwitch = elements.removeParamsToggle;
-    const removeParams = toggleSwitch.classList.contains("active");
-    const processedUrl = processUrl(currentUrl, removeParams);
+    const cleaningSelect = elements.removeParamsToggle;
+    const cleaningMode = cleaningSelect.value;
+    const processedUrl = processUrl(currentUrl, cleaningMode);
 
     try {
       // 首先尝试现代clipboard API
@@ -392,9 +511,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 创建 markdown 链接格式
   function createMarkdownLink(url, title) {
-    const toggleSwitch = elements.removeParamsToggle;
-    const removeParams = toggleSwitch.classList.contains("active");
-    const processedUrl = processUrl(url, removeParams);
+    const cleaningSelect = elements.removeParamsToggle;
+    const cleaningMode = cleaningSelect.value;
+    const processedUrl = processUrl(url, cleaningMode);
     const linkTitle = title || new URL(url).hostname;
     return `[${linkTitle}](${processedUrl})`;
   }
@@ -493,9 +612,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 显示二维码模态框
   function showQRModal() {
-    const toggleSwitch = elements.removeParamsToggle;
-    const removeParams = toggleSwitch.classList.contains("active");
-    const processedUrl = processUrl(currentUrl, removeParams);
+    const cleaningSelect = elements.removeParamsToggle;
+    const cleaningMode = cleaningSelect.value;
+    const processedUrl = processUrl(currentUrl, cleaningMode);
 
     generateQRCode(processedUrl);
     elements.qrModal.classList.add("show");
@@ -544,7 +663,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 初始化
   loadVersion(); // Load version from manifest
-  initializeToggleSwitch();
+  initializeUrlCleaningSelect();
   initializeQRModal(); // Initialize QR modal
   await loadSettings();
   await initializeTheme(); // Initialize theme after loading settings

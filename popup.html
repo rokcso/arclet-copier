@@ -902,12 +902,21 @@
                 <div class="settings-title" data-i18n="settings">Settings</div>
 
                 <div class="setting-item">
-                    <span class="setting-label" data-i18n="removeUrlParams"
-                        >Remove URL parameters</span
+                    <span class="setting-label" data-i18n="urlCleaning"
+                        >URL Cleaning</span
                     >
-                    <div class="toggle-switch" id="removeParamsToggle">
-                        <input type="checkbox" style="display: none" />
-                    </div>
+                    <select id="removeParamsToggle" class="format-select">
+                        <option value="off" data-i18n="cleaningOff">Off</option>
+                        <option value="smart" data-i18n="cleaningSmart">
+                            Smart
+                        </option>
+                        <option
+                            value="aggressive"
+                            data-i18n="cleaningAggressive"
+                        >
+                            All Parameters
+                        </option>
+                    </select>
                 </div>
 
                 <div class="setting-item">
