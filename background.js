@@ -3,6 +3,74 @@
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
 
+// URL参数分类定义
+const PARAM_CATEGORIES = {
+  // 跟踪参数 - 可以安全移除
+  TRACKING: [
+    // UTM 系列
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    // 社交媒体跟踪
+    "fbclid",
+    "igshid",
+    "gclid",
+    "msclkid",
+    "dclid",
+    "wbraid",
+    "gbraid",
+    // 分析工具
+    "ref",
+    "referrer",
+    "source",
+    "campaign",
+    "medium",
+    // 其他常见跟踪
+    "spm",
+    "from",
+    "share_from",
+    "tt_from",
+    "tt_medium",
+    "share_token",
+  ],
+
+  // 功能性参数 - 应该保留
+  FUNCTIONAL: [
+    "page",
+    "p",
+    "offset",
+    "limit",
+    "size",
+    "per_page", // 分页
+    "sort",
+    "order",
+    "orderby",
+    "direction",
+    "sort_by", // 排序
+    "q",
+    "query",
+    "search",
+    "keyword",
+    "filter",
+    "s", // 搜索筛选
+    "tab",
+    "view",
+    "mode",
+    "type",
+    "category",
+    "section", // 界面状态
+    "id",
+    "uid",
+    "token",
+    "key",
+    "code",
+    "lang",
+    "locale", // 功能标识
+  ],
+};
+
 // i18n helper function
 function getMessage(key, substitutions = []) {
   return chrome.i18n.getMessage(key, substitutions);
@@ -47,10 +115,19 @@ async function getCurrentTab() {
 async function getUserSettings() {
   const settings = await chrome.storage.sync.get([
     "removeParams",
+    "urlCleaning",
     "silentCopyFormat",
   ]);
+
+  // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
+  let cleaningMode = settings.urlCleaning;
+  if (!cleaningMode && typeof settings.removeParams === "boolean") {
+    cleaningMode = settings.removeParams ? "aggressive" : "off";
+  }
+  cleaningMode = cleaningMode || "smart";
+
   return {
-    removeParams: settings.removeParams || false,
+    urlCleaning: cleaningMode,
     silentCopyFormat: settings.silentCopyFormat || "url",
   };
 }
@@ -94,10 +171,72 @@ async function getPageTitle(tabId, url) {
 }
 
 // 创建 markdown 链接格式
-function createMarkdownLink(url, title, removeParams) {
-  const processedUrl = processUrl(url, removeParams);
+function createMarkdownLink(url, title, cleaningMode) {
+  const processedUrl = processUrl(url, cleaningMode);
   const linkTitle = title || new URL(url).hostname;
   return `[${linkTitle}](${processedUrl})`;
+}
+
+// 判断参数是否应该保留
+function shouldKeepParameter(paramName, cleaningMode) {
+  const lowerParam = paramName.toLowerCase();
+
+  // 功能性参数总是保留
+  if (PARAM_CATEGORIES.FUNCTIONAL.includes(lowerParam)) {
+    return true;
+  }
+
+  // 跟踪参数的处理
+  if (PARAM_CATEGORIES.TRACKING.includes(lowerParam)) {
+    return false; // 跟踪参数总是移除
+  }
+
+  // 根据清理模式处理其他参数
+  switch (cleaningMode) {
+    case "off":
+      return true; // 不清理，保留所有参数
+    case "smart":
+      return true; // 智能清理，保留未知参数（安全第一）
+    case "aggressive":
+      return false; // 激进清理，移除所有非功能性参数
+    default:
+      return true;
+  }
+}
+
+// 智能处理URL参数
+function processUrl(url, cleaningMode = "smart") {
+  if (!url || cleaningMode === "off") {
+    return url;
+  }
+
+  try {
+    const urlObj = new URL(url);
+
+    // 激进模式：移除所有查询参数（保持向后兼容）
+    if (cleaningMode === "aggressive") {
+      return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+    }
+
+    // 智能模式：只移除跟踪参数
+    if (cleaningMode === "smart") {
+      const params = new URLSearchParams(urlObj.search);
+      const newParams = new URLSearchParams();
+
+      for (const [key, value] of params.entries()) {
+        if (shouldKeepParameter(key, cleaningMode)) {
+          newParams.append(key, value);
+        }
+      }
+
+      urlObj.search = newParams.toString();
+      return urlObj.toString();
+    }
+
+    return url;
+  } catch (error) {
+    return url;
+  }
 }
 
 // 处理URL复制功能
@@ -112,11 +251,11 @@ async function handleCopyUrl() {
     if (settings.silentCopyFormat === "markdown") {
       // 获取页面标题并创建 markdown 链接
       const title = await getPageTitle(tab.id, tab.url);
-      contentToCopy = createMarkdownLink(tab.url, title, settings.removeParams);
+      contentToCopy = createMarkdownLink(tab.url, title, settings.urlCleaning);
       successMessage = getMessage("markdownLinkCopied");
     } else {
       // 默认复制 URL
-      contentToCopy = processUrl(tab.url, settings.removeParams);
+      contentToCopy = processUrl(tab.url, settings.urlCleaning);
       successMessage = getMessage("urlCopied");
     }
 
@@ -130,33 +269,6 @@ async function handleCopyUrl() {
         : getMessage("copyFailed");
     showNotification(EXTENSION_NAME, message);
   }
-}
-
-// 处理URL参数
-function processUrl(url, removeParams) {
-  if (!removeParams) {
-    return url;
-  }
-
-  try {
-    const urlObj = new URL(url);
-    return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
-  } catch (error) {
-    console.error("URL 处理失败:", error);
-    return url;
-  }
-}
-
-// 创建临时textarea用于复制
-function createCopyElement(text) {
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.style.position = "fixed";
-  textarea.style.left = "-9999px";
-  textarea.style.top = "-9999px";
-  textarea.style.opacity = "0";
-  textarea.setAttribute("readonly", "");
-  return textarea;
 }
 
 // 复制到剪贴板 - 使用 offscreen document
