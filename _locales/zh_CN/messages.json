@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "Arclet Copier"
+    "message": "Arclet Copier - 智能链接复制工具"
   },
   "extDescription": {
-    "message": "快速复制当前页面的 URL，支持参数过滤功能和 Markdown 链接格式化。"
+    "message": "一键复制网页链接，智能清理跟踪参数，支持Markdown格式和二维码生成。快捷键静默复制，深色主题，多语言界面。"
   },
   "copyUrlShortcut": {
     "message": "静默复制"

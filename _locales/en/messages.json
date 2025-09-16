@@ -1,9 +1,9 @@
 {
   "extName": {
-    "message": "Arclet Copier"
+    "message": "Arclet Copier - Smart URL Copier"
   },
   "extDescription": {
-    "message": "Quickly copy current page URL with parameter filtering and Markdown formatting support."
+    "message": "One-click URL copying with smart tracking parameter removal, Markdown format, and QR code generation. Keyboard shortcuts, dark theme, and multi-language support."
   },
   "copyUrlShortcut": {
     "message": "Silent Copy"
