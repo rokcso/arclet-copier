@@ -1,0 +1,149 @@
+// Shared constants for Arclet Copier
+
+// URL参数分类定义
+export const PARAM_CATEGORIES = {
+  // 跟踪参数 - 可以安全移除
+  TRACKING: [
+    // UTM 系列
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    // 社交媒体跟踪
+    "fbclid",
+    "igshid",
+    "gclid",
+    "msclkid",
+    "dclid",
+    "wbraid",
+    "gbraid",
+    // 分析工具
+    "ref",
+    "referrer",
+    "source",
+    "campaign",
+    "medium",
+    // 其他常见跟踪
+    "spm",
+    "from",
+    "share_from",
+    "tt_from",
+    "tt_medium",
+    "share_token",
+  ],
+
+  // 功能性参数 - 应该保留
+  FUNCTIONAL: [
+    "page",
+    "p",
+    "offset",
+    "limit",
+    "size",
+    "per_page", // 分页
+    "sort",
+    "order",
+    "orderby",
+    "direction",
+    "sort_by", // 排序
+    "q",
+    "query",
+    "search",
+    "keyword",
+    "filter",
+    "s", // 搜索筛选
+    "tab",
+    "view",
+    "mode",
+    "type",
+    "category",
+    "section", // 界面状态
+    "id",
+    "uid",
+    "token",
+    "key",
+    "code",
+    "lang",
+    "locale", // 功能标识
+  ],
+};
+
+// 判断参数是否应该保留的共享函数
+export function shouldKeepParameter(paramName, cleaningMode) {
+  const lowerParam = paramName.toLowerCase();
+
+  // 功能性参数总是保留
+  if (PARAM_CATEGORIES.FUNCTIONAL.includes(lowerParam)) {
+    return true;
+  }
+
+  // 跟踪参数的处理
+  if (PARAM_CATEGORIES.TRACKING.includes(lowerParam)) {
+    return false; // 跟踪参数总是移除
+  }
+
+  // 根据清理模式处理其他参数
+  switch (cleaningMode) {
+    case "off":
+      return true; // 不清理，保留所有参数
+    case "smart":
+      return true; // 智能清理，保留未知参数（安全第一）
+    case "aggressive":
+      return false; // 激进清理，移除所有非功能性参数
+    default:
+      return true;
+  }
+}
+
+// 智能处理URL参数的共享函数
+export function processUrl(url, cleaningMode = "smart") {
+  if (!url || cleaningMode === "off") {
+    return url;
+  }
+
+  try {
+    const urlObj = new URL(url);
+
+    // 激进模式：移除所有查询参数（保持向后兼容）
+    if (cleaningMode === "aggressive") {
+      return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+    }
+
+    // 智能模式：只移除跟踪参数
+    if (cleaningMode === "smart") {
+      const params = new URLSearchParams(urlObj.search);
+      const newParams = new URLSearchParams();
+
+      for (const [key, value] of params.entries()) {
+        if (shouldKeepParameter(key, cleaningMode)) {
+          newParams.append(key, value);
+        }
+      }
+
+      urlObj.search = newParams.toString();
+      return urlObj.toString();
+    }
+
+    return url;
+  } catch (error) {
+    return url;
+  }
+}
+
+// 检查是否为特殊页面的共享函数
+export function isRestrictedPage(url) {
+  if (!url) return true;
+  const restrictedProtocols = [
+    "chrome:",
+    "chrome-extension:",
+    "edge:",
+    "about:",
+    "moz-extension:",
+  ];
+  return restrictedProtocols.some((protocol) => url.startsWith(protocol));
+}
+
+// i18n helper function
+export function getMessage(key, substitutions = []) {
+  return chrome.i18n.getMessage(key, substitutions);
+}

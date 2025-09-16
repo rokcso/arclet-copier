@@ -1,3 +1,9 @@
+import {
+  processUrl,
+  isRestrictedPage,
+  getMessage,
+} from "../shared/constants.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
   const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -20,8 +26,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // i18n helper function
-  function getMessage(key, substitutions = []) {
+  // i18n helper function (using local one for popup specific behavior)
+  function getLocalMessage(key, substitutions = []) {
     if (localeMessages[key] && localeMessages[key].message) {
       return localeMessages[key].message;
     }
@@ -51,74 +57,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentUrl = "";
   let currentTitle = "";
 
-  // URL参数分类定义
-  const PARAM_CATEGORIES = {
-    // 跟踪参数 - 可以安全移除
-    TRACKING: [
-      // UTM 系列
-      "utm_source",
-      "utm_medium",
-      "utm_campaign",
-      "utm_term",
-      "utm_content",
-      // 社交媒体跟踪
-      "fbclid",
-      "igshid",
-      "gclid",
-      "msclkid",
-      "dclid",
-      "wbraid",
-      "gbraid",
-      // 分析工具
-      "ref",
-      "referrer",
-      "source",
-      "campaign",
-      "medium",
-      // 其他常见跟踪
-      "spm",
-      "from",
-      "share_from",
-      "tt_from",
-      "tt_medium",
-      "share_token",
-    ],
-
-    // 功能性参数 - 应该保留
-    FUNCTIONAL: [
-      "page",
-      "p",
-      "offset",
-      "limit",
-      "size",
-      "per_page", // 分页
-      "sort",
-      "order",
-      "orderby",
-      "direction",
-      "sort_by", // 排序
-      "q",
-      "query",
-      "search",
-      "keyword",
-      "filter",
-      "s", // 搜索筛选
-      "tab",
-      "view",
-      "mode",
-      "type",
-      "category",
-      "section", // 界面状态
-      "id",
-      "uid",
-      "token",
-      "key",
-      "code",
-      "lang",
-      "locale", // 功能标识
-    ],
-  };
-
   // Load version from manifest
   function loadVersion() {
     const manifest = chrome.runtime.getManifest();
@@ -140,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const i18nElements = document.querySelectorAll("[data-i18n]");
     i18nElements.forEach((element) => {
       const key = element.getAttribute("data-i18n");
-      const message = getMessage(key);
+      const message = getLocalMessage(key);
       if (message && message !== key) {
         if (element.tagName === "INPUT" && element.type === "text") {
           element.placeholder = message;
@@ -213,13 +151,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       { value: "aggressive", key: "aggressiveCleaningEnabled" },
     ];
 
-    initializeThreeWaySwitch(
+    return initializeThreeWaySwitch(
       elements.removeParamsToggle,
       cleaningOptions,
       (value, option) => {
         // 显示通知
         if (option.key) {
-          showArcNotification(getMessage(option.key));
+          showArcNotification(getLocalMessage(option.key));
         }
         saveSettings();
         updateUrlDisplay();
@@ -260,7 +198,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         applyTheme(value);
         await saveSettings();
         showArcNotification(
-          getMessage("appearanceChanged") || "Appearance changed successfully!",
+          getLocalMessage("appearanceChanged") ||
+            "Appearance changed successfully!",
         );
       },
     );
@@ -352,7 +291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // Show notification in new language
       showArcNotification(
-        getMessage("languageChangeNotification") ||
+        getLocalMessage("languageChangeNotification") ||
           "Language changed successfully!",
       );
     }
@@ -361,69 +300,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Handle silent copy format change
   async function handleSilentCopyFormatChange() {
     await saveSettings();
-    showArcNotification(getMessage("silentCopyFormatChanged"));
-  }
-
-  // 判断参数是否应该保留
-  function shouldKeepParameter(paramName, cleaningMode) {
-    const lowerParam = paramName.toLowerCase();
-
-    // 功能性参数总是保留
-    if (PARAM_CATEGORIES.FUNCTIONAL.includes(lowerParam)) {
-      return true;
-    }
-
-    // 跟踪参数的处理
-    if (PARAM_CATEGORIES.TRACKING.includes(lowerParam)) {
-      return false; // 跟踪参数总是移除
-    }
-
-    // 根据清理模式处理其他参数
-    switch (cleaningMode) {
-      case "off":
-        return true; // 不清理，保留所有参数
-      case "smart":
-        return true; // 智能清理，保留未知参数（安全第一）
-      case "aggressive":
-        return false; // 激进清理，移除所有非功能性参数
-      default:
-        return true;
-    }
-  }
-
-  // 智能处理URL参数
-  function processUrl(url, cleaningMode = "smart") {
-    if (!url || cleaningMode === "off") {
-      return url;
-    }
-
-    try {
-      const urlObj = new URL(url);
-
-      // 激进模式：移除所有查询参数（保持向后兼容）
-      if (cleaningMode === "aggressive") {
-        return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
-      }
-
-      // 智能模式：只移除跟踪参数
-      if (cleaningMode === "smart") {
-        const params = new URLSearchParams(urlObj.search);
-        const newParams = new URLSearchParams();
-
-        for (const [key, value] of params.entries()) {
-          if (shouldKeepParameter(key, cleaningMode)) {
-            newParams.append(key, value);
-          }
-        }
-
-        urlObj.search = newParams.toString();
-        return urlObj.toString();
-      }
-
-      return url;
-    } catch (error) {
-      return url;
-    }
+    showArcNotification(getLocalMessage("silentCopyFormatChanged"));
   }
 
   // 获取页面标题
@@ -438,19 +315,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("获取页面标题失败:", error);
       return "";
     }
-  }
-
-  // 检查是否为特殊页面 (chrome://, edge://, about: 等内部页面)
-  function isRestrictedPage(url) {
-    if (!url) return true;
-    const restrictedProtocols = [
-      "chrome:",
-      "chrome-extension:",
-      "edge:",
-      "about:",
-      "moz-extension:",
-    ];
-    return restrictedProtocols.some((protocol) => url.startsWith(protocol));
   }
 
   // 获取当前页面URL
@@ -474,11 +338,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         updateUrlDisplay();
       } else {
-        handleError(getMessage("noUrl"));
+        handleError(getLocalMessage("noUrl"));
       }
     } catch (error) {
       console.error("获取 URL 失败:", error);
-      handleError(getMessage("getUrlFailed"));
+      handleError(getLocalMessage("getUrlFailed"));
     }
   }
 
@@ -565,7 +429,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           showStatus();
         } catch (fallbackError) {
           console.error("特殊页面降级复制失败:", fallbackError);
-          // 移除自动显示成功状态，避免在popup打开时误触发
         }
       } else {
         try {
@@ -600,7 +463,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         fallbackCopy(markdownLink);
       }
 
-      showArcNotification(getMessage("markdownCopied"));
+      showArcNotification(getLocalMessage("markdownCopied"));
     } catch (error) {
       console.error("Markdown复制失败:", error);
       // 对于特殊页面，不要报错，只是静默失败并显示成功状态
@@ -608,15 +471,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("特殊页面，使用fallback复制 Markdown");
         try {
           fallbackCopy(markdownLink);
-          showArcNotification(getMessage("markdownCopied"));
+          showArcNotification(getLocalMessage("markdownCopied"));
         } catch (fallbackError) {
           console.error("特殊页面 Markdown 降级复制失败:", fallbackError);
-          // 移除自动显示成功状态，避免在popup打开时误触发
         }
       } else {
         try {
           fallbackCopy(markdownLink);
-          showArcNotification(getMessage("markdownCopied"));
+          showArcNotification(getLocalMessage("markdownCopied"));
         } catch (fallbackError) {
           console.error("Markdown降级复制也失败:", fallbackError);
         }
@@ -624,21 +486,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 显示按钮复制成功状态
-
   // 显示复制成功状态
   function showStatus() {
-    // 显示按钮交互效果
-
     // 显示Arc风格通知
-    showArcNotification(getMessage("urlCopied"));
+    showArcNotification(getLocalMessage("urlCopied"));
 
     try {
       const notificationOptions = {
         type: "basic",
-        iconUrl: "icons/icon128.png",
+        iconUrl: "../assets/icons/icon128.png",
         title: EXTENSION_NAME,
-        message: getMessage("urlCopied"),
+        message: getLocalMessage("urlCopied"),
       };
 
       chrome.notifications.create(notificationOptions, (notificationId) => {

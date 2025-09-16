@@ -1,8 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
+// 获取项目根目录
+const rootDir = path.join(__dirname, "..");
+
 // 获取版本号
-const manifest = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
+const manifest = JSON.parse(
+  fs.readFileSync(path.join(rootDir, "manifest.json"), "utf8"),
+);
 const version = manifest.version;
 
 // 创建 dist 目录
@@ -14,14 +19,11 @@ if (!fs.existsSync(distDir)) {
 // 定义需要打包的文件和目录
 const filesToInclude = [
   "manifest.json",
-  "background.js",
-  "popup.html",
-  "popup.js",
-  "offscreen.html",
-  "offscreen.js",
-  "qrcode.min.js",
-  "style.css",
-  "icons/",
+  "background/",
+  "popup/",
+  "offscreen/",
+  "shared/",
+  "assets/",
   "_locales/",
 ];
 
@@ -36,7 +38,7 @@ fs.mkdirSync(buildDir, { recursive: true });
 
 // 复制文件
 filesToInclude.forEach((file) => {
-  const srcPath = path.join(__dirname, file);
+  const srcPath = path.join(rootDir, file);
   const destPath = path.join(buildDir, file);
 
   if (fs.existsSync(srcPath)) {
