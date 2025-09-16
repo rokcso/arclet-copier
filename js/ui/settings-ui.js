@@ -1,9 +1,9 @@
 // 设置界面UI组件
 
-import { CLEANING_OPTIONS, THEME_OPTIONS } from '../shared/constants.js';
-import { I18nUtils } from '../shared/utils.js';
-import { StorageManager } from '../shared/storage-manager.js';
-import { ThemeService } from '../services/theme-service.js';
+import { CLEANING_OPTIONS, THEME_OPTIONS } from "../shared/constants.js";
+import { I18nUtils } from "../shared/utils.js";
+import { StorageManager } from "../shared/storage-manager.js";
+import { ThemeService } from "../services/theme-service.js";
 
 export class SettingsUI {
   constructor() {
@@ -93,10 +93,11 @@ export class SettingsUI {
       THEME_OPTIONS,
       async (value) => {
         ThemeService.applyTheme(value);
-        await StorageManager.saveSetting('appearance', value);
+        await StorageManager.saveSetting("appearance", value);
         if (window.showArcNotification) {
           window.showArcNotification(
-            I18nUtils.getMessage("appearanceChanged") || "Appearance changed successfully!",
+            I18nUtils.getMessage("appearanceChanged") ||
+              "Appearance changed successfully!",
           );
         }
         if (onAppearanceChange) {
@@ -109,7 +110,7 @@ export class SettingsUI {
   // 处理语言切换
   async handleLanguageChange(onLanguageChange) {
     const newLocale = this.elements.languageSelect.value;
-    await StorageManager.saveSetting('language', newLocale);
+    await StorageManager.saveSetting("language", newLocale);
 
     if (onLanguageChange) {
       await onLanguageChange(newLocale);
@@ -125,19 +126,32 @@ export class SettingsUI {
 
   // 处理静默复制格式变化
   async handleSilentCopyFormatChange() {
-    await StorageManager.saveSetting('silentCopyFormat', this.elements.silentCopyFormat.value);
+    await StorageManager.saveSetting(
+      "silentCopyFormat",
+      this.elements.silentCopyFormat.value,
+    );
     if (window.showArcNotification) {
-      window.showArcNotification(I18nUtils.getMessage("silentCopyFormatChanged"));
+      window.showArcNotification(
+        I18nUtils.getMessage("silentCopyFormatChanged"),
+      );
     }
   }
 
   // 加载设置到UI
   async loadSettings() {
     const settings = await StorageManager.getUserSettings();
+    console.log("SettingsUI.loadSettings - 加载的设置:", settings);
 
     // URL清理设置
     if (this.elements.removeParamsToggle) {
-      this.elements.removeParamsToggle.setAttribute("data-value", settings.urlCleaning);
+      console.log(
+        "SettingsUI.loadSettings - 设置URL清理模式:",
+        settings.urlCleaning,
+      );
+      this.elements.removeParamsToggle.setAttribute(
+        "data-value",
+        settings.urlCleaning,
+      );
     }
 
     // 静默复制格式
@@ -147,7 +161,10 @@ export class SettingsUI {
 
     // 外观设置
     if (this.elements.appearanceSwitch) {
-      this.elements.appearanceSwitch.setAttribute("data-value", settings.appearance);
+      this.elements.appearanceSwitch.setAttribute(
+        "data-value",
+        settings.appearance,
+      );
     }
 
     // 语言设置
@@ -162,17 +179,15 @@ export class SettingsUI {
   bindEventListeners(callbacks = {}) {
     // 静默复制格式变化
     if (this.elements.silentCopyFormat) {
-      this.elements.silentCopyFormat.addEventListener(
-        "change",
-        () => this.handleSilentCopyFormatChange(),
+      this.elements.silentCopyFormat.addEventListener("change", () =>
+        this.handleSilentCopyFormatChange(),
       );
     }
 
     // 语言选择变化
     if (this.elements.languageSelect) {
-      this.elements.languageSelect.addEventListener(
-        "change",
-        () => this.handleLanguageChange(callbacks.onLanguageChange)
+      this.elements.languageSelect.addEventListener("change", () =>
+        this.handleLanguageChange(callbacks.onLanguageChange),
       );
     }
   }
