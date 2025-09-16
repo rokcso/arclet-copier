@@ -124,5 +124,14 @@
   },
   "aggressiveCleaningEnabled": {
     "message": "已启用激进清理 - 移除所有参数"
+  },
+  "copyQRCode": {
+    "message": "复制二维码图片"
+  },
+  "qrCodeCopied": {
+    "message": "二维码图片已复制到剪贴板"
+  },
+  "qrCodeCopyFailed": {
+    "message": "二维码图片复制失败"
   }
 }

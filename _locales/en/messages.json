@@ -124,5 +124,14 @@
   },
   "aggressiveCleaningEnabled": {
     "message": "Aggressive cleaning enabled - removes all parameters"
+  },
+  "copyQRCode": {
+    "message": "Copy QR Code Image"
+  },
+  "qrCodeCopied": {
+    "message": "QR code image copied to clipboard"
+  },
+  "qrCodeCopyFailed": {
+    "message": "Failed to copy QR code image"
   }
 }

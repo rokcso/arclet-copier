@@ -266,11 +266,33 @@
                         </button>
                     </div>
                     <div class="qr-modal-body">
+                        <div class="qr-url-display" id="qrUrlDisplay"></div>
                         <div
                             class="qr-code-container"
                             id="qrCodeContainer"
                         ></div>
-                        <div class="qr-url-display" id="qrUrlDisplay"></div>
+                        <button class="qr-copy-btn" id="qrCopyBtn">
+                            <svg
+                                class="button-icon"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <rect
+                                    x="9"
+                                    y="9"
+                                    width="13"
+                                    height="13"
+                                    rx="2"
+                                    ry="2"
+                                />
+                                <path
+                                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                                />
+                            </svg>
+                            <span data-i18n="copyQRCode">复制二维码图片</span>
+                        </button>
                     </div>
                 </div>
             </div>

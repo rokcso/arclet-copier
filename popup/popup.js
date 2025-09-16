@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     qrModalClose: document.getElementById("qrModalClose"),
     qrCodeContainer: document.getElementById("qrCodeContainer"),
     qrUrlDisplay: document.getElementById("qrUrlDisplay"),
+    qrCopyBtn: document.getElementById("qrCopyBtn"),
   };
 
   let currentUrl = "";
@@ -514,6 +515,53 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 复制二维码图片到剪贴板
+  async function copyQRCodeImage() {
+    try {
+      const canvas = elements.qrCodeContainer.querySelector("canvas");
+      if (!canvas) {
+        throw new Error("未找到二维码canvas元素");
+      }
+
+      // 将canvas转换为blob
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          throw new Error("无法生成二维码图片");
+        }
+
+        try {
+          // 使用现代clipboard API复制图片
+          if (navigator.clipboard && navigator.clipboard.write) {
+            const clipboardItem = new ClipboardItem({ "image/png": blob });
+            await navigator.clipboard.write([clipboardItem]);
+
+            // 复制成功后立即关闭二维码模态框
+            hideQRModal();
+
+            // 关闭弹窗后显示成功通知
+            setTimeout(() => {
+              showArcNotification(
+                getLocalMessage("qrCodeCopied") || "二维码图片已复制",
+              );
+            }, 200);
+          } else {
+            throw new Error("浏览器不支持图片复制功能");
+          }
+        } catch (error) {
+          console.error("复制二维码图片失败:", error);
+          showArcNotification(
+            getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败",
+          );
+        }
+      }, "image/png");
+    } catch (error) {
+      console.error("处理二维码图片失败:", error);
+      showArcNotification(
+        getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败",
+      );
+    }
+  }
+
   // 生成二维码
   function generateQRCode(url) {
     // 清空容器
@@ -575,6 +623,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   elements.copyBtn.addEventListener("click", copyUrl);
   elements.markdownBtn.addEventListener("click", copyMarkdown);
   elements.qrBtn.addEventListener("click", showQRModal);
+  elements.qrCopyBtn.addEventListener("click", copyQRCodeImage);
 
   elements.silentCopyFormat.addEventListener(
     "change",
