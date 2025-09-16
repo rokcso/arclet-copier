@@ -133,5 +133,8 @@
   },
   "qrCodeCopyFailed": {
     "message": "二维码图片复制失败"
+  },
+  "copyCurrentUrl": {
+    "message": "复制当前 URL"
   }
 }

@@ -12,7 +12,8 @@
     "notifications",
     "scripting",
     "offscreen",
-    "clipboardWrite"
+    "clipboardWrite",
+    "contextMenus"
   ],
   "web_accessible_resources": [
     {

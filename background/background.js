@@ -9,6 +9,31 @@ import {
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
 
+// 创建右键菜单
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "copy-current-url",
+    title: chrome.i18n.getMessage("copyCurrentUrl") || "复制当前 URL",
+    contexts: [
+      "page",
+      "frame",
+      "selection",
+      "link",
+      "editable",
+      "image",
+      "video",
+      "audio",
+    ],
+  });
+});
+
+// 监听右键菜单点击事件
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === "copy-current-url") {
+    await handleCopyUrl();
+  }
+});
+
 // 监听键盘快捷键命令
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === "copy-url") {

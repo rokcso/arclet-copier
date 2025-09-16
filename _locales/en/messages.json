@@ -133,5 +133,8 @@
   },
   "qrCodeCopyFailed": {
     "message": "Failed to copy QR code image"
+  },
+  "copyCurrentUrl": {
+    "message": "Copy Current URL"
   }
 }
