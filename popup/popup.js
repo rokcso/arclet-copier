@@ -37,7 +37,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // DOM elements
   const elements = {
-    urlDisplay: document.getElementById("urlDisplay"),
+    pageTitle: document.getElementById("pageTitle"),
+    pageUrl: document.getElementById("pageUrl"),
     copyBtn: document.getElementById("copyBtn"),
     markdownBtn: document.getElementById("markdownBtn"),
     qrBtn: document.getElementById("qrBtn"),
@@ -161,7 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           showArcNotification(getLocalMessage(option.key));
         }
         saveSettings();
-        updateUrlDisplay();
+        updatePageDisplay();
       },
     );
   }
@@ -287,8 +288,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       await initializeI18n(newLocale);
       await saveSettings();
 
-      // Update URL display with new language
-      updateUrlDisplay();
+      // Update page display with new language
+      updatePageDisplay();
 
       // Show notification in new language
       showArcNotification(
@@ -337,7 +338,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           currentTitle = tab.title || new URL(tab.url).hostname || "特殊页面";
         }
 
-        updateUrlDisplay();
+        updatePageDisplay();
       } else {
         handleError(getLocalMessage("noUrl"));
       }
@@ -349,17 +350,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 处理错误状态
   function handleError(message) {
-    elements.urlDisplay.textContent = message;
+    elements.pageTitle.textContent = getLocalMessage("errorTitle") || "Error";
+    elements.pageUrl.textContent = message;
     elements.copyBtn.disabled = true;
     elements.markdownBtn.disabled = true;
   }
 
-  // 更新URL显示
-  function updateUrlDisplay() {
+  // 更新页面信息显示
+  function updatePageDisplay() {
     const cleaningSelect = elements.removeParamsToggle;
     const cleaningMode = cleaningSelect.getAttribute("data-value");
     const processedUrl = processUrl(currentUrl, cleaningMode);
-    elements.urlDisplay.textContent = processedUrl;
+
+    // 更新标题显示
+    if (currentTitle && currentTitle.trim()) {
+      elements.pageTitle.textContent = currentTitle;
+    } else {
+      // 如果没有标题，使用域名作为后备
+      try {
+        const hostname = new URL(currentUrl).hostname;
+        elements.pageTitle.textContent = hostname;
+        elements.pageTitle.setAttribute(
+          "data-fallback",
+          getLocalMessage("noPageTitle") || "Untitled Page",
+        );
+      } catch (error) {
+        elements.pageTitle.textContent =
+          getLocalMessage("noPageTitle") || "Untitled Page";
+      }
+    }
+
+    // 更新URL显示
+    elements.pageUrl.textContent = processedUrl;
   }
 
   // 创建临时复制元素

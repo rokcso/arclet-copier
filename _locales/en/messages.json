@@ -11,6 +11,18 @@
   "currentUrl": {
     "message": "Current URL"
   },
+  "currentPage": {
+    "message": "Current Page"
+  },
+  "gettingTitle": {
+    "message": "Getting page title..."
+  },
+  "noPageTitle": {
+    "message": "Untitled Page"
+  },
+  "errorTitle": {
+    "message": "Error"
+  },
   "copyUrl": {
     "message": "Copy URL"
   },

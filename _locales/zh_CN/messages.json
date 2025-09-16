@@ -11,6 +11,18 @@
   "currentUrl": {
     "message": "当前 URL"
   },
+  "currentPage": {
+    "message": "当前页面"
+  },
+  "gettingTitle": {
+    "message": "获取页面标题中..."
+  },
+  "noPageTitle": {
+    "message": "无标题页面"
+  },
+  "errorTitle": {
+    "message": "错误"
+  },
   "copyUrl": {
     "message": "复制 URL"
   },

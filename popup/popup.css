@@ -129,31 +129,58 @@ body {
     text-transform: uppercase;
 }
 
-.url-display {
+.page-preview {
     background: #fafbfc;
     border: 1px solid #f1f3f4;
     border-radius: var(--arc-radius);
     padding: 12px;
-    word-break: break-all;
-    font-size: 13px;
-    font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace;
-    color: var(--arc-text-secondary);
-    max-height: 120px;
-    overflow-y: auto;
-    line-height: 1.6;
     transition: all 0.2s ease;
     position: relative;
 }
 
-.url-display::-webkit-scrollbar {
+.page-title {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--arc-text-secondary);
+    line-height: 1.4;
+    margin-bottom: 6px;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    opacity: 0.95;
+}
+
+.page-title:empty::before {
+    content: attr(data-fallback);
+    color: var(--arc-text-muted);
+    font-style: italic;
+}
+
+.page-url {
+    font-size: 14px;
+    font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace;
+    color: var(--arc-text-secondary);
+    font-weight: 400;
+    word-break: break-all;
+    line-height: 1.5;
+    max-height: 80px;
+    overflow-y: auto;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.15);
+    opacity: 0.95;
+}
+
+.page-url::-webkit-scrollbar {
     width: 4px;
 }
 
-.url-display::-webkit-scrollbar-track {
+.page-url::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.url-display::-webkit-scrollbar-thumb {
+.page-url::-webkit-scrollbar-thumb {
     background: var(--arc-border);
     border-radius: 2px;
 }
@@ -485,10 +512,18 @@ body {
     );
 }
 
-[data-theme="dark"] .url-display {
+[data-theme="dark"] .page-preview {
     background: #0f172a;
     border: 1px solid #334155;
+}
+
+[data-theme="dark"] .page-title {
     color: var(--arc-text-secondary);
+}
+
+[data-theme="dark"] .page-url {
+    color: var(--arc-text-secondary);
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
 [data-theme="dark"] .copy-btn,
@@ -598,10 +633,18 @@ body {
         );
     }
 
-    :root:not([data-theme]) .url-display {
+    :root:not([data-theme]) .page-preview {
         background: #0f172a;
         border: 1px solid #334155;
+    }
+
+    :root:not([data-theme]) .page-title {
         color: var(--arc-text-secondary);
+    }
+
+    :root:not([data-theme]) .page-url {
+        color: var(--arc-text-secondary);
+        border-top: 1px dashed rgba(255, 255, 255, 0.2);
     }
 
     :root:not([data-theme]) .copy-btn,
