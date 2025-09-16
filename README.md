@@ -12,6 +12,7 @@
 - ⚡ **快捷键支持**：`Ctrl+Shift+C` (Windows/Linux) 或 `Cmd+Shift+C` (Mac)
 - 🌍 **多语言支持**：简体中文和英文界面，支持动态切换
 - 🛡️ **智能处理**：针对 Chrome 系统页面优化，提供友好的用户体验
+- 🏗️ **模块化架构**：采用现代ES6模块化设计，代码结构清晰，易于维护和扩展
 
 ## 安装方法
 
@@ -73,27 +74,41 @@
 
 ### 项目结构
 
+采用**按功能分割的模块化架构**，便于开发和维护：
+
 ```
 arclet-copier/
-├── manifest.json          # 扩展程序配置文件
-├── background.js          # 后台脚本，处理快捷键和静默复制
-├── popup.html            # 弹出界面 HTML
-├── popup.js              # 弹出界面逻辑
-├── offscreen.html        # Offscreen Document HTML
-├── offscreen.js          # Offscreen Document 脚本
-├── build.js              # 构建脚本
-├── _locales/             # 国际化文件
+├── manifest.json              # 扩展程序配置文件
+├── background/                 # 后台服务功能模块
+│   └── background.js          #   Service Worker，处理快捷键和核心逻辑
+├── popup/                      # 弹窗界面功能模块
+│   ├── popup.html             #   弹窗HTML结构
+│   ├── popup.js               #   用户交互逻辑
+│   └── popup.css              #   界面样式
+├── offscreen/                  # 剪贴板操作功能模块
+│   ├── offscreen.html         #   Offscreen文档
+│   └── offscreen.js           #   剪贴板操作逻辑
+├── shared/                     # 共享资源和工具模块
+│   ├── constants.js           #   共享常量和工具函数
+│   └── lib/                   #   第三方库
+│       └── qrcode.min.js      #     二维码生成库
+├── assets/                     # 静态资源
+│   └── icons/                 #   扩展程序图标
+│       ├── icon16.png
+│       ├── icon32.png
+│       ├── icon48.png
+│       ├── icon64.png
+│       ├── icon128.png
+│       └── icon256.png
+├── _locales/                   # 国际化文件
 │   ├── en/
-│   │   └── messages.json # 英文语言包
+│   │   └── messages.json      #   英文语言包
 │   └── zh_CN/
-│       └── messages.json # 中文语言包
-└── icons/                # 扩展程序图标
-    ├── icon16.png
-    ├── icon32.png
-    ├── icon48.png
-    ├── icon64.png
-    ├── icon128.png
-    └── icon256.png
+│       └── messages.json      #   中文语言包
+├── scripts/                    # 构建和工具脚本
+│   └── build.js               #   构建脚本
+├── TESTING.md                  # 完整测试用例文档
+└── package.json               # 项目配置
 ```
 
 ### 构建和打包
@@ -109,11 +124,24 @@ cd arclet-copier
 npm run build
 ```
 
+构建完成后，打包文件将生成在 `scripts/dist/arclet-copier-v{version}/` 目录中。
+
 ### 本地开发
 
-1. 修改代码后，在 `chrome://extensions/` 页面点击扩展程序的"重新加载"按钮
-2. 测试功能是否正常工作
-3. 提交代码变更
+#### 开发流程
+1. 克隆仓库并进入项目目录
+2. 直接在项目根目录加载扩展（无需构建）
+3. 修改代码后，在 `chrome://extensions/` 页面点击扩展程序的"重新加载"按钮
+4. 测试功能是否正常工作
+
+#### 模块化开发说明
+- **background/**: 后台逻辑，支持ES6模块导入
+- **popup/**: 前端界面，使用`type="module"`支持模块化
+- **shared/**: 共享工具函数，避免代码重复
+- **offscreen/**: 独立的剪贴板操作模块
+
+#### 测试
+项目提供完整的测试用例文档，请参考 [TESTING.md](TESTING.md) 进行系统性测试。
 
 ## 权限说明
 
@@ -135,6 +163,13 @@ npm run build
 MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ## 更新日志
+
+### v1.3.2
+- 🏗️ **代码架构重构**: 采用按功能分割的模块化架构，提升代码可维护性和可扩展性
+- 📦 **ES6模块化**: 全面支持ES6模块导入导出，减少代码重复
+- 🔧 **构建系统优化**: 更新构建脚本适配新的目录结构
+- 🧪 **测试体系完善**: 新增完整的测试用例文档(TESTING.md)，包含100+个测试用例
+- 🐛 **通知系统修复**: 修复通知图标加载问题，确保通知正常显示
 
 ### v1.3.1
 - 🐛 **重要Bug修复**: 解决静默复制（快捷键）不尊重URL参数清理设置的关键问题
