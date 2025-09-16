@@ -1,8 +1,13 @@
 // Offscreen document for clipboard operations
 // 根据最新的 Chrome 扩展 Manifest V3 最佳实践
 
+console.log("Offscreen script loaded");
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log("Offscreen received message:", message);
+
   if (message.action === "copy") {
+    console.log("处理复制请求:", message.text);
     handleClipboardWrite(message.text)
       .then(() => {
         console.log("Offscreen copy successful");
@@ -14,6 +19,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     return true; // 表示会异步发送响应
   }
+
+  console.log("Unknown action:", message.action);
 });
 
 async function handleClipboardWrite(data) {

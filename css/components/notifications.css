@@ -1,0 +1,63 @@
+/* 通知组件样式 */
+
+.status-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.3);
+    transform-origin: center top;
+    background: #86efac;
+    color: #166534;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all var(--arc-transition-bounce);
+    box-shadow: 0 4px 12px rgba(134, 239, 172, 0.4);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    max-width: 323px;
+    width: fit-content;
+    text-align: center;
+    line-height: 1.4;
+    word-wrap: break-word;
+    hyphens: auto;
+    border: 1.5px solid #22c55e;
+    box-sizing: border-box;
+}
+
+.status-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+.notification-text {
+    display: block;
+    width: 100%;
+    text-align: center;
+    line-height: 1.4;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+/* 深色模式通知样式 */
+[data-theme="dark"] .status-notification {
+    background: #065f46;
+    color: #d1fae5;
+    border-color: #10b981;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* 系统主题适配 */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .status-notification {
+        background: #065f46;
+        color: #d1fae5;
+        border-color: #10b981;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+}

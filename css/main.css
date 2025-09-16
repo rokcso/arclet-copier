@@ -1,0 +1,206 @@
+/* 主样式文件 - 导入所有模块化样式 */
+
+/* 基础样式 */
+@import url("./base/variables.css");
+@import url("./base/reset.css");
+@import url("./base/typography.css");
+
+/* 组件样式 */
+@import url("./components/buttons.css");
+@import url("./components/forms.css");
+@import url("./components/modal.css");
+@import url("./components/notifications.css");
+
+/* 布局样式 */
+.container {
+    padding: 20px;
+    background: linear-gradient(
+        135deg,
+        var(--arc-background) 0%,
+        var(--arc-surface) 100%
+    );
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--arc-border);
+}
+
+.header-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.version {
+    font-size: 11px;
+    color: var(--arc-text-muted);
+    font-weight: 400;
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+}
+
+.developer-info {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.dev-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--arc-text-muted);
+    text-decoration: none;
+    transition: all var(--arc-transition);
+    opacity: 0.7;
+}
+
+.dev-link:hover {
+    color: var(--arc-primary);
+    opacity: 1;
+}
+
+.dev-link svg {
+    width: 16px;
+    height: 16px;
+}
+
+.url-section {
+    margin-bottom: 20px;
+}
+
+.url-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--arc-text-secondary);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.url-display {
+    background: #fafbfc;
+    border: 1px solid #f1f3f4;
+    border-radius: var(--arc-radius);
+    padding: 12px;
+    word-break: break-all;
+    font-size: 13px;
+    color: var(--arc-text-secondary);
+    max-height: 120px;
+    overflow-y: auto;
+    line-height: 1.6;
+    transition: all var(--arc-transition);
+    position: relative;
+}
+
+@extend .monospace;
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.settings {
+    border-top: 1px solid var(--arc-border);
+    padding-top: 12px;
+}
+
+.settings-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--arc-text-secondary);
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+}
+
+.setting-label {
+    font-size: 14px;
+    color: var(--arc-text-primary);
+    font-weight: 400;
+}
+
+/* 动画效果 */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container > *:not(.status-notification) {
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+.container > *:nth-child(1):not(.status-notification) {
+    animation-delay: 0.05s;
+}
+.container > *:nth-child(2):not(.status-notification) {
+    animation-delay: 0.1s;
+}
+.container > *:nth-child(3):not(.status-notification) {
+    animation-delay: 0.15s;
+}
+.container > *:nth-child(4):not(.status-notification) {
+    animation-delay: 0.2s;
+}
+
+/* 深色模式布局样式 */
+[data-theme="dark"] .container {
+    background: linear-gradient(
+        135deg,
+        var(--arc-background) 0%,
+        var(--arc-surface) 100%
+    );
+}
+
+[data-theme="dark"] .url-display {
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: var(--arc-text-secondary);
+}
+
+/* 系统主题适配 */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .container {
+        background: linear-gradient(
+            135deg,
+            var(--arc-background) 0%,
+            var(--arc-surface) 100%
+        );
+    }
+
+    :root:not([data-theme]) .url-display {
+        background: #0f172a;
+        border: 1px solid #334155;
+        color: var(--arc-text-secondary);
+    }
+}

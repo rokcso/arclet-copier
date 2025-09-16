@@ -1,0 +1,29 @@
+/* 字体样式 */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap");
+
+body {
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+h1 {
+    margin: 0;
+    font-family: "Playfair Display", serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--arc-text-primary);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+/* 代码字体 */
+.monospace {
+    font-family:
+        "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace;
+}

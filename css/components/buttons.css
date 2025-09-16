@@ -1,0 +1,115 @@
+/* 按钮组件样式 */
+
+.action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: var(--arc-radius);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-height: 48px;
+    box-sizing: border-box;
+}
+
+.action-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.6s;
+}
+
+.action-button:hover::before {
+    left: 100%;
+}
+
+.copy-btn,
+.markdown-btn,
+.qr-btn {
+    background: #ffffff;
+    color: var(--arc-text-primary);
+    border: 1px solid #d1d5db;
+    box-shadow:
+        0 1px 3px 0 rgb(0 0 0 / 0.1),
+        0 1px 2px 0 rgb(0 0 0 / 0.06);
+}
+
+.copy-btn:hover,
+.markdown-btn:hover,
+.qr-btn:hover {
+    background: #f2f2f2;
+    color: var(--arc-primary);
+}
+
+.copy-btn:active,
+.markdown-btn:active,
+.qr-btn:active {
+    transform: translateY(0);
+}
+
+.button-icon,
+.markdown-icon,
+.qr-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+}
+
+/* 深色模式按钮样式 */
+[data-theme="dark"] .copy-btn,
+[data-theme="dark"] .markdown-btn,
+[data-theme="dark"] .qr-btn {
+    background: var(--arc-surface);
+    border: 1px solid var(--arc-border);
+    color: var(--arc-text-primary);
+}
+
+[data-theme="dark"] .copy-btn:hover,
+[data-theme="dark"] .markdown-btn:hover,
+[data-theme="dark"] .qr-btn:hover {
+    background: #334155;
+    color: var(--arc-primary);
+}
+
+[data-theme="dark"] .action-button::before {
+    display: none;
+}
+
+/* 系统主题适配 */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .copy-btn,
+    :root:not([data-theme]) .markdown-btn,
+    :root:not([data-theme]) .qr-btn {
+        background: var(--arc-surface);
+        border: 1px solid var(--arc-border);
+        color: var(--arc-text-primary);
+    }
+
+    :root:not([data-theme]) .copy-btn:hover,
+    :root:not([data-theme]) .markdown-btn:hover,
+    :root:not([data-theme]) .qr-btn:hover {
+        background: #334155;
+        color: var(--arc-primary);
+    }
+
+    :root:not([data-theme]) .action-button::before {
+        display: none;
+    }
+}
