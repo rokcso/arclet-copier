@@ -148,5 +148,11 @@
   },
   "copyCurrentUrl": {
     "message": "复制当前 URL"
+  },
+  "themeColor": {
+    "message": "主题色"
+  },
+  "themeColorChanged": {
+    "message": "主题色切换成功"
   }
 }

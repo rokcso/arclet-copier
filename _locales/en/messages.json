@@ -148,5 +148,11 @@
   },
   "copyCurrentUrl": {
     "message": "Copy Current URL"
+  },
+  "themeColor": {
+    "message": "Theme Color"
+  },
+  "themeColorChanged": {
+    "message": "Theme color changed successfully"
   }
 }

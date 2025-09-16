@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     silentCopyFormat: document.getElementById("silentCopyFormat"),
     appearanceSwitch: document.getElementById("appearanceSwitch"),
     languageSelect: document.getElementById("languageSelect"),
+    colorPicker: document.getElementById("colorPicker"),
     version: document.getElementById("version"),
     qrModal: document.getElementById("qrModal"),
     qrModalOverlay: document.getElementById("qrModalOverlay"),
@@ -185,6 +186,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 应用主题色
+  function applyThemeColor(color) {
+    const htmlElement = document.documentElement;
+    htmlElement.setAttribute("data-color", color);
+  }
+
+  // 初始化颜色选择器
+  function initializeColorPicker() {
+    if (!elements.colorPicker) return;
+
+    const colorOptions = elements.colorPicker.querySelectorAll(".color-option");
+
+    colorOptions.forEach((option) => {
+      option.addEventListener("click", async () => {
+        const selectedColor = option.getAttribute("data-color");
+
+        // 更新UI状态
+        colorOptions.forEach((opt) => opt.classList.remove("active"));
+        option.classList.add("active");
+
+        // 应用新的主题色
+        applyThemeColor(selectedColor);
+
+        // 保存设置
+        await saveSettings();
+
+        // 显示通知
+        showArcNotification(
+          getLocalMessage("themeColorChanged") ||
+            "Theme color changed successfully!",
+        );
+      });
+    });
+  }
+
   // 初始化外观滑块
   function initializeAppearanceSwitch() {
     const appearanceOptions = [
@@ -239,6 +275,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "silentCopyFormat",
       "appearance",
       "language",
+      "themeColor",
     ]);
 
     // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
@@ -265,6 +302,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     const savedLanguage = result.language || defaultLang;
     elements.languageSelect.value = savedLanguage;
     currentLocale = savedLanguage;
+
+    // Load theme color setting, default to green
+    const savedThemeColor = result.themeColor || "green";
+    applyThemeColor(savedThemeColor);
+
+    // Update color picker UI
+    if (elements.colorPicker) {
+      const colorOptions =
+        elements.colorPicker.querySelectorAll(".color-option");
+      colorOptions.forEach((option) => {
+        option.classList.toggle(
+          "active",
+          option.getAttribute("data-color") === savedThemeColor,
+        );
+      });
+    }
   }
 
   // 保存设置
@@ -272,11 +325,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cleaningSelect = elements.removeParamsToggle;
     const appearanceSwitch = elements.appearanceSwitch;
 
+    // 获取当前选中的主题色
+    const selectedColorOption = elements.colorPicker?.querySelector(
+      ".color-option.active",
+    );
+    const currentThemeColor =
+      selectedColorOption?.getAttribute("data-color") || "green";
+
     await chrome.storage.sync.set({
       urlCleaning: cleaningSelect.getAttribute("data-value"),
       silentCopyFormat: elements.silentCopyFormat.value,
       appearance: appearanceSwitch.getAttribute("data-value"),
       language: elements.languageSelect.value,
+      themeColor: currentThemeColor,
     });
   }
 
@@ -665,6 +726,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   loadVersion(); // Load version from manifest
   const urlCleaningSwitch = initializeUrlCleaningSelect();
   const appearanceSwitch = initializeAppearanceSwitch();
+  initializeColorPicker(); // Initialize color picker
   initializeQRModal(); // Initialize QR modal
   await loadSettings();
   await initializeTheme(); // Initialize theme after loading settings

@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap");
 
 :root {
-    --arc-primary: #585efb;
-    --arc-primary-hover: #4f55e3;
+    --arc-primary: #22c55e;
+    --arc-primary-hover: #16a34a;
     --arc-secondary: #f1f5f9;
     --arc-success: #10b981;
     --arc-background: #ffffff;
@@ -411,10 +411,19 @@ body {
     left: 2px;
     width: var(--slider-width);
     height: 26px;
-    background: var(--arc-primary);
+    background: linear-gradient(
+        135deg,
+        var(--arc-primary) 0%,
+        var(--arc-primary-hover) 50%,
+        var(--arc-primary) 100%
+    );
     border-radius: 13px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--arc-shadow-sm);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+        0 0 20px var(--glow-light, rgba(34, 197, 94, 0.15)),
+        0 2px 8px var(--glow-medium, rgba(34, 197, 94, 0.3)),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     z-index: 1;
     transform: translateX(var(--slider-x));
 }
@@ -445,6 +454,45 @@ body {
 
 .format-select:hover {
     border-color: var(--arc-primary);
+}
+
+.color-picker {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.color-option {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.color-option.active {
+    border-color: var(--arc-text-primary);
+    transform: scale(1.15);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.color-option.active::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .button-icon {
@@ -487,10 +535,80 @@ body {
     animation-delay: 0.2s;
 }
 
+/* 主题色定义 */
+[data-color="blue"] {
+    --arc-primary: #3b82f6;
+    --arc-primary-hover: #1d4ed8;
+    --glow-light: rgba(59, 130, 246, 0.15);
+    --glow-medium: rgba(59, 130, 246, 0.3);
+}
+
+[data-color="green"] {
+    --arc-primary: #22c55e;
+    --arc-primary-hover: #16a34a;
+    --glow-light: rgba(34, 197, 94, 0.15);
+    --glow-medium: rgba(34, 197, 94, 0.3);
+}
+
+[data-color="orange"] {
+    --arc-primary: #f97316;
+    --arc-primary-hover: #ea580c;
+    --glow-light: rgba(249, 115, 22, 0.15);
+    --glow-medium: rgba(249, 115, 22, 0.3);
+}
+
+[data-color="yellow"] {
+    --arc-primary: #eab308;
+    --arc-primary-hover: #ca8a04;
+    --glow-light: rgba(234, 179, 8, 0.15);
+    --glow-medium: rgba(234, 179, 8, 0.3);
+}
+
+[data-color="purple"] {
+    --arc-primary: #8b5cf6;
+    --arc-primary-hover: #7c3aed;
+    --glow-light: rgba(139, 92, 246, 0.15);
+    --glow-medium: rgba(139, 92, 246, 0.3);
+}
+
+/* 深色模式下的主题色 */
+[data-theme="dark"][data-color="blue"] {
+    --arc-primary: #60a5fa;
+    --arc-primary-hover: #3b82f6;
+    --glow-light: rgba(96, 165, 250, 0.2);
+    --glow-medium: rgba(96, 165, 250, 0.4);
+}
+
+[data-theme="dark"][data-color="green"] {
+    --arc-primary: #10b981;
+    --arc-primary-hover: #059669;
+    --glow-light: rgba(16, 185, 129, 0.2);
+    --glow-medium: rgba(16, 185, 129, 0.4);
+}
+
+[data-theme="dark"][data-color="orange"] {
+    --arc-primary: #fb923c;
+    --arc-primary-hover: #f97316;
+    --glow-light: rgba(251, 146, 60, 0.2);
+    --glow-medium: rgba(251, 146, 60, 0.4);
+}
+
+[data-theme="dark"][data-color="yellow"] {
+    --arc-primary: #fbbf24;
+    --arc-primary-hover: #f59e0b;
+    --glow-light: rgba(251, 191, 36, 0.2);
+    --glow-medium: rgba(251, 191, 36, 0.4);
+}
+
+[data-theme="dark"][data-color="purple"] {
+    --arc-primary: #a78bfa;
+    --arc-primary-hover: #8b5cf6;
+    --glow-light: rgba(167, 139, 250, 0.2);
+    --glow-medium: rgba(167, 139, 250, 0.4);
+}
+
 /* 深色模式适配 */
 [data-theme="dark"] {
-    --arc-primary: #6366f1;
-    --arc-primary-hover: #5b61f0;
     --arc-secondary: #1e293b;
     --arc-success: #10b981;
     --arc-background: #0f172a;
@@ -610,8 +728,8 @@ body {
 /* 自动检测系统主题 */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
-        --arc-primary: #6366f1;
-        --arc-primary-hover: #5b61f0;
+        --arc-primary: #10b981;
+        --arc-primary-hover: #059669;
         --arc-secondary: #1e293b;
         --arc-success: #10b981;
         --arc-background: #0f172a;
@@ -866,7 +984,7 @@ body {
 .qr-copy-btn:hover {
     background: var(--arc-primary-hover);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(88, 94, 251, 0.3);
+    box-shadow: 0 4px 12px var(--glow-medium, rgba(34, 197, 94, 0.3));
 }
 
 .qr-copy-btn:active {
