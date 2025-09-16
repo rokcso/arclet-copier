@@ -494,14 +494,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const notificationOptions = {
         type: "basic",
-        iconUrl: "../assets/icons/icon128.png",
+        iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
         title: EXTENSION_NAME,
         message: getLocalMessage("urlCopied"),
       };
 
       chrome.notifications.create(notificationOptions, (notificationId) => {
         if (chrome.runtime.lastError) {
-          console.error("通知创建失败:", chrome.runtime.lastError);
+          console.error(
+            "通知创建失败:",
+            chrome.runtime.lastError.message || chrome.runtime.lastError,
+          );
         } else {
           console.log("通知创建成功:", notificationId);
         }
