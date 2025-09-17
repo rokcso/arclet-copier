@@ -21,6 +21,7 @@ const filesToInclude = [
   "manifest.json",
   "background/",
   "popup/",
+  "options/",
   "offscreen/",
   "shared/",
   "assets/",

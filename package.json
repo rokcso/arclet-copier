@@ -1,6 +1,6 @@
 {
   "name": "arclet-copier",
-  "version": "1.3.5",
+  "version": "1.4.0",
   "description": "快速复制当前页面的 URL，支持参数过滤功能",
   "scripts": {
     "build": "node scripts/build.js",
