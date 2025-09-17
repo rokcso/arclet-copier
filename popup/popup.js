@@ -2,6 +2,7 @@ import {
   processUrl,
   getMessage,
   SHORT_URL_SERVICES,
+  isValidWebUrl,
 } from "../shared/constants.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -591,6 +592,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function generateShortUrl() {
     if (!currentUrl) {
       showArcNotification(getLocalMessage("noUrl") || "No URL available");
+      return;
+    }
+
+    // 验证URL是否适合生成短链
+    if (!isValidWebUrl(currentUrl)) {
+      showArcNotification(
+        getLocalMessage("invalidUrlForShortening") ||
+          "This URL cannot be shortened",
+      );
       return;
     }
 

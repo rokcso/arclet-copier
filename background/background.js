@@ -1,6 +1,11 @@
 // Background script for handling keyboard shortcuts and URL copying
 
-import { processUrl, getMessage, createShortUrl } from "../shared/constants.js";
+import {
+  processUrl,
+  getMessage,
+  createShortUrl,
+  isValidWebUrl,
+} from "../shared/constants.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -125,11 +130,27 @@ function createMarkdownLink(url, title, cleaningMode) {
 // 处理短链生成
 async function handleCreateShortUrl(longUrl, service) {
   try {
+    // 验证URL是否适合生成短链
+    if (!isValidWebUrl(longUrl)) {
+      throw new Error(
+        getMessage("invalidUrlForShortening") ||
+          "URL is not suitable for shortening",
+      );
+    }
+
     const settings = await getUserSettings();
     const serviceToUse = service || settings.shortUrlService;
 
     // 应用URL清理规则
     const cleanedUrl = processUrl(longUrl, settings.urlCleaning);
+
+    // 再次验证清理后的URL
+    if (!isValidWebUrl(cleanedUrl)) {
+      throw new Error(
+        getMessage("invalidUrlForShortening") ||
+          "Cleaned URL is not suitable for shortening",
+      );
+    }
 
     // 生成短链
     const shortUrl = await createShortUrl(cleanedUrl, serviceToUse);

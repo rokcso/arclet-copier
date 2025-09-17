@@ -193,5 +193,8 @@
   },
   "shortUrlFailed": {
     "message": "短链生成失败，请重试"
+  },
+  "invalidUrlForShortening": {
+    "message": "当前URL不支持短链生成（仅支持http/https网页链接）"
   }
 }

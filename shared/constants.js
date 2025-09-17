@@ -165,6 +165,77 @@ export function isRestrictedPage(url) {
   }
 }
 
+// 检查是否为有效的网页URL（可用于短链生成）
+export function isValidWebUrl(url) {
+  if (!url) return false;
+
+  try {
+    const urlObj = new URL(url);
+
+    // 只允许 HTTP 和 HTTPS 协议
+    if (!["http:", "https:"].includes(urlObj.protocol)) {
+      return false;
+    }
+
+    // 排除部分本地地址（保留localhost用于开发）
+    const hostname = urlObj.hostname.toLowerCase();
+    if (
+      hostname === "127.0.0.1" ||
+      hostname.startsWith("192.168.") ||
+      hostname.startsWith("10.") ||
+      hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./) ||
+      hostname.endsWith(".local")
+    ) {
+      return false;
+    }
+
+    // 排除特殊域名
+    const restrictedDomains = [
+      "chromewebstore.google.com",
+      "chrome.google.com",
+      "addons.mozilla.org",
+      "microsoftedge.microsoft.com",
+    ];
+
+    if (
+      restrictedDomains.some(
+        (domain) => hostname === domain || hostname.endsWith("." + domain),
+      )
+    ) {
+      return false;
+    }
+
+    // 排除文件协议和其他特殊协议
+    const invalidProtocols = [
+      "file:",
+      "ftp:",
+      "chrome:",
+      "chrome-extension:",
+      "edge:",
+      "about:",
+      "moz-extension:",
+      "data:",
+      "javascript:",
+      "mailto:",
+      "tel:",
+      "sms:",
+    ];
+
+    if (invalidProtocols.some((protocol) => url.startsWith(protocol))) {
+      return false;
+    }
+
+    // 基本的域名格式检查
+    if (!hostname.includes(".") || hostname.length < 3) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 // 短链服务配置
 export const SHORT_URL_SERVICES = {
   isgd: {

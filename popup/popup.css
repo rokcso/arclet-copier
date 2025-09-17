@@ -758,6 +758,7 @@ body {
 
 [data-theme="dark"] .copy-btn,
 [data-theme="dark"] .markdown-btn,
+[data-theme="dark"] .short-url-btn,
 [data-theme="dark"] .qr-btn {
     background: var(--arc-surface);
     border: 1px solid var(--arc-border);
@@ -766,6 +767,7 @@ body {
 
 [data-theme="dark"] .copy-btn:hover,
 [data-theme="dark"] .markdown-btn:hover,
+[data-theme="dark"] .short-url-btn:hover,
 [data-theme="dark"] .qr-btn:hover {
     background: #334155;
     color: var(--arc-primary);
@@ -923,6 +925,7 @@ body {
 
     :root:not([data-theme]) .copy-btn,
     :root:not([data-theme]) .markdown-btn,
+    :root:not([data-theme]) .short-url-btn,
     :root:not([data-theme]) .qr-btn {
         background: var(--arc-surface);
         border: 1px solid var(--arc-border);
@@ -931,6 +934,7 @@ body {
 
     :root:not([data-theme]) .copy-btn:hover,
     :root:not([data-theme]) .markdown-btn:hover,
+    :root:not([data-theme]) .short-url-btn:hover,
     :root:not([data-theme]) .qr-btn:hover {
         background: #334155;
         color: var(--arc-primary);
@@ -1058,6 +1062,21 @@ body {
     :root:not([data-theme]) .action-button::before {
         display: none;
     }
+}
+
+/* Short URL Button */
+.short-url-btn {
+    background: #ffffff;
+    color: var(--arc-text-primary);
+    border: 1px solid #d1d5db;
+    box-shadow:
+        0 1px 3px 0 rgb(0 0 0 / 0.1),
+        0 1px 2px 0 rgb(0 0 0 / 0.06);
+}
+
+.short-url-btn:hover {
+    background: #f2f2f2;
+    color: var(--arc-primary);
 }
 
 /* QR Code Button */
