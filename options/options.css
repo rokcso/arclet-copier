@@ -63,6 +63,12 @@ body {
     width: 48px;
     height: 48px;
     margin-right: 16px;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.header-icon:hover {
+    transform: rotate(-720deg);
 }
 
 .header-content {
@@ -376,6 +382,21 @@ select.setting-control:hover {
     font-size: 14px;
     color: var(--arc-text-primary);
     font-weight: 500;
+}
+
+.about-value.developer-link {
+    color: var(--arc-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin: -2px -4px;
+}
+
+.about-value.developer-link:hover {
+    color: var(--arc-primary-hover);
+    background: var(--glow-light);
+    text-decoration: underline;
 }
 
 .about-links {
