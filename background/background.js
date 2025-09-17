@@ -30,10 +30,10 @@ function debounce(key, fn, delay = 500) {
   debounceMap.set(key, timeoutId);
 }
 
-// 短链缓存管理（与popup.js中的实现保持一致）
-class ShortUrlCache {
+// 持久化短链缓存管理（与popup.js中的实现保持一致）
+class PersistentShortUrlCache {
   constructor() {
-    this.cache = new Map();
+    this.storageKey = "arclet_shorturl_cache";
     this.maxSize = 100; // 最大缓存数量
     this.ttl = 24 * 60 * 60 * 1000; // 24小时过期
   }
@@ -43,39 +43,62 @@ class ShortUrlCache {
     return `${service}:${processedUrl}`;
   }
 
-  get(url, service, cleaningMode) {
-    const key = this.getKey(url, service, cleaningMode);
-    const item = this.cache.get(key);
+  async get(url, service, cleaningMode) {
+    try {
+      const key = this.getKey(url, service, cleaningMode);
+      const result = await chrome.storage.local.get([this.storageKey]);
+      const cache = result[this.storageKey] || {};
+      const item = cache[key];
 
-    if (item && Date.now() - item.timestamp < this.ttl) {
-      return item.shortUrl;
+      if (item && Date.now() - item.timestamp < this.ttl) {
+        console.log("使用持久化缓存 (background):", item.shortUrl);
+        return item.shortUrl;
+      }
+
+      // 清理过期项
+      if (item) {
+        delete cache[key];
+        await chrome.storage.local.set({ [this.storageKey]: cache });
+      }
+
+      return null;
+    } catch (error) {
+      console.error("缓存读取失败:", error);
+      return null;
     }
-
-    if (item) {
-      this.cache.delete(key); // 清理过期数据
-    }
-
-    return null;
   }
 
-  set(url, service, cleaningMode, shortUrl) {
-    const key = this.getKey(url, service, cleaningMode);
+  async set(url, service, cleaningMode, shortUrl) {
+    try {
+      const key = this.getKey(url, service, cleaningMode);
+      const result = await chrome.storage.local.get([this.storageKey]);
+      let cache = result[this.storageKey] || {};
 
-    // LRU清理
-    if (this.cache.size >= this.maxSize) {
-      const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
+      // LRU清理
+      const keys = Object.keys(cache);
+      if (keys.length >= this.maxSize) {
+        // 删除最旧的项
+        const oldestKey = keys.reduce((oldest, current) =>
+          cache[current].timestamp < cache[oldest].timestamp ? current : oldest,
+        );
+        delete cache[oldestKey];
+      }
+
+      cache[key] = {
+        shortUrl,
+        timestamp: Date.now(),
+      };
+
+      await chrome.storage.local.set({ [this.storageKey]: cache });
+      console.log("短链已持久化缓存 (background):", shortUrl);
+    } catch (error) {
+      console.error("缓存保存失败:", error);
     }
-
-    this.cache.set(key, {
-      shortUrl,
-      timestamp: Date.now(),
-    });
   }
 }
 
-// 创建短链缓存实例
-const shortUrlCache = new ShortUrlCache();
+// 创建持久化短链缓存实例
+const shortUrlCache = new PersistentShortUrlCache();
 
 // 创建右键菜单
 chrome.runtime.onInstalled.addListener(() => {
@@ -209,7 +232,7 @@ async function handleCreateShortUrl(longUrl, service) {
     const serviceToUse = service || settings.shortUrlService;
 
     // 首先检查缓存
-    const cachedShortUrl = shortUrlCache.get(
+    const cachedShortUrl = await shortUrlCache.get(
       longUrl,
       serviceToUse,
       settings.urlCleaning,
@@ -234,7 +257,12 @@ async function handleCreateShortUrl(longUrl, service) {
     const shortUrl = await createShortUrl(cleanedUrl, serviceToUse);
 
     // 将新生成的短链保存到缓存
-    shortUrlCache.set(longUrl, serviceToUse, settings.urlCleaning, shortUrl);
+    await shortUrlCache.set(
+      longUrl,
+      serviceToUse,
+      settings.urlCleaning,
+      shortUrl,
+    );
     console.log(`Short URL created and cached (background): ${shortUrl}`);
 
     return shortUrl;
