@@ -154,5 +154,14 @@
   },
   "themeColorChanged": {
     "message": "主题色切换成功"
+  },
+  "chromeNotifications": {
+    "message": "Chrome 通知"
+  },
+  "notificationsEnabled": {
+    "message": "已启用 Chrome 通知"
+  },
+  "notificationsDisabled": {
+    "message": "已禁用 Chrome 通知"
   }
 }

@@ -366,6 +366,42 @@ body {
     transform: translateX(24px);
 }
 
+/* Checkbox-based toggle */
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-label {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    background: var(--arc-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--arc-shadow-sm);
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background: var(--arc-primary);
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-slider {
+    transform: translateX(24px);
+}
+
 /* 自适应三段开关 */
 .three-way-switch {
     position: relative;
@@ -726,6 +762,18 @@ body {
     background: var(--arc-text-primary);
 }
 
+[data-theme="dark"] .toggle-label {
+    background: var(--arc-border);
+}
+
+[data-theme="dark"] .toggle-checkbox:checked + .toggle-label {
+    background: var(--arc-primary);
+}
+
+[data-theme="dark"] .toggle-slider {
+    background: white;
+}
+
 [data-theme="dark"] .three-way-switch {
     background: var(--arc-surface);
     border-color: var(--arc-border);
@@ -838,6 +886,18 @@ body {
 
     :root:not([data-theme]) .toggle-switch::after {
         background: var(--arc-text-primary);
+    }
+
+    :root:not([data-theme]) .toggle-label {
+        background: var(--arc-border);
+    }
+
+    :root:not([data-theme]) .toggle-checkbox:checked + .toggle-label {
+        background: var(--arc-primary);
+    }
+
+    :root:not([data-theme]) .toggle-slider {
+        background: white;
     }
 
     :root:not([data-theme]) .three-way-switch {

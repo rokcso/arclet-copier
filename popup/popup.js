@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     qrCodeContainer: document.getElementById("qrCodeContainer"),
     qrUrlDisplay: document.getElementById("qrUrlDisplay"),
     qrCopyBtn: document.getElementById("qrCopyBtn"),
+    notificationCheckbox: document.getElementById("notificationCheckbox"),
   };
 
   let currentUrl = "";
@@ -272,6 +273,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "appearance",
       "language",
       "themeColor",
+      "chromeNotifications",
     ]);
 
     // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
@@ -314,6 +316,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
       });
     }
+
+    // Load Chrome notifications setting, default to true
+    const chromeNotificationsEnabled = result.chromeNotifications !== false;
+    elements.notificationCheckbox.checked = chromeNotificationsEnabled;
   }
 
   // 保存设置
@@ -334,6 +340,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       appearance: appearanceSwitch.getAttribute("data-value"),
       language: elements.languageSelect.value,
       themeColor: currentThemeColor,
+      chromeNotifications: elements.notificationCheckbox.checked,
     });
   }
 
@@ -360,6 +367,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function handleSilentCopyFormatChange() {
     await saveSettings();
     showArcNotification(getLocalMessage("silentCopyFormatChanged"));
+  }
+
+  // Handle notification toggle change
+  async function handleNotificationToggleChange() {
+    await saveSettings();
+    const isEnabled = elements.notificationCheckbox.checked;
+    const message = isEnabled
+      ? getLocalMessage("notificationsEnabled") ||
+        "Chrome notifications enabled"
+      : getLocalMessage("notificationsDisabled") ||
+        "Chrome notifications disabled";
+    showArcNotification(message);
   }
 
   // 获取页面标题
@@ -546,30 +565,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 显示复制成功状态
-  function showStatus() {
+  async function showStatus() {
     // 显示Arc风格通知
     showArcNotification(getLocalMessage("urlCopied"));
 
-    try {
-      const notificationOptions = {
-        type: "basic",
-        iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
-        title: EXTENSION_NAME,
-        message: getLocalMessage("urlCopied"),
-      };
+    // 检查Chrome通知设置
+    const settings = await chrome.storage.sync.get(["chromeNotifications"]);
+    const chromeNotificationsEnabled = settings.chromeNotifications !== false;
 
-      chrome.notifications.create(notificationOptions, (notificationId) => {
-        if (chrome.runtime.lastError) {
-          console.error(
-            "通知创建失败:",
-            chrome.runtime.lastError.message || chrome.runtime.lastError,
-          );
-        } else {
-          console.log("通知创建成功:", notificationId);
-        }
-      });
-    } catch (error) {
-      console.error("通知 API 调用失败:", error);
+    if (chromeNotificationsEnabled) {
+      try {
+        const notificationOptions = {
+          type: "basic",
+          iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
+          title: EXTENSION_NAME,
+          message: getLocalMessage("urlCopied"),
+        };
+
+        chrome.notifications.create(notificationOptions, (notificationId) => {
+          if (chrome.runtime.lastError) {
+            console.error(
+              "通知创建失败:",
+              chrome.runtime.lastError.message || chrome.runtime.lastError,
+            );
+          } else {
+            console.log("通知创建成功:", notificationId);
+          }
+        });
+      } catch (error) {
+        console.error("通知 API 调用失败:", error);
+      }
     }
   }
 
@@ -688,6 +713,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     handleSilentCopyFormatChange,
   );
   elements.languageSelect.addEventListener("change", handleLanguageChange);
+  elements.notificationCheckbox.addEventListener(
+    "change",
+    handleNotificationToggleChange,
+  );
 
   // 键盘快捷键
   document.addEventListener("keydown", (e) => {

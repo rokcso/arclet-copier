@@ -154,5 +154,14 @@
   },
   "themeColorChanged": {
     "message": "Theme color changed successfully"
+  },
+  "chromeNotifications": {
+    "message": "Chrome Notifications"
+  },
+  "notificationsEnabled": {
+    "message": "Chrome notifications enabled"
+  },
+  "notificationsDisabled": {
+    "message": "Chrome notifications disabled"
   }
 }

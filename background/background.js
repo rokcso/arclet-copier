@@ -71,6 +71,7 @@ async function getUserSettings() {
     "removeParams",
     "urlCleaning",
     "silentCopyFormat",
+    "chromeNotifications",
   ]);
 
   // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
@@ -83,6 +84,7 @@ async function getUserSettings() {
   return {
     urlCleaning: cleaningMode,
     silentCopyFormat: settings.silentCopyFormat || "url",
+    chromeNotifications: settings.chromeNotifications !== false,
   };
 }
 
@@ -130,14 +132,20 @@ async function handleCopyUrl() {
     }
 
     await copyToClipboard(contentToCopy);
-    showNotification(EXTENSION_NAME, successMessage);
+
+    if (settings.chromeNotifications) {
+      showNotification(EXTENSION_NAME, successMessage);
+    }
   } catch (error) {
     console.error("复制 URL 失败:", error);
     const message =
       error.message === getMessage("noUrl")
         ? getMessage("noUrl")
         : getMessage("copyFailed");
-    showNotification(EXTENSION_NAME, message);
+
+    if (settings.chromeNotifications) {
+      showNotification(EXTENSION_NAME, message);
+    }
   }
 }
 
