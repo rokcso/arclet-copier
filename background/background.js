@@ -1,10 +1,6 @@
 // Background script for handling keyboard shortcuts and URL copying
 
-import {
-  processUrl,
-  isRestrictedPage,
-  getMessage,
-} from "../shared/constants.js";
+import { processUrl, getMessage } from "../shared/constants.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -93,23 +89,14 @@ async function getUserSettings() {
 // 获取页面标题
 async function getPageTitle(tabId, url) {
   try {
-    // 对于受限页面，尝试从tab信息获取标题
-    if (isRestrictedPage(url)) {
-      const tab = await chrome.tabs.get(tabId);
-      return tab.title || new URL(url).hostname || "";
-    }
-
-    const results = await chrome.scripting.executeScript({
-      target: { tabId },
-      func: () => document.title,
-    });
-    return results[0]?.result || "";
+    const tab = await chrome.tabs.get(tabId);
+    return tab.title || new URL(url).hostname || "";
   } catch (error) {
     console.error("获取页面标题失败:", error);
-    // 获取标题失败时，尝试从URL生成标题
+    // 如果获取tab失败，尝试从URL生成标题
     try {
       return new URL(url).hostname || "";
-    } catch {
+    } catch (urlError) {
       return "";
     }
   }

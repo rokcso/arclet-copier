@@ -133,6 +133,8 @@ export function processUrl(url, cleaningMode = "smart") {
 // 检查是否为特殊页面的共享函数
 export function isRestrictedPage(url) {
   if (!url) return true;
+
+  // 受限协议
   const restrictedProtocols = [
     "chrome:",
     "chrome-extension:",
@@ -140,7 +142,27 @@ export function isRestrictedPage(url) {
     "about:",
     "moz-extension:",
   ];
-  return restrictedProtocols.some((protocol) => url.startsWith(protocol));
+
+  // 受限域名
+  const restrictedDomains = [
+    "chromewebstore.google.com",
+    "chrome.google.com",
+    "addons.mozilla.org",
+    "microsoftedge.microsoft.com",
+  ];
+
+  // 检查协议
+  if (restrictedProtocols.some((protocol) => url.startsWith(protocol))) {
+    return true;
+  }
+
+  // 检查域名
+  try {
+    const urlObj = new URL(url);
+    return restrictedDomains.some((domain) => urlObj.hostname === domain);
+  } catch (error) {
+    return true; // URL无效时也认为是受限页面
+  }
 }
 
 // i18n helper function

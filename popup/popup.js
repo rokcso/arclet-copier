@@ -1,8 +1,4 @@
-import {
-  processUrl,
-  isRestrictedPage,
-  getMessage,
-} from "../shared/constants.js";
+import { processUrl, getMessage } from "../shared/constants.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
@@ -367,16 +363,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 获取页面标题
-  async function getPageTitle(tabId) {
+  async function getPageTitle(tabId, url) {
     try {
-      const results = await chrome.scripting.executeScript({
-        target: { tabId },
-        func: () => document.title,
-      });
-      return results[0]?.result || "";
+      const tab = await chrome.tabs.get(tabId);
+      return tab.title || new URL(url).hostname || "";
     } catch (error) {
       console.error("获取页面标题失败:", error);
-      return "";
+      // 如果获取tab失败，尝试从URL生成标题
+      try {
+        return new URL(url).hostname || "";
+      } catch (urlError) {
+        return "";
+      }
     }
   }
 
@@ -391,12 +389,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (tab && tab.url) {
         currentUrl = tab.url;
 
-        // 获取页面标题，但在特殊页面跳过脚本注入
-        if (tab.id && !isRestrictedPage(tab.url)) {
-          currentTitle = await getPageTitle(tab.id);
-        } else if (isRestrictedPage(tab.url)) {
-          // 对于特殊页面，使用tab.title或从URL生成标题
-          currentTitle = tab.title || new URL(tab.url).hostname || "特殊页面";
+        // 获取页面标题
+        if (tab.id) {
+          currentTitle = await getPageTitle(tab.id, tab.url);
         }
 
         updatePageDisplay();
@@ -505,22 +500,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       showStatus();
     } catch (error) {
       console.error("复制失败:", error);
-      // 对于特殊页面，不要报错，只是静默失败并显示成功状态
-      if (isRestrictedPage(currentUrl)) {
-        console.log("特殊页面，使用fallback复制");
-        try {
-          fallbackCopy(processedUrl);
-          showStatus();
-        } catch (fallbackError) {
-          console.error("特殊页面降级复制失败:", fallbackError);
-        }
-      } else {
-        try {
-          fallbackCopy(processedUrl);
-          showStatus();
-        } catch (fallbackError) {
-          console.error("降级复制也失败:", fallbackError);
-        }
+      // 使用fallback复制方法
+      try {
+        fallbackCopy(processedUrl);
+        showStatus();
+      } catch (fallbackError) {
+        console.error("降级复制也失败:", fallbackError);
       }
     }
   }
@@ -550,22 +535,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       showArcNotification(getLocalMessage("markdownCopied"));
     } catch (error) {
       console.error("Markdown复制失败:", error);
-      // 对于特殊页面，不要报错，只是静默失败并显示成功状态
-      if (isRestrictedPage(currentUrl)) {
-        console.log("特殊页面，使用fallback复制 Markdown");
-        try {
-          fallbackCopy(markdownLink);
-          showArcNotification(getLocalMessage("markdownCopied"));
-        } catch (fallbackError) {
-          console.error("特殊页面 Markdown 降级复制失败:", fallbackError);
-        }
-      } else {
-        try {
-          fallbackCopy(markdownLink);
-          showArcNotification(getLocalMessage("markdownCopied"));
-        } catch (fallbackError) {
-          console.error("Markdown降级复制也失败:", fallbackError);
-        }
+      // 使用fallback复制方法
+      try {
+        fallbackCopy(markdownLink);
+        showArcNotification(getLocalMessage("markdownCopied"));
+      } catch (fallbackError) {
+        console.error("Markdown降级复制也失败:", fallbackError);
       }
     }
   }
