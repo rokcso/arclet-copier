@@ -9,6 +9,77 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Constants
   const EXTENSION_NAME = chrome.i18n.getMessage("extName");
 
+  // 防抖工具
+  const debounceMap = new Map();
+
+  function debounce(key, fn, delay = 300) {
+    if (debounceMap.has(key)) {
+      clearTimeout(debounceMap.get(key));
+    }
+
+    const timeoutId = setTimeout(() => {
+      debounceMap.delete(key);
+      fn();
+    }, delay);
+
+    debounceMap.set(key, timeoutId);
+  }
+
+  // 复制操作状态管理
+  const copyOperationStates = {
+    copyUrl: false,
+    copyMarkdown: false,
+    generateShortUrl: false,
+    copyQRCode: false,
+  };
+
+  // 短链缓存管理
+  class ShortUrlCache {
+    constructor() {
+      this.cache = new Map();
+      this.maxSize = 100; // 最大缓存数量
+      this.ttl = 24 * 60 * 60 * 1000; // 24小时过期
+    }
+
+    getKey(url, service, cleaningMode) {
+      const processedUrl = processUrl(url, cleaningMode);
+      return `${service}:${processedUrl}`;
+    }
+
+    get(url, service, cleaningMode) {
+      const key = this.getKey(url, service, cleaningMode);
+      const item = this.cache.get(key);
+
+      if (item && Date.now() - item.timestamp < this.ttl) {
+        return item.shortUrl;
+      }
+
+      if (item) {
+        this.cache.delete(key); // 清理过期数据
+      }
+
+      return null;
+    }
+
+    set(url, service, cleaningMode, shortUrl) {
+      const key = this.getKey(url, service, cleaningMode);
+
+      // LRU清理
+      if (this.cache.size >= this.maxSize) {
+        const firstKey = this.cache.keys().next().value;
+        this.cache.delete(firstKey);
+      }
+
+      this.cache.set(key, {
+        shortUrl,
+        timestamp: Date.now(),
+      });
+    }
+  }
+
+  // 创建短链缓存实例
+  const shortUrlCache = new ShortUrlCache();
+
   // Locale data
   let currentLocale = "zh_CN";
   let localeMessages = {};
@@ -385,11 +456,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 复制URL到剪贴板
   async function copyUrl() {
-    const cleaningSelect = elements.removeParamsToggle;
-    const cleaningMode = cleaningSelect.getAttribute("data-value");
-    const processedUrl = processUrl(currentUrl, cleaningMode);
+    if (copyOperationStates.copyUrl) {
+      return; // 防止重复执行
+    }
+
+    copyOperationStates.copyUrl = true;
 
     try {
+      const cleaningSelect = elements.removeParamsToggle;
+      const cleaningMode = cleaningSelect.getAttribute("data-value");
+      const processedUrl = processUrl(currentUrl, cleaningMode);
+
       // 首先尝试现代clipboard API
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(processedUrl);
@@ -403,11 +480,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("复制失败:", error);
       // 使用fallback复制方法
       try {
+        const cleaningSelect = elements.removeParamsToggle;
+        const cleaningMode = cleaningSelect.getAttribute("data-value");
+        const processedUrl = processUrl(currentUrl, cleaningMode);
         fallbackCopy(processedUrl);
         showStatus();
       } catch (fallbackError) {
         console.error("降级复制也失败:", fallbackError);
       }
+    } finally {
+      // 300ms后重置状态
+      setTimeout(() => {
+        copyOperationStates.copyUrl = false;
+      }, 300);
     }
   }
 
@@ -422,9 +507,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 复制 markdown 链接
   async function copyMarkdown() {
-    const markdownLink = createMarkdownLink(currentUrl, currentTitle);
+    if (copyOperationStates.copyMarkdown) {
+      return; // 防止重复执行
+    }
+
+    copyOperationStates.copyMarkdown = true;
 
     try {
+      const markdownLink = createMarkdownLink(currentUrl, currentTitle);
+
       // 首先尝试现代clipboard API
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(markdownLink);
@@ -438,16 +529,27 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Markdown复制失败:", error);
       // 使用fallback复制方法
       try {
+        const markdownLink = createMarkdownLink(currentUrl, currentTitle);
         fallbackCopy(markdownLink);
         showArcNotification(getLocalMessage("markdownCopied"));
       } catch (fallbackError) {
         console.error("Markdown降级复制也失败:", fallbackError);
       }
+    } finally {
+      // 300ms后重置状态
+      setTimeout(() => {
+        copyOperationStates.copyMarkdown = false;
+      }, 300);
     }
   }
 
   // 生成短链
   async function generateShortUrl() {
+    // 强化防抖：如果正在生成短链，直接返回
+    if (copyOperationStates.generateShortUrl) {
+      return;
+    }
+
     if (!currentUrl) {
       showArcNotification(getLocalMessage("noUrl") || "No URL available");
       return;
@@ -462,6 +564,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
+    // 设置防抖状态
+    copyOperationStates.generateShortUrl = true;
+
     // 显示加载状态
     const originalText = elements.shortUrlBtn.querySelector("span").textContent;
     const loadingText = getLocalMessage("generating") || "Generating...";
@@ -473,6 +578,38 @@ document.addEventListener("DOMContentLoaded", async () => {
       const result = await chrome.storage.sync.get(["shortUrlService"]);
       const selectedService = result.shortUrlService || "isgd";
 
+      // 获取当前的URL清理模式
+      const cleaningSelect = elements.removeParamsToggle;
+      const cleaningMode = cleaningSelect.getAttribute("data-value");
+
+      // 首先检查缓存
+      const cachedShortUrl = shortUrlCache.get(
+        currentUrl,
+        selectedService,
+        cleaningMode,
+      );
+      if (cachedShortUrl) {
+        // 使用缓存的短链
+        console.log("使用缓存的短链:", cachedShortUrl);
+
+        // 复制短链到剪贴板
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(cachedShortUrl);
+        } else {
+          fallbackCopy(cachedShortUrl);
+        }
+
+        // 显示成功通知
+        const serviceName =
+          SHORT_URL_SERVICES[selectedService]?.name || selectedService;
+        showArcNotification(
+          getLocalMessage("shortUrlGenerated") ||
+            `Short URL generated and copied! (${serviceName})`,
+        );
+
+        return; // 直接返回，不需要发送API请求
+      }
+
       // 通过 background script 生成短链
       const response = await chrome.runtime.sendMessage({
         action: "createShortUrl",
@@ -481,6 +618,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (response.success) {
+        // 将新生成的短链保存到缓存
+        shortUrlCache.set(
+          currentUrl,
+          selectedService,
+          cleaningMode,
+          response.shortUrl,
+        );
+        console.log("短链已缓存:", response.shortUrl);
+
         // 复制短链到剪贴板
         if (navigator.clipboard && navigator.clipboard.writeText) {
           await navigator.clipboard.writeText(response.shortUrl);
@@ -542,6 +688,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       // 恢复按钮状态
       elements.shortUrlBtn.querySelector("span").textContent = originalText;
       elements.shortUrlBtn.disabled = false;
+
+      // 重置防抖状态（使用更长的延迟避免重复请求）
+      setTimeout(() => {
+        copyOperationStates.generateShortUrl = false;
+      }, 1000);
     }
   }
 
@@ -581,6 +732,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 复制二维码图片到剪贴板
   async function copyQRCodeImage() {
+    if (copyOperationStates.copyQRCode) {
+      return; // 防止重复执行
+    }
+
+    copyOperationStates.copyQRCode = true;
+
     try {
       const canvas = elements.qrCodeContainer.querySelector("canvas");
       if (!canvas) {
@@ -616,6 +773,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           showArcNotification(
             getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败",
           );
+        } finally {
+          // 重置状态
+          setTimeout(() => {
+            copyOperationStates.copyQRCode = false;
+          }, 300);
         }
       }, "image/png");
     } catch (error) {
@@ -623,6 +785,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       showArcNotification(
         getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败",
       );
+      // 重置状态
+      setTimeout(() => {
+        copyOperationStates.copyQRCode = false;
+      }, 300);
     }
   }
 

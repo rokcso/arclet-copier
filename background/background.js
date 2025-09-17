@@ -10,6 +10,73 @@ import {
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
 
+// 防抖工具和状态管理
+const debounceMap = new Map();
+const copyOperationStates = {
+  copyUrl: false,
+  contextMenuCopy: false,
+};
+
+function debounce(key, fn, delay = 500) {
+  if (debounceMap.has(key)) {
+    clearTimeout(debounceMap.get(key));
+  }
+
+  const timeoutId = setTimeout(() => {
+    debounceMap.delete(key);
+    fn();
+  }, delay);
+
+  debounceMap.set(key, timeoutId);
+}
+
+// 短链缓存管理（与popup.js中的实现保持一致）
+class ShortUrlCache {
+  constructor() {
+    this.cache = new Map();
+    this.maxSize = 100; // 最大缓存数量
+    this.ttl = 24 * 60 * 60 * 1000; // 24小时过期
+  }
+
+  getKey(url, service, cleaningMode) {
+    const processedUrl = processUrl(url, cleaningMode);
+    return `${service}:${processedUrl}`;
+  }
+
+  get(url, service, cleaningMode) {
+    const key = this.getKey(url, service, cleaningMode);
+    const item = this.cache.get(key);
+
+    if (item && Date.now() - item.timestamp < this.ttl) {
+      return item.shortUrl;
+    }
+
+    if (item) {
+      this.cache.delete(key); // 清理过期数据
+    }
+
+    return null;
+  }
+
+  set(url, service, cleaningMode, shortUrl) {
+    const key = this.getKey(url, service, cleaningMode);
+
+    // LRU清理
+    if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      this.cache.delete(firstKey);
+    }
+
+    this.cache.set(key, {
+      shortUrl,
+      timestamp: Date.now(),
+    });
+  }
+}
+
+// 创建短链缓存实例
+const shortUrlCache = new ShortUrlCache();
+
 // 创建右键菜单
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
@@ -31,14 +98,14 @@ chrome.runtime.onInstalled.addListener(() => {
 // 监听右键菜单点击事件
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "copy-current-url") {
-    await handleCopyUrl();
+    debounce("contextMenuCopy", () => handleCopyUrl(), 300);
   }
 });
 
 // 监听键盘快捷键命令
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === "copy-url") {
-    await handleCopyUrl();
+    debounce("shortcutCopy", () => handleCopyUrl(), 500);
   }
 });
 
@@ -141,6 +208,17 @@ async function handleCreateShortUrl(longUrl, service) {
     const settings = await getUserSettings();
     const serviceToUse = service || settings.shortUrlService;
 
+    // 首先检查缓存
+    const cachedShortUrl = shortUrlCache.get(
+      longUrl,
+      serviceToUse,
+      settings.urlCleaning,
+    );
+    if (cachedShortUrl) {
+      console.log("使用缓存的短链 (background):", cachedShortUrl);
+      return cachedShortUrl;
+    }
+
     // 应用URL清理规则
     const cleanedUrl = processUrl(longUrl, settings.urlCleaning);
 
@@ -155,7 +233,10 @@ async function handleCreateShortUrl(longUrl, service) {
     // 生成短链
     const shortUrl = await createShortUrl(cleanedUrl, serviceToUse);
 
-    console.log(`Short URL created: ${shortUrl}`);
+    // 将新生成的短链保存到缓存
+    shortUrlCache.set(longUrl, serviceToUse, settings.urlCleaning, shortUrl);
+    console.log(`Short URL created and cached (background): ${shortUrl}`);
+
     return shortUrl;
   } catch (error) {
     console.error("Failed to create short URL:", error);
@@ -165,6 +246,12 @@ async function handleCreateShortUrl(longUrl, service) {
 
 // 处理URL复制功能
 async function handleCopyUrl() {
+  // 防止重复执行
+  if (copyOperationStates.copyUrl) {
+    return;
+  }
+
+  copyOperationStates.copyUrl = true;
   let settings;
 
   try {
@@ -245,6 +332,11 @@ async function handleCopyUrl() {
     if (settings.chromeNotifications) {
       showNotification(EXTENSION_NAME, message);
     }
+  } finally {
+    // 重置状态
+    setTimeout(() => {
+      copyOperationStates.copyUrl = false;
+    }, 500);
   }
 }
 
