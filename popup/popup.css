@@ -167,6 +167,7 @@ body {
     line-height: 1.5;
     max-height: 80px;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-top: 6px;
     border-top: 1px dashed rgba(0, 0, 0, 0.15);
     opacity: 0.95;
@@ -1134,6 +1135,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 20px 24px;
+    border-bottom: 1px solid var(--arc-border);
 }
 
 .qr-modal-header h3 {
@@ -1238,21 +1240,13 @@ body {
     width: 100%;
     line-height: 1.5;
     text-align: left;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--arc-border);
     max-height: 80px;
     overflow-y: auto;
-    min-height: 45px;
+    overflow-x: hidden;
     box-sizing: border-box;
-}
-
-.qr-url-display::after {
-    content: "";
-    position: absolute;
-    bottom: -12px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--arc-border);
 }
 
 .qr-url-display::-webkit-scrollbar {
