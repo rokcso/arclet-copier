@@ -1,6 +1,6 @@
 // Background script for handling keyboard shortcuts and URL copying
 
-import { processUrl, getMessage } from "../shared/constants.js";
+import { processUrl, getMessage, createShortUrl } from "../shared/constants.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -48,6 +48,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
 
     return true; // 表示会异步发送响应
+  } else if (message.action === "createShortUrl") {
+    handleCreateShortUrl(message.url, message.service)
+      .then((shortUrl) => sendResponse({ success: true, shortUrl }))
+      .catch((error) => {
+        console.error("Short URL creation failed:", error);
+        sendResponse({ success: false, error: error.message });
+      });
+
+    return true; // 表示会异步发送响应
   }
 });
 
@@ -72,6 +81,7 @@ async function getUserSettings() {
     "urlCleaning",
     "silentCopyFormat",
     "chromeNotifications",
+    "shortUrlService",
   ]);
 
   // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
@@ -85,6 +95,7 @@ async function getUserSettings() {
     urlCleaning: cleaningMode,
     silentCopyFormat: settings.silentCopyFormat || "url",
     chromeNotifications: settings.chromeNotifications !== false,
+    shortUrlService: settings.shortUrlService || "isgd",
   };
 }
 
@@ -111,6 +122,26 @@ function createMarkdownLink(url, title, cleaningMode) {
   return `[${linkTitle}](${processedUrl})`;
 }
 
+// 处理短链生成
+async function handleCreateShortUrl(longUrl, service) {
+  try {
+    const settings = await getUserSettings();
+    const serviceToUse = service || settings.shortUrlService;
+
+    // 应用URL清理规则
+    const cleanedUrl = processUrl(longUrl, settings.urlCleaning);
+
+    // 生成短链
+    const shortUrl = await createShortUrl(cleanedUrl, serviceToUse);
+
+    console.log(`Short URL created: ${shortUrl}`);
+    return shortUrl;
+  } catch (error) {
+    console.error("Failed to create short URL:", error);
+    throw error;
+  }
+}
+
 // 处理URL复制功能
 async function handleCopyUrl() {
   try {
@@ -125,6 +156,14 @@ async function handleCopyUrl() {
       const title = await getPageTitle(tab.id, tab.url);
       contentToCopy = createMarkdownLink(tab.url, title, settings.urlCleaning);
       successMessage = getMessage("markdownLinkCopied");
+    } else if (settings.silentCopyFormat === "shortUrl") {
+      // 生成短链
+      const shortUrl = await handleCreateShortUrl(
+        tab.url,
+        settings.shortUrlService,
+      );
+      contentToCopy = shortUrl;
+      successMessage = getMessage("shortUrlCopied");
     } else {
       // 默认复制 URL
       contentToCopy = processUrl(tab.url, settings.urlCleaning);
@@ -138,10 +177,15 @@ async function handleCopyUrl() {
     }
   } catch (error) {
     console.error("复制 URL 失败:", error);
-    const message =
-      error.message === getMessage("noUrl")
-        ? getMessage("noUrl")
-        : getMessage("copyFailed");
+    let message;
+
+    if (error.message === getMessage("noUrl")) {
+      message = getMessage("noUrl");
+    } else if (settings.silentCopyFormat === "shortUrl") {
+      message = getMessage("shortUrlFailed");
+    } else {
+      message = getMessage("copyFailed");
+    }
 
     if (settings.chromeNotifications) {
       showNotification(EXTENSION_NAME, message);

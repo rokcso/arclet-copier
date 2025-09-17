@@ -14,6 +14,7 @@
     "clipboardWrite",
     "contextMenus"
   ],
+  "host_permissions": ["https://is.gd/*", "https://tinyurl.com/*"],
   "web_accessible_resources": [
     {
       "resources": ["_locales/*/*.json"],

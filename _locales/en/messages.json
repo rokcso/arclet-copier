@@ -47,6 +47,9 @@
   "formatMarkdown": {
     "message": "Markdown"
   },
+  "formatShortUrl": {
+    "message": "Short URL"
+  },
   "languageEn": {
     "message": "🇺🇸 English"
   },
@@ -61,6 +64,9 @@
   },
   "markdownCopied": {
     "message": "Markdown link copied to clipboard"
+  },
+  "shortUrlCopied": {
+    "message": "Short URL copied to clipboard"
   },
   "noUrl": {
     "message": "Unable to get URL"
@@ -163,5 +169,29 @@
   },
   "notificationsDisabled": {
     "message": "Chrome notifications disabled"
+  },
+  "generateShortUrl": {
+    "message": "Generate Short URL"
+  },
+  "shortUrlService": {
+    "message": "Short URL Service"
+  },
+  "serviceIsgd": {
+    "message": "is.gd"
+  },
+  "serviceTinyurl": {
+    "message": "TinyURL"
+  },
+  "shortUrlServiceChanged": {
+    "message": "Short URL service changed"
+  },
+  "generating": {
+    "message": "Generating..."
+  },
+  "shortUrlGenerated": {
+    "message": "Short URL generated and copied to clipboard"
+  },
+  "shortUrlFailed": {
+    "message": "Failed to generate short URL, please try again"
   }
 }

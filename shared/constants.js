@@ -165,6 +165,67 @@ export function isRestrictedPage(url) {
   }
 }
 
+// 短链服务配置
+export const SHORT_URL_SERVICES = {
+  isgd: {
+    name: "is.gd",
+    endpoint: "https://is.gd/create.php",
+    method: "GET",
+    params: (url) => ({ format: "simple", url: url }),
+  },
+  tinyurl: {
+    name: "TinyURL",
+    endpoint: "https://tinyurl.com/api-create.php",
+    method: "GET",
+    params: (url) => ({ url: url }),
+  },
+};
+
+// 创建短链的共享函数
+export async function createShortUrl(longUrl, service = "isgd") {
+  const serviceConfig = SHORT_URL_SERVICES[service];
+  if (!serviceConfig) {
+    throw new Error(`Unknown short URL service: ${service}`);
+  }
+
+  try {
+    const url = new URL(serviceConfig.endpoint);
+    const params = serviceConfig.params(longUrl);
+
+    // 添加参数到URL
+    Object.keys(params).forEach((key) => {
+      url.searchParams.append(key, params[key]);
+    });
+
+    const response = await fetch(url.toString(), {
+      method: serviceConfig.method,
+      headers: {
+        "User-Agent": "Arclet Copier Chrome Extension",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const shortUrl = await response.text();
+
+    // 验证返回的是否为有效URL
+    if (
+      !shortUrl.trim() ||
+      shortUrl.includes("Error") ||
+      !shortUrl.startsWith("http")
+    ) {
+      throw new Error(`Invalid short URL returned: ${shortUrl}`);
+    }
+
+    return shortUrl.trim();
+  } catch (error) {
+    console.error(`Short URL creation failed for ${service}:`, error);
+    throw error;
+  }
+}
+
 // i18n helper function
 export function getMessage(key, substitutions = []) {
   return chrome.i18n.getMessage(key, substitutions);

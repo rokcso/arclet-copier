@@ -1,4 +1,8 @@
-import { processUrl, getMessage } from "../shared/constants.js";
+import {
+  processUrl,
+  getMessage,
+  SHORT_URL_SERVICES,
+} from "../shared/constants.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
@@ -37,10 +41,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     pageUrl: document.getElementById("pageUrl"),
     copyBtn: document.getElementById("copyBtn"),
     markdownBtn: document.getElementById("markdownBtn"),
+    shortUrlBtn: document.getElementById("shortUrlBtn"),
     qrBtn: document.getElementById("qrBtn"),
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
+    shortUrlServiceSelect: document.getElementById("shortUrlServiceSelect"),
     appearanceSwitch: document.getElementById("appearanceSwitch"),
     languageSelect: document.getElementById("languageSelect"),
     colorPicker: document.getElementById("colorPicker"),
@@ -270,6 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "removeParams",
       "urlCleaning",
       "silentCopyFormat",
+      "shortUrlService",
       "appearance",
       "language",
       "themeColor",
@@ -287,6 +294,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     cleaningSelect.setAttribute("data-value", cleaningMode);
 
     elements.silentCopyFormat.value = result.silentCopyFormat || "url";
+
+    // Load short URL service setting
+    elements.shortUrlServiceSelect.value = result.shortUrlService || "isgd";
 
     // Load appearance setting
     const savedAppearance = result.appearance || "system";
@@ -337,6 +347,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await chrome.storage.sync.set({
       urlCleaning: cleaningSelect.getAttribute("data-value"),
       silentCopyFormat: elements.silentCopyFormat.value,
+      shortUrlService: elements.shortUrlServiceSelect.value,
       appearance: appearanceSwitch.getAttribute("data-value"),
       language: elements.languageSelect.value,
       themeColor: currentThemeColor,
@@ -367,6 +378,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function handleSilentCopyFormatChange() {
     await saveSettings();
     showArcNotification(getLocalMessage("silentCopyFormatChanged"));
+  }
+
+  // Handle short URL service change
+  async function handleShortUrlServiceChange() {
+    await saveSettings();
+    const serviceName =
+      SHORT_URL_SERVICES[elements.shortUrlServiceSelect.value]?.name ||
+      elements.shortUrlServiceSelect.value;
+    showArcNotification(
+      getLocalMessage("shortUrlServiceChanged") ||
+        `Short URL service changed to ${serviceName}`,
+    );
   }
 
   // Handle notification toggle change
@@ -564,6 +587,94 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 生成短链
+  async function generateShortUrl() {
+    if (!currentUrl) {
+      showArcNotification(getLocalMessage("noUrl") || "No URL available");
+      return;
+    }
+
+    // 显示加载状态
+    const originalText = elements.shortUrlBtn.querySelector("span").textContent;
+    const loadingText = getLocalMessage("generating") || "Generating...";
+    elements.shortUrlBtn.querySelector("span").textContent = loadingText;
+    elements.shortUrlBtn.disabled = true;
+
+    try {
+      const selectedService = elements.shortUrlServiceSelect.value;
+
+      // 通过 background script 生成短链
+      const response = await chrome.runtime.sendMessage({
+        action: "createShortUrl",
+        url: currentUrl,
+        service: selectedService,
+      });
+
+      if (response.success) {
+        // 复制短链到剪贴板
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(response.shortUrl);
+        } else {
+          fallbackCopy(response.shortUrl);
+        }
+
+        // 显示成功通知
+        const serviceName =
+          SHORT_URL_SERVICES[selectedService]?.name || selectedService;
+        showArcNotification(
+          getLocalMessage("shortUrlGenerated") ||
+            `Short URL generated and copied! (${serviceName})`,
+        );
+
+        // 检查Chrome通知设置
+        const settings = await chrome.storage.sync.get(["chromeNotifications"]);
+        const chromeNotificationsEnabled =
+          settings.chromeNotifications !== false;
+
+        if (chromeNotificationsEnabled) {
+          try {
+            const notificationOptions = {
+              type: "basic",
+              iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
+              title: EXTENSION_NAME,
+              message:
+                getLocalMessage("shortUrlGenerated") ||
+                `Short URL generated: ${response.shortUrl}`,
+            };
+
+            chrome.notifications.create(
+              notificationOptions,
+              (notificationId) => {
+                if (chrome.runtime.lastError) {
+                  console.error(
+                    "通知创建失败:",
+                    chrome.runtime.lastError.message ||
+                      chrome.runtime.lastError,
+                  );
+                } else {
+                  console.log("通知创建成功:", notificationId);
+                }
+              },
+            );
+          } catch (error) {
+            console.error("通知 API 调用失败:", error);
+          }
+        }
+      } else {
+        throw new Error(response.error || "Failed to generate short URL");
+      }
+    } catch (error) {
+      console.error("生成短链失败:", error);
+      showArcNotification(
+        getLocalMessage("shortUrlFailed") || "Failed to generate short URL",
+      );
+    } finally {
+      // 恢复按钮状态
+      elements.shortUrlBtn.querySelector("span").textContent = originalText;
+      elements.shortUrlBtn.disabled = false;
+    }
+  }
+
   // 显示复制成功状态
   async function showStatus() {
     // 显示Arc风格通知
@@ -705,12 +816,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 事件监听器
   elements.copyBtn.addEventListener("click", copyUrl);
   elements.markdownBtn.addEventListener("click", copyMarkdown);
+  elements.shortUrlBtn.addEventListener("click", generateShortUrl);
   elements.qrBtn.addEventListener("click", showQRModal);
   elements.qrCopyBtn.addEventListener("click", copyQRCodeImage);
 
   elements.silentCopyFormat.addEventListener(
     "change",
     handleSilentCopyFormatChange,
+  );
+  elements.shortUrlServiceSelect.addEventListener(
+    "change",
+    handleShortUrlServiceChange,
   );
   elements.languageSelect.addEventListener("change", handleLanguageChange);
   elements.notificationCheckbox.addEventListener(

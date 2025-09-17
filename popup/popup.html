@@ -121,6 +121,33 @@
                     </svg>
                     <span data-i18n="copyAsMarkdown">Copy as Markdown</span>
                 </button>
+                <button class="action-button short-url-btn" id="shortUrlBtn">
+                    <svg
+                        class="button-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="128"
+                        height="128"
+                        viewBox="0 0 48 48"
+                    >
+                        <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-width="4"
+                        >
+                            <path
+                                stroke-linejoin="round"
+                                d="M8.92 8.714C8.495 7.39 9.476 6 10.867 6h26.266c1.391 0 2.372 1.39 1.947 2.714C37.9 12.4 36 19.09 36 24s1.9 11.6 3.08 15.286C39.505 40.61 38.524 42 37.133 42H10.867c-1.391 0-2.372-1.39-1.947-2.714C10.1 35.6 12 28.91 12 24S10.1 12.4 8.92 8.714M4 15c1.5 2 2 6 2 9s-.5 7-2 9"
+                            />
+                            <path d="M18 15.5h12M18 24h12m-12 8h4" />
+                            <path
+                                stroke-linejoin="round"
+                                d="M44 15c-1.5 2-2 6-2 9s.5 6 2 9"
+                            />
+                        </g>
+                    </svg>
+                    <span data-i18n="generateShortUrl">Generate Short URL</span>
+                </button>
                 <button class="action-button qr-btn" id="qrBtn">
                     <svg
                         class="qr-icon"
@@ -172,6 +199,23 @@
                         <option value="url" data-i18n="formatUrl">URL</option>
                         <option value="markdown" data-i18n="formatMarkdown">
                             Markdown
+                        </option>
+                        <option value="shortUrl" data-i18n="formatShortUrl">
+                            Short URL
+                        </option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label" data-i18n="shortUrlService"
+                        >Short URL Service</span
+                    >
+                    <select id="shortUrlServiceSelect" class="format-select">
+                        <option value="isgd" data-i18n="serviceIsgd">
+                            is.gd
+                        </option>
+                        <option value="tinyurl" data-i18n="serviceTinyurl">
+                            TinyURL
                         </option>
                     </select>
                 </div>

@@ -47,6 +47,9 @@
   "formatMarkdown": {
     "message": "Markdown"
   },
+  "formatShortUrl": {
+    "message": "短链"
+  },
   "languageEn": {
     "message": "🇺🇸 English"
   },
@@ -61,6 +64,9 @@
   },
   "markdownCopied": {
     "message": "Markdown 链接已复制到剪贴板"
+  },
+  "shortUrlCopied": {
+    "message": "短链已复制到剪贴板"
   },
   "noUrl": {
     "message": "无法获取 URL"
@@ -163,5 +169,29 @@
   },
   "notificationsDisabled": {
     "message": "已禁用 Chrome 通知"
+  },
+  "generateShortUrl": {
+    "message": "生成短链"
+  },
+  "shortUrlService": {
+    "message": "短链服务"
+  },
+  "serviceIsgd": {
+    "message": "is.gd"
+  },
+  "serviceTinyurl": {
+    "message": "TinyURL"
+  },
+  "shortUrlServiceChanged": {
+    "message": "短链服务已更改"
+  },
+  "generating": {
+    "message": "生成中..."
+  },
+  "shortUrlGenerated": {
+    "message": "短链已生成并复制到剪贴板"
+  },
+  "shortUrlFailed": {
+    "message": "短链生成失败，请重试"
   }
 }
