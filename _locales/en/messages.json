@@ -196,5 +196,50 @@
   },
   "invalidUrlForShortening": {
     "message": "This URL cannot be shortened (only http/https web links are supported)"
+  },
+  "moreSettings": {
+    "message": "More Settings"
+  },
+  "optionsTitle": {
+    "message": "Arclet Copier - Settings"
+  },
+  "generalSettings": {
+    "message": "General Settings"
+  },
+  "appearanceSettings": {
+    "message": "Appearance Settings"
+  },
+  "aboutSection": {
+    "message": "About"
+  },
+  "shortUrlServiceDesc": {
+    "message": "Choose the service to use when generating short URLs"
+  },
+  "chromeNotificationsDesc": {
+    "message": "Show notifications when operations are completed"
+  },
+  "languageDesc": {
+    "message": "Choose the interface display language"
+  },
+  "appearanceDesc": {
+    "message": "Choose the interface theme mode"
+  },
+  "themeColorDesc": {
+    "message": "Choose the interface theme color"
+  },
+  "version": {
+    "message": "Version"
+  },
+  "developer": {
+    "message": "Developer"
+  },
+  "officialWebsite": {
+    "message": "Official Website"
+  },
+  "githubRepo": {
+    "message": "GitHub Repository"
+  },
+  "developerTwitter": {
+    "message": "Developer X"
   }
 }

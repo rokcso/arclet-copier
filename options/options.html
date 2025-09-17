@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title data-i18n="optionsTitle">Arclet Copier - 设置</title>
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <img
+                    src="../assets/icons/icon64.png"
+                    alt="Arclet Copier"
+                    class="header-icon"
+                />
+                <div class="header-content">
+                    <h1 data-i18n="optionsTitle">Arclet Copier - 设置</h1>
+                    <span class="version" id="version">v1.3.5</span>
+                </div>
+            </div>
+
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h2 data-i18n="generalSettings">常规设置</h2>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label" data-i18n="shortUrlService">短链服务</span>
+                            <span class="setting-description" data-i18n="shortUrlServiceDesc">选择生成短链时使用的服务</span>
+                        </div>
+                        <select id="shortUrlServiceSelect" class="setting-control">
+                            <option value="isgd" data-i18n="serviceIsgd">is.gd</option>
+                            <option value="tinyurl" data-i18n="serviceTinyurl">TinyURL</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label" data-i18n="chromeNotifications">Chrome 通知</span>
+                            <span class="setting-description" data-i18n="chromeNotificationsDesc">启用后将显示操作完成通知</span>
+                        </div>
+                        <div class="setting-control">
+                            <input
+                                type="checkbox"
+                                id="notificationCheckbox"
+                                class="toggle-checkbox"
+                            />
+                            <label for="notificationCheckbox" class="toggle-label">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label" data-i18n="language">语言</span>
+                            <span class="setting-description" data-i18n="languageDesc">选择界面显示语言</span>
+                        </div>
+                        <select id="languageSelect" class="setting-control">
+                            <option value="zh_CN" data-i18n="languageZh">简体中文</option>
+                            <option value="en" data-i18n="languageEn">English</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 data-i18n="appearanceSettings">外观设置</h2>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label" data-i18n="appearance">外观</span>
+                            <span class="setting-description" data-i18n="appearanceDesc">选择界面主题模式</span>
+                        </div>
+                        <div class="setting-control">
+                            <div class="three-way-switch" id="appearanceSwitch" data-value="system">
+                                <div class="switch-option" data-i18n="appearanceSystem">跟随系统</div>
+                                <div class="switch-option" data-i18n="appearanceLight">明亮</div>
+                                <div class="switch-option" data-i18n="appearanceDark">黑暗</div>
+                                <div class="switch-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label" data-i18n="themeColor">主题色</span>
+                            <span class="setting-description" data-i18n="themeColorDesc">选择界面主题颜色</span>
+                        </div>
+                        <div class="setting-control">
+                            <div class="color-picker" id="colorPicker">
+                                <div
+                                    class="color-option"
+                                    data-color="orange"
+                                    style="background: linear-gradient(135deg, #f97316, #ea580c);"
+                                ></div>
+                                <div
+                                    class="color-option"
+                                    data-color="yellow"
+                                    style="background: linear-gradient(135deg, #eab308, #ca8a04);"
+                                ></div>
+                                <div
+                                    class="color-option"
+                                    data-color="green"
+                                    style="background: linear-gradient(135deg, #22c55e, #16a34a);"
+                                ></div>
+                                <div
+                                    class="color-option"
+                                    data-color="blue"
+                                    style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"
+                                ></div>
+                                <div
+                                    class="color-option"
+                                    data-color="purple"
+                                    style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 data-i18n="aboutSection">关于</h2>
+
+                    <div class="about-content">
+                        <div class="about-item">
+                            <span class="about-label" data-i18n="version">版本</span>
+                            <span class="about-value" id="aboutVersion">v1.3.5</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label" data-i18n="developer">开发者</span>
+                            <span class="about-value">rokcso</span>
+                        </div>
+                        <div class="about-links">
+                            <a href="https://lunarye.com/arclet-copier" target="_blank" class="about-link" data-i18n="officialWebsite">
+                                官方网站
+                            </a>
+                            <a href="https://github.com/rokcso/arclet-copier" target="_blank" class="about-link" data-i18n="githubRepo">
+                                GitHub 仓库
+                            </a>
+                            <a href="https://x.com/rokcso" target="_blank" class="about-link" data-i18n="developerTwitter">
+                                开发者 X
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 通知容器 -->
+            <div class="notification" id="notification">
+                <span class="notification-text"></span>
+            </div>
+        </div>
+
+        <script type="module" src="options.js"></script>
+    </body>
+</html>

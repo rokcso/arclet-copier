@@ -29,6 +29,7 @@
     "service_worker": "background/background.js",
     "type": "module"
   },
+  "options_page": "options/options.html",
   "commands": {
     "copy-url": {
       "suggested_key": {

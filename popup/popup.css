@@ -518,6 +518,43 @@ body {
     border-color: var(--arc-primary);
 }
 
+/* 更多设置按钮样式 */
+.more-settings-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--arc-border);
+    border-radius: var(--arc-radius);
+    background: var(--arc-background);
+    color: var(--arc-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.more-settings-btn:hover {
+    background: var(--arc-surface);
+    border-color: var(--arc-primary);
+    color: var(--arc-primary);
+}
+
+.more-settings-btn:active {
+    transform: translateY(1px);
+}
+
+.settings-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+}
+
 .color-picker {
     display: flex;
     gap: 8px;
@@ -788,6 +825,18 @@ body {
     border-color: var(--arc-primary);
 }
 
+[data-theme="dark"] .more-settings-btn {
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
+    color: var(--arc-text-secondary);
+}
+
+[data-theme="dark"] .more-settings-btn:hover {
+    background: #334155;
+    border-color: var(--arc-primary);
+    color: var(--arc-primary);
+}
+
 [data-theme="dark"] .toggle-switch {
     background: var(--arc-border);
 }
@@ -953,6 +1002,18 @@ body {
 
     :root:not([data-theme]) .format-select:hover {
         border-color: var(--arc-primary);
+    }
+
+    :root:not([data-theme]) .more-settings-btn {
+        background: var(--arc-surface);
+        border-color: var(--arc-border);
+        color: var(--arc-text-secondary);
+    }
+
+    :root:not([data-theme]) .more-settings-btn:hover {
+        background: #334155;
+        border-color: var(--arc-primary);
+        color: var(--arc-primary);
     }
 
     :root:not([data-theme]) .toggle-switch {

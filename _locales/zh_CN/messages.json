@@ -196,5 +196,50 @@
   },
   "invalidUrlForShortening": {
     "message": "当前URL不支持短链生成（仅支持http/https网页链接）"
+  },
+  "moreSettings": {
+    "message": "更多设置"
+  },
+  "optionsTitle": {
+    "message": "Arclet Copier - 设置"
+  },
+  "generalSettings": {
+    "message": "常规设置"
+  },
+  "appearanceSettings": {
+    "message": "外观设置"
+  },
+  "aboutSection": {
+    "message": "关于"
+  },
+  "shortUrlServiceDesc": {
+    "message": "选择生成短链时使用的服务"
+  },
+  "chromeNotificationsDesc": {
+    "message": "启用后将显示操作完成通知"
+  },
+  "languageDesc": {
+    "message": "选择界面显示语言"
+  },
+  "appearanceDesc": {
+    "message": "选择界面主题模式"
+  },
+  "themeColorDesc": {
+    "message": "选择界面主题颜色"
+  },
+  "version": {
+    "message": "版本"
+  },
+  "developer": {
+    "message": "开发者"
+  },
+  "officialWebsite": {
+    "message": "官方网站"
+  },
+  "githubRepo": {
+    "message": "GitHub 仓库"
+  },
+  "developerTwitter": {
+    "message": "开发者 X"
   }
 }

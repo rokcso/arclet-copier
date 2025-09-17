@@ -47,10 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
-    shortUrlServiceSelect: document.getElementById("shortUrlServiceSelect"),
-    appearanceSwitch: document.getElementById("appearanceSwitch"),
-    languageSelect: document.getElementById("languageSelect"),
-    colorPicker: document.getElementById("colorPicker"),
     version: document.getElementById("version"),
     qrModal: document.getElementById("qrModal"),
     qrModalOverlay: document.getElementById("qrModalOverlay"),
@@ -58,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     qrCodeContainer: document.getElementById("qrCodeContainer"),
     qrUrlDisplay: document.getElementById("qrUrlDisplay"),
     qrCopyBtn: document.getElementById("qrCopyBtn"),
-    notificationCheckbox: document.getElementById("notificationCheckbox"),
+    moreSettingsBtn: document.getElementById("moreSettingsBtn"),
   };
 
   let currentUrl = "";
@@ -196,65 +192,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     htmlElement.setAttribute("data-color", color);
   }
 
-  // 初始化颜色选择器
-  function initializeColorPicker() {
-    if (!elements.colorPicker) return;
-
-    const colorOptions = elements.colorPicker.querySelectorAll(".color-option");
-
-    colorOptions.forEach((option) => {
-      option.addEventListener("click", async () => {
-        const selectedColor = option.getAttribute("data-color");
-
-        // 更新UI状态
-        colorOptions.forEach((opt) => opt.classList.remove("active"));
-        option.classList.add("active");
-
-        // 应用新的主题色
-        applyThemeColor(selectedColor);
-
-        // 保存设置
-        await saveSettings();
-
-        // 显示通知
-        showArcNotification(
-          getLocalMessage("themeColorChanged") ||
-            "Theme color changed successfully!",
-        );
-      });
-    });
-  }
-
-  // 初始化外观滑块
-  function initializeAppearanceSwitch() {
-    const appearanceOptions = [
-      { value: "system", key: null },
-      { value: "light", key: null },
-      { value: "dark", key: null },
-    ];
-
-    return initializeThreeWaySwitch(
-      elements.appearanceSwitch,
-      appearanceOptions,
-      async (value) => {
-        applyTheme(value);
-        await saveSettings();
-        showArcNotification(
-          getLocalMessage("appearanceChanged") ||
-            "Appearance changed successfully!",
-        );
-      },
-    );
-  }
-
   async function initializeTheme() {
     const result = await chrome.storage.sync.get(["appearance"]);
     const savedTheme = result.appearance || "system";
-
-    // 设置滑块初始值
-    if (elements.appearanceSwitch) {
-      elements.appearanceSwitch.setAttribute("data-value", savedTheme);
-    }
 
     applyTheme(savedTheme);
 
@@ -262,9 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (window.matchMedia) {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       mediaQuery.addEventListener("change", () => {
-        const currentTheme =
-          elements.appearanceSwitch.getAttribute("data-value");
-        if (currentTheme === "system") {
+        if (savedTheme === "system") {
           applyTheme("system");
         }
       });
@@ -277,11 +215,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       "removeParams",
       "urlCleaning",
       "silentCopyFormat",
-      "shortUrlService",
       "appearance",
       "language",
       "themeColor",
-      "chromeNotifications",
     ]);
 
     // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
@@ -296,113 +232,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     elements.silentCopyFormat.value = result.silentCopyFormat || "url";
 
-    // Load short URL service setting
-    elements.shortUrlServiceSelect.value = result.shortUrlService || "isgd";
-
-    // Load appearance setting
+    // Load appearance setting for theme application
     const savedAppearance = result.appearance || "system";
-    if (elements.appearanceSwitch) {
-      elements.appearanceSwitch.setAttribute("data-value", savedAppearance);
-    }
+    applyTheme(savedAppearance);
 
     // Load language setting, default to browser language or zh_CN
     const browserLang = chrome.i18n.getUILanguage();
     const defaultLang = browserLang.startsWith("zh") ? "zh_CN" : "en";
     const savedLanguage = result.language || defaultLang;
-    elements.languageSelect.value = savedLanguage;
     currentLocale = savedLanguage;
 
     // Load theme color setting, default to green
     const savedThemeColor = result.themeColor || "green";
     applyThemeColor(savedThemeColor);
-
-    // Update color picker UI
-    if (elements.colorPicker) {
-      const colorOptions =
-        elements.colorPicker.querySelectorAll(".color-option");
-      colorOptions.forEach((option) => {
-        option.classList.toggle(
-          "active",
-          option.getAttribute("data-color") === savedThemeColor,
-        );
-      });
-    }
-
-    // Load Chrome notifications setting, default to true
-    const chromeNotificationsEnabled = result.chromeNotifications !== false;
-    elements.notificationCheckbox.checked = chromeNotificationsEnabled;
   }
 
   // 保存设置
   async function saveSettings() {
     const cleaningSelect = elements.removeParamsToggle;
-    const appearanceSwitch = elements.appearanceSwitch;
-
-    // 获取当前选中的主题色
-    const selectedColorOption = elements.colorPicker?.querySelector(
-      ".color-option.active",
-    );
-    const currentThemeColor =
-      selectedColorOption?.getAttribute("data-color") || "green";
 
     await chrome.storage.sync.set({
       urlCleaning: cleaningSelect.getAttribute("data-value"),
       silentCopyFormat: elements.silentCopyFormat.value,
-      shortUrlService: elements.shortUrlServiceSelect.value,
-      appearance: appearanceSwitch.getAttribute("data-value"),
-      language: elements.languageSelect.value,
-      themeColor: currentThemeColor,
-      chromeNotifications: elements.notificationCheckbox.checked,
     });
-  }
-
-  // Handle language change
-  async function handleLanguageChange() {
-    const newLocale = elements.languageSelect.value;
-    if (newLocale !== currentLocale) {
-      // Update locale and re-initialize UI
-      await initializeI18n(newLocale);
-      await saveSettings();
-
-      // Update page display with new language
-      updatePageDisplay();
-
-      // Show notification in new language
-      showArcNotification(
-        getLocalMessage("languageChangeNotification") ||
-          "Language changed successfully!",
-      );
-    }
   }
 
   // Handle silent copy format change
   async function handleSilentCopyFormatChange() {
     await saveSettings();
     showArcNotification(getLocalMessage("silentCopyFormatChanged"));
-  }
-
-  // Handle short URL service change
-  async function handleShortUrlServiceChange() {
-    await saveSettings();
-    const serviceName =
-      SHORT_URL_SERVICES[elements.shortUrlServiceSelect.value]?.name ||
-      elements.shortUrlServiceSelect.value;
-    showArcNotification(
-      getLocalMessage("shortUrlServiceChanged") ||
-        `Short URL service changed to ${serviceName}`,
-    );
-  }
-
-  // Handle notification toggle change
-  async function handleNotificationToggleChange() {
-    await saveSettings();
-    const isEnabled = elements.notificationCheckbox.checked;
-    const message = isEnabled
-      ? getLocalMessage("notificationsEnabled") ||
-        "Chrome notifications enabled"
-      : getLocalMessage("notificationsDisabled") ||
-        "Chrome notifications disabled";
-    showArcNotification(message);
   }
 
   // 获取页面标题
@@ -611,7 +469,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.shortUrlBtn.disabled = true;
 
     try {
-      const selectedService = elements.shortUrlServiceSelect.value;
+      // Get short URL service from storage
+      const result = await chrome.storage.sync.get(["shortUrlService"]);
+      const selectedService = result.shortUrlService || "isgd";
 
       // 通过 background script 生成短链
       const response = await chrome.runtime.sendMessage({
@@ -834,15 +694,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     "change",
     handleSilentCopyFormatChange,
   );
-  elements.shortUrlServiceSelect.addEventListener(
-    "change",
-    handleShortUrlServiceChange,
-  );
-  elements.languageSelect.addEventListener("change", handleLanguageChange);
-  elements.notificationCheckbox.addEventListener(
-    "change",
-    handleNotificationToggleChange,
-  );
+
+  // 更多设置按钮事件
+  elements.moreSettingsBtn.addEventListener("click", () => {
+    chrome.runtime.openOptionsPage();
+  });
 
   // 键盘快捷键
   document.addEventListener("keydown", (e) => {
@@ -855,8 +711,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 初始化
   loadVersion(); // Load version from manifest
   const urlCleaningSwitch = initializeUrlCleaningSelect();
-  const appearanceSwitch = initializeAppearanceSwitch();
-  initializeColorPicker(); // Initialize color picker
   initializeQRModal(); // Initialize QR modal
   await loadSettings();
   await initializeTheme(); // Initialize theme after loading settings
@@ -867,9 +721,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   setTimeout(() => {
     if (urlCleaningSwitch && urlCleaningSwitch.updateSliderPosition) {
       urlCleaningSwitch.updateSliderPosition();
-    }
-    if (appearanceSwitch && appearanceSwitch.updateSliderPosition) {
-      appearanceSwitch.updateSliderPosition();
     }
   }, 100);
 });
