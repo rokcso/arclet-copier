@@ -177,9 +177,10 @@ export function isValidWebUrl(url) {
       return false;
     }
 
-    // 排除部分本地地址（保留localhost用于开发）
+    // 排除所有本地地址
     const hostname = urlObj.hostname.toLowerCase();
     if (
+      hostname === "localhost" ||
       hostname === "127.0.0.1" ||
       hostname.startsWith("192.168.") ||
       hostname.startsWith("10.") ||

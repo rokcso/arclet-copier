@@ -165,9 +165,11 @@ async function handleCreateShortUrl(longUrl, service) {
 
 // 处理URL复制功能
 async function handleCopyUrl() {
+  let settings;
+
   try {
     const tab = await getCurrentTab();
-    const settings = await getUserSettings();
+    settings = await getUserSettings();
 
     let contentToCopy;
     let successMessage;
@@ -178,6 +180,13 @@ async function handleCopyUrl() {
       contentToCopy = createMarkdownLink(tab.url, title, settings.urlCleaning);
       successMessage = getMessage("markdownLinkCopied");
     } else if (settings.silentCopyFormat === "shortUrl") {
+      // 验证URL是否适合生成短链
+      if (!isValidWebUrl(tab.url)) {
+        throw new Error(
+          getMessage("invalidUrlForShortening") ||
+            "URL is not suitable for shortening",
+        );
+      }
       // 生成短链
       const shortUrl = await handleCreateShortUrl(
         tab.url,
@@ -197,15 +206,40 @@ async function handleCopyUrl() {
       showNotification(EXTENSION_NAME, successMessage);
     }
   } catch (error) {
-    console.error("复制 URL 失败:", error);
+    // 如果settings未获取到，尝试重新获取或使用默认设置
+    if (!settings) {
+      try {
+        settings = await getUserSettings();
+      } catch (settingsError) {
+        console.error("获取设置失败:", settingsError);
+        // 使用默认设置
+        settings = { chromeNotifications: true, silentCopyFormat: "url" };
+      }
+    }
+
     let message;
+    let isUserValidationError = false;
 
     if (error.message === getMessage("noUrl")) {
       message = getMessage("noUrl");
     } else if (settings.silentCopyFormat === "shortUrl") {
-      message = getMessage("shortUrlFailed");
+      // 根据错误类型选择更具体的消息
+      if (
+        error.message.includes(getMessage("invalidUrlForShortening")) ||
+        error.message.includes("URL is not suitable for shortening")
+      ) {
+        message = getMessage("invalidUrlForShortening");
+        isUserValidationError = true; // 这是用户输入验证错误，不是系统错误
+      } else {
+        message = getMessage("shortUrlFailed");
+      }
     } else {
       message = getMessage("copyFailed");
+    }
+
+    // 只有非用户验证错误才打印错误日志
+    if (!isUserValidationError) {
+      console.error("复制 URL 失败:", error);
     }
 
     if (settings.chromeNotifications) {
