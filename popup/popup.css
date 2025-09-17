@@ -366,7 +366,7 @@ body {
     transform: translateX(24px);
 }
 
-/* Checkbox-based toggle */
+/* Enhanced notification toggle - inspired by three-way switch */
 .toggle-checkbox {
     display: none;
 }
@@ -374,12 +374,19 @@ body {
 .toggle-label {
     position: relative;
     width: 48px;
-    height: 24px;
-    background: var(--arc-border);
-    border-radius: 12px;
+    height: 26px;
+    background: var(--arc-surface);
+    border: 1.5px solid var(--arc-border);
+    border-radius: 13px;
     cursor: pointer;
-    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: block;
+    overflow: hidden;
+}
+
+.toggle-label:hover {
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .toggle-slider {
@@ -388,18 +395,36 @@ body {
     left: 2px;
     width: 20px;
     height: 20px;
-    background: white;
-    border-radius: 50%;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--arc-shadow-sm);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
+    border-radius: 10px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .toggle-checkbox:checked + .toggle-label {
-    background: var(--arc-primary);
+    background: linear-gradient(
+        135deg,
+        var(--arc-primary) 0%,
+        var(--arc-primary-hover) 50%,
+        var(--arc-primary) 100%
+    );
+    border-color: var(--arc-primary);
+    box-shadow:
+        0 0 20px var(--glow-light),
+        0 2px 8px var(--glow-medium),
+        0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .toggle-checkbox:checked + .toggle-label .toggle-slider {
-    transform: translateX(24px);
+    transform: translateX(22px);
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%);
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.2),
+        0 1px 3px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* 自适应三段开关 */
@@ -499,24 +524,34 @@ body {
 }
 
 .color-option {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
     cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.2s ease;
+    border: 1.5px solid var(--arc-border);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .color-option:hover {
-    transform: scale(1.1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+    border-color: var(--arc-primary);
+    box-shadow:
+        0 0 0 2px var(--glow-light),
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .color-option.active {
-    border-color: var(--arc-text-primary);
-    transform: scale(1.15);
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    border-color: var(--arc-primary);
+    box-shadow:
+        0 0 0 2px var(--glow-light),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .color-option.active::after {
@@ -527,8 +562,8 @@ body {
     transform: translate(-50%, -50%);
     color: white;
     font-size: 12px;
-    font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .button-icon {
@@ -763,15 +798,43 @@ body {
 }
 
 [data-theme="dark"] .toggle-label {
-    background: var(--arc-border);
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
+}
+
+[data-theme="dark"] .toggle-label:hover {
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 [data-theme="dark"] .toggle-checkbox:checked + .toggle-label {
-    background: var(--arc-primary);
+    background: linear-gradient(
+        135deg,
+        var(--arc-primary) 0%,
+        var(--arc-primary-hover) 50%,
+        var(--arc-primary) 100%
+    );
+    border-color: var(--arc-primary);
+    box-shadow:
+        0 0 20px var(--glow-light),
+        0 2px 8px var(--glow-medium),
+        0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] .toggle-slider {
-    background: white;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.4),
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .toggle-checkbox:checked + .toggle-label .toggle-slider {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.5),
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 [data-theme="dark"] .three-way-switch {
@@ -889,15 +952,56 @@ body {
     }
 
     :root:not([data-theme]) .toggle-label {
-        background: var(--arc-border);
+        background: var(--arc-surface);
+        border-color: var(--arc-border);
+    }
+
+    :root:not([data-theme]) .toggle-label:hover {
+        border-color: var(--arc-primary);
+        box-shadow: 0 0 0 3px var(--glow-light);
     }
 
     :root:not([data-theme]) .toggle-checkbox:checked + .toggle-label {
-        background: var(--arc-primary);
+        background: linear-gradient(
+            135deg,
+            var(--arc-primary) 0%,
+            var(--arc-primary-hover) 50%,
+            var(--arc-primary) 100%
+        );
+        border-color: var(--arc-primary);
+        box-shadow:
+            0 0 20px var(--glow-light),
+            0 2px 8px var(--glow-medium),
+            0 1px 3px rgba(0, 0, 0, 0.3);
     }
 
     :root:not([data-theme]) .toggle-slider {
-        background: white;
+        background: linear-gradient(
+            135deg,
+            #f1f5f9 0%,
+            #e2e8f0 50%,
+            #f1f5f9 100%
+        );
+        box-shadow:
+            0 2px 8px rgba(0, 0, 0, 0.4),
+            0 1px 3px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    :root:not([data-theme])
+        .toggle-checkbox:checked
+        + .toggle-label
+        .toggle-slider {
+        background: linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f8fafc 50%,
+            #ffffff 100%
+        );
+        box-shadow:
+            0 2px 12px rgba(0, 0, 0, 0.5),
+            0 1px 3px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95);
     }
 
     :root:not([data-theme]) .three-way-switch {
