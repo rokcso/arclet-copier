@@ -1,0 +1,266 @@
+{
+  "extName": {
+    "message": "Arclet Copier - 스마트 URL 복사 도구"
+  },
+  "extDescription": {
+    "message": "원클릭 URL 복사, 스마트 추적 파라미터 제거, 마크다운 형식, 단축 URL 생성 및 QR 코드 생성. 키보드 단축키, 다크 테마, 다국어 지원."
+  },
+  "copyUrlShortcut": {
+    "message": "무음 복사"
+  },
+  "currentUrl": {
+    "message": "현재 URL"
+  },
+  "currentPage": {
+    "message": "현재 페이지"
+  },
+  "gettingTitle": {
+    "message": "페이지 제목 가져오는 중..."
+  },
+  "noPageTitle": {
+    "message": "제목 없는 페이지"
+  },
+  "errorTitle": {
+    "message": "오류"
+  },
+  "copyUrl": {
+    "message": "URL 복사"
+  },
+  "copyAsMarkdown": {
+    "message": "마크다운으로 복사"
+  },
+  "settings": {
+    "message": "설정"
+  },
+  "removeUrlParams": {
+    "message": "URL 파라미터 제거"
+  },
+  "silentCopyFormat": {
+    "message": "무음 복사 형식"
+  },
+  "language": {
+    "message": "언어"
+  },
+  "formatUrl": {
+    "message": "URL"
+  },
+  "formatMarkdown": {
+    "message": "마크다운"
+  },
+  "formatShortUrl": {
+    "message": "단축 URL"
+  },
+  "languageEn": {
+    "message": "🇺🇸 English"
+  },
+  "languageZh": {
+    "message": "🇨🇳 简体中文"
+  },
+  "languageEs": {
+    "message": "🇪🇸 Español"
+  },
+  "languageJa": {
+    "message": "🇯🇵 日本語"
+  },
+  "languageDe": {
+    "message": "🇩🇪 Deutsch"
+  },
+  "languageFr": {
+    "message": "🇫🇷 Français"
+  },
+  "languagePt": {
+    "message": "🇵🇹 Português"
+  },
+  "languageRu": {
+    "message": "🇷🇺 Русский"
+  },
+  "languageKo": {
+    "message": "🇰🇷 한국어"
+  },
+  "gettingUrl": {
+    "message": "URL 가져오는 중..."
+  },
+  "urlCopied": {
+    "message": "URL이 클립보드에 복사되었습니다"
+  },
+  "markdownCopied": {
+    "message": "마크다운 링크가 클립보드에 복사되었습니다"
+  },
+  "shortUrlCopied": {
+    "message": "단축 URL이 클립보드에 복사되었습니다"
+  },
+  "noUrl": {
+    "message": "URL을 가져올 수 없습니다"
+  },
+  "getUrlFailed": {
+    "message": "URL 가져오기 실패"
+  },
+  "copyFailed": {
+    "message": "복사 실패, 다시 시도해 주세요"
+  },
+  "noTab": {
+    "message": "현재 탭을 가져올 수 없습니다"
+  },
+  "restrictedPage": {
+    "message": "현재 페이지는 시스템 페이지입니다. 확장 프로그램 아이콘을 클릭하여 복사 기능을 사용해 주세요"
+  },
+  "markdownLinkCopied": {
+    "message": "마크다운 링크가 클립보드에 복사되었습니다"
+  },
+  "copied": {
+    "message": "복사됨"
+  },
+  "languageChangeNotification": {
+    "message": "언어가 성공적으로 변경되었습니다"
+  },
+  "removeParamsEnabled": {
+    "message": "URL 파라미터 필터링이 활성화되었습니다"
+  },
+  "removeParamsDisabled": {
+    "message": "URL 파라미터 필터링이 비활성화되었습니다"
+  },
+  "silentCopyFormatChanged": {
+    "message": "무음 복사 형식이 변경되었습니다"
+  },
+  "generateQR": {
+    "message": "QR 코드 생성"
+  },
+  "qrCodeTitle": {
+    "message": "QR 코드"
+  },
+  "appearance": {
+    "message": "외관"
+  },
+  "appearanceSystem": {
+    "message": "자동"
+  },
+  "appearanceLight": {
+    "message": "밝음"
+  },
+  "appearanceDark": {
+    "message": "어둠"
+  },
+  "appearanceChanged": {
+    "message": "외관이 성공적으로 변경되었습니다"
+  },
+  "urlCleaning": {
+    "message": "URL 정리"
+  },
+  "cleaningOff": {
+    "message": "끄기"
+  },
+  "cleaningSmart": {
+    "message": "스마트"
+  },
+  "cleaningAggressive": {
+    "message": "모두"
+  },
+  "cleaningDisabled": {
+    "message": "URL 정리가 비활성화되었습니다"
+  },
+  "smartCleaningEnabled": {
+    "message": "스마트 정리가 활성화되었습니다 - 추적 파라미터 제거"
+  },
+  "aggressiveCleaningEnabled": {
+    "message": "강력한 정리가 활성화되었습니다 - 모든 파라미터 제거"
+  },
+  "copyQRCode": {
+    "message": "QR 코드 이미지 복사"
+  },
+  "qrCodeCopied": {
+    "message": "QR 코드 이미지가 클립보드에 복사되었습니다"
+  },
+  "qrCodeCopyFailed": {
+    "message": "QR 코드 이미지 복사 실패"
+  },
+  "copyCurrentUrl": {
+    "message": "현재 URL 복사"
+  },
+  "themeColor": {
+    "message": "테마 색상"
+  },
+  "themeColorChanged": {
+    "message": "테마 색상이 성공적으로 변경되었습니다"
+  },
+  "chromeNotifications": {
+    "message": "Chrome 알림"
+  },
+  "notificationsEnabled": {
+    "message": "Chrome 알림이 활성화되었습니다"
+  },
+  "notificationsDisabled": {
+    "message": "Chrome 알림이 비활성화되었습니다"
+  },
+  "generateShortUrl": {
+    "message": "단축 URL 생성"
+  },
+  "shortUrlService": {
+    "message": "단축 URL 서비스"
+  },
+  "serviceIsgd": {
+    "message": "is.gd"
+  },
+  "serviceTinyurl": {
+    "message": "TinyURL"
+  },
+  "shortUrlServiceChanged": {
+    "message": "단축 URL 서비스가 변경되었습니다"
+  },
+  "generating": {
+    "message": "생성 중..."
+  },
+  "shortUrlGenerated": {
+    "message": "단축 URL이 생성되어 클립보드에 복사되었습니다"
+  },
+  "shortUrlFailed": {
+    "message": "단축 URL 생성 실패, 다시 시도해 주세요"
+  },
+  "invalidUrlForShortening": {
+    "message": "이 URL은 단축할 수 없습니다 (http/https 웹 링크만 지원됩니다)"
+  },
+  "moreSettings": {
+    "message": "추가 설정"
+  },
+  "optionsTitle": {
+    "message": "Arclet Copier - 설정"
+  },
+  "generalSettings": {
+    "message": "일반 설정"
+  },
+  "appearanceSettings": {
+    "message": "외관 설정"
+  },
+  "aboutSection": {
+    "message": "정보"
+  },
+  "shortUrlServiceDesc": {
+    "message": "단축 URL 생성 시 사용할 서비스를 선택하세요"
+  },
+  "chromeNotificationsDesc": {
+    "message": "작업 완료 시 알림을 표시합니다"
+  },
+  "languageDesc": {
+    "message": "인터페이스 표시 언어를 선택하세요"
+  },
+  "appearanceDesc": {
+    "message": "인터페이스 테마 모드를 선택하세요"
+  },
+  "themeColorDesc": {
+    "message": "인터페이스 테마 색상을 선택하세요"
+  },
+  "version": {
+    "message": "버전"
+  },
+  "developer": {
+    "message": "개발자"
+  },
+  "officialWebsite": {
+    "message": "공식 웹사이트"
+  },
+  "githubRepo": {
+    "message": "GitHub 저장소"
+  },
+  "developerTwitter": {
+    "message": "개발자 X"
+  }
+}

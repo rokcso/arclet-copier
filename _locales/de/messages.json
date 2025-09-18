@@ -74,6 +74,9 @@
   "languageRu": {
     "message": "🇷🇺 Русский"
   },
+  "languageKo": {
+    "message": "🇰🇷 한국어"
+  },
   "gettingUrl": {
     "message": "URL wird abgerufen..."
   },
