@@ -1,0 +1,251 @@
+{
+  "extName": {
+    "message": "Arclet Copier - Copiador de URL Inteligente"
+  },
+  "extDescription": {
+    "message": "Copiado de URLs con un clic, eliminación inteligente de parámetros de seguimiento, formato Markdown, generación de URLs cortas y códigos QR. Atajos de teclado, tema oscuro y soporte multiidioma."
+  },
+  "copyUrlShortcut": {
+    "message": "Copia Silenciosa"
+  },
+  "currentUrl": {
+    "message": "URL Actual"
+  },
+  "currentPage": {
+    "message": "Página Actual"
+  },
+  "gettingTitle": {
+    "message": "Obteniendo título de la página..."
+  },
+  "noPageTitle": {
+    "message": "Página Sin Título"
+  },
+  "errorTitle": {
+    "message": "Error"
+  },
+  "copyUrl": {
+    "message": "Copiar URL"
+  },
+  "copyAsMarkdown": {
+    "message": "Copiar como Markdown"
+  },
+  "settings": {
+    "message": "Configuración"
+  },
+  "removeUrlParams": {
+    "message": "Eliminar Parámetros de URL"
+  },
+  "silentCopyFormat": {
+    "message": "Formato de Copia Silenciosa"
+  },
+  "language": {
+    "message": "Idioma"
+  },
+  "formatUrl": {
+    "message": "URL"
+  },
+  "formatMarkdown": {
+    "message": "Markdown"
+  },
+  "formatShortUrl": {
+    "message": "URL Corta"
+  },
+  "languageEn": {
+    "message": "🇺🇸 English"
+  },
+  "languageZh": {
+    "message": "🇨🇳 简体中文"
+  },
+  "languageEs": {
+    "message": "🇪🇸 Español"
+  },
+  "languageJa": {
+    "message": "🇯🇵 日本語"
+  },
+  "gettingUrl": {
+    "message": "Obteniendo URL..."
+  },
+  "urlCopied": {
+    "message": "URL copiada al portapapeles"
+  },
+  "markdownCopied": {
+    "message": "Enlace Markdown copiado al portapapeles"
+  },
+  "shortUrlCopied": {
+    "message": "URL corta copiada al portapapeles"
+  },
+  "noUrl": {
+    "message": "No se puede obtener la URL"
+  },
+  "getUrlFailed": {
+    "message": "Error al obtener la URL"
+  },
+  "copyFailed": {
+    "message": "Error al copiar, inténtalo de nuevo"
+  },
+  "noTab": {
+    "message": "No se puede obtener la pestaña actual"
+  },
+  "restrictedPage": {
+    "message": "La página actual es una página del sistema, haz clic en el icono de la extensión para usar la función de copia"
+  },
+  "markdownLinkCopied": {
+    "message": "Enlace Markdown copiado al portapapeles"
+  },
+  "copied": {
+    "message": "Copiado"
+  },
+  "languageChangeNotification": {
+    "message": "Idioma cambiado exitosamente"
+  },
+  "removeParamsEnabled": {
+    "message": "Filtrado de parámetros de URL habilitado"
+  },
+  "removeParamsDisabled": {
+    "message": "Filtrado de parámetros de URL deshabilitado"
+  },
+  "silentCopyFormatChanged": {
+    "message": "Formato de copia silenciosa cambiado"
+  },
+  "generateQR": {
+    "message": "Generar Código QR"
+  },
+  "qrCodeTitle": {
+    "message": "Código QR"
+  },
+  "appearance": {
+    "message": "Apariencia"
+  },
+  "appearanceSystem": {
+    "message": "Auto"
+  },
+  "appearanceLight": {
+    "message": "Claro"
+  },
+  "appearanceDark": {
+    "message": "Oscuro"
+  },
+  "appearanceChanged": {
+    "message": "Apariencia cambiada exitosamente"
+  },
+  "urlCleaning": {
+    "message": "Limpieza de URL"
+  },
+  "cleaningOff": {
+    "message": "Desactivado"
+  },
+  "cleaningSmart": {
+    "message": "Inteligente"
+  },
+  "cleaningAggressive": {
+    "message": "Todo"
+  },
+  "cleaningDisabled": {
+    "message": "Limpieza de URL deshabilitada"
+  },
+  "smartCleaningEnabled": {
+    "message": "Limpieza inteligente habilitada - elimina parámetros de seguimiento"
+  },
+  "aggressiveCleaningEnabled": {
+    "message": "Limpieza agresiva habilitada - elimina todos los parámetros"
+  },
+  "copyQRCode": {
+    "message": "Copiar Imagen del Código QR"
+  },
+  "qrCodeCopied": {
+    "message": "Imagen del código QR copiada al portapapeles"
+  },
+  "qrCodeCopyFailed": {
+    "message": "Error al copiar la imagen del código QR"
+  },
+  "copyCurrentUrl": {
+    "message": "Copiar URL Actual"
+  },
+  "themeColor": {
+    "message": "Color del Tema"
+  },
+  "themeColorChanged": {
+    "message": "Color del tema cambiado exitosamente"
+  },
+  "chromeNotifications": {
+    "message": "Notificaciones de Chrome"
+  },
+  "notificationsEnabled": {
+    "message": "Notificaciones de Chrome habilitadas"
+  },
+  "notificationsDisabled": {
+    "message": "Notificaciones de Chrome deshabilitadas"
+  },
+  "generateShortUrl": {
+    "message": "Generar URL Corta"
+  },
+  "shortUrlService": {
+    "message": "Servicio de URL Corta"
+  },
+  "serviceIsgd": {
+    "message": "is.gd"
+  },
+  "serviceTinyurl": {
+    "message": "TinyURL"
+  },
+  "shortUrlServiceChanged": {
+    "message": "Servicio de URL corta cambiado"
+  },
+  "generating": {
+    "message": "Generando..."
+  },
+  "shortUrlGenerated": {
+    "message": "URL corta generada y copiada al portapapeles"
+  },
+  "shortUrlFailed": {
+    "message": "Error al generar URL corta, inténtalo de nuevo"
+  },
+  "invalidUrlForShortening": {
+    "message": "Esta URL no puede ser acortada (solo se admiten enlaces web http/https)"
+  },
+  "moreSettings": {
+    "message": "Más Configuraciones"
+  },
+  "optionsTitle": {
+    "message": "Arclet Copier - Configuración"
+  },
+  "generalSettings": {
+    "message": "Configuración General"
+  },
+  "appearanceSettings": {
+    "message": "Configuración de Apariencia"
+  },
+  "aboutSection": {
+    "message": "Acerca de"
+  },
+  "shortUrlServiceDesc": {
+    "message": "Elige el servicio a usar al generar URLs cortas"
+  },
+  "chromeNotificationsDesc": {
+    "message": "Mostrar notificaciones cuando se completen las operaciones"
+  },
+  "languageDesc": {
+    "message": "Elige el idioma de la interfaz"
+  },
+  "appearanceDesc": {
+    "message": "Elige el modo del tema de la interfaz"
+  },
+  "themeColorDesc": {
+    "message": "Elige el color del tema de la interfaz"
+  },
+  "version": {
+    "message": "Versión"
+  },
+  "developer": {
+    "message": "Desarrollador"
+  },
+  "officialWebsite": {
+    "message": "Sitio Web Oficial"
+  },
+  "githubRepo": {
+    "message": "Repositorio GitHub"
+  },
+  "developerTwitter": {
+    "message": "X del Desarrollador"
+  }
+}

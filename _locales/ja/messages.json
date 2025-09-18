@@ -1,0 +1,251 @@
+{
+  "extName": {
+    "message": "Arclet Copier - スマートURL コピーツール"
+  },
+  "extDescription": {
+    "message": "ワンクリックでURLをコピー、スマートなトラッキングパラメータ除去、Markdownフォーマット、短縮URL生成、QRコード生成に対応。キーボードショートカット、ダークテーマ、多言語サポート。"
+  },
+  "copyUrlShortcut": {
+    "message": "サイレントコピー"
+  },
+  "currentUrl": {
+    "message": "現在のURL"
+  },
+  "currentPage": {
+    "message": "現在のページ"
+  },
+  "gettingTitle": {
+    "message": "ページタイトルを取得中..."
+  },
+  "noPageTitle": {
+    "message": "無題のページ"
+  },
+  "errorTitle": {
+    "message": "エラー"
+  },
+  "copyUrl": {
+    "message": "URLをコピー"
+  },
+  "copyAsMarkdown": {
+    "message": "Markdownとしてコピー"
+  },
+  "settings": {
+    "message": "設定"
+  },
+  "removeUrlParams": {
+    "message": "URLパラメータを除去"
+  },
+  "silentCopyFormat": {
+    "message": "サイレントコピー形式"
+  },
+  "language": {
+    "message": "言語"
+  },
+  "formatUrl": {
+    "message": "URL"
+  },
+  "formatMarkdown": {
+    "message": "Markdown"
+  },
+  "formatShortUrl": {
+    "message": "短縮URL"
+  },
+  "languageEn": {
+    "message": "🇺🇸 English"
+  },
+  "languageZh": {
+    "message": "🇨🇳 简体中文"
+  },
+  "languageEs": {
+    "message": "🇪🇸 Español"
+  },
+  "languageJa": {
+    "message": "🇯🇵 日本語"
+  },
+  "gettingUrl": {
+    "message": "URLを取得中..."
+  },
+  "urlCopied": {
+    "message": "URLをクリップボードにコピーしました"
+  },
+  "markdownCopied": {
+    "message": "Markdownリンクをクリップボードにコピーしました"
+  },
+  "shortUrlCopied": {
+    "message": "短縮URLをクリップボードにコピーしました"
+  },
+  "noUrl": {
+    "message": "URLを取得できません"
+  },
+  "getUrlFailed": {
+    "message": "URL取得に失敗しました"
+  },
+  "copyFailed": {
+    "message": "コピーに失敗しました。再試行してください"
+  },
+  "noTab": {
+    "message": "現在のタブを取得できません"
+  },
+  "restrictedPage": {
+    "message": "現在のページはシステムページです。拡張機能のアイコンをクリックしてコピー機能をご利用ください"
+  },
+  "markdownLinkCopied": {
+    "message": "Markdownリンクをクリップボードにコピーしました"
+  },
+  "copied": {
+    "message": "コピーしました"
+  },
+  "languageChangeNotification": {
+    "message": "言語が正常に変更されました"
+  },
+  "removeParamsEnabled": {
+    "message": "URLパラメータフィルタリングを有効にしました"
+  },
+  "removeParamsDisabled": {
+    "message": "URLパラメータフィルタリングを無効にしました"
+  },
+  "silentCopyFormatChanged": {
+    "message": "サイレントコピー形式が変更されました"
+  },
+  "generateQR": {
+    "message": "QRコードを生成"
+  },
+  "qrCodeTitle": {
+    "message": "QRコード"
+  },
+  "appearance": {
+    "message": "外観"
+  },
+  "appearanceSystem": {
+    "message": "自動"
+  },
+  "appearanceLight": {
+    "message": "ライト"
+  },
+  "appearanceDark": {
+    "message": "ダーク"
+  },
+  "appearanceChanged": {
+    "message": "外観が正常に変更されました"
+  },
+  "urlCleaning": {
+    "message": "URLクリーニング"
+  },
+  "cleaningOff": {
+    "message": "オフ"
+  },
+  "cleaningSmart": {
+    "message": "スマート"
+  },
+  "cleaningAggressive": {
+    "message": "すべて"
+  },
+  "cleaningDisabled": {
+    "message": "URLクリーニングを無効にしました"
+  },
+  "smartCleaningEnabled": {
+    "message": "スマートクリーニングを有効にしました - トラッキングパラメータを除去"
+  },
+  "aggressiveCleaningEnabled": {
+    "message": "アグレッシブクリーニングを有効にしました - すべてのパラメータを除去"
+  },
+  "copyQRCode": {
+    "message": "QRコード画像をコピー"
+  },
+  "qrCodeCopied": {
+    "message": "QRコード画像をクリップボードにコピーしました"
+  },
+  "qrCodeCopyFailed": {
+    "message": "QRコード画像のコピーに失敗しました"
+  },
+  "copyCurrentUrl": {
+    "message": "現在のURLをコピー"
+  },
+  "themeColor": {
+    "message": "テーマカラー"
+  },
+  "themeColorChanged": {
+    "message": "テーマカラーが正常に変更されました"
+  },
+  "chromeNotifications": {
+    "message": "Chrome通知"
+  },
+  "notificationsEnabled": {
+    "message": "Chrome通知を有効にしました"
+  },
+  "notificationsDisabled": {
+    "message": "Chrome通知を無効にしました"
+  },
+  "generateShortUrl": {
+    "message": "短縮URLを生成"
+  },
+  "shortUrlService": {
+    "message": "短縮URLサービス"
+  },
+  "serviceIsgd": {
+    "message": "is.gd"
+  },
+  "serviceTinyurl": {
+    "message": "TinyURL"
+  },
+  "shortUrlServiceChanged": {
+    "message": "短縮URLサービスが変更されました"
+  },
+  "generating": {
+    "message": "生成中..."
+  },
+  "shortUrlGenerated": {
+    "message": "短縮URLを生成してクリップボードにコピーしました"
+  },
+  "shortUrlFailed": {
+    "message": "短縮URL生成に失敗しました。再試行してください"
+  },
+  "invalidUrlForShortening": {
+    "message": "このURLは短縮できません（http/https Webリンクのみサポート）"
+  },
+  "moreSettings": {
+    "message": "その他の設定"
+  },
+  "optionsTitle": {
+    "message": "Arclet Copier - 設定"
+  },
+  "generalSettings": {
+    "message": "一般設定"
+  },
+  "appearanceSettings": {
+    "message": "外観設定"
+  },
+  "aboutSection": {
+    "message": "について"
+  },
+  "shortUrlServiceDesc": {
+    "message": "短縮URL生成時に使用するサービスを選択"
+  },
+  "chromeNotificationsDesc": {
+    "message": "操作完了時に通知を表示"
+  },
+  "languageDesc": {
+    "message": "インターフェース表示言語を選択"
+  },
+  "appearanceDesc": {
+    "message": "インターフェーステーマモードを選択"
+  },
+  "themeColorDesc": {
+    "message": "インターフェーステーマカラーを選択"
+  },
+  "version": {
+    "message": "バージョン"
+  },
+  "developer": {
+    "message": "開発者"
+  },
+  "officialWebsite": {
+    "message": "公式ウェブサイト"
+  },
+  "githubRepo": {
+    "message": "GitHubリポジトリ"
+  },
+  "developerTwitter": {
+    "message": "開発者X"
+  }
+}
