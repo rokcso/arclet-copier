@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadLocaleMessages(locale) {
     try {
       const response = await fetch(
-        chrome.runtime.getURL(`_locales/${locale}/messages.json`)
+        chrome.runtime.getURL(`_locales/${locale}/messages.json`),
       );
       const messages = await response.json();
       return messages;
@@ -74,14 +74,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Update page title
-    document.title = getLocalMessage("optionsTitle") || "Arclet Copier - Settings";
+    document.title =
+      getLocalMessage("optionsTitle") || "Arclet Copier - Settings";
   }
 
   // Show notification
   function showNotification(message, type = "success") {
     if (!elements.notification) return;
 
-    const notificationText = elements.notification.querySelector('.notification-text');
+    const notificationText =
+      elements.notification.querySelector(".notification-text");
     if (notificationText) {
       notificationText.textContent = message;
     }
@@ -105,7 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function updateSliderPosition() {
       const currentValue = switchElement.getAttribute("data-value");
       const currentIndex = options.findIndex(
-        (opt) => opt.value === currentValue
+        (opt) => opt.value === currentValue,
       );
 
       if (currentIndex === -1) return;
@@ -195,7 +197,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // 显示通知
         showNotification(
-          getLocalMessage("themeColorChanged") || "Theme color changed successfully!"
+          getLocalMessage("themeColorChanged") ||
+            "Theme color changed successfully!",
         );
       });
     });
@@ -216,9 +219,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         applyTheme(value);
         await saveSettings();
         showNotification(
-          getLocalMessage("appearanceChanged") || "Appearance changed successfully!"
+          getLocalMessage("appearanceChanged") ||
+            "Appearance changed successfully!",
         );
-      }
+      },
     );
   }
 
@@ -238,7 +242,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (window.matchMedia) {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       mediaQuery.addEventListener("change", () => {
-        const currentTheme = elements.appearanceSwitch.getAttribute("data-value");
+        const currentTheme =
+          elements.appearanceSwitch.getAttribute("data-value");
         if (currentTheme === "system") {
           applyTheme("system");
         }
@@ -267,7 +272,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Load language setting, default to browser language or zh_CN
     const browserLang = chrome.i18n.getUILanguage();
-    const defaultLang = browserLang.startsWith("zh") ? "zh_CN" : "en";
+    let defaultLang = "en"; // default fallback
+    if (browserLang.startsWith("zh")) {
+      defaultLang = "zh_CN";
+    } else if (browserLang.startsWith("es")) {
+      defaultLang = "es";
+    } else if (browserLang.startsWith("ja")) {
+      defaultLang = "ja";
+    }
     const savedLanguage = result.language || defaultLang;
     elements.languageSelect.value = savedLanguage;
     currentLocale = savedLanguage;
@@ -278,11 +290,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Update color picker UI
     if (elements.colorPicker) {
-      const colorOptions = elements.colorPicker.querySelectorAll(".color-option");
+      const colorOptions =
+        elements.colorPicker.querySelectorAll(".color-option");
       colorOptions.forEach((option) => {
         option.classList.toggle(
           "active",
-          option.getAttribute("data-color") === savedThemeColor
+          option.getAttribute("data-color") === savedThemeColor,
         );
       });
     }
@@ -297,8 +310,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const appearanceSwitch = elements.appearanceSwitch;
 
     // 获取当前选中的主题色
-    const selectedColorOption = elements.colorPicker?.querySelector(".color-option.active");
-    const currentThemeColor = selectedColorOption?.getAttribute("data-color") || "green";
+    const selectedColorOption = elements.colorPicker?.querySelector(
+      ".color-option.active",
+    );
+    const currentThemeColor =
+      selectedColorOption?.getAttribute("data-color") || "green";
 
     await chrome.storage.sync.set({
       shortUrlService: elements.shortUrlServiceSelect.value,
@@ -315,7 +331,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.shortUrlServiceSelect.addEventListener("change", async () => {
       await saveSettings();
       showNotification(
-        getLocalMessage("shortUrlServiceChanged") || "Short URL service changed successfully!"
+        getLocalMessage("shortUrlServiceChanged") ||
+          "Short URL service changed successfully!",
       );
     });
 
@@ -337,7 +354,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       await initializeI18n(newLanguage);
 
       showNotification(
-        getLocalMessage("languageChangeNotification") || "Language changed successfully!"
+        getLocalMessage("languageChangeNotification") ||
+          "Language changed successfully!",
       );
     });
   }

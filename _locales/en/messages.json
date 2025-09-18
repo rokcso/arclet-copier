@@ -56,6 +56,12 @@
   "languageZh": {
     "message": "🇨🇳 简体中文"
   },
+  "languageEs": {
+    "message": "🇪🇸 Español"
+  },
+  "languageJa": {
+    "message": "🇯🇵 日本語"
+  },
   "gettingUrl": {
     "message": "Getting URL..."
   },

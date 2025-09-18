@@ -334,7 +334,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Load language setting, default to browser language or zh_CN
     const browserLang = chrome.i18n.getUILanguage();
-    const defaultLang = browserLang.startsWith("zh") ? "zh_CN" : "en";
+    let defaultLang = "en"; // default fallback
+    if (browserLang.startsWith("zh")) {
+      defaultLang = "zh_CN";
+    } else if (browserLang.startsWith("es")) {
+      defaultLang = "es";
+    } else if (browserLang.startsWith("ja")) {
+      defaultLang = "ja";
+    }
     const savedLanguage = result.language || defaultLang;
     currentLocale = savedLanguage;
 
