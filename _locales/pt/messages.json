@@ -1,0 +1,260 @@
+{
+  "extName": {
+    "message": "Arclet Copier - Copiador de URL Inteligente"
+  },
+  "extDescription": {
+    "message": "Cópia de URL com um clique, remoção inteligente de parâmetros de rastreamento, formato Markdown, geração de URL curta e código QR. Atalhos de teclado, tema escuro e suporte multilíngue."
+  },
+  "copyUrlShortcut": {
+    "message": "Cópia Silenciosa"
+  },
+  "currentUrl": {
+    "message": "URL Atual"
+  },
+  "currentPage": {
+    "message": "Página Atual"
+  },
+  "gettingTitle": {
+    "message": "Obtendo título da página..."
+  },
+  "noPageTitle": {
+    "message": "Página Sem Título"
+  },
+  "errorTitle": {
+    "message": "Erro"
+  },
+  "copyUrl": {
+    "message": "Copiar URL"
+  },
+  "copyAsMarkdown": {
+    "message": "Copiar como Markdown"
+  },
+  "settings": {
+    "message": "Configurações"
+  },
+  "removeUrlParams": {
+    "message": "Remover Parâmetros da URL"
+  },
+  "silentCopyFormat": {
+    "message": "Formato de Cópia Silenciosa"
+  },
+  "language": {
+    "message": "Idioma"
+  },
+  "formatUrl": {
+    "message": "URL"
+  },
+  "formatMarkdown": {
+    "message": "Markdown"
+  },
+  "formatShortUrl": {
+    "message": "URL Curta"
+  },
+  "languageEn": {
+    "message": "🇺🇸 English"
+  },
+  "languageZh": {
+    "message": "🇨🇳 简体中文"
+  },
+  "languageEs": {
+    "message": "🇪🇸 Español"
+  },
+  "languageJa": {
+    "message": "🇯🇵 日本語"
+  },
+  "languageDe": {
+    "message": "🇩🇪 Deutsch"
+  },
+  "languageFr": {
+    "message": "🇫🇷 Français"
+  },
+  "languagePt": {
+    "message": "🇵🇹 Português"
+  },
+  "gettingUrl": {
+    "message": "Obtendo URL..."
+  },
+  "urlCopied": {
+    "message": "URL copiada para a área de transferência"
+  },
+  "markdownCopied": {
+    "message": "Link Markdown copiado para a área de transferência"
+  },
+  "shortUrlCopied": {
+    "message": "URL curta copiada para a área de transferência"
+  },
+  "noUrl": {
+    "message": "Não é possível obter a URL"
+  },
+  "getUrlFailed": {
+    "message": "Falha ao obter a URL"
+  },
+  "copyFailed": {
+    "message": "Falha na cópia, tente novamente"
+  },
+  "noTab": {
+    "message": "Não é possível obter a aba atual"
+  },
+  "restrictedPage": {
+    "message": "A página atual é uma página do sistema, clique no ícone da extensão para usar a função de cópia"
+  },
+  "markdownLinkCopied": {
+    "message": "Link Markdown copiado para a área de transferência"
+  },
+  "copied": {
+    "message": "Copiado"
+  },
+  "languageChangeNotification": {
+    "message": "Idioma alterado com sucesso"
+  },
+  "removeParamsEnabled": {
+    "message": "Filtragem de parâmetros de URL ativada"
+  },
+  "removeParamsDisabled": {
+    "message": "Filtragem de parâmetros de URL desativada"
+  },
+  "silentCopyFormatChanged": {
+    "message": "Formato de cópia silenciosa alterado"
+  },
+  "generateQR": {
+    "message": "Gerar Código QR"
+  },
+  "qrCodeTitle": {
+    "message": "Código QR"
+  },
+  "appearance": {
+    "message": "Aparência"
+  },
+  "appearanceSystem": {
+    "message": "Auto"
+  },
+  "appearanceLight": {
+    "message": "Claro"
+  },
+  "appearanceDark": {
+    "message": "Escuro"
+  },
+  "appearanceChanged": {
+    "message": "Aparência alterada com sucesso"
+  },
+  "urlCleaning": {
+    "message": "Limpeza de URL"
+  },
+  "cleaningOff": {
+    "message": "Desativado"
+  },
+  "cleaningSmart": {
+    "message": "Inteligente"
+  },
+  "cleaningAggressive": {
+    "message": "Todos"
+  },
+  "cleaningDisabled": {
+    "message": "Limpeza de URL desativada"
+  },
+  "smartCleaningEnabled": {
+    "message": "Limpeza inteligente ativada - remove parâmetros de rastreamento"
+  },
+  "aggressiveCleaningEnabled": {
+    "message": "Limpeza agressiva ativada - remove todos os parâmetros"
+  },
+  "copyQRCode": {
+    "message": "Copiar Imagem do Código QR"
+  },
+  "qrCodeCopied": {
+    "message": "Imagem do código QR copiada para a área de transferência"
+  },
+  "qrCodeCopyFailed": {
+    "message": "Falha ao copiar a imagem do código QR"
+  },
+  "copyCurrentUrl": {
+    "message": "Copiar URL Atual"
+  },
+  "themeColor": {
+    "message": "Cor do Tema"
+  },
+  "themeColorChanged": {
+    "message": "Cor do tema alterada com sucesso"
+  },
+  "chromeNotifications": {
+    "message": "Notificações do Chrome"
+  },
+  "notificationsEnabled": {
+    "message": "Notificações do Chrome ativadas"
+  },
+  "notificationsDisabled": {
+    "message": "Notificações do Chrome desativadas"
+  },
+  "generateShortUrl": {
+    "message": "Gerar URL Curta"
+  },
+  "shortUrlService": {
+    "message": "Serviço de URL Curta"
+  },
+  "serviceIsgd": {
+    "message": "is.gd"
+  },
+  "serviceTinyurl": {
+    "message": "TinyURL"
+  },
+  "shortUrlServiceChanged": {
+    "message": "Serviço de URL curta alterado"
+  },
+  "generating": {
+    "message": "Gerando..."
+  },
+  "shortUrlGenerated": {
+    "message": "URL curta gerada e copiada para a área de transferência"
+  },
+  "shortUrlFailed": {
+    "message": "Falha ao gerar URL curta, tente novamente"
+  },
+  "invalidUrlForShortening": {
+    "message": "Esta URL não pode ser encurtada (apenas links web http/https são suportados)"
+  },
+  "moreSettings": {
+    "message": "Mais Configurações"
+  },
+  "optionsTitle": {
+    "message": "Arclet Copier - Configurações"
+  },
+  "generalSettings": {
+    "message": "Configurações Gerais"
+  },
+  "appearanceSettings": {
+    "message": "Configurações de Aparência"
+  },
+  "aboutSection": {
+    "message": "Sobre"
+  },
+  "shortUrlServiceDesc": {
+    "message": "Escolha o serviço a usar ao gerar URLs curtas"
+  },
+  "chromeNotificationsDesc": {
+    "message": "Mostrar notificações quando as operações forem concluídas"
+  },
+  "languageDesc": {
+    "message": "Escolha o idioma de exibição da interface"
+  },
+  "appearanceDesc": {
+    "message": "Escolha o modo de tema da interface"
+  },
+  "themeColorDesc": {
+    "message": "Escolha a cor do tema da interface"
+  },
+  "version": {
+    "message": "Versão"
+  },
+  "developer": {
+    "message": "Desenvolvedor"
+  },
+  "officialWebsite": {
+    "message": "Site Oficial"
+  },
+  "githubRepo": {
+    "message": "Repositório GitHub"
+  },
+  "developerTwitter": {
+    "message": "X do Desenvolvedor"
+  }
+}

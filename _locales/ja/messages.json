@@ -68,6 +68,9 @@
   "languageFr": {
     "message": "🇫🇷 Français"
   },
+  "languagePt": {
+    "message": "🇵🇹 Português"
+  },
   "gettingUrl": {
     "message": "URLを取得中..."
   },
