@@ -211,13 +211,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         switchOptions[currentIndex].classList.add("active");
       }
 
-      // 计算滑块位置和宽度
-      const optionWidth = switchOptions[currentIndex].offsetWidth;
-      const optionLeft = switchOptions[currentIndex].offsetLeft;
+      // 修复滑块位置计算 - 解决超出容器问题
+      const optionElement = switchOptions[currentIndex];
+      const optionWidth = optionElement.offsetWidth;
+      const optionLeft = optionElement.offsetLeft;
+
+      // 获取容器的padding值
+      const containerStyle = getComputedStyle(switchElement);
+      const containerPadding = parseFloat(containerStyle.paddingLeft);
+
+      // 关键修复：translateX需要减去容器padding，因为滑块已经有left: 2px的基础定位
+      const sliderTranslateX = optionLeft - containerPadding;
 
       // 更新CSS变量来控制滑块
       switchElement.style.setProperty("--slider-width", `${optionWidth}px`);
-      switchElement.style.setProperty("--slider-x", `${optionLeft}px`);
+      switchElement.style.setProperty("--slider-x", `${sliderTranslateX}px`);
     }
 
     // 为每个选项添加点击事件
