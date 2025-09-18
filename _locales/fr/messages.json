@@ -71,6 +71,9 @@
   "languagePt": {
     "message": "🇵🇹 Português"
   },
+  "languageRu": {
+    "message": "🇷🇺 Русский"
+  },
   "gettingUrl": {
     "message": "Récupération de l'URL..."
   },

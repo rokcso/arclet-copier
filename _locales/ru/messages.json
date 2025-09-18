@@ -1,0 +1,263 @@
+{
+  "extName": {
+    "message": "Arclet Copier - Умный Копировщик URL"
+  },
+  "extDescription": {
+    "message": "Копирование URL одним кликом с умным удалением параметров отслеживания, форматом Markdown, генерацией коротких URL и QR-кодов. Горячие клавиши, тёмная тема и многоязычная поддержка."
+  },
+  "copyUrlShortcut": {
+    "message": "Тихое Копирование"
+  },
+  "currentUrl": {
+    "message": "Текущий URL"
+  },
+  "currentPage": {
+    "message": "Текущая Страница"
+  },
+  "gettingTitle": {
+    "message": "Получение заголовка страницы..."
+  },
+  "noPageTitle": {
+    "message": "Страница Без Заголовка"
+  },
+  "errorTitle": {
+    "message": "Ошибка"
+  },
+  "copyUrl": {
+    "message": "Копировать URL"
+  },
+  "copyAsMarkdown": {
+    "message": "Копировать как Markdown"
+  },
+  "settings": {
+    "message": "Настройки"
+  },
+  "removeUrlParams": {
+    "message": "Удалить Параметры URL"
+  },
+  "silentCopyFormat": {
+    "message": "Формат Тихого Копирования"
+  },
+  "language": {
+    "message": "Язык"
+  },
+  "formatUrl": {
+    "message": "URL"
+  },
+  "formatMarkdown": {
+    "message": "Markdown"
+  },
+  "formatShortUrl": {
+    "message": "Короткий URL"
+  },
+  "languageEn": {
+    "message": "🇺🇸 English"
+  },
+  "languageZh": {
+    "message": "🇨🇳 简体中文"
+  },
+  "languageEs": {
+    "message": "🇪🇸 Español"
+  },
+  "languageJa": {
+    "message": "🇯🇵 日本語"
+  },
+  "languageDe": {
+    "message": "🇩🇪 Deutsch"
+  },
+  "languageFr": {
+    "message": "🇫🇷 Français"
+  },
+  "languagePt": {
+    "message": "🇵🇹 Português"
+  },
+  "languageRu": {
+    "message": "🇷🇺 Русский"
+  },
+  "gettingUrl": {
+    "message": "Получение URL..."
+  },
+  "urlCopied": {
+    "message": "URL скопирован в буфер обмена"
+  },
+  "markdownCopied": {
+    "message": "Ссылка Markdown скопирована в буфер обмена"
+  },
+  "shortUrlCopied": {
+    "message": "Короткий URL скопирован в буфер обмена"
+  },
+  "noUrl": {
+    "message": "Невозможно получить URL"
+  },
+  "getUrlFailed": {
+    "message": "Не удалось получить URL"
+  },
+  "copyFailed": {
+    "message": "Ошибка копирования, попробуйте снова"
+  },
+  "noTab": {
+    "message": "Невозможно получить текущую вкладку"
+  },
+  "restrictedPage": {
+    "message": "Текущая страница является системной страницей, пожалуйста, нажмите на иконку расширения для использования функции копирования"
+  },
+  "markdownLinkCopied": {
+    "message": "Ссылка Markdown скопирована в буфер обмена"
+  },
+  "copied": {
+    "message": "Скопировано"
+  },
+  "languageChangeNotification": {
+    "message": "Язык успешно изменён"
+  },
+  "removeParamsEnabled": {
+    "message": "Фильтрация параметров URL включена"
+  },
+  "removeParamsDisabled": {
+    "message": "Фильтрация параметров URL отключена"
+  },
+  "silentCopyFormatChanged": {
+    "message": "Формат тихого копирования изменён"
+  },
+  "generateQR": {
+    "message": "Создать QR-код"
+  },
+  "qrCodeTitle": {
+    "message": "QR-код"
+  },
+  "appearance": {
+    "message": "Внешний вид"
+  },
+  "appearanceSystem": {
+    "message": "Авто"
+  },
+  "appearanceLight": {
+    "message": "Светлый"
+  },
+  "appearanceDark": {
+    "message": "Тёмный"
+  },
+  "appearanceChanged": {
+    "message": "Внешний вид успешно изменён"
+  },
+  "urlCleaning": {
+    "message": "Очистка URL"
+  },
+  "cleaningOff": {
+    "message": "Выключено"
+  },
+  "cleaningSmart": {
+    "message": "Умная"
+  },
+  "cleaningAggressive": {
+    "message": "Все"
+  },
+  "cleaningDisabled": {
+    "message": "Очистка URL отключена"
+  },
+  "smartCleaningEnabled": {
+    "message": "Умная очистка включена - удаляет параметры отслеживания"
+  },
+  "aggressiveCleaningEnabled": {
+    "message": "Агрессивная очистка включена - удаляет все параметры"
+  },
+  "copyQRCode": {
+    "message": "Копировать Изображение QR-кода"
+  },
+  "qrCodeCopied": {
+    "message": "Изображение QR-кода скопировано в буфер обмена"
+  },
+  "qrCodeCopyFailed": {
+    "message": "Ошибка копирования изображения QR-кода"
+  },
+  "copyCurrentUrl": {
+    "message": "Копировать Текущий URL"
+  },
+  "themeColor": {
+    "message": "Цвет Темы"
+  },
+  "themeColorChanged": {
+    "message": "Цвет темы успешно изменён"
+  },
+  "chromeNotifications": {
+    "message": "Уведомления Chrome"
+  },
+  "notificationsEnabled": {
+    "message": "Уведомления Chrome включены"
+  },
+  "notificationsDisabled": {
+    "message": "Уведомления Chrome отключены"
+  },
+  "generateShortUrl": {
+    "message": "Создать Короткий URL"
+  },
+  "shortUrlService": {
+    "message": "Сервис Коротких URL"
+  },
+  "serviceIsgd": {
+    "message": "is.gd"
+  },
+  "serviceTinyurl": {
+    "message": "TinyURL"
+  },
+  "shortUrlServiceChanged": {
+    "message": "Сервис коротких URL изменён"
+  },
+  "generating": {
+    "message": "Создание..."
+  },
+  "shortUrlGenerated": {
+    "message": "Короткий URL создан и скопирован в буфер обмена"
+  },
+  "shortUrlFailed": {
+    "message": "Ошибка создания короткого URL, попробуйте снова"
+  },
+  "invalidUrlForShortening": {
+    "message": "Этот URL нельзя сократить (поддерживаются только http/https веб-ссылки)"
+  },
+  "moreSettings": {
+    "message": "Дополнительные Настройки"
+  },
+  "optionsTitle": {
+    "message": "Arclet Copier - Настройки"
+  },
+  "generalSettings": {
+    "message": "Общие Настройки"
+  },
+  "appearanceSettings": {
+    "message": "Настройки Внешнего Вида"
+  },
+  "aboutSection": {
+    "message": "О программе"
+  },
+  "shortUrlServiceDesc": {
+    "message": "Выберите сервис для использования при создании коротких URL"
+  },
+  "chromeNotificationsDesc": {
+    "message": "Показывать уведомления при завершении операций"
+  },
+  "languageDesc": {
+    "message": "Выберите язык отображения интерфейса"
+  },
+  "appearanceDesc": {
+    "message": "Выберите режим темы интерфейса"
+  },
+  "themeColorDesc": {
+    "message": "Выберите цвет темы интерфейса"
+  },
+  "version": {
+    "message": "Версия"
+  },
+  "developer": {
+    "message": "Разработчик"
+  },
+  "officialWebsite": {
+    "message": "Официальный Сайт"
+  },
+  "githubRepo": {
+    "message": "Репозиторий GitHub"
+  },
+  "developerTwitter": {
+    "message": "X Разработчика"
+  }
+}

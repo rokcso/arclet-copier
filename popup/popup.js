@@ -347,6 +347,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       defaultLang = "fr";
     } else if (browserLang.startsWith("pt")) {
       defaultLang = "pt";
+    } else if (browserLang.startsWith("ru")) {
+      defaultLang = "ru";
     }
     const savedLanguage = result.language || defaultLang;
     currentLocale = savedLanguage;
