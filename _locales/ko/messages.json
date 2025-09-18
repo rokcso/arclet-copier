@@ -262,5 +262,32 @@
   },
   "developerTwitter": {
     "message": "개발자 X"
+  },
+  "supportSection": {
+    "message": "지원하기"
+  },
+  "ratingTitle": {
+    "message": "Arclet Copier가 마음에 드시나요?"
+  },
+  "ratingDescription": {
+    "message": "이 확장 프로그램이 도움이 되었다면 Chrome 웹 스토어에 리뷰를 남겨주세요! 여러분의 지원이 저희의 개선 동력이 됩니다."
+  },
+  "rateNow": {
+    "message": "지금 평가하기"
+  },
+  "feedbackTitle": {
+    "message": "피드백 및 제안"
+  },
+  "feedbackDescription": {
+    "message": "문제를 발견했거나 기능 제안이 있으시나요? 언제든지 이메일로 연락해 주세요 - 모든 메시지에 답변드립니다!"
+  },
+  "contactDeveloper": {
+    "message": "개발자 연락하기"
+  },
+  "feedbackEmailSubject": {
+    "message": "Arclet Copier - 피드백 및 제안"
+  },
+  "feedbackEmailBody": {
+    "message": "안녕하세요!\n\nArclet Copier에 대한 다음과 같은 피드백이 있습니다:\n\n\n\n시간을 내주셔서 감사합니다!"
   }
 }

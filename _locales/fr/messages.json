@@ -262,5 +262,32 @@
   },
   "developerTwitter": {
     "message": "X du Développeur"
+  },
+  "supportSection": {
+    "message": "Soutenez-nous"
+  },
+  "ratingTitle": {
+    "message": "Vous aimez Arclet Copier ?"
+  },
+  "ratingDescription": {
+    "message": "Si cette extension vous a été utile, veuillez considérer laisser un avis sur le Chrome Web Store ! Votre soutien nous motive à continuer à nous améliorer."
+  },
+  "rateNow": {
+    "message": "Évaluer maintenant"
+  },
+  "feedbackTitle": {
+    "message": "Commentaires et Suggestions"
+  },
+  "feedbackDescription": {
+    "message": "Rencontré un problème ou avez des suggestions de fonctionnalités ? N'hésitez pas à nous contacter par e-mail - nous répondons à chaque message !"
+  },
+  "contactDeveloper": {
+    "message": "Contacter le Développeur"
+  },
+  "feedbackEmailSubject": {
+    "message": "Arclet Copier - Commentaires et Suggestions"
+  },
+  "feedbackEmailBody": {
+    "message": "Bonjour !\n\nJ'ai les commentaires suivants concernant Arclet Copier :\n\n\n\nMerci pour votre temps !"
   }
 }

@@ -303,6 +303,110 @@ select.setting-control:hover {
     font-weight: 600;
 }
 
+/* 支持组件样式 */
+.support-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+    border: 1px solid var(--arc-border);
+    background: var(--arc-surface);
+}
+
+.support-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rating-card .support-icon {
+    background: linear-gradient(
+        135deg,
+        var(--arc-primary),
+        var(--arc-primary-hover)
+    );
+    color: white;
+    box-shadow: 0 4px 12px var(--glow-medium);
+}
+
+.feedback-card .support-icon {
+    background: linear-gradient(
+        135deg,
+        var(--arc-primary),
+        var(--arc-primary-hover)
+    );
+    color: white;
+    box-shadow: 0 4px 12px var(--glow-medium);
+}
+
+.support-content {
+    flex: 1;
+}
+
+.support-content h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--arc-text-primary);
+}
+
+.support-content p {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    color: var(--arc-text-secondary);
+    line-height: 1.5;
+}
+
+.support-btn {
+    color: var(--arc-primary);
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.rating-btn {
+    color: var(--arc-primary);
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+}
+
+.rating-btn:hover {
+    background: var(--arc-surface);
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 2px var(--glow-light);
+}
+
+.feedback-btn {
+    color: var(--arc-primary);
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+}
+
+.feedback-btn:hover {
+    background: var(--arc-surface);
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 2px var(--glow-light);
+}
+
+/* 深色模式适配 */
+[data-theme="dark"] .support-item {
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
+}
+
 /* 颜色选择器样式 */
 .color-picker {
     display: flex;

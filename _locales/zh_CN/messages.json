@@ -262,5 +262,32 @@
   },
   "developerTwitter": {
     "message": "开发者 X"
+  },
+  "supportSection": {
+    "message": "支持我们"
+  },
+  "ratingTitle": {
+    "message": "喜欢 Arclet Copier？"
+  },
+  "ratingDescription": {
+    "message": "如果这个扩展对您有帮助，请在 Chrome 应用商店给我们一个好评！您的支持是我们前进的动力。"
+  },
+  "rateNow": {
+    "message": "立即评价"
+  },
+  "feedbackTitle": {
+    "message": "反馈建议"
+  },
+  "feedbackDescription": {
+    "message": "遇到问题或有新功能建议？欢迎通过邮件联系我们，我们会认真回复每一封邮件。"
+  },
+  "contactDeveloper": {
+    "message": "联系开发者"
+  },
+  "feedbackEmailSubject": {
+    "message": "Arclet Copier - 反馈建议"
+  },
+  "feedbackEmailBody": {
+    "message": "您好！\n\n我在使用 Arclet Copier 时有以下反馈：\n\n\n\n感谢您的时间！"
   }
 }

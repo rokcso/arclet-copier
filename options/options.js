@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     appearanceSwitch: document.getElementById("appearanceSwitch"),
     colorPicker: document.getElementById("colorPicker"),
     notification: document.getElementById("notification"),
+    ratingBtn: document.getElementById("ratingBtn"),
+    feedbackBtn: document.getElementById("feedbackBtn"),
   };
 
   // Load version from manifest
@@ -375,6 +377,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         getLocalMessage("languageChangeNotification") ||
           "Language changed successfully!",
       );
+    });
+
+    // Rating button
+    elements.ratingBtn.addEventListener("click", () => {
+      chrome.tabs.create({
+        url: "https://chromewebstore.google.com/detail/arclet-copier/mkflehheaokdfopijachhfdbofkppdil",
+      });
+    });
+
+    // Feedback button
+    elements.feedbackBtn.addEventListener("click", () => {
+      // Use localized email template from i18n
+      const subject = encodeURIComponent(
+        getLocalMessage("feedbackEmailSubject"),
+      );
+      const body = encodeURIComponent(getLocalMessage("feedbackEmailBody"));
+      const mailtoUrl = `mailto:hi@rokcso.com?subject=${subject}&body=${body}`;
+      chrome.tabs.create({ url: mailtoUrl });
     });
   }
 

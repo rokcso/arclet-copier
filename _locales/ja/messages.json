@@ -262,5 +262,32 @@
   },
   "developerTwitter": {
     "message": "開発者X"
+  },
+  "supportSection": {
+    "message": "サポートする"
+  },
+  "ratingTitle": {
+    "message": "Arclet Copier は気に入りましたか？"
+  },
+  "ratingDescription": {
+    "message": "この拡張機能が役に立った場合は、Chrome ウェブストアでレビューを残すことを検討してください！あなたのサポートが私たちの改善の励みになります。"
+  },
+  "rateNow": {
+    "message": "今すぐ評価"
+  },
+  "feedbackTitle": {
+    "message": "フィードバックと提案"
+  },
+  "feedbackDescription": {
+    "message": "問題を発見したり、機能の提案がありますか？お気軽にメールでお問い合わせください - すべてのメッセージに返信いたします！"
+  },
+  "contactDeveloper": {
+    "message": "開発者に連絡"
+  },
+  "feedbackEmailSubject": {
+    "message": "Arclet Copier - フィードバックと提案"
+  },
+  "feedbackEmailBody": {
+    "message": "こんにちは！\n\nArclet Copier について以下のフィードバックがあります：\n\n\n\nお時間をありがとうございます！"
   }
 }
