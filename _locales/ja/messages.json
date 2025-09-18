@@ -65,6 +65,9 @@
   "languageDe": {
     "message": "🇩🇪 Deutsch"
   },
+  "languageFr": {
+    "message": "🇫🇷 Français"
+  },
   "gettingUrl": {
     "message": "URLを取得中..."
   },
