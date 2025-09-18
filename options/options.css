@@ -308,12 +308,14 @@ select.setting-control:hover {
     display: flex;
     align-items: flex-start;
     gap: 16px;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--arc-border);
     transition: all 0.2s ease;
-    border: 1px solid var(--arc-border);
-    background: var(--arc-surface);
+}
+
+.support-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .support-icon {
@@ -401,11 +403,7 @@ select.setting-control:hover {
     box-shadow: 0 0 0 2px var(--glow-light);
 }
 
-/* 深色模式适配 */
-[data-theme="dark"] .support-item {
-    background: var(--arc-surface);
-    border-color: var(--arc-border);
-}
+/* 深色模式适配 - support-item 样式已移除 */
 
 /* 颜色选择器样式 */
 .color-picker {
