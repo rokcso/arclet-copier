@@ -2,6 +2,14 @@
 
 快速复制当前页面 URL 的 Chrome 扩展程序，支持参数过滤和 Markdown 链接格式。
 
+## 界面预览
+
+### 弹窗界面
+![弹窗界面预览](./assets/screenshots/popup.webp)
+
+### 设置选项页面
+![设置选项页面预览](./assets/screenshots/options.webp)
+
 ## 功能特色
 
 - 🔗 **一键复制 URL**：支持 popup 点击和快捷键静默复制
