@@ -190,21 +190,7 @@ export function isValidWebUrl(url) {
       return false;
     }
 
-    // 排除特殊域名
-    const restrictedDomains = [
-      "chromewebstore.google.com",
-      "chrome.google.com",
-      "addons.mozilla.org",
-      "microsoftedge.microsoft.com",
-    ];
-
-    if (
-      restrictedDomains.some(
-        (domain) => hostname === domain || hostname.endsWith("." + domain),
-      )
-    ) {
-      return false;
-    }
+    // 移除特定域名限制 - 让用户自主决定是否生成短链
 
     // 排除文件协议和其他特殊协议
     const invalidProtocols = [
