@@ -150,6 +150,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (currentIndex === -1) return;
 
+    // 新的三段式开关
+    if (switchElement.classList.contains("three-segment-switch")) {
+      const segmentOptions = switchElement.querySelectorAll(".segment-option");
+      segmentOptions.forEach((option) => option.classList.remove("active"));
+      if (segmentOptions[currentIndex]) {
+        segmentOptions[currentIndex].classList.add("active");
+      }
+      // CSS会根据data-value自动更新indicator位置
+      return;
+    }
+
+    // 旧版本的三段式开关（保持兼容性）
     const switchOptions = switchElement.querySelectorAll(".switch-option");
     switchOptions.forEach((option) => option.classList.remove("active"));
 
@@ -175,17 +187,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       { value: "aggressive", text: "激进" },
     ];
 
-    const switchOptions =
-      elements.urlCleaningSwitch.querySelectorAll(".switch-option");
-    switchOptions.forEach((option, index) => {
-      option.addEventListener("click", () => {
-        const newValue = options[index].value;
-        elements.urlCleaningSwitch.setAttribute("data-value", newValue);
-        currentSettings.urlCleaning = newValue;
-        updateSliderPosition(elements.urlCleaningSwitch);
-        applyFilters();
+    // 新的三段式开关
+    if (elements.urlCleaningSwitch.classList.contains("three-segment-switch")) {
+      const segmentOptions =
+        elements.urlCleaningSwitch.querySelectorAll(".segment-option");
+      segmentOptions.forEach((option, index) => {
+        option.addEventListener("click", () => {
+          const newValue = option.getAttribute("data-value");
+          elements.urlCleaningSwitch.setAttribute("data-value", newValue);
+          currentSettings.urlCleaning = newValue;
+          updateSliderPosition(elements.urlCleaningSwitch);
+          applyFilters();
+        });
       });
-    });
+    } else {
+      // 旧版本的三段式开关（保持兼容性）
+      const switchOptions =
+        elements.urlCleaningSwitch.querySelectorAll(".switch-option");
+      switchOptions.forEach((option, index) => {
+        option.addEventListener("click", () => {
+          const newValue = options[index].value;
+          elements.urlCleaningSwitch.setAttribute("data-value", newValue);
+          currentSettings.urlCleaning = newValue;
+          updateSliderPosition(elements.urlCleaningSwitch);
+          applyFilters();
+        });
+      });
+    }
 
     updateSliderPosition(elements.urlCleaningSwitch);
   }

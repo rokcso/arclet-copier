@@ -22,176 +22,133 @@
             </div>
 
             <!-- 第二层：设置区域 -->
-            <div class="operations-section">
-                <div class="settings-card">
-                    <h3 class="card-title" data-i18n="settings">设置</h3>
-                    <div class="card-content">
-                        <div class="settings-grid">
-                            <!-- 左侧：过滤器设置 -->
-                            <div class="settings-group">
-                                <div class="filter-group">
-                                    <label
-                                        class="filter-label"
-                                        data-i18n="urlType"
-                                        >URL 类型</label
+            <div class="settings-section">
+                <h2 class="settings-title">SETTINGS</h2>
+                <div class="settings-layout">
+                    <!-- 左侧：URL类型 -->
+                    <div class="settings-column-left">
+                        <div class="setting-group">
+                            <h3 class="setting-group-title">URL Type</h3>
+                            <div class="checkbox-list">
+                                <label class="modern-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="urlType"
+                                        value="web"
+                                        checked
+                                    />
+                                    <span class="checkbox-box"></span>
+                                    <span
+                                        class="checkbox-text"
+                                        data-i18n="webPages"
+                                        >Web Pages (HTTP/HTTPS)</span
                                     >
-                                    <div class="checkbox-group">
-                                        <label class="checkbox-option">
-                                            <input
-                                                type="checkbox"
-                                                name="urlType"
-                                                value="web"
-                                                checked
-                                            />
-                                            <span
-                                                class="checkbox-custom"
-                                            ></span>
-                                            <span data-i18n="webPages"
-                                                >网页 (HTTP/HTTPS)</span
-                                            >
-                                        </label>
-                                        <label class="checkbox-option">
-                                            <input
-                                                type="checkbox"
-                                                name="urlType"
-                                                value="extension"
-                                            />
-                                            <span
-                                                class="checkbox-custom"
-                                            ></span>
-                                            <span data-i18n="extensionPages"
-                                                >扩展页面</span
-                                            >
-                                        </label>
-                                        <label class="checkbox-option">
-                                            <input
-                                                type="checkbox"
-                                                name="urlType"
-                                                value="system"
-                                            />
-                                            <span
-                                                class="checkbox-custom"
-                                            ></span>
-                                            <span data-i18n="systemPages"
-                                                >系统页面</span
-                                            >
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="filter-group">
-                                    <label class="checkbox-option">
-                                        <input
-                                            type="checkbox"
-                                            id="removeDuplicates"
-                                            checked
-                                        />
-                                        <span class="checkbox-custom"></span>
-                                        <span data-i18n="removeDuplicates"
-                                            >去除重复</span
-                                        >
-                                    </label>
-                                </div>
-
-                                <div class="filter-group">
-                                    <label
-                                        class="filter-label"
-                                        data-i18n="urlCleaning"
-                                        >URL 清理</label
+                                </label>
+                                <label class="modern-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="urlType"
+                                        value="extension"
+                                    />
+                                    <span class="checkbox-box"></span>
+                                    <span
+                                        class="checkbox-text"
+                                        data-i18n="extensionPages"
+                                        >Extension Pages</span
                                     >
-                                    <div
-                                        class="three-way-switch"
-                                        id="urlCleaningSwitch"
-                                        data-value="smart"
+                                </label>
+                                <label class="modern-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="urlType"
+                                        value="system"
+                                    />
+                                    <span class="checkbox-box"></span>
+                                    <span
+                                        class="checkbox-text"
+                                        data-i18n="systemPages"
+                                        >System Pages</span
                                     >
-                                        <div
-                                            class="switch-option"
-                                            data-i18n="cleaningOff"
-                                        >
-                                            关闭
-                                        </div>
-                                        <div
-                                            class="switch-option"
-                                            data-i18n="cleaningSmart"
-                                        >
-                                            智能
-                                        </div>
-                                        <div
-                                            class="switch-option"
-                                            data-i18n="cleaningAggressive"
-                                        >
-                                            激进
-                                        </div>
-                                        <div class="switch-slider"></div>
-                                    </div>
-                                </div>
+                                </label>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- 右侧：输出格式设置 -->
-                            <div class="settings-group">
-                                <div class="filter-group">
-                                    <label
-                                        class="filter-label"
-                                        data-i18n="outputFormat"
-                                        >输出格式</label
-                                    >
-                                    <div class="format-options">
-                                        <label class="format-option">
-                                            <input
-                                                type="radio"
-                                                name="outputFormat"
-                                                value="text"
-                                                checked
-                                            />
-                                            <span class="format-custom">
-                                                <svg
-                                                    class="format-icon"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                >
-                                                    <path
-                                                        d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-                                                    />
-                                                    <path
-                                                        d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-                                                    />
-                                                </svg>
-                                                <span data-i18n="formatUrl"
-                                                    >URL 列表</span
-                                                >
-                                            </span>
-                                        </label>
-                                        <label class="format-option">
-                                            <input
-                                                type="radio"
-                                                name="outputFormat"
-                                                value="markdown"
-                                            />
-                                            <span class="format-custom">
-                                                <svg
-                                                    class="format-icon"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                >
-                                                    <path
-                                                        d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
-                                                    />
-                                                    <path
-                                                        d="M7 15V9l2 2l2-2v6m3-2l2 2l2-2m-2 2V9"
-                                                    />
-                                                </svg>
-                                                <span data-i18n="formatMarkdown"
-                                                    >Markdown</span
-                                                >
-                                            </span>
-                                        </label>
-                                    </div>
+                    <!-- 右侧：其他设置 -->
+                    <div class="settings-column-right">
+                        <div class="setting-item">
+                            <span
+                                class="setting-label"
+                                data-i18n="removeDuplicates"
+                                >Deduplicate</span
+                            >
+                            <label class="toggle-switch">
+                                <input
+                                    type="checkbox"
+                                    id="removeDuplicates"
+                                    checked
+                                />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="urlCleaning"
+                                >URL Cleaning</span
+                            >
+                            <div
+                                class="three-segment-switch"
+                                id="urlCleaningSwitch"
+                                data-value="smart"
+                            >
+                                <div
+                                    class="segment-option"
+                                    data-value="off"
+                                    data-i18n="cleaningOff"
+                                >
+                                    Off
                                 </div>
+                                <div
+                                    class="segment-option active"
+                                    data-value="smart"
+                                    data-i18n="cleaningSmart"
+                                >
+                                    Smart
+                                </div>
+                                <div
+                                    class="segment-option"
+                                    data-value="aggressive"
+                                    data-i18n="cleaningAggressive"
+                                >
+                                    All
+                                </div>
+                                <div class="segment-indicator"></div>
                             </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <span
+                                class="setting-label"
+                                data-i18n="silentCopyFormat"
+                                >Silent Copy Format</span
+                            >
+                            <select id="silentCopyFormat" class="modern-select">
+                                <option value="url" data-i18n="formatUrl">
+                                    URL
+                                </option>
+                                <option
+                                    value="markdown"
+                                    data-i18n="formatMarkdown"
+                                >
+                                    Markdown
+                                </option>
+                                <option
+                                    value="shortUrl"
+                                    data-i18n="formatShortUrl"
+                                >
+                                    Short URL
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
