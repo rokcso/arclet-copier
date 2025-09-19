@@ -83,17 +83,29 @@
                             <!-- 右侧：其他设置 -->
                             <div class="settings-group">
                                 <div class="filter-group">
-                                    <label class="checkbox-option">
-                                        <input
-                                            type="checkbox"
-                                            id="removeDuplicates"
-                                            checked
-                                        />
-                                        <span class="checkbox-custom"></span>
-                                        <span data-i18n="removeDuplicates"
+                                    <div class="setting-row">
+                                        <span
+                                            class="setting-label"
+                                            data-i18n="removeDuplicates"
                                             >Deduplicate</span
                                         >
-                                    </label>
+                                        <div class="setting-control">
+                                            <input
+                                                type="checkbox"
+                                                id="removeDuplicates"
+                                                class="toggle-checkbox"
+                                                checked
+                                            />
+                                            <label
+                                                for="removeDuplicates"
+                                                class="toggle-label"
+                                            >
+                                                <span
+                                                    class="toggle-slider"
+                                                ></span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="filter-group">
