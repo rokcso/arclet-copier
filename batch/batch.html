@@ -198,56 +198,6 @@
                                     </span>
                                 </label>
                             </div>
-
-                            <div class="main-actions">
-                                <button
-                                    class="action-btn secondary"
-                                    id="previewBtn"
-                                    disabled
-                                >
-                                    <svg
-                                        class="btn-icon"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <path
-                                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
-                                        />
-                                        <circle cx="12" cy="12" r="3" />
-                                    </svg>
-                                    <span data-i18n="preview">预览</span>
-                                </button>
-                                <button
-                                    class="action-btn primary"
-                                    id="copyBtn"
-                                    disabled
-                                >
-                                    <svg
-                                        class="btn-icon"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <rect
-                                            x="9"
-                                            y="9"
-                                            width="13"
-                                            height="13"
-                                            rx="2"
-                                            ry="2"
-                                        />
-                                        <path
-                                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                                        />
-                                    </svg>
-                                    <span data-i18n="copySelected"
-                                        >复制选中项</span
-                                    >
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -255,44 +205,92 @@
 
             <!-- 第三层：URL 展示区域 -->
             <div class="display-section">
-                <div class="display-header">
-                    <h3 class="section-title">
-                        <svg
-                            class="title-icon"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path
-                                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                            />
-                            <rect
-                                x="8"
-                                y="2"
-                                width="8"
-                                height="4"
-                                rx="1"
-                                ry="1"
-                            />
-                        </svg>
-                        <span data-i18n="tabsList">标签页列表</span>
-                    </h3>
-                    <div class="header-right">
-                        <div class="window-scope-selector">
-                            <label class="filter-label" data-i18n="windowScope"
-                                >窗口</label
+                <div class="sticky-header">
+                    <!-- 第一层：标题 + 窗口选择 + 刷新按钮 + 数量 -->
+                    <div class="header-layer">
+                        <div class="header-left">
+                            <h3 class="section-title" data-i18n="tabsList">
+                                Tab List
+                            </h3>
+                            <div class="window-scope-selector">
+                                <label
+                                    class="filter-label"
+                                    data-i18n="windowScope"
+                                    >window</label
+                                >
+                                <select
+                                    id="windowScopeSelect"
+                                    class="scope-select"
+                                >
+                                    <!-- 选项将通过 JavaScript 动态生成 -->
+                                </select>
+                            </div>
+                            <button
+                                type="button"
+                                class="refresh-btn"
+                                id="refreshBtn"
                             >
-                            <select id="windowScopeSelect" class="scope-select">
-                                <!-- 选项将通过 JavaScript 动态生成 -->
-                            </select>
+                                <span data-i18n="refresh">刷新</span>
+                            </button>
                         </div>
-                        <div class="stats">
-                            <span class="count primary" id="selectedCount"
-                                >0</span
+                        <div class="header-right">
+                            <div class="page-count">
+                                <span class="count primary" id="selectedCount"
+                                    >1</span
+                                >
+                                <span>/</span>
+                                <span class="count" id="totalCount">23</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二层：操作按钮 -->
+                    <div class="controls-layer" id="tabsControls">
+                        <div class="left-controls">
+                            <label class="master-checkbox">
+                                <input type="checkbox" id="masterCheckbox" />
+                                <span class="checkbox-custom"></span>
+                            </label>
+                            <button
+                                type="button"
+                                class="control-btn"
+                                id="selectAllBtn"
                             >
-                            <span>/</span>
-                            <span class="count" id="totalCount">0</span>
+                                <span data-i18n="selectAll">全选</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="control-btn"
+                                id="invertSelectionBtn"
+                            >
+                                <span data-i18n="invertSelection">反选</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="control-btn"
+                                id="selectNoneBtn"
+                            >
+                                <span data-i18n="clearSelection">清空</span>
+                            </button>
+                        </div>
+
+                        <div class="right-controls">
+                            <button
+                                type="button"
+                                class="control-btn"
+                                id="previewBtn"
+                                disabled
+                            >
+                                <span data-i18n="preview">预览</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="control-btn primary"
+                                id="copyBtn"
+                                disabled
+                            >
+                                <span data-i18n="copy">复制</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -301,119 +299,6 @@
                     <div class="loading" id="loading">
                         <div class="loading-spinner"></div>
                         <span data-i18n="loadingTabs">正在加载标签页...</span>
-                    </div>
-
-                    <!-- 列表操作栏 -->
-                    <div
-                        class="tabs-controls"
-                        id="tabsControls"
-                        style="display: none"
-                    >
-                        <div class="select-controls">
-                            <label class="master-checkbox">
-                                <input type="checkbox" id="masterCheckbox" />
-                                <span class="checkbox-custom"></span>
-                                <span
-                                    class="checkbox-label"
-                                    id="masterCheckboxLabel"
-                                    >全选</span
-                                >
-                            </label>
-                        </div>
-
-                        <div class="action-groups">
-                            <!-- 选择操作组 -->
-                            <div class="action-group select-actions">
-                                <button
-                                    class="action-btn compact secondary"
-                                    id="selectNoneBtn"
-                                >
-                                    <span>清空</span>
-                                </button>
-                                <button
-                                    class="action-btn compact secondary"
-                                    id="invertSelectionBtn"
-                                >
-                                    <span>反选</span>
-                                </button>
-                            </div>
-
-                            <!-- 列表操作组 -->
-                            <div class="action-group list-actions">
-                                <button
-                                    class="action-btn compact secondary"
-                                    id="refreshBtn"
-                                >
-                                    <svg
-                                        class="btn-icon"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <polyline
-                                            points="23 4 23 10 17 10"
-                                        ></polyline>
-                                        <polyline
-                                            points="1 20 1 14 7 14"
-                                        ></polyline>
-                                        <path
-                                            d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
-                                        ></path>
-                                    </svg>
-                                    <span>刷新</span>
-                                </button>
-                            </div>
-
-                            <!-- 主要操作组 -->
-                            <div class="action-group main-actions">
-                                <button
-                                    class="action-btn compact secondary"
-                                    id="previewBtn"
-                                    disabled
-                                >
-                                    <svg
-                                        class="btn-icon"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <path
-                                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
-                                        ></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                    <span>预览</span>
-                                </button>
-                                <button
-                                    class="action-btn compact primary"
-                                    id="copyBtn"
-                                    disabled
-                                >
-                                    <svg
-                                        class="btn-icon"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <rect
-                                            x="9"
-                                            y="9"
-                                            width="13"
-                                            height="13"
-                                            rx="2"
-                                            ry="2"
-                                        ></rect>
-                                        <path
-                                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                                        ></path>
-                                    </svg>
-                                    <span>复制</span>
-                                </button>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- 标签页列表内容 -->

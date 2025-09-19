@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     version: document.getElementById("version"),
     refreshBtn: document.getElementById("refreshBtn"),
     closeBtn: document.getElementById("closeBtn"),
+    selectAllBtn: document.getElementById("selectAllBtn"),
     selectNoneBtn: document.getElementById("selectNoneBtn"),
     invertSelectionBtn: document.getElementById("invertSelectionBtn"),
     selectedCount: document.getElementById("selectedCount"),
@@ -25,7 +26,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     tabsControls: document.getElementById("tabsControls"),
     tabsList: document.getElementById("tabsList"),
     masterCheckbox: document.getElementById("masterCheckbox"),
-    masterCheckboxLabel: document.getElementById("masterCheckboxLabel"),
     loading: document.getElementById("loading"),
     previewBtn: document.getElementById("previewBtn"),
     copyBtn: document.getElementById("copyBtn"),
@@ -347,8 +347,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           <span>${getLocalMessage("noTabsFound") || "没有找到符合条件的标签页"}</span>
         </div>
       `;
-      // 隐藏操作栏
-      elements.tabsControls.style.display = "none";
       return;
     }
 
@@ -475,22 +473,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (totalTabs === 0) {
       elements.masterCheckbox.checked = false;
       elements.masterCheckbox.indeterminate = false;
-      elements.masterCheckboxLabel.textContent = "全选";
       return;
     }
 
     if (selectedCount === 0) {
       elements.masterCheckbox.checked = false;
       elements.masterCheckbox.indeterminate = false;
-      elements.masterCheckboxLabel.textContent = `全选 (${totalTabs}项)`;
     } else if (selectedCount === totalTabs) {
       elements.masterCheckbox.checked = true;
       elements.masterCheckbox.indeterminate = false;
-      elements.masterCheckboxLabel.textContent = `全选 (${totalTabs}项)`;
     } else {
       elements.masterCheckbox.checked = false;
       elements.masterCheckbox.indeterminate = true;
-      elements.masterCheckboxLabel.textContent = `部分 (${selectedCount}/${totalTabs}项)`;
     }
   }
 
@@ -705,13 +699,38 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 事件监听器
-  elements.refreshBtn.addEventListener("click", refreshTabs);
+  elements.refreshBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    refreshTabs();
+  });
   elements.closeBtn.addEventListener("click", () => window.close());
   elements.masterCheckbox.addEventListener("change", handleMasterCheckboxClick);
-  elements.selectNoneBtn.addEventListener("click", selectNone);
-  elements.invertSelectionBtn.addEventListener("click", invertSelection);
-  elements.previewBtn.addEventListener("click", showPreview);
-  elements.copyBtn.addEventListener("click", performCopy);
+  elements.selectAllBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    selectAll();
+  });
+  elements.selectNoneBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    selectNone();
+  });
+  elements.invertSelectionBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    invertSelection();
+  });
+  elements.previewBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    showPreview();
+  });
+  elements.copyBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    performCopy();
+  });
 
   // 预览模态框事件
   elements.previewModalClose.addEventListener("click", hidePreview);

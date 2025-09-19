@@ -553,11 +553,7 @@ body {
 .master-checkbox {
     display: flex;
     align-items: center;
-    gap: 8px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--arc-text-primary);
 }
 
 .master-checkbox input[type="checkbox"] {
@@ -565,8 +561,8 @@ body {
 }
 
 .master-checkbox .checkbox-custom {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border: 2px solid var(--arc-border);
     border-radius: 4px;
     position: relative;
@@ -585,7 +581,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -603,7 +599,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -640,6 +636,135 @@ body {
 
 .action-btn.compact span {
     font-size: 13px;
+}
+
+/* 粘性头部容器 */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--arc-background);
+    border-bottom: 1px solid var(--arc-border);
+}
+
+/* 第一层：标题 + 窗口选择 + 数量 */
+.header-layer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--arc-border);
+    background: var(--arc-surface);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.section-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--arc-text-primary);
+}
+
+.page-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--arc-text-secondary);
+}
+
+/* 第二层：操作按钮 */
+.controls-layer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--arc-surface);
+    gap: 16px;
+}
+
+.left-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.right-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--arc-text-secondary);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+    background: var(--arc-secondary);
+    color: var(--arc-text-primary);
+}
+
+.control-btn.primary {
+    color: var(--arc-primary);
+    font-weight: 600;
+}
+
+.control-btn.primary:hover {
+    background: var(--glow-light);
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid var(--arc-border);
+    border-radius: 6px;
+    background: var(--arc-secondary);
+    color: var(--arc-text-primary);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+    background: var(--arc-border);
+    border-color: var(--arc-primary);
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+}
+
+.left-actions,
+.right-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* 标签页列表容器 */
@@ -705,7 +830,37 @@ body {
         font-size: 13px;
     }
 
-    /* 操作栏响应式样式 */
+    /* 两层布局响应式样式 */
+    .header-layer {
+        padding: 16px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .controls-layer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .left-actions,
+    .right-actions {
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .refresh-btn {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    /* 原有样式保持兼容 */
     .tabs-controls {
         flex-direction: column;
         align-items: stretch;
@@ -787,13 +942,14 @@ body {
 .tab-item {
     display: flex;
     align-items: center;
-    padding: 12px 16px;
+    padding: 20px 24px;
     border: 1px solid var(--arc-border);
-    border-radius: var(--arc-radius-sm);
-    margin-bottom: 8px;
+    border-radius: 8px;
+    margin-bottom: 12px;
     background: var(--arc-background);
     transition: all 0.2s ease;
     cursor: pointer;
+    min-height: 80px;
 }
 
 .tab-item:hover {
@@ -808,9 +964,9 @@ body {
 }
 
 .tab-checkbox {
-    margin-right: 12px;
-    width: 18px;
-    height: 18px;
+    margin-right: 16px;
+    width: 20px;
+    height: 20px;
     accent-color: var(--arc-primary);
 }
 
@@ -831,13 +987,15 @@ body {
     font-weight: 500;
     color: var(--arc-text-primary);
     margin-bottom: 4px;
+    font-size: 18px;
+    line-height: 1.4;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .tab-url {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--arc-text-secondary);
     white-space: nowrap;
     overflow: hidden;
