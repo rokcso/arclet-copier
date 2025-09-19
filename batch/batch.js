@@ -5,7 +5,76 @@ import {
   getMessage,
 } from "../shared/constants.js";
 
+// 持久化短链缓存管理
+class PersistentShortUrlCache {
+  constructor() {
+    this.storageKey = "arclet_shorturl_cache";
+    this.maxSize = 100; // 最大缓存数量
+    this.ttl = 24 * 60 * 60 * 1000; // 24小时过期
+  }
+
+  getKey(url, service, cleaningMode) {
+    const processedUrl = processUrl(url, cleaningMode);
+    return `${service}:${processedUrl}`;
+  }
+
+  async get(url, service, cleaningMode) {
+    try {
+      const key = this.getKey(url, service, cleaningMode);
+      const result = await chrome.storage.local.get([this.storageKey]);
+      const cache = result[this.storageKey] || {};
+      const item = cache[key];
+
+      if (item && Date.now() - item.timestamp < this.ttl) {
+        console.log("使用持久化缓存 (batch):", item.shortUrl);
+        return item.shortUrl;
+      }
+
+      // 清理过期项
+      if (item) {
+        delete cache[key];
+        await chrome.storage.local.set({ [this.storageKey]: cache });
+      }
+
+      return null;
+    } catch (error) {
+      console.error("缓存读取失败:", error);
+      return null;
+    }
+  }
+
+  async set(url, service, cleaningMode, shortUrl) {
+    try {
+      const key = this.getKey(url, service, cleaningMode);
+      const result = await chrome.storage.local.get([this.storageKey]);
+      let cache = result[this.storageKey] || {};
+
+      // LRU清理
+      const keys = Object.keys(cache);
+      if (keys.length >= this.maxSize) {
+        // 删除最旧的项
+        const oldestKey = keys.reduce((oldest, current) =>
+          cache[current].timestamp < cache[oldest].timestamp ? current : oldest,
+        );
+        delete cache[oldestKey];
+      }
+
+      cache[key] = {
+        shortUrl,
+        timestamp: Date.now(),
+      };
+
+      await chrome.storage.local.set({ [this.storageKey]: cache });
+      console.log("短链已持久化缓存 (batch):", shortUrl);
+    } catch (error) {
+      console.error("缓存保存失败:", error);
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
+  // 创建持久化短链缓存实例
+  const shortUrlCache = new PersistentShortUrlCache();
   // 状态管理
   let allTabs = [];
   let filteredTabs = [];
@@ -601,13 +670,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         const shortUrls = await Promise.all(
           tabs.map(async (tab) => {
             const url = processUrl(tab.url, cleaningMode);
+
+            // 首先检查缓存
+            const cachedUrl = await shortUrlCache.get(
+              url,
+              selectedService,
+              cleaningMode,
+            );
+            if (cachedUrl) {
+              return cachedUrl;
+            }
+
             try {
               const response = await chrome.runtime.sendMessage({
                 action: "createShortUrl",
                 url: url,
                 service: selectedService,
               });
-              return response.shortUrl || url; // 如果失败则返回原URL
+
+              if (response.shortUrl) {
+                // 保存到缓存
+                await shortUrlCache.set(
+                  url,
+                  selectedService,
+                  cleaningMode,
+                  response.shortUrl,
+                );
+                return response.shortUrl;
+              }
+
+              return url; // 如果失败则返回原URL
             } catch (error) {
               console.error("短链生成失败:", error);
               return url; // 如果出错则返回原URL
