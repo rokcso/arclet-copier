@@ -189,12 +189,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateSliderPosition(elements.urlCleaningSwitch);
   }
 
+  // 存储窗口信息
+  let allWindows = [];
+  let currentWindowId = null;
+
+  // 获取所有窗口信息
+  async function getAllWindows() {
+    try {
+      const windows = await chrome.windows.getAll({ populate: true });
+      const currentWindow = await chrome.windows.getCurrent();
+      allWindows = windows;
+      currentWindowId = currentWindow.id;
+      return windows;
+    } catch (error) {
+      console.error("获取窗口失败:", error);
+      return [];
+    }
+  }
+
+  // 更新窗口选择器选项
+  function updateWindowSelector() {
+    const select = document.getElementById("windowScopeSelect");
+    const currentValue = select.value;
+
+    // 清空现有选项
+    select.innerHTML = "";
+
+    // 添加当前窗口选项
+    const currentWindow = allWindows.find((w) => w.id === currentWindowId);
+    if (currentWindow) {
+      const currentOption = document.createElement("option");
+      currentOption.value = "current";
+      currentOption.textContent = `当前 (${currentWindow.tabs.length}个)`;
+      select.appendChild(currentOption);
+    }
+
+    // 添加全部窗口选项
+    const allOption = document.createElement("option");
+    allOption.value = "all";
+    const totalTabs = allWindows.reduce((sum, w) => sum + w.tabs.length, 0);
+    allOption.textContent = `全部 (${totalTabs}个)`;
+    select.appendChild(allOption);
+
+    // 恢复之前的选择
+    select.value = currentValue || "current";
+  }
+
   // 获取所有标签页
   async function getAllTabs() {
     try {
-      const windowScope = document.querySelector(
-        'input[name="windowScope"]:checked',
-      ).value;
+      const windowScope = document.getElementById("windowScopeSelect").value;
 
       if (windowScope === "current") {
         const currentWindow = await chrome.windows.getCurrent();
@@ -597,6 +641,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.loading.style.display = "flex";
     elements.tabsContainer.innerHTML = "";
 
+    // 先获取窗口信息，然后更新选择器
+    await getAllWindows();
+    updateWindowSelector();
+
     allTabs = await getAllTabs();
     selectedTabs.clear();
     applyFilters();
@@ -624,9 +672,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // 过滤器变化事件
-  document.querySelectorAll('input[name="windowScope"]').forEach((input) => {
-    input.addEventListener("change", refreshTabs);
-  });
+  document
+    .getElementById("windowScopeSelect")
+    .addEventListener("change", refreshTabs);
 
   document.querySelectorAll('input[name="urlType"]').forEach((input) => {
     input.addEventListener("change", applyFilters);

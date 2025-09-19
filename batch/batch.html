@@ -67,39 +67,6 @@
                         <h3 class="card-title" data-i18n="filters">过滤器</h3>
                         <div class="card-content">
                             <div class="filter-group">
-                                <label
-                                    class="filter-label"
-                                    data-i18n="windowScope"
-                                    >窗口范围</label
-                                >
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input
-                                            type="radio"
-                                            name="windowScope"
-                                            value="current"
-                                            checked
-                                        />
-                                        <span class="radio-custom"></span>
-                                        <span data-i18n="currentWindow"
-                                            >当前窗口</span
-                                        >
-                                    </label>
-                                    <label class="radio-option">
-                                        <input
-                                            type="radio"
-                                            name="windowScope"
-                                            value="all"
-                                        />
-                                        <span class="radio-custom"></span>
-                                        <span data-i18n="allWindows"
-                                            >所有窗口</span
-                                        >
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="filter-group">
                                 <label class="filter-label" data-i18n="urlType"
                                     >URL 类型</label
                                 >
@@ -252,76 +219,6 @@
                                 </label>
                             </div>
 
-                            <div class="bulk-actions">
-                                <button
-                                    class="action-btn secondary"
-                                    id="selectAllBtn"
-                                >
-                                    <svg
-                                        class="btn-icon"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <polyline points="9 11 12 14 22 4" />
-                                        <path
-                                            d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
-                                        />
-                                    </svg>
-                                    <span data-i18n="selectAll">全选</span>
-                                </button>
-                                <button
-                                    class="action-btn secondary"
-                                    id="selectNoneBtn"
-                                >
-                                    <svg
-                                        class="btn-icon"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <rect
-                                            x="3"
-                                            y="3"
-                                            width="18"
-                                            height="18"
-                                            rx="2"
-                                            ry="2"
-                                        />
-                                    </svg>
-                                    <span data-i18n="selectNone">全不选</span>
-                                </button>
-                                <button
-                                    class="action-btn secondary"
-                                    id="invertSelectionBtn"
-                                >
-                                    <svg
-                                        class="btn-icon"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <path
-                                            d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                                        />
-                                        <rect
-                                            x="8"
-                                            y="2"
-                                            width="8"
-                                            height="4"
-                                            rx="1"
-                                            ry="1"
-                                        />
-                                    </svg>
-                                    <span data-i18n="invertSelection"
-                                        >反选</span
-                                    >
-                                </button>
-                            </div>
-
                             <div class="main-actions">
                                 <button
                                     class="action-btn secondary"
@@ -401,11 +298,89 @@
                         </svg>
                         <span data-i18n="tabsList">标签页列表</span>
                     </h3>
-                    <div class="stats">
-                        <span data-i18n="selected">已选择</span>
-                        <span class="count primary" id="selectedCount">0</span>
-                        <span>/</span>
-                        <span class="count" id="totalCount">0</span>
+                    <div class="header-right">
+                        <div class="window-scope-selector">
+                            <label class="filter-label" data-i18n="windowScope"
+                                >窗口</label
+                            >
+                            <select id="windowScopeSelect" class="scope-select">
+                                <!-- 选项将通过 JavaScript 动态生成 -->
+                            </select>
+                        </div>
+                        <div class="quick-actions">
+                            <button
+                                class="action-btn compact secondary"
+                                id="selectAllBtn"
+                            >
+                                <svg
+                                    class="btn-icon"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <polyline points="9 11 12 14 22 4" />
+                                    <path
+                                        d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                                    />
+                                </svg>
+                                <span data-i18n="selectAll">全选</span>
+                            </button>
+                            <button
+                                class="action-btn compact secondary"
+                                id="selectNoneBtn"
+                            >
+                                <svg
+                                    class="btn-icon"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <rect
+                                        x="3"
+                                        y="3"
+                                        width="18"
+                                        height="18"
+                                        rx="2"
+                                        ry="2"
+                                    />
+                                </svg>
+                                <span data-i18n="selectNone">清空</span>
+                            </button>
+                            <button
+                                class="action-btn compact secondary"
+                                id="invertSelectionBtn"
+                            >
+                                <svg
+                                    class="btn-icon"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                                    />
+                                    <rect
+                                        x="8"
+                                        y="2"
+                                        width="8"
+                                        height="4"
+                                        rx="1"
+                                        ry="1"
+                                    />
+                                </svg>
+                                <span data-i18n="invertSelection">反选</span>
+                            </button>
+                        </div>
+                        <div class="stats">
+                            <span class="count primary" id="selectedCount"
+                                >0</span
+                            >
+                            <span>/</span>
+                            <span class="count" id="totalCount">0</span>
+                        </div>
                     </div>
                 </div>
 
