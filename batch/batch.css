@@ -879,6 +879,10 @@ body {
     gap: 16px;
 }
 
+.header-left .card-title {
+    margin: 0;
+}
+
 .section-title {
     margin: 0;
     font-size: 20px;

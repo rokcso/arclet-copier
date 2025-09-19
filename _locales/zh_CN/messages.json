@@ -299,9 +299,7 @@
   "filters": {
     "message": "过滤器"
   },
-  "windowScope": {
-    "message": "窗口范围"
-  },
+
   "currentWindow": {
     "message": "当前窗口"
   },

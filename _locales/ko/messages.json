@@ -299,9 +299,7 @@
   "filters": {
     "message": "필터"
   },
-  "windowScope": {
-    "message": "창 범위"
-  },
+
   "currentWindow": {
     "message": "현재 창"
   },
