@@ -17,12 +17,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     version: document.getElementById("version"),
     refreshBtn: document.getElementById("refreshBtn"),
     closeBtn: document.getElementById("closeBtn"),
-    selectAllBtn: document.getElementById("selectAllBtn"),
     selectNoneBtn: document.getElementById("selectNoneBtn"),
     invertSelectionBtn: document.getElementById("invertSelectionBtn"),
     selectedCount: document.getElementById("selectedCount"),
     totalCount: document.getElementById("totalCount"),
     tabsContainer: document.getElementById("tabsContainer"),
+    tabsControls: document.getElementById("tabsControls"),
+    tabsList: document.getElementById("tabsList"),
+    masterCheckbox: document.getElementById("masterCheckbox"),
+    masterCheckboxLabel: document.getElementById("masterCheckboxLabel"),
     loading: document.getElementById("loading"),
     previewBtn: document.getElementById("previewBtn"),
     copyBtn: document.getElementById("copyBtn"),
@@ -332,8 +335,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 渲染标签页列表
   function renderTabs() {
-    const container = elements.tabsContainer;
+    const container = elements.tabsList;
     container.innerHTML = "";
+
+    // 显示操作栏
+    elements.tabsControls.style.display = "flex";
 
     if (filteredTabs.length === 0) {
       container.innerHTML = `
@@ -341,6 +347,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           <span>${getLocalMessage("noTabsFound") || "没有找到符合条件的标签页"}</span>
         </div>
       `;
+      // 隐藏操作栏
+      elements.tabsControls.style.display = "none";
       return;
     }
 
@@ -355,6 +363,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const tabElement = createTabElement(tab, isDuplicate);
       container.appendChild(tabElement);
     });
+
+    // 更新主复选框状态
+    updateMasterCheckbox();
   }
 
   // 创建标签页元素
@@ -435,6 +446,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateTabElement(tabId);
     updateCounts();
     updateCopyButton();
+    updateMasterCheckbox();
   }
 
   // 更新标签页元素
@@ -453,6 +465,33 @@ document.addEventListener("DOMContentLoaded", async () => {
   function updateCounts() {
     elements.selectedCount.textContent = selectedTabs.size;
     elements.totalCount.textContent = filteredTabs.length;
+  }
+
+  // 更新主复选框状态
+  function updateMasterCheckbox() {
+    const totalTabs = filteredTabs.length;
+    const selectedCount = selectedTabs.size;
+
+    if (totalTabs === 0) {
+      elements.masterCheckbox.checked = false;
+      elements.masterCheckbox.indeterminate = false;
+      elements.masterCheckboxLabel.textContent = "全选";
+      return;
+    }
+
+    if (selectedCount === 0) {
+      elements.masterCheckbox.checked = false;
+      elements.masterCheckbox.indeterminate = false;
+      elements.masterCheckboxLabel.textContent = `全选 (${totalTabs}项)`;
+    } else if (selectedCount === totalTabs) {
+      elements.masterCheckbox.checked = true;
+      elements.masterCheckbox.indeterminate = false;
+      elements.masterCheckboxLabel.textContent = `全选 (${totalTabs}项)`;
+    } else {
+      elements.masterCheckbox.checked = false;
+      elements.masterCheckbox.indeterminate = true;
+      elements.masterCheckboxLabel.textContent = `部分 (${selectedCount}/${totalTabs}项)`;
+    }
   }
 
   // 更新复制按钮状态
@@ -489,6 +528,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderTabs();
     updateCounts();
     updateCopyButton();
+  }
+
+  // 主复选框点击处理
+  function handleMasterCheckboxClick() {
+    if (selectedTabs.size === filteredTabs.length) {
+      // 如果全选，则清空
+      selectNone();
+    } else {
+      // 否则全选
+      selectAll();
+    }
   }
 
   // 获取选中的标签页
@@ -639,7 +689,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 刷新标签页列表
   async function refreshTabs() {
     elements.loading.style.display = "flex";
-    elements.tabsContainer.innerHTML = "";
+    elements.tabsList.innerHTML = "";
+    elements.tabsControls.style.display = "none";
 
     // 先获取窗口信息，然后更新选择器
     await getAllWindows();
@@ -656,7 +707,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 事件监听器
   elements.refreshBtn.addEventListener("click", refreshTabs);
   elements.closeBtn.addEventListener("click", () => window.close());
-  elements.selectAllBtn.addEventListener("click", selectAll);
+  elements.masterCheckbox.addEventListener("change", handleMasterCheckboxClick);
   elements.selectNoneBtn.addEventListener("click", selectNone);
   elements.invertSelectionBtn.addEventListener("click", invertSelection);
   elements.previewBtn.addEventListener("click", showPreview);

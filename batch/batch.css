@@ -534,10 +534,97 @@ body {
     box-shadow: 0 0 0 3px var(--glow-light);
 }
 
-.quick-actions {
+/* 列表内部操作栏 */
+.tabs-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--arc-surface);
+    border-bottom: 1px solid var(--arc-border);
+    gap: 16px;
+}
+
+.select-controls {
+    display: flex;
+    align-items: center;
+}
+
+.master-checkbox {
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--arc-text-primary);
+}
+
+.master-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.master-checkbox .checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--arc-border);
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.master-checkbox input[type="checkbox"]:checked + .checkbox-custom {
+    border-color: var(--arc-primary);
+    background: var(--arc-primary);
+}
+
+.master-checkbox input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.master-checkbox input[type="checkbox"]:indeterminate + .checkbox-custom {
+    border-color: var(--arc-primary);
+    background: var(--arc-primary);
+}
+
+.master-checkbox
+    input[type="checkbox"]:indeterminate
+    + .checkbox-custom::after {
+    content: "−";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.action-groups {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-group:not(:last-child)::after {
+    content: "";
+    width: 1px;
+    height: 20px;
+    background: var(--arc-border);
+    margin-left: 8px;
 }
 
 .action-btn.compact {
@@ -555,7 +642,26 @@ body {
     font-size: 13px;
 }
 
+/* 标签页列表容器 */
+.tabs-list {
+    /* 原来tabs-container的内容样式将应用到这里 */
+}
+
 /* 响应式布局 */
+@media (max-width: 768px) {
+    .tabs-controls {
+        gap: 14px;
+    }
+
+    .action-groups {
+        gap: 14px;
+    }
+
+    .action-group {
+        gap: 6px;
+    }
+}
+
 @media (max-width: 640px) {
     .header-right {
         gap: 16px;
@@ -597,6 +703,29 @@ body {
         order: 2;
         padding: 5px 10px;
         font-size: 13px;
+    }
+
+    /* 操作栏响应式样式 */
+    .tabs-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 10px 12px;
+    }
+
+    .action-groups {
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .action-group {
+        gap: 6px;
+    }
+
+    .action-group:not(:last-child)::after {
+        display: none;
     }
 }
 
