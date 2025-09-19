@@ -956,6 +956,62 @@ body {
         --arc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3);
     }
 
+    /* 自动暗色模式下的主题色覆盖 */
+    :root:not([data-theme])[data-color="blue"] {
+        --arc-primary: #60a5fa;
+        --arc-primary-hover: #3b82f6;
+        --glow-light: rgba(96, 165, 250, 0.2);
+        --glow-medium: rgba(96, 165, 250, 0.4);
+        --toast-bg: #1e3a8a;
+        --toast-text: #bfdbfe;
+        --toast-border: #60a5fa;
+        --toast-shadow: rgba(96, 165, 250, 0.3);
+    }
+
+    :root:not([data-theme])[data-color="green"] {
+        --arc-primary: #10b981;
+        --arc-primary-hover: #059669;
+        --glow-light: rgba(16, 185, 129, 0.2);
+        --glow-medium: rgba(16, 185, 129, 0.4);
+        --toast-bg: #065f46;
+        --toast-text: #d1fae5;
+        --toast-border: #10b981;
+        --toast-shadow: rgba(16, 185, 129, 0.3);
+    }
+
+    :root:not([data-theme])[data-color="orange"] {
+        --arc-primary: #fb923c;
+        --arc-primary-hover: #f97316;
+        --glow-light: rgba(251, 146, 60, 0.2);
+        --glow-medium: rgba(251, 146, 60, 0.4);
+        --toast-bg: #9a3412;
+        --toast-text: #fed7aa;
+        --toast-border: #fb923c;
+        --toast-shadow: rgba(251, 146, 60, 0.3);
+    }
+
+    :root:not([data-theme])[data-color="yellow"] {
+        --arc-primary: #fbbf24;
+        --arc-primary-hover: #f59e0b;
+        --glow-light: rgba(251, 191, 36, 0.2);
+        --glow-medium: rgba(251, 191, 36, 0.4);
+        --toast-bg: #92400e;
+        --toast-text: #fef3c7;
+        --toast-border: #fbbf24;
+        --toast-shadow: rgba(251, 191, 36, 0.3);
+    }
+
+    :root:not([data-theme])[data-color="purple"] {
+        --arc-primary: #a78bfa;
+        --arc-primary-hover: #8b5cf6;
+        --glow-light: rgba(167, 139, 250, 0.2);
+        --glow-medium: rgba(167, 139, 250, 0.4);
+        --toast-bg: #5b21b6;
+        --toast-text: #ddd6fe;
+        --toast-border: #a78bfa;
+        --toast-shadow: rgba(167, 139, 250, 0.3);
+    }
+
     :root:not([data-theme]) .container {
         background: linear-gradient(
             135deg,
