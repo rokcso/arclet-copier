@@ -87,7 +87,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 40px 20px;
     min-height: 100vh;
@@ -726,24 +726,97 @@ body {
     border-top: 1px solid var(--arc-border);
 }
 
-/* 通知 */
-.notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    background: var(--arc-primary);
-    color: white;
-    border-radius: var(--arc-radius-sm);
-    box-shadow: var(--arc-shadow-lg);
-    transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1001;
-    font-weight: 500;
+/* 动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.notification.show {
-    transform: translateX(0);
+.container > *:not(.notification) {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+.container > .header {
+    animation-delay: 0.1s;
+}
+
+.container > .operations-section {
+    animation-delay: 0.2s;
+}
+
+.container > .display-section {
+    animation-delay: 0.3s;
+}
+
+.filter-card {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    animation-delay: 0.25s;
+}
+
+.actions-card {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    animation-delay: 0.3s;
+}
+
+/* 自动检测系统主题 */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --arc-primary: #10b981;
+        --arc-primary-hover: #059669;
+        --arc-secondary: #1e293b;
+        --arc-success: #10b981;
+        --arc-background: #0f172a;
+        --arc-surface: #1e293b;
+        --arc-border: #334155;
+        --arc-text-primary: #f1f5f9;
+        --arc-text-secondary: #cbd5e1;
+        --arc-text-muted: #64748b;
+        --arc-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+        --arc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+        --arc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+
+    /* 自动暗色模式下的主题色覆盖 */
+    :root:not([data-theme])[data-color="blue"] {
+        --arc-primary: #60a5fa;
+        --arc-primary-hover: #3b82f6;
+        --glow-light: rgba(96, 165, 250, 0.2);
+        --glow-medium: rgba(96, 165, 250, 0.4);
+    }
+
+    :root:not([data-theme])[data-color="green"] {
+        --arc-primary: #10b981;
+        --arc-primary-hover: #059669;
+        --glow-light: rgba(16, 185, 129, 0.2);
+        --glow-medium: rgba(16, 185, 129, 0.4);
+    }
+
+    :root:not([data-theme])[data-color="orange"] {
+        --arc-primary: #fb923c;
+        --arc-primary-hover: #f97316;
+        --glow-light: rgba(251, 146, 60, 0.2);
+        --glow-medium: rgba(251, 146, 60, 0.4);
+    }
+
+    :root:not([data-theme])[data-color="yellow"] {
+        --arc-primary: #fbbf24;
+        --arc-primary-hover: #f59e0b;
+        --glow-light: rgba(251, 191, 36, 0.2);
+        --glow-medium: rgba(251, 191, 36, 0.4);
+    }
+
+    :root:not([data-theme])[data-color="purple"] {
+        --arc-primary: #a78bfa;
+        --arc-primary-hover: #8b5cf6;
+        --glow-light: rgba(167, 139, 250, 0.2);
+        --glow-medium: rgba(167, 139, 250, 0.4);
+    }
 }
 
 /* 响应式设计 */
