@@ -27,55 +27,31 @@
                     <h3 class="card-title" data-i18n="settings">设置</h3>
                     <div class="card-content">
                         <div class="settings-grid">
-                            <!-- 左侧：URL Type -->
+                            <!-- 左侧：仅复制网页 -->
                             <div class="settings-group">
                                 <div class="filter-group">
-                                    <label
-                                        class="filter-label"
-                                        data-i18n="urlType"
-                                        >URL Type</label
-                                    >
-                                    <div class="checkbox-group">
-                                        <label class="checkbox-option">
+                                    <div class="setting-row">
+                                        <span
+                                            class="setting-label"
+                                            data-i18n="webPagesOnly"
+                                            >Web Pages Only</span
+                                        >
+                                        <div class="setting-control">
                                             <input
                                                 type="checkbox"
-                                                name="urlType"
-                                                value="web"
+                                                id="webPagesOnly"
+                                                class="toggle-checkbox"
                                                 checked
                                             />
-                                            <span
-                                                class="checkbox-custom"
-                                            ></span>
-                                            <span data-i18n="webPages"
-                                                >Web Pages (HTTP/HTTPS)</span
+                                            <label
+                                                for="webPagesOnly"
+                                                class="toggle-label"
                                             >
-                                        </label>
-                                        <label class="checkbox-option">
-                                            <input
-                                                type="checkbox"
-                                                name="urlType"
-                                                value="extension"
-                                            />
-                                            <span
-                                                class="checkbox-custom"
-                                            ></span>
-                                            <span data-i18n="extensionPages"
-                                                >Extension Pages</span
-                                            >
-                                        </label>
-                                        <label class="checkbox-option">
-                                            <input
-                                                type="checkbox"
-                                                name="urlType"
-                                                value="system"
-                                            />
-                                            <span
-                                                class="checkbox-custom"
-                                            ></span>
-                                            <span data-i18n="systemPages"
-                                                >System Pages</span
-                                            >
-                                        </label>
+                                                <span
+                                                    class="toggle-slider"
+                                                ></span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

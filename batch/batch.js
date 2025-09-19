@@ -388,14 +388,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 应用过滤器
   function applyFilters() {
-    const urlTypes = Array.from(
-      document.querySelectorAll('input[name="urlType"]:checked'),
-    ).map((input) => input.value);
+    const webPagesOnly = document.getElementById("webPagesOnly").checked;
     const removeDuplicates = elements.removeDuplicates.checked;
 
     filteredTabs = allTabs.filter((tab) => {
       const urlType = categorizeUrl(tab.url);
-      return urlTypes.includes(urlType);
+      // 如果开启仅复制网页，只包含web类型；关闭则包含所有类型
+      return webPagesOnly ? urlType === "web" : true;
     });
 
     // 去重
@@ -894,9 +893,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     .getElementById("windowScopeSelect")
     .addEventListener("change", refreshTabs);
 
-  document.querySelectorAll('input[name="urlType"]').forEach((input) => {
-    input.addEventListener("change", applyFilters);
-  });
+  document
+    .getElementById("webPagesOnly")
+    .addEventListener("change", applyFilters);
 
   elements.removeDuplicates.addEventListener("change", applyFilters);
 
