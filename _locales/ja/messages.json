@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "こんにちは！\n\nArclet Copier について以下のフィードバックがあります：\n\n\n\nお時間をありがとうございます！"
+  },
+  "batchCopy": {
+    "message": "一括コピー"
+  },
+  "batchTitle": {
+    "message": "URL一括コピー"
+  },
+  "filters": {
+    "message": "フィルター"
+  },
+  "windowScope": {
+    "message": "ウィンドウ範囲"
+  },
+  "currentWindow": {
+    "message": "現在のウィンドウ"
+  },
+  "allWindows": {
+    "message": "すべてのウィンドウ"
+  },
+  "urlType": {
+    "message": "URL タイプ"
+  },
+  "webPages": {
+    "message": "ウェブページ (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "拡張機能ページ"
+  },
+  "systemPages": {
+    "message": "システムページ"
+  },
+  "removeDuplicates": {
+    "message": "重複を削除"
+  },
+  "outputFormat": {
+    "message": "出力形式"
+  },
+  "formatText": {
+    "message": "プレーンテキスト"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "すべて選択"
+  },
+  "selectNone": {
+    "message": "すべて選択解除"
+  },
+  "invertSelection": {
+    "message": "選択を反転"
+  },
+  "selected": {
+    "message": "選択済み"
+  },
+  "loadingTabs": {
+    "message": "タブを読み込み中..."
+  },
+  "noTabsFound": {
+    "message": "条件に一致するタブが見つかりません"
+  },
+  "preview": {
+    "message": "プレビュー"
+  },
+  "copySelected": {
+    "message": "選択項目をコピー"
+  },
+  "previewTitle": {
+    "message": "プレビュー"
+  },
+  "previewStats": {
+    "message": "{count} 個のURLをコピーします"
+  },
+  "cancel": {
+    "message": "キャンセル"
+  },
+  "copy": {
+    "message": "コピー"
+  },
+  "copySuccess": {
+    "message": "コピー成功"
+  },
+  "copyFailed": {
+    "message": "コピー失敗"
+  },
+  "batchCopySuccess": {
+    "message": "一括コピー成功"
+  },
+  "untitled": {
+    "message": "無題"
+  },
+  "tabsList": {
+    "message": "タブ一覧"
   }
 }

@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "您好！\n\n我在使用 Arclet Copier 时有以下反馈：\n\n\n\n感谢您的时间！"
+  },
+  "batchCopy": {
+    "message": "批量复制"
+  },
+  "batchTitle": {
+    "message": "批量复制 URL"
+  },
+  "filters": {
+    "message": "过滤器"
+  },
+  "windowScope": {
+    "message": "窗口范围"
+  },
+  "currentWindow": {
+    "message": "当前窗口"
+  },
+  "allWindows": {
+    "message": "所有窗口"
+  },
+  "urlType": {
+    "message": "URL 类型"
+  },
+  "webPages": {
+    "message": "网页 (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "扩展页面"
+  },
+  "systemPages": {
+    "message": "系统页面"
+  },
+  "removeDuplicates": {
+    "message": "去除重复"
+  },
+  "outputFormat": {
+    "message": "输出格式"
+  },
+  "formatText": {
+    "message": "纯文本"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "全选"
+  },
+  "selectNone": {
+    "message": "全不选"
+  },
+  "invertSelection": {
+    "message": "反选"
+  },
+  "selected": {
+    "message": "已选择"
+  },
+  "loadingTabs": {
+    "message": "正在加载标签页..."
+  },
+  "noTabsFound": {
+    "message": "没有找到符合条件的标签页"
+  },
+  "preview": {
+    "message": "预览"
+  },
+  "copySelected": {
+    "message": "复制选中项"
+  },
+  "previewTitle": {
+    "message": "预览"
+  },
+  "previewStats": {
+    "message": "将复制 {count} 个URL"
+  },
+  "cancel": {
+    "message": "取消"
+  },
+  "copy": {
+    "message": "复制"
+  },
+  "copySuccess": {
+    "message": "复制成功"
+  },
+  "copyFailed": {
+    "message": "复制失败"
+  },
+  "batchCopySuccess": {
+    "message": "批量复制成功"
+  },
+  "untitled": {
+    "message": "无标题"
+  },
+  "tabsList": {
+    "message": "标签页列表"
   }
 }

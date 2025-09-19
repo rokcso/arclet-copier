@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "Hallo!\n\nIch habe folgendes Feedback zu Arclet Copier:\n\n\n\nVielen Dank für Ihre Zeit!"
+  },
+  "batchCopy": {
+    "message": "Stapel-Kopieren"
+  },
+  "batchTitle": {
+    "message": "URLs stapelweise kopieren"
+  },
+  "filters": {
+    "message": "Filter"
+  },
+  "windowScope": {
+    "message": "Fensterbereich"
+  },
+  "currentWindow": {
+    "message": "Aktuelles Fenster"
+  },
+  "allWindows": {
+    "message": "Alle Fenster"
+  },
+  "urlType": {
+    "message": "URL-Typ"
+  },
+  "webPages": {
+    "message": "Webseiten (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "Erweiterungsseiten"
+  },
+  "systemPages": {
+    "message": "Systemseiten"
+  },
+  "removeDuplicates": {
+    "message": "Duplikate entfernen"
+  },
+  "outputFormat": {
+    "message": "Ausgabeformat"
+  },
+  "formatText": {
+    "message": "Klartext"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "Alle auswählen"
+  },
+  "selectNone": {
+    "message": "Alle abwählen"
+  },
+  "invertSelection": {
+    "message": "Auswahl umkehren"
+  },
+  "selected": {
+    "message": "Ausgewählt"
+  },
+  "loadingTabs": {
+    "message": "Lade Tabs..."
+  },
+  "noTabsFound": {
+    "message": "Keine Tabs gefunden, die den Kriterien entsprechen"
+  },
+  "preview": {
+    "message": "Vorschau"
+  },
+  "copySelected": {
+    "message": "Ausgewählte kopieren"
+  },
+  "previewTitle": {
+    "message": "Vorschau"
+  },
+  "previewStats": {
+    "message": "{count} URLs werden kopiert"
+  },
+  "cancel": {
+    "message": "Abbrechen"
+  },
+  "copy": {
+    "message": "Kopieren"
+  },
+  "copySuccess": {
+    "message": "Kopieren erfolgreich"
+  },
+  "copyFailed": {
+    "message": "Kopieren fehlgeschlagen"
+  },
+  "batchCopySuccess": {
+    "message": "Stapel-Kopieren erfolgreich"
+  },
+  "untitled": {
+    "message": "Unbenannt"
+  },
+  "tabsList": {
+    "message": "Tab-Liste"
   }
 }

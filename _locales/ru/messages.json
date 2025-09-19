@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "Здравствуйте!\n\nУ меня есть следующие отзывы об Arclet Copier:\n\n\n\nСпасибо за ваше время!"
+  },
+  "batchCopy": {
+    "message": "Пакетное Копирование"
+  },
+  "batchTitle": {
+    "message": "Пакетное Копирование URL"
+  },
+  "filters": {
+    "message": "Фильтры"
+  },
+  "windowScope": {
+    "message": "Область Окна"
+  },
+  "currentWindow": {
+    "message": "Текущее Окно"
+  },
+  "allWindows": {
+    "message": "Все Окна"
+  },
+  "urlType": {
+    "message": "Тип URL"
+  },
+  "webPages": {
+    "message": "Веб-страницы (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "Страницы Расширений"
+  },
+  "systemPages": {
+    "message": "Системные Страницы"
+  },
+  "removeDuplicates": {
+    "message": "Удалить Дубликаты"
+  },
+  "outputFormat": {
+    "message": "Формат Вывода"
+  },
+  "formatText": {
+    "message": "Простой Текст"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "Выбрать Все"
+  },
+  "selectNone": {
+    "message": "Снять Выделение"
+  },
+  "invertSelection": {
+    "message": "Обратить Выделение"
+  },
+  "selected": {
+    "message": "Выбрано"
+  },
+  "loadingTabs": {
+    "message": "Загрузка вкладок..."
+  },
+  "noTabsFound": {
+    "message": "Не найдено вкладок, соответствующих критериям"
+  },
+  "preview": {
+    "message": "Предварительный Просмотр"
+  },
+  "copySelected": {
+    "message": "Копировать Выбранные"
+  },
+  "previewTitle": {
+    "message": "Предварительный Просмотр"
+  },
+  "previewStats": {
+    "message": "Будет скопировано {count} URL"
+  },
+  "cancel": {
+    "message": "Отмена"
+  },
+  "copy": {
+    "message": "Копировать"
+  },
+  "copySuccess": {
+    "message": "Копирование успешно"
+  },
+  "copyFailed": {
+    "message": "Ошибка копирования"
+  },
+  "batchCopySuccess": {
+    "message": "Пакетное копирование успешно"
+  },
+  "untitled": {
+    "message": "Без названия"
+  },
+  "tabsList": {
+    "message": "Список Вкладок"
   }
 }

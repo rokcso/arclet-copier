@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "안녕하세요!\n\nArclet Copier에 대한 다음과 같은 피드백이 있습니다:\n\n\n\n시간을 내주셔서 감사합니다!"
+  },
+  "batchCopy": {
+    "message": "일괄 복사"
+  },
+  "batchTitle": {
+    "message": "URL 일괄 복사"
+  },
+  "filters": {
+    "message": "필터"
+  },
+  "windowScope": {
+    "message": "창 범위"
+  },
+  "currentWindow": {
+    "message": "현재 창"
+  },
+  "allWindows": {
+    "message": "모든 창"
+  },
+  "urlType": {
+    "message": "URL 유형"
+  },
+  "webPages": {
+    "message": "웹 페이지 (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "확장 프로그램 페이지"
+  },
+  "systemPages": {
+    "message": "시스템 페이지"
+  },
+  "removeDuplicates": {
+    "message": "중복 제거"
+  },
+  "outputFormat": {
+    "message": "출력 형식"
+  },
+  "formatText": {
+    "message": "일반 텍스트"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "모두 선택"
+  },
+  "selectNone": {
+    "message": "모두 선택 해제"
+  },
+  "invertSelection": {
+    "message": "선택 반전"
+  },
+  "selected": {
+    "message": "선택됨"
+  },
+  "loadingTabs": {
+    "message": "탭 로딩 중..."
+  },
+  "noTabsFound": {
+    "message": "조건에 맞는 탭을 찾을 수 없습니다"
+  },
+  "preview": {
+    "message": "미리보기"
+  },
+  "copySelected": {
+    "message": "선택 항목 복사"
+  },
+  "previewTitle": {
+    "message": "미리보기"
+  },
+  "previewStats": {
+    "message": "{count}개의 URL을 복사합니다"
+  },
+  "cancel": {
+    "message": "취소"
+  },
+  "copy": {
+    "message": "복사"
+  },
+  "copySuccess": {
+    "message": "복사 성공"
+  },
+  "copyFailed": {
+    "message": "복사 실패"
+  },
+  "batchCopySuccess": {
+    "message": "일괄 복사 성공"
+  },
+  "untitled": {
+    "message": "제목 없음"
+  },
+  "tabsList": {
+    "message": "탭 목록"
   }
 }

@@ -199,6 +199,15 @@ body {
     margin-bottom: 20px;
 }
 
+.button-row {
+    display: flex;
+    gap: 8px;
+}
+
+.button-row .action-button {
+    flex: 1;
+}
+
 .action-button {
     display: flex;
     align-items: center;
@@ -802,7 +811,8 @@ body {
 [data-theme="dark"] .copy-btn,
 [data-theme="dark"] .markdown-btn,
 [data-theme="dark"] .short-url-btn,
-[data-theme="dark"] .qr-btn {
+[data-theme="dark"] .qr-btn,
+[data-theme="dark"] .batch-btn {
     background: var(--arc-surface);
     border: 1px solid var(--arc-border);
     color: var(--arc-text-primary);
@@ -811,7 +821,8 @@ body {
 [data-theme="dark"] .copy-btn:hover,
 [data-theme="dark"] .markdown-btn:hover,
 [data-theme="dark"] .short-url-btn:hover,
-[data-theme="dark"] .qr-btn:hover {
+[data-theme="dark"] .qr-btn:hover,
+[data-theme="dark"] .batch-btn:hover {
     background: #334155;
     color: var(--arc-primary);
 }
@@ -1037,7 +1048,8 @@ body {
     :root:not([data-theme]) .copy-btn,
     :root:not([data-theme]) .markdown-btn,
     :root:not([data-theme]) .short-url-btn,
-    :root:not([data-theme]) .qr-btn {
+    :root:not([data-theme]) .qr-btn,
+    :root:not([data-theme]) .batch-btn {
         background: var(--arc-surface);
         border: 1px solid var(--arc-border);
         color: var(--arc-text-primary);
@@ -1046,7 +1058,8 @@ body {
     :root:not([data-theme]) .copy-btn:hover,
     :root:not([data-theme]) .markdown-btn:hover,
     :root:not([data-theme]) .short-url-btn:hover,
-    :root:not([data-theme]) .qr-btn:hover {
+    :root:not([data-theme]) .qr-btn:hover,
+    :root:not([data-theme]) .batch-btn:hover {
         background: #334155;
         color: var(--arc-primary);
     }
@@ -1202,8 +1215,9 @@ body {
     color: var(--arc-primary);
 }
 
-/* QR Code Button */
-.qr-btn {
+/* QR Code Button & Batch Copy Button */
+.qr-btn,
+.batch-btn {
     background: #ffffff;
     color: var(--arc-text-primary);
     border: 1px solid #d1d5db;
@@ -1212,7 +1226,8 @@ body {
         0 1px 2px 0 rgb(0 0 0 / 0.06);
 }
 
-.qr-btn:hover {
+.qr-btn:hover,
+.batch-btn:hover {
     background: #f2f2f2;
     color: var(--arc-primary);
 }

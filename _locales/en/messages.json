@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "Hello!\n\nI have the following feedback about Arclet Copier:\n\n\n\nThank you for your time!"
+  },
+  "batchCopy": {
+    "message": "Batch Copy"
+  },
+  "batchTitle": {
+    "message": "Batch Copy URLs"
+  },
+  "filters": {
+    "message": "Filters"
+  },
+  "windowScope": {
+    "message": "Window Scope"
+  },
+  "currentWindow": {
+    "message": "Current Window"
+  },
+  "allWindows": {
+    "message": "All Windows"
+  },
+  "urlType": {
+    "message": "URL Type"
+  },
+  "webPages": {
+    "message": "Web Pages (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "Extension Pages"
+  },
+  "systemPages": {
+    "message": "System Pages"
+  },
+  "removeDuplicates": {
+    "message": "Remove Duplicates"
+  },
+  "outputFormat": {
+    "message": "Output Format"
+  },
+  "formatText": {
+    "message": "Plain Text"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "Select All"
+  },
+  "selectNone": {
+    "message": "Select None"
+  },
+  "invertSelection": {
+    "message": "Invert Selection"
+  },
+  "selected": {
+    "message": "Selected"
+  },
+  "loadingTabs": {
+    "message": "Loading tabs..."
+  },
+  "noTabsFound": {
+    "message": "No tabs found matching the criteria"
+  },
+  "preview": {
+    "message": "Preview"
+  },
+  "copySelected": {
+    "message": "Copy Selected"
+  },
+  "previewTitle": {
+    "message": "Preview"
+  },
+  "previewStats": {
+    "message": "Will copy {count} URLs"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "copy": {
+    "message": "Copy"
+  },
+  "copySuccess": {
+    "message": "Copy successful"
+  },
+  "copyFailed": {
+    "message": "Copy failed"
+  },
+  "batchCopySuccess": {
+    "message": "Batch copy successful"
+  },
+  "untitled": {
+    "message": "Untitled"
+  },
+  "tabsList": {
+    "message": "Tabs List"
   }
 }

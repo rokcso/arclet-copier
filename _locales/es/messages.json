@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "¡Hola!\n\nTengo los siguientes comentarios sobre Arclet Copier:\n\n\n\n¡Gracias por tu tiempo!"
+  },
+  "batchCopy": {
+    "message": "Copia por Lotes"
+  },
+  "batchTitle": {
+    "message": "Copiar URLs por Lotes"
+  },
+  "filters": {
+    "message": "Filtros"
+  },
+  "windowScope": {
+    "message": "Ámbito de Ventana"
+  },
+  "currentWindow": {
+    "message": "Ventana Actual"
+  },
+  "allWindows": {
+    "message": "Todas las Ventanas"
+  },
+  "urlType": {
+    "message": "Tipo de URL"
+  },
+  "webPages": {
+    "message": "Páginas Web (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "Páginas de Extensión"
+  },
+  "systemPages": {
+    "message": "Páginas del Sistema"
+  },
+  "removeDuplicates": {
+    "message": "Eliminar Duplicados"
+  },
+  "outputFormat": {
+    "message": "Formato de Salida"
+  },
+  "formatText": {
+    "message": "Texto Plano"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "Seleccionar Todo"
+  },
+  "selectNone": {
+    "message": "Deseleccionar Todo"
+  },
+  "invertSelection": {
+    "message": "Invertir Selección"
+  },
+  "selected": {
+    "message": "Seleccionado"
+  },
+  "loadingTabs": {
+    "message": "Cargando pestañas..."
+  },
+  "noTabsFound": {
+    "message": "No se encontraron pestañas que coincidan con los criterios"
+  },
+  "preview": {
+    "message": "Vista Previa"
+  },
+  "copySelected": {
+    "message": "Copiar Seleccionados"
+  },
+  "previewTitle": {
+    "message": "Vista Previa"
+  },
+  "previewStats": {
+    "message": "Se copiarán {count} URLs"
+  },
+  "cancel": {
+    "message": "Cancelar"
+  },
+  "copy": {
+    "message": "Copiar"
+  },
+  "copySuccess": {
+    "message": "Copia exitosa"
+  },
+  "copyFailed": {
+    "message": "Error al copiar"
+  },
+  "batchCopySuccess": {
+    "message": "Copia por lotes exitosa"
+  },
+  "untitled": {
+    "message": "Sin título"
+  },
+  "tabsList": {
+    "message": "Lista de Pestañas"
   }
 }

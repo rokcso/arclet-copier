@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "Bonjour !\n\nJ'ai les commentaires suivants concernant Arclet Copier :\n\n\n\nMerci pour votre temps !"
+  },
+  "batchCopy": {
+    "message": "Copie par Lot"
+  },
+  "batchTitle": {
+    "message": "Copier les URLs par Lot"
+  },
+  "filters": {
+    "message": "Filtres"
+  },
+  "windowScope": {
+    "message": "Portée de Fenêtre"
+  },
+  "currentWindow": {
+    "message": "Fenêtre Actuelle"
+  },
+  "allWindows": {
+    "message": "Toutes les Fenêtres"
+  },
+  "urlType": {
+    "message": "Type d'URL"
+  },
+  "webPages": {
+    "message": "Pages Web (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "Pages d'Extension"
+  },
+  "systemPages": {
+    "message": "Pages Système"
+  },
+  "removeDuplicates": {
+    "message": "Supprimer les Doublons"
+  },
+  "outputFormat": {
+    "message": "Format de Sortie"
+  },
+  "formatText": {
+    "message": "Texte Brut"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "Tout Sélectionner"
+  },
+  "selectNone": {
+    "message": "Tout Désélectionner"
+  },
+  "invertSelection": {
+    "message": "Inverser la Sélection"
+  },
+  "selected": {
+    "message": "Sélectionné"
+  },
+  "loadingTabs": {
+    "message": "Chargement des onglets..."
+  },
+  "noTabsFound": {
+    "message": "Aucun onglet trouvé correspondant aux critères"
+  },
+  "preview": {
+    "message": "Aperçu"
+  },
+  "copySelected": {
+    "message": "Copier la Sélection"
+  },
+  "previewTitle": {
+    "message": "Aperçu"
+  },
+  "previewStats": {
+    "message": "{count} URLs seront copiées"
+  },
+  "cancel": {
+    "message": "Annuler"
+  },
+  "copy": {
+    "message": "Copier"
+  },
+  "copySuccess": {
+    "message": "Copie réussie"
+  },
+  "copyFailed": {
+    "message": "Échec de la copie"
+  },
+  "batchCopySuccess": {
+    "message": "Copie par lot réussie"
+  },
+  "untitled": {
+    "message": "Sans titre"
+  },
+  "tabsList": {
+    "message": "Liste des Onglets"
   }
 }

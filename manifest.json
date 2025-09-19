@@ -8,6 +8,7 @@
   "homepage_url": "https://rokcso.com/",
   "permissions": [
     "activeTab",
+    "tabs",
     "storage",
     "notifications",
     "offscreen",

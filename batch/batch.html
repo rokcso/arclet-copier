@@ -1,0 +1,541 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title data-i18n="batchTitle">Arclet Copier - 批量复制</title>
+        <link rel="stylesheet" href="batch.css" />
+    </head>
+    <body>
+        <div class="container">
+            <!-- 第一层：Header -->
+            <div class="header">
+                <img
+                    src="../assets/icons/icon256.png"
+                    alt="Arclet Copier"
+                    class="header-icon"
+                />
+                <div class="header-content">
+                    <h1 data-i18n="batchTitle">批量复制 URL</h1>
+                    <span class="version" id="version">v1.4.2</span>
+                </div>
+                <div class="header-actions">
+                    <button
+                        class="header-btn refresh-btn"
+                        id="refreshBtn"
+                        title="刷新标签页列表"
+                    >
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path
+                                d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
+                            ></path>
+                        </svg>
+                    </button>
+                    <button
+                        class="header-btn close-btn"
+                        id="closeBtn"
+                        title="关闭"
+                    >
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path d="M18 6L6 18M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 第二层：操作区域 -->
+            <div class="operations-section">
+                <div class="section-row">
+                    <!-- 过滤器 -->
+                    <div class="filter-card">
+                        <h3 class="card-title" data-i18n="filters">过滤器</h3>
+                        <div class="card-content">
+                            <div class="filter-group">
+                                <label
+                                    class="filter-label"
+                                    data-i18n="windowScope"
+                                    >窗口范围</label
+                                >
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input
+                                            type="radio"
+                                            name="windowScope"
+                                            value="current"
+                                            checked
+                                        />
+                                        <span class="radio-custom"></span>
+                                        <span data-i18n="currentWindow"
+                                            >当前窗口</span
+                                        >
+                                    </label>
+                                    <label class="radio-option">
+                                        <input
+                                            type="radio"
+                                            name="windowScope"
+                                            value="all"
+                                        />
+                                        <span class="radio-custom"></span>
+                                        <span data-i18n="allWindows"
+                                            >所有窗口</span
+                                        >
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="filter-label" data-i18n="urlType"
+                                    >URL 类型</label
+                                >
+                                <div class="checkbox-group">
+                                    <label class="checkbox-option">
+                                        <input
+                                            type="checkbox"
+                                            name="urlType"
+                                            value="web"
+                                            checked
+                                        />
+                                        <span class="checkbox-custom"></span>
+                                        <span data-i18n="webPages"
+                                            >网页 (HTTP/HTTPS)</span
+                                        >
+                                    </label>
+                                    <label class="checkbox-option">
+                                        <input
+                                            type="checkbox"
+                                            name="urlType"
+                                            value="extension"
+                                        />
+                                        <span class="checkbox-custom"></span>
+                                        <span data-i18n="extensionPages"
+                                            >扩展页面</span
+                                        >
+                                    </label>
+                                    <label class="checkbox-option">
+                                        <input
+                                            type="checkbox"
+                                            name="urlType"
+                                            value="system"
+                                        />
+                                        <span class="checkbox-custom"></span>
+                                        <span data-i18n="systemPages"
+                                            >系统页面</span
+                                        >
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="checkbox-option">
+                                    <input
+                                        type="checkbox"
+                                        id="removeDuplicates"
+                                        checked
+                                    />
+                                    <span class="checkbox-custom"></span>
+                                    <span data-i18n="removeDuplicates"
+                                        >去除重复</span
+                                    >
+                                </label>
+                            </div>
+
+                            <div class="filter-group">
+                                <label
+                                    class="filter-label"
+                                    data-i18n="urlCleaning"
+                                    >URL 清理</label
+                                >
+                                <div
+                                    class="three-way-switch"
+                                    id="urlCleaningSwitch"
+                                    data-value="smart"
+                                >
+                                    <div
+                                        class="switch-option"
+                                        data-i18n="cleaningOff"
+                                    >
+                                        关闭
+                                    </div>
+                                    <div
+                                        class="switch-option"
+                                        data-i18n="cleaningSmart"
+                                    >
+                                        智能
+                                    </div>
+                                    <div
+                                        class="switch-option"
+                                        data-i18n="cleaningAggressive"
+                                    >
+                                        激进
+                                    </div>
+                                    <div class="switch-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 输出格式和操作 -->
+                    <div class="actions-card">
+                        <h3 class="card-title" data-i18n="outputFormat">
+                            输出格式
+                        </h3>
+                        <div class="card-content">
+                            <div class="format-options">
+                                <label class="format-option">
+                                    <input
+                                        type="radio"
+                                        name="outputFormat"
+                                        value="text"
+                                        checked
+                                    />
+                                    <span class="format-custom">
+                                        <svg
+                                            class="format-icon"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                        >
+                                            <path
+                                                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                                            />
+                                            <polyline points="14,2 14,8 20,8" />
+                                            <line
+                                                x1="16"
+                                                y1="13"
+                                                x2="8"
+                                                y2="13"
+                                            />
+                                            <line
+                                                x1="16"
+                                                y1="17"
+                                                x2="8"
+                                                y2="17"
+                                            />
+                                            <polyline points="10,9 9,9 8,9" />
+                                        </svg>
+                                        <span data-i18n="formatText"
+                                            >纯文本</span
+                                        >
+                                    </span>
+                                </label>
+                                <label class="format-option">
+                                    <input
+                                        type="radio"
+                                        name="outputFormat"
+                                        value="markdown"
+                                    />
+                                    <span class="format-custom">
+                                        <svg
+                                            class="format-icon"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                        >
+                                            <path
+                                                d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                                            />
+                                            <path
+                                                d="M7 15V9l2 2l2-2v6m3-2l2 2l2-2m-2 2V9"
+                                            />
+                                        </svg>
+                                        <span data-i18n="formatMarkdown"
+                                            >Markdown</span
+                                        >
+                                    </span>
+                                </label>
+                                <label class="format-option">
+                                    <input
+                                        type="radio"
+                                        name="outputFormat"
+                                        value="html"
+                                    />
+                                    <span class="format-custom">
+                                        <svg
+                                            class="format-icon"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                        >
+                                            <polyline
+                                                points="16 18 22 12 16 6"
+                                            />
+                                            <polyline points="8 6 2 12 8 18" />
+                                        </svg>
+                                        <span data-i18n="formatHtml">HTML</span>
+                                    </span>
+                                </label>
+                                <label class="format-option">
+                                    <input
+                                        type="radio"
+                                        name="outputFormat"
+                                        value="json"
+                                    />
+                                    <span class="format-custom">
+                                        <svg
+                                            class="format-icon"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                        >
+                                            <path
+                                                d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z"
+                                            />
+                                            <path
+                                                d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
+                                            />
+                                            <path
+                                                d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2"
+                                            />
+                                            <path
+                                                d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"
+                                            />
+                                        </svg>
+                                        <span data-i18n="formatJson">JSON</span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="bulk-actions">
+                                <button
+                                    class="action-btn secondary"
+                                    id="selectAllBtn"
+                                >
+                                    <svg
+                                        class="btn-icon"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <polyline points="9 11 12 14 22 4" />
+                                        <path
+                                            d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                                        />
+                                    </svg>
+                                    <span data-i18n="selectAll">全选</span>
+                                </button>
+                                <button
+                                    class="action-btn secondary"
+                                    id="selectNoneBtn"
+                                >
+                                    <svg
+                                        class="btn-icon"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <rect
+                                            x="3"
+                                            y="3"
+                                            width="18"
+                                            height="18"
+                                            rx="2"
+                                            ry="2"
+                                        />
+                                    </svg>
+                                    <span data-i18n="selectNone">全不选</span>
+                                </button>
+                                <button
+                                    class="action-btn secondary"
+                                    id="invertSelectionBtn"
+                                >
+                                    <svg
+                                        class="btn-icon"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path
+                                            d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                                        />
+                                        <rect
+                                            x="8"
+                                            y="2"
+                                            width="8"
+                                            height="4"
+                                            rx="1"
+                                            ry="1"
+                                        />
+                                    </svg>
+                                    <span data-i18n="invertSelection"
+                                        >反选</span
+                                    >
+                                </button>
+                            </div>
+
+                            <div class="main-actions">
+                                <button
+                                    class="action-btn secondary"
+                                    id="previewBtn"
+                                    disabled
+                                >
+                                    <svg
+                                        class="btn-icon"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path
+                                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                                        />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                    <span data-i18n="preview">预览</span>
+                                </button>
+                                <button
+                                    class="action-btn primary"
+                                    id="copyBtn"
+                                    disabled
+                                >
+                                    <svg
+                                        class="btn-icon"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <rect
+                                            x="9"
+                                            y="9"
+                                            width="13"
+                                            height="13"
+                                            rx="2"
+                                            ry="2"
+                                        />
+                                        <path
+                                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                                        />
+                                    </svg>
+                                    <span data-i18n="copySelected"
+                                        >复制选中项</span
+                                    >
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第三层：URL 展示区域 -->
+            <div class="display-section">
+                <div class="display-header">
+                    <h3 class="section-title">
+                        <svg
+                            class="title-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path
+                                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                            />
+                            <rect
+                                x="8"
+                                y="2"
+                                width="8"
+                                height="4"
+                                rx="1"
+                                ry="1"
+                            />
+                        </svg>
+                        <span data-i18n="tabsList">标签页列表</span>
+                    </h3>
+                    <div class="stats">
+                        <span data-i18n="selected">已选择</span>
+                        <span class="count primary" id="selectedCount">0</span>
+                        <span>/</span>
+                        <span class="count" id="totalCount">0</span>
+                    </div>
+                </div>
+
+                <div class="tabs-container" id="tabsContainer">
+                    <div class="loading" id="loading">
+                        <div class="loading-spinner"></div>
+                        <span data-i18n="loadingTabs">正在加载标签页...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 预览模态框 -->
+            <div class="modal" id="previewModal">
+                <div class="modal-overlay" id="previewModalOverlay"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 data-i18n="previewTitle">预览</h3>
+                        <button class="modal-close" id="previewModalClose">
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="preview-stats">
+                            <span
+                                >将复制
+                                <strong id="previewCount">0</strong> 个URL</span
+                            >
+                        </div>
+                        <div class="preview-content">
+                            <pre id="previewText"></pre>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            class="btn secondary"
+                            id="previewCancelBtn"
+                            data-i18n="cancel"
+                        >
+                            取消
+                        </button>
+                        <button
+                            class="btn primary"
+                            id="previewCopyBtn"
+                            data-i18n="copy"
+                        >
+                            复制
+                        </button>
+                        action-action-
+                    </div>
+                </div>
+            </div>
+
+            <!-- 通知容器 -->
+            <div class="notification" id="notification">
+                <span class="notification-text"></span>
+            </div>
+        </div>
+
+        <script type="module" src="batch.js"></script>
+    </body>
+</html>

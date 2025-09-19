@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     markdownBtn: document.getElementById("markdownBtn"),
     shortUrlBtn: document.getElementById("shortUrlBtn"),
     qrBtn: document.getElementById("qrBtn"),
+    batchBtn: document.getElementById("batchBtn"),
     status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
@@ -899,11 +900,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // 打开批量复制页面
+  function openBatchCopyPage() {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL("batch/batch.html"),
+    });
+  }
+
   // 事件监听器
   elements.copyBtn.addEventListener("click", copyUrl);
   elements.markdownBtn.addEventListener("click", copyMarkdown);
   elements.shortUrlBtn.addEventListener("click", generateShortUrl);
   elements.qrBtn.addEventListener("click", showQRModal);
+  elements.batchBtn.addEventListener("click", openBatchCopyPage);
   elements.qrCopyBtn.addEventListener("click", copyQRCodeImage);
 
   elements.silentCopyFormat.addEventListener(

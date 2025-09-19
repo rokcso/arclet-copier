@@ -289,5 +289,101 @@
   },
   "feedbackEmailBody": {
     "message": "Olá!\n\nTenho o seguinte feedback sobre o Arclet Copier:\n\n\n\nObrigado pelo seu tempo!"
+  },
+  "batchCopy": {
+    "message": "Cópia em Lote"
+  },
+  "batchTitle": {
+    "message": "Copiar URLs em Lote"
+  },
+  "filters": {
+    "message": "Filtros"
+  },
+  "windowScope": {
+    "message": "Escopo da Janela"
+  },
+  "currentWindow": {
+    "message": "Janela Atual"
+  },
+  "allWindows": {
+    "message": "Todas as Janelas"
+  },
+  "urlType": {
+    "message": "Tipo de URL"
+  },
+  "webPages": {
+    "message": "Páginas Web (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "Páginas de Extensão"
+  },
+  "systemPages": {
+    "message": "Páginas do Sistema"
+  },
+  "removeDuplicates": {
+    "message": "Remover Duplicados"
+  },
+  "outputFormat": {
+    "message": "Formato de Saída"
+  },
+  "formatText": {
+    "message": "Texto Simples"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "Selecionar Tudo"
+  },
+  "selectNone": {
+    "message": "Desmarcar Tudo"
+  },
+  "invertSelection": {
+    "message": "Inverter Seleção"
+  },
+  "selected": {
+    "message": "Selecionado"
+  },
+  "loadingTabs": {
+    "message": "Carregando abas..."
+  },
+  "noTabsFound": {
+    "message": "Nenhuma aba encontrada que corresponda aos critérios"
+  },
+  "preview": {
+    "message": "Pré-visualização"
+  },
+  "copySelected": {
+    "message": "Copiar Selecionados"
+  },
+  "previewTitle": {
+    "message": "Pré-visualização"
+  },
+  "previewStats": {
+    "message": "Irá copiar {count} URLs"
+  },
+  "cancel": {
+    "message": "Cancelar"
+  },
+  "copy": {
+    "message": "Copiar"
+  },
+  "copySuccess": {
+    "message": "Cópia bem-sucedida"
+  },
+  "copyFailed": {
+    "message": "Falha na cópia"
+  },
+  "batchCopySuccess": {
+    "message": "Cópia em lote bem-sucedida"
+  },
+  "untitled": {
+    "message": "Sem título"
+  },
+  "tabsList": {
+    "message": "Lista de Abas"
   }
 }
