@@ -16,7 +16,7 @@
                     class="header-icon"
                 />
                 <div class="header-content">
-                    <h1 data-i18n="batchTitle">批量复制 URL</h1>
+                    <h1 data-i18n="batchTitle">Arclet Copier - 批量复制 URL</h1>
                     <span class="version" id="version">v1.4.2</span>
                 </div>
             </div>
@@ -26,139 +26,119 @@
                 <div class="settings-card">
                     <h3 class="card-title" data-i18n="settings">设置</h3>
                     <div class="card-content">
-                        <div class="settings-grid">
-                            <!-- 左侧：仅复制网页 -->
-                            <div class="settings-group">
-                                <div class="filter-group">
-                                    <div class="setting-row">
-                                        <span
-                                            class="setting-label"
-                                            data-i18n="webPagesOnly"
-                                            >Web Pages Only</span
+                        <div class="settings-list">
+                            <div class="setting-row">
+                                <span
+                                    class="setting-label"
+                                    data-i18n="webPagesOnly"
+                                    >Web Pages Only</span
+                                >
+                                <div class="setting-control">
+                                    <input
+                                        type="checkbox"
+                                        id="webPagesOnly"
+                                        class="toggle-checkbox"
+                                        checked
+                                    />
+                                    <label
+                                        for="webPagesOnly"
+                                        class="toggle-label"
+                                    >
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-row">
+                                <span
+                                    class="setting-label"
+                                    data-i18n="removeDuplicates"
+                                    >Deduplicate</span
+                                >
+                                <div class="setting-control">
+                                    <input
+                                        type="checkbox"
+                                        id="removeDuplicates"
+                                        class="toggle-checkbox"
+                                        checked
+                                    />
+                                    <label
+                                        for="removeDuplicates"
+                                        class="toggle-label"
+                                    >
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-row">
+                                <span
+                                    class="setting-label"
+                                    data-i18n="urlCleaning"
+                                    >URL Cleaning</span
+                                >
+                                <div class="setting-control">
+                                    <div
+                                        class="three-way-switch"
+                                        id="urlCleaningSwitch"
+                                        data-value="smart"
+                                    >
+                                        <div
+                                            class="switch-option"
+                                            data-value="off"
+                                            data-i18n="cleaningOff"
                                         >
-                                        <div class="setting-control">
-                                            <input
-                                                type="checkbox"
-                                                id="webPagesOnly"
-                                                class="toggle-checkbox"
-                                                checked
-                                            />
-                                            <label
-                                                for="webPagesOnly"
-                                                class="toggle-label"
-                                            >
-                                                <span
-                                                    class="toggle-slider"
-                                                ></span>
-                                            </label>
+                                            Off
                                         </div>
+                                        <div
+                                            class="switch-option"
+                                            data-value="smart"
+                                            data-i18n="cleaningSmart"
+                                        >
+                                            Smart
+                                        </div>
+                                        <div
+                                            class="switch-option"
+                                            data-value="aggressive"
+                                            data-i18n="cleaningAggressive"
+                                        >
+                                            All
+                                        </div>
+                                        <div class="switch-slider"></div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- 右侧：其他设置 -->
-                            <div class="settings-group">
-                                <div class="filter-group">
-                                    <div class="setting-row">
-                                        <span
-                                            class="setting-label"
-                                            data-i18n="removeDuplicates"
-                                            >Deduplicate</span
+                            <div class="setting-row">
+                                <span
+                                    class="setting-label"
+                                    data-i18n="silentCopyFormat"
+                                    >Silent Copy Format</span
+                                >
+                                <div class="setting-control">
+                                    <select
+                                        id="silentCopyFormat"
+                                        class="format-select"
+                                    >
+                                        <option
+                                            value="url"
+                                            data-i18n="formatUrl"
                                         >
-                                        <div class="setting-control">
-                                            <input
-                                                type="checkbox"
-                                                id="removeDuplicates"
-                                                class="toggle-checkbox"
-                                                checked
-                                            />
-                                            <label
-                                                for="removeDuplicates"
-                                                class="toggle-label"
-                                            >
-                                                <span
-                                                    class="toggle-slider"
-                                                ></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="filter-group">
-                                    <div class="setting-row">
-                                        <span
-                                            class="setting-label"
-                                            data-i18n="urlCleaning"
-                                            >URL Cleaning</span
+                                            URL
+                                        </option>
+                                        <option
+                                            value="markdown"
+                                            data-i18n="formatMarkdown"
                                         >
-                                        <div class="setting-control">
-                                            <div
-                                                class="three-way-switch"
-                                                id="urlCleaningSwitch"
-                                                data-value="smart"
-                                            >
-                                                <div
-                                                    class="switch-option"
-                                                    data-value="off"
-                                                    data-i18n="cleaningOff"
-                                                >
-                                                    Off
-                                                </div>
-                                                <div
-                                                    class="switch-option"
-                                                    data-value="smart"
-                                                    data-i18n="cleaningSmart"
-                                                >
-                                                    Smart
-                                                </div>
-                                                <div
-                                                    class="switch-option"
-                                                    data-value="aggressive"
-                                                    data-i18n="cleaningAggressive"
-                                                >
-                                                    All
-                                                </div>
-                                                <div
-                                                    class="switch-slider"
-                                                ></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="filter-group">
-                                    <div class="setting-row">
-                                        <span
-                                            class="setting-label"
-                                            data-i18n="silentCopyFormat"
-                                            >Silent Copy Format</span
+                                            Markdown
+                                        </option>
+                                        <option
+                                            value="shortUrl"
+                                            data-i18n="formatShortUrl"
                                         >
-                                        <div class="setting-control">
-                                            <select
-                                                id="silentCopyFormat"
-                                                class="format-select"
-                                            >
-                                                <option
-                                                    value="url"
-                                                    data-i18n="formatUrl"
-                                                >
-                                                    URL
-                                                </option>
-                                                <option
-                                                    value="markdown"
-                                                    data-i18n="formatMarkdown"
-                                                >
-                                                    Markdown
-                                                </option>
-                                                <option
-                                                    value="shortUrl"
-                                                    data-i18n="formatShortUrl"
-                                                >
-                                                    Short URL
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                            Short URL
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
