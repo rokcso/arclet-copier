@@ -16,8 +16,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const elements = {
     version: document.getElementById("version"),
     refreshBtn: document.getElementById("refreshBtn"),
-    closeBtn: document.getElementById("closeBtn"),
-    selectAllBtn: document.getElementById("selectAllBtn"),
     selectNoneBtn: document.getElementById("selectNoneBtn"),
     invertSelectionBtn: document.getElementById("invertSelectionBtn"),
     selectedCount: document.getElementById("selectedCount"),
@@ -704,13 +702,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.stopPropagation();
     refreshTabs();
   });
-  elements.closeBtn.addEventListener("click", () => window.close());
+
   elements.masterCheckbox.addEventListener("change", handleMasterCheckboxClick);
-  elements.selectAllBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    selectAll();
-  });
+
   elements.selectNoneBtn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
