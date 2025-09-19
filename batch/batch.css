@@ -62,6 +62,19 @@
     border-color: var(--arc-primary);
 }
 
+[data-theme="dark"] .three-way-switch {
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
+}
+
+[data-theme="dark"] .three-way-switch .switch-option {
+    color: var(--arc-text-muted);
+}
+
+[data-theme="dark"] .three-way-switch .switch-option.active {
+    color: white;
+}
+
 /* Theme colors */
 [data-color="orange"] {
     --arc-primary: #f97316;
@@ -527,6 +540,72 @@ body {
 
 .format-select:hover {
     border-color: var(--arc-primary);
+}
+
+/* Three-way Switch - Same as Popup Page */
+.three-way-switch {
+    position: relative;
+    height: 32px;
+    background: var(--arc-surface);
+    border: 1.5px solid var(--arc-border);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+    min-width: fit-content;
+    /* CSS变量用于动态控制滑块 */
+    --slider-width: 44px;
+    --slider-x: 0px;
+}
+
+.three-way-switch .switch-option {
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--arc-text-muted);
+    transition: color 0.3s ease;
+    z-index: 2;
+    position: relative;
+    border-radius: 13px;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    white-space: nowrap;
+    padding: 0 12px;
+    min-width: 40px;
+    box-sizing: border-box;
+}
+
+.three-way-switch .switch-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: var(--slider-width);
+    height: 26px;
+    background: linear-gradient(
+        135deg,
+        var(--arc-primary) 0%,
+        var(--arc-primary-hover) 50%,
+        var(--arc-primary) 100%
+    );
+    border-radius: 13px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+        0 0 20px var(--glow-light, rgba(34, 197, 94, 0.15)),
+        0 2px 8px var(--glow-medium, rgba(34, 197, 94, 0.3)),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    z-index: 1;
+    transform: translateX(var(--slider-x));
+}
+
+.three-way-switch .switch-option.active {
+    color: white;
+    font-weight: 600;
 }
 
 /* 操作按钮 */
