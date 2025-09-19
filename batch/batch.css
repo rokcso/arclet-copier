@@ -47,6 +47,21 @@
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
 }
 
+[data-theme="dark"] .format-select {
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
+    color: var(--arc-text-primary);
+}
+
+[data-theme="dark"] .format-select:focus {
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+}
+
+[data-theme="dark"] .format-select:hover {
+    border-color: var(--arc-primary);
+}
+
 /* Theme colors */
 [data-color="orange"] {
     --arc-primary: #f97316;
@@ -187,11 +202,6 @@ body {
     padding: 24px;
     box-shadow: var(--arc-shadow-sm);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.settings-card:hover {
-    box-shadow: var(--arc-shadow-md);
-    border-color: var(--arc-primary);
 }
 
 .settings-grid {
@@ -493,6 +503,30 @@ body {
     font-size: 14px;
     font-weight: 500;
     color: var(--arc-text-primary);
+}
+
+/* Format Select - Same as Popup Page */
+.format-select {
+    padding: 8px 12px;
+    border: 1.5px solid var(--arc-border);
+    border-radius: var(--arc-radius-sm);
+    background: var(--arc-background);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--arc-text-primary);
+    cursor: pointer;
+    min-width: 100px;
+    transition: all 0.2s ease;
+}
+
+.format-select:focus {
+    outline: none;
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+}
+
+.format-select:hover {
+    border-color: var(--arc-primary);
 }
 
 /* 操作按钮 */
