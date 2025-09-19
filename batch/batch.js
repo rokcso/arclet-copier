@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // DOM 元素
   const elements = {
     version: document.getElementById("version"),
+    moreSettingsBtn: document.getElementById("moreSettingsBtn"),
     refreshBtn: document.getElementById("refreshBtn"),
     selectNoneBtn: document.getElementById("selectNoneBtn"),
     invertSelectionBtn: document.getElementById("invertSelectionBtn"),
@@ -831,6 +832,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 3000);
   }
 
+  // 打开options页面
+  function openOptionsPage() {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL("options/options.html"),
+    });
+  }
+
   // 刷新标签页列表
   async function refreshTabs() {
     elements.loading.style.display = "flex";
@@ -850,6 +858,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 事件监听器
+  elements.moreSettingsBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openOptionsPage();
+  });
+
   elements.refreshBtn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
