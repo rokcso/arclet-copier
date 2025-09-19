@@ -530,31 +530,45 @@ select.setting-control:hover {
 .notification {
     position: fixed;
     top: 20px;
-    right: 20px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.3);
+    transform-origin: center top;
     background: var(--toast-bg, #86efac);
     color: var(--toast-text, #166534);
-    padding: 12px 20px;
-    border-radius: var(--arc-radius);
+    padding: 12px 16px;
+    border-radius: 16px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     opacity: 0;
-    transform: translateY(-20px);
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 4px 12px var(--toast-shadow, rgba(134, 239, 172, 0.4));
     z-index: 1000;
-    border: 1.5px solid var(--toast-border, #22c55e);
-    max-width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    max-width: 400px;
+    width: fit-content;
+    text-align: center;
+    line-height: 1.4;
     word-wrap: break-word;
+    hyphens: auto;
+    border: 1.5px solid var(--toast-border, #22c55e);
+    box-sizing: border-box;
 }
 
 .notification.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) scale(1);
 }
 
 .notification-text {
     display: block;
+    width: 100%;
+    text-align: center;
     line-height: 1.4;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 /* 主题色定义 */
