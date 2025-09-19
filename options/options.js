@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Rating button
     elements.ratingBtn.addEventListener("click", () => {
       chrome.tabs.create({
-        url: "https://chromewebstore.google.com/detail/arclet-copier/mkflehheaokdfopijachhfdbofkppdil",
+        url: "https://chromewebstore.google.com/detail/mkflehheaokdfopijachhfdbofkppdil",
       });
     });
 
