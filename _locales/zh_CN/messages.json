@@ -385,5 +385,41 @@
   },
   "tabsList": {
     "message": "标签页列表"
+  },
+  "refresh": {
+    "message": "刷新"
+  },
+  "clearSelection": {
+    "message": "清空"
+  },
+  "deduplicate": {
+    "message": "去重"
+  },
+  "batchSettings": {
+    "message": "批量设置"
+  },
+  "urlTypes": {
+    "message": "URL 类型"
+  },
+  "filterSettings": {
+    "message": "筛选设置"
+  },
+  "outputSettings": {
+    "message": "输出设置"
+  },
+  "currentWindow": {
+    "message": "当前"
+  },
+  "allWindows": {
+    "message": "全部"
+  },
+  "windowTabsCount": {
+    "message": "$count$个",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
   }
 }

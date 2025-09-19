@@ -249,7 +249,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (currentWindow) {
       const currentOption = document.createElement("option");
       currentOption.value = "current";
-      currentOption.textContent = `当前 (${currentWindow.tabs.length}个)`;
+      const currentText = getLocalMessage("currentWindow");
+      const countText = getLocalMessage("windowTabsCount", [
+        currentWindow.tabs.length.toString(),
+      ]);
+      currentOption.textContent = `${currentText} (${countText})`;
       select.appendChild(currentOption);
     }
 
@@ -257,7 +261,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const allOption = document.createElement("option");
     allOption.value = "all";
     const totalTabs = allWindows.reduce((sum, w) => sum + w.tabs.length, 0);
-    allOption.textContent = `全部 (${totalTabs}个)`;
+    const allText = getLocalMessage("allWindows");
+    const totalCountText = getLocalMessage("windowTabsCount", [
+      totalTabs.toString(),
+    ]);
+    allOption.textContent = `${allText} (${totalCountText})`;
     select.appendChild(allOption);
 
     // 恢复之前的选择

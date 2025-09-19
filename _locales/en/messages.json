@@ -385,5 +385,41 @@
   },
   "tabsList": {
     "message": "Tabs List"
+  },
+  "refresh": {
+    "message": "Refresh"
+  },
+  "clearSelection": {
+    "message": "Clear"
+  },
+  "deduplicate": {
+    "message": "Deduplicate"
+  },
+  "batchSettings": {
+    "message": "Batch Settings"
+  },
+  "urlTypes": {
+    "message": "URL Types"
+  },
+  "filterSettings": {
+    "message": "Filter Settings"
+  },
+  "outputSettings": {
+    "message": "Output Settings"
+  },
+  "currentWindow": {
+    "message": "Current"
+  },
+  "allWindows": {
+    "message": "All"
+  },
+  "windowTabsCount": {
+    "message": "$count$ tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
   }
 }
