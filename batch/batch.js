@@ -575,11 +575,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 格式化输出
-  function formatOutput(tabs, format) {
+  async function formatOutput(tabs, format) {
     const cleaningMode = currentSettings.urlCleaning;
 
     switch (format) {
       case "text":
+      case "url":
         return tabs.map((tab) => processUrl(tab.url, cleaningMode)).join("\n");
 
       case "markdown":
@@ -590,6 +591,30 @@ document.addEventListener("DOMContentLoaded", async () => {
             return `- [${title}](${url})`;
           })
           .join("\n");
+
+      case "shortUrl":
+        // 获取短链服务设置
+        const result = await chrome.storage.sync.get(["shortUrlService"]);
+        const selectedService = result.shortUrlService || "isgd";
+
+        // 批量生成短链
+        const shortUrls = await Promise.all(
+          tabs.map(async (tab) => {
+            const url = processUrl(tab.url, cleaningMode);
+            try {
+              const response = await chrome.runtime.sendMessage({
+                action: "createShortUrl",
+                url: url,
+                service: selectedService,
+              });
+              return response.shortUrl || url; // 如果失败则返回原URL
+            } catch (error) {
+              console.error("短链生成失败:", error);
+              return url; // 如果出错则返回原URL
+            }
+          }),
+        );
+        return shortUrls.join("\n");
 
       case "html":
         const items = tabs
@@ -619,10 +644,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 显示预览
-  function showPreview() {
+  async function showPreview() {
     const selectedTabsList = getSelectedTabs();
     const format = document.getElementById("silentCopyFormat").value;
-    const content = formatOutput(selectedTabsList, format);
+
+    // 显示加载状态
+    elements.previewText.textContent =
+      getLocalMessage("loading") || "Loading...";
+
+    const content = await formatOutput(selectedTabsList, format);
 
     elements.previewCount.textContent = selectedTabsList.length;
     elements.previewText.textContent = content;
@@ -672,7 +702,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (selectedTabsList.length === 0) return;
 
     const format = document.getElementById("silentCopyFormat").value;
-    const content = formatOutput(selectedTabsList, format);
+    const content = await formatOutput(selectedTabsList, format);
 
     const success = await copyToClipboard(content);
 
