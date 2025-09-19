@@ -612,6 +612,31 @@ body {
     flex-shrink: 0;
 }
 
+.watermark-text {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--arc-text-muted);
+    background: var(--arc-secondary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
+    transition: all 0.2s ease;
+    user-select: none;
+    cursor: help;
+    vertical-align: middle;
+}
+
+.watermark-text:hover {
+    background: var(--arc-border);
+}
+
 /* 模态框 */
 .modal {
     position: fixed;

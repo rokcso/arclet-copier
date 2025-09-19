@@ -267,6 +267,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateCounts();
   }
 
+  // 检测重复项
+  function detectDuplicates(tabs) {
+    const urlCounts = new Map();
+    const duplicateUrls = new Set();
+
+    // 统计每个处理后的 URL 出现次数
+    tabs.forEach((tab) => {
+      const processedUrl = processUrl(tab.url, currentSettings.urlCleaning);
+      const count = urlCounts.get(processedUrl) || 0;
+      urlCounts.set(processedUrl, count + 1);
+
+      if (count >= 1) {
+        duplicateUrls.add(processedUrl);
+      }
+    });
+
+    return duplicateUrls;
+  }
+
   // 渲染标签页列表
   function renderTabs() {
     const container = elements.tabsContainer;
@@ -281,14 +300,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
+    // 检测重复项（只有在未开启去重功能时才检测）
+    const duplicateUrls = !elements.removeDuplicates.checked
+      ? detectDuplicates(filteredTabs)
+      : new Set();
+
     filteredTabs.forEach((tab) => {
-      const tabElement = createTabElement(tab);
+      const processedUrl = processUrl(tab.url, currentSettings.urlCleaning);
+      const isDuplicate = duplicateUrls.has(processedUrl);
+      const tabElement = createTabElement(tab, isDuplicate);
       container.appendChild(tabElement);
     });
   }
 
   // 创建标签页元素
-  function createTabElement(tab) {
+  function createTabElement(tab, isDuplicate = false) {
     const div = document.createElement("div");
     div.className = "tab-item";
     div.dataset.tabId = tab.id;
@@ -298,15 +324,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       div.classList.add("selected");
     }
 
+    if (isDuplicate) {
+      div.classList.add("duplicate");
+    }
+
     const processedUrl = processUrl(tab.url, currentSettings.urlCleaning);
     const domain = getDomain(tab.url);
+
+    const duplicateWatermark = isDuplicate
+      ? `<span class="watermark-text" title="${getLocalMessage("duplicateUrl") || "重复的URL"}">${getLocalMessage("duplicate") || "DUPLICATE"}</span>`
+      : "";
 
     div.innerHTML = `
       <input type="checkbox" class="tab-checkbox" ${isSelected ? "checked" : ""}>
       <img class="tab-favicon" src="${tab.favIconUrl || chrome.runtime.getURL("assets/icons/icon16.png")}"
            onerror="this.src='${chrome.runtime.getURL("assets/icons/icon16.png")}'">
       <div class="tab-info">
-        <div class="tab-title">${escapeHtml(tab.title || getLocalMessage("untitled"))}</div>
+        <div class="tab-title">
+          ${escapeHtml(tab.title || getLocalMessage("untitled"))}
+          ${duplicateWatermark}
+        </div>
         <div class="tab-url">${escapeHtml(processedUrl)}</div>
       </div>
       <div class="tab-domain">${escapeHtml(domain)}</div>
@@ -315,6 +352,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 事件监听
     div.addEventListener("click", (e) => {
       if (e.target.type === "checkbox") return;
+      if (e.target.classList.contains("watermark-text")) return;
       toggleTabSelection(tab.id);
     });
 
