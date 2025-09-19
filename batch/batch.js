@@ -621,9 +621,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 显示预览
   function showPreview() {
     const selectedTabsList = getSelectedTabs();
-    const format = document.querySelector(
-      'input[name="outputFormat"]:checked',
-    ).value;
+    const format = document.getElementById("silentCopyFormat").value;
     const content = formatOutput(selectedTabsList, format);
 
     elements.previewCount.textContent = selectedTabsList.length;
@@ -673,9 +671,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedTabsList = getSelectedTabs();
     if (selectedTabsList.length === 0) return;
 
-    const format = document.querySelector(
-      'input[name="outputFormat"]:checked',
-    ).value;
+    const format = document.getElementById("silentCopyFormat").value;
     const content = formatOutput(selectedTabsList, format);
 
     const success = await copyToClipboard(content);
