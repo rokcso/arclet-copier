@@ -168,9 +168,9 @@ body {
 }
 
 .settings-card {
-    background: var(--arc-background);
+    background: var(--arc-surface);
     border: 1px solid var(--arc-border);
-    border-radius: var(--arc-radius);
+    border-radius: var(--arc-radius-lg);
     padding: 24px;
     box-shadow: var(--arc-shadow-sm);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -198,7 +198,7 @@ body {
     font-size: 18px;
     font-weight: 600;
     color: var(--arc-text-primary);
-    display: flex;
+    letter-spacing: -0.01em;
     align-items: center;
     gap: 8px;
 }
