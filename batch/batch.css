@@ -1532,7 +1532,6 @@ body {
 .tab-item:hover {
     background: var(--arc-surface);
     border-color: var(--arc-primary);
-    transform: translateY(-1px);
     box-shadow: var(--arc-shadow-md);
 }
 
@@ -1542,16 +1541,37 @@ body {
     box-shadow:
         0 0 0 3px var(--glow-light),
         var(--arc-shadow-md);
-    transform: translateY(-1px);
 }
 
 .tab-checkbox {
     margin-right: 16px;
     width: 18px;
     height: 18px;
-    accent-color: var(--arc-primary);
+    appearance: none;
+    -webkit-appearance: none;
+    border: 2px solid var(--arc-border);
     border-radius: 4px;
+    background: var(--arc-background);
+    cursor: pointer;
+    position: relative;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--arc-shadow-sm);
+}
+
+.tab-checkbox:checked {
+    border-color: var(--arc-primary);
+    background: var(--arc-primary);
+}
+
+.tab-checkbox:checked::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .tab-favicon {
