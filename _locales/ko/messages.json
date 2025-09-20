@@ -383,5 +383,53 @@
   },
   "tabsList": {
     "message": "탭 목록"
+  },
+  "refresh": {
+    "message": "새로고침"
+  },
+  "clearSelection": {
+    "message": "선택 해제"
+  },
+  "deduplicate": {
+    "message": "중복 제거"
+  },
+  "batchSettings": {
+    "message": "일괄 설정"
+  },
+  "urlTypes": {
+    "message": "URL 유형"
+  },
+  "filterSettings": {
+    "message": "필터 설정"
+  },
+  "outputSettings": {
+    "message": "내보내기 설정"
+  },
+  "currentWindowShort": {
+    "message": "현재"
+  },
+  "allWindowsShort": {
+    "message": "모든"
+  },
+  "windowTabsCount": {
+    "message": "$count$개 항목/탭",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "webPagesOnly": {
+    "message": "웹 페이지만"
+  },
+  "duplicateUrl": {
+    "message": "중복 URL"
+  },
+  "duplicate": {
+    "message": "중복"
+  },
+  "loading": {
+    "message": "로딩 중..."
   }
 }

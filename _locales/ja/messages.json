@@ -385,5 +385,53 @@
   },
   "tabsList": {
     "message": "タブ一覧"
+  },
+  "refresh": {
+    "message": "更新"
+  },
+  "clearSelection": {
+    "message": "クリア"
+  },
+  "deduplicate": {
+    "message": "重複削除"
+  },
+  "batchSettings": {
+    "message": "一括設定"
+  },
+  "urlTypes": {
+    "message": "URLタイプ"
+  },
+  "filterSettings": {
+    "message": "フィルター設定"
+  },
+  "outputSettings": {
+    "message": "出力設定"
+  },
+  "currentWindowShort": {
+    "message": "現在"
+  },
+  "allWindowsShort": {
+    "message": "すべて"
+  },
+  "windowTabsCount": {
+    "message": "$count$個",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "webPagesOnly": {
+    "message": "ウェブページのみ"
+  },
+  "duplicateUrl": {
+    "message": "重複URL"
+  },
+  "duplicate": {
+    "message": "重複"
+  },
+  "loading": {
+    "message": "読み込み中..."
   }
 }

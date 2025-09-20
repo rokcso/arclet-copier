@@ -385,5 +385,53 @@
   },
   "tabsList": {
     "message": "Список Вкладок"
+  },
+  "refresh": {
+    "message": "Обновить"
+  },
+  "clearSelection": {
+    "message": "Очистить"
+  },
+  "deduplicate": {
+    "message": "Удалить Дубликаты"
+  },
+  "batchSettings": {
+    "message": "Настройки Пакета"
+  },
+  "urlTypes": {
+    "message": "Типы URL"
+  },
+  "filterSettings": {
+    "message": "Настройки Фильтра"
+  },
+  "outputSettings": {
+    "message": "Настройки Экспорта"
+  },
+  "currentWindowShort": {
+    "message": "Текущее"
+  },
+  "allWindowsShort": {
+    "message": "Все"
+  },
+  "windowTabsCount": {
+    "message": "$count$ элементов/вкладок",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "webPagesOnly": {
+    "message": "Только Веб-Страницы"
+  },
+  "duplicateUrl": {
+    "message": "Дублирующий URL"
+  },
+  "duplicate": {
+    "message": "ДУБЛИКАТ"
+  },
+  "loading": {
+    "message": "Загрузка..."
   }
 }

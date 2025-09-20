@@ -385,5 +385,53 @@
   },
   "tabsList": {
     "message": "Liste des Onglets"
+  },
+  "refresh": {
+    "message": "Actualiser"
+  },
+  "clearSelection": {
+    "message": "Effacer"
+  },
+  "deduplicate": {
+    "message": "Supprimer les Doublons"
+  },
+  "batchSettings": {
+    "message": "Paramètres de Lot"
+  },
+  "urlTypes": {
+    "message": "Types d'URL"
+  },
+  "filterSettings": {
+    "message": "Paramètres de Filtre"
+  },
+  "outputSettings": {
+    "message": "Paramètres d'Exportation"
+  },
+  "currentWindowShort": {
+    "message": "Actuelle"
+  },
+  "allWindowsShort": {
+    "message": "Toutes"
+  },
+  "windowTabsCount": {
+    "message": "$count$ éléments/onglets",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "webPagesOnly": {
+    "message": "Pages Web Uniquement"
+  },
+  "duplicateUrl": {
+    "message": "URL Dupliquée"
+  },
+  "duplicate": {
+    "message": "DOUBLON"
+  },
+  "loading": {
+    "message": "Chargement..."
   }
 }

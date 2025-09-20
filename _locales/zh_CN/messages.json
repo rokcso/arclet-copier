@@ -294,7 +294,7 @@
     "message": "批量复制"
   },
   "batchTitle": {
-    "message": "批量复制 URL"
+    "message": "批量复制链接"
   },
   "filters": {
     "message": "过滤器"
@@ -307,10 +307,10 @@
     "message": "所有窗口"
   },
   "urlType": {
-    "message": "URL 类型"
+    "message": "页面类型"
   },
   "webPages": {
-    "message": "网页 (HTTP/HTTPS)"
+    "message": "网页链接 (HTTP/HTTPS)"
   },
   "extensionPages": {
     "message": "扩展页面"
@@ -319,10 +319,10 @@
     "message": "系统页面"
   },
   "removeDuplicates": {
-    "message": "去除重复"
+    "message": "去重"
   },
   "outputFormat": {
-    "message": "输出格式"
+    "message": "导出格式"
   },
   "formatText": {
     "message": "纯文本"
@@ -337,7 +337,7 @@
     "message": "全选"
   },
   "selectNone": {
-    "message": "全不选"
+    "message": "清空选择"
   },
   "invertSelection": {
     "message": "反选"
@@ -346,10 +346,10 @@
     "message": "已选择"
   },
   "loadingTabs": {
-    "message": "正在加载标签页..."
+    "message": "正在加载标签页列表..."
   },
   "noTabsFound": {
-    "message": "没有找到符合条件的标签页"
+    "message": "未找到符合条件的标签页"
   },
   "preview": {
     "message": "预览"
@@ -358,10 +358,10 @@
     "message": "复制选中项"
   },
   "previewTitle": {
-    "message": "预览"
+    "message": "复制预览"
   },
   "previewStats": {
-    "message": "将复制 {count} 个URL"
+    "message": "将复制 {count} 个链接"
   },
   "cancel": {
     "message": "取消"
@@ -373,10 +373,10 @@
     "message": "复制成功"
   },
   "copyFailed": {
-    "message": "复制失败"
+    "message": "复制失败，请重试"
   },
   "batchCopySuccess": {
-    "message": "批量复制成功"
+    "message": "批量复制完成"
   },
   "untitled": {
     "message": "无标题"
@@ -397,18 +397,18 @@
     "message": "批量设置"
   },
   "urlTypes": {
-    "message": "URL 类型"
+    "message": "链接类型"
   },
   "filterSettings": {
     "message": "筛选设置"
   },
   "outputSettings": {
-    "message": "输出设置"
+    "message": "导出设置"
   },
-  "currentWindow": {
+  "currentWindowShort": {
     "message": "当前"
   },
-  "allWindows": {
+  "allWindowsShort": {
     "message": "全部"
   },
   "windowTabsCount": {
@@ -419,5 +419,17 @@
         "example": "5"
       }
     }
+  },
+  "webPagesOnly": {
+    "message": "仅网页"
+  },
+  "duplicateUrl": {
+    "message": "重复链接"
+  },
+  "duplicate": {
+    "message": "重复"
+  },
+  "loading": {
+    "message": "加载中..."
   }
 }

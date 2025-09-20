@@ -385,5 +385,53 @@
   },
   "tabsList": {
     "message": "Tab-Liste"
+  },
+  "refresh": {
+    "message": "Aktualisieren"
+  },
+  "clearSelection": {
+    "message": "Löschen"
+  },
+  "deduplicate": {
+    "message": "Duplikate entfernen"
+  },
+  "batchSettings": {
+    "message": "Stapel-Einstellungen"
+  },
+  "urlTypes": {
+    "message": "URL-Typen"
+  },
+  "filterSettings": {
+    "message": "Filter-Einstellungen"
+  },
+  "outputSettings": {
+    "message": "Export-Einstellungen"
+  },
+  "currentWindowShort": {
+    "message": "Aktuell"
+  },
+  "allWindowsShort": {
+    "message": "Alle"
+  },
+  "windowTabsCount": {
+    "message": "$count$ Tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "webPagesOnly": {
+    "message": "Nur Webseiten"
+  },
+  "duplicateUrl": {
+    "message": "Doppelte URL"
+  },
+  "duplicate": {
+    "message": "DUPLIKAT"
+  },
+  "loading": {
+    "message": "Laden..."
   }
 }

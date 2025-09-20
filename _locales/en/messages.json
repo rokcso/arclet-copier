@@ -294,7 +294,7 @@
     "message": "Batch Copy"
   },
   "batchTitle": {
-    "message": "Arclet Copier - Batch Copy URLs"
+    "message": "Batch Copy URLs"
   },
   "filters": {
     "message": "Filters"
@@ -309,7 +309,7 @@
     "message": "All Windows"
   },
   "urlType": {
-    "message": "URL Type"
+    "message": "Page Types"
   },
   "webPages": {
     "message": "Web Pages (HTTP/HTTPS)"
@@ -339,7 +339,7 @@
     "message": "Select All"
   },
   "selectNone": {
-    "message": "Select None"
+    "message": "Clear Selection"
   },
   "invertSelection": {
     "message": "Invert Selection"
@@ -348,10 +348,10 @@
     "message": "Selected"
   },
   "loadingTabs": {
-    "message": "Loading tabs..."
+    "message": "Loading tab list..."
   },
   "noTabsFound": {
-    "message": "No tabs found matching the criteria"
+    "message": "No tabs match the current filters"
   },
   "preview": {
     "message": "Preview"
@@ -360,10 +360,10 @@
     "message": "Copy Selected"
   },
   "previewTitle": {
-    "message": "Preview"
+    "message": "Copy Preview"
   },
   "previewStats": {
-    "message": "Will copy {count} URLs"
+    "message": "Ready to copy {count} URLs"
   },
   "cancel": {
     "message": "Cancel"
@@ -375,10 +375,10 @@
     "message": "Copy successful"
   },
   "copyFailed": {
-    "message": "Copy failed"
+    "message": "Copy failed, please try again"
   },
   "batchCopySuccess": {
-    "message": "Batch copy successful"
+    "message": "Batch copy completed"
   },
   "untitled": {
     "message": "Untitled"
@@ -393,7 +393,7 @@
     "message": "Clear"
   },
   "deduplicate": {
-    "message": "Deduplicate"
+    "message": "Remove Duplicates"
   },
   "batchSettings": {
     "message": "Batch Settings"
@@ -405,12 +405,12 @@
     "message": "Filter Settings"
   },
   "outputSettings": {
-    "message": "Output Settings"
+    "message": "Export Settings"
   },
-  "currentWindow": {
+  "currentWindowShort": {
     "message": "Current"
   },
-  "allWindows": {
+  "allWindowsShort": {
     "message": "All"
   },
   "windowTabsCount": {
@@ -421,5 +421,17 @@
         "example": "5"
       }
     }
+  },
+  "webPagesOnly": {
+    "message": "Web Pages Only"
+  },
+  "duplicateUrl": {
+    "message": "Duplicate URL"
+  },
+  "duplicate": {
+    "message": "DUPLICATE"
+  },
+  "loading": {
+    "message": "Loading..."
   }
 }

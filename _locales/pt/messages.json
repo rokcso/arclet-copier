@@ -385,5 +385,53 @@
   },
   "tabsList": {
     "message": "Lista de Abas"
+  },
+  "refresh": {
+    "message": "Atualizar"
+  },
+  "clearSelection": {
+    "message": "Limpar"
+  },
+  "deduplicate": {
+    "message": "Remover Duplicatas"
+  },
+  "batchSettings": {
+    "message": "Configurações em Lote"
+  },
+  "urlTypes": {
+    "message": "Tipos de URL"
+  },
+  "filterSettings": {
+    "message": "Configurações de Filtro"
+  },
+  "outputSettings": {
+    "message": "Configurações de Exportação"
+  },
+  "currentWindowShort": {
+    "message": "Atual"
+  },
+  "allWindowsShort": {
+    "message": "Todas"
+  },
+  "windowTabsCount": {
+    "message": "$count$ itens/abas",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "webPagesOnly": {
+    "message": "Apenas Páginas Web"
+  },
+  "duplicateUrl": {
+    "message": "URL Duplicada"
+  },
+  "duplicate": {
+    "message": "DUPLICADO"
+  },
+  "loading": {
+    "message": "Carregando..."
   }
 }
