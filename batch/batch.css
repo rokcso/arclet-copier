@@ -1077,7 +1077,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 8px 16px;
     background: var(--arc-background);
 }
 
@@ -1114,7 +1114,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 8px 16px;
     background: var(--arc-background);
     border-bottom: 1px solid var(--arc-border);
     gap: 16px;
@@ -1422,7 +1422,7 @@ body {
 
     /* 两层布局响应式样式 */
     .header-layer {
-        padding: 12px 16px;
+        padding: 8px 16px;
         flex-wrap: wrap;
         gap: 12px;
     }
@@ -1431,7 +1431,7 @@ body {
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
-        padding: 12px 16px;
+        padding: 8px 16px;
     }
 
     .action-buttons {
