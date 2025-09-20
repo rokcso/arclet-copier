@@ -437,8 +437,6 @@ body {
     margin-left: 6px;
     display: inline-block;
 }
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 .settings-list {
     display: flex;
