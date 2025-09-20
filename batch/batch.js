@@ -802,7 +802,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const content = await formatOutput(selectedTabsList, format);
 
-    elements.previewCount.textContent = selectedTabsList.length;
     elements.previewText.textContent = content;
 
     // 更新预览统计文本
@@ -812,6 +811,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       "{count}",
       `<strong id="previewCount">${selectedTabsList.length}</strong>`,
     );
+
+    // 重新获取previewCount元素引用，因为innerHTML会重新创建元素
+    elements.previewCount = document.getElementById("previewCount");
 
     elements.previewModal.classList.add("show");
   }
