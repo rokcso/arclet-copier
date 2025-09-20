@@ -351,10 +351,6 @@ body {
     gap: 16px;
 }
 
-/* 主要设置（常用功能） */
-.primary-settings {
-}
-
 .primary-settings .setting-row {
     min-height: 40px;
 }
@@ -1355,11 +1351,6 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-/* 标签页列表容器 */
-.tabs-list {
-    /* 原来tabs-container的内容样式将应用到这里 */
 }
 
 /* 响应式布局 */
