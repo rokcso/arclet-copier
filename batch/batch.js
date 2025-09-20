@@ -3,58 +3,9 @@ import {
   isValidWebUrl,
   isRestrictedPage,
   getMessage,
+  createShortUrlDirect,
+  globalShortUrlThrottle,
 } from "../shared/constants.js";
-
-// 短链请求限流器
-class ShortUrlThrottle {
-  constructor() {
-    this.concurrentLimit = 3; // 同时最多3个请求
-    this.requestQueue = [];
-    this.activeRequests = 0;
-    this.requestDelay = 200; // 请求间隔200ms
-    this.lastRequestTime = 0;
-  }
-
-  async throttledRequest(requestFn) {
-    return new Promise((resolve, reject) => {
-      this.requestQueue.push({ requestFn, resolve, reject });
-      this.processQueue();
-    });
-  }
-
-  async processQueue() {
-    if (
-      this.activeRequests >= this.concurrentLimit ||
-      this.requestQueue.length === 0
-    ) {
-      return;
-    }
-
-    const { requestFn, resolve, reject } = this.requestQueue.shift();
-    this.activeRequests++;
-
-    try {
-      // 确保请求间隔
-      const now = Date.now();
-      const timeSinceLastRequest = now - this.lastRequestTime;
-      if (timeSinceLastRequest < this.requestDelay) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, this.requestDelay - timeSinceLastRequest),
-        );
-      }
-
-      this.lastRequestTime = Date.now();
-      const result = await requestFn();
-      resolve(result);
-    } catch (error) {
-      reject(error);
-    } finally {
-      this.activeRequests--;
-      // 继续处理队列
-      setTimeout(() => this.processQueue(), 10);
-    }
-  }
-}
 
 // 持久化短链缓存管理
 class PersistentShortUrlCache {
@@ -124,8 +75,7 @@ class PersistentShortUrlCache {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // 创建短链限流器和缓存实例
-  const shortUrlThrottle = new ShortUrlThrottle();
+  // 创建缓存实例，使用全局短链限流器
   const shortUrlCache = new PersistentShortUrlCache();
   // 状态管理
   let allTabs = [];
@@ -790,27 +740,22 @@ document.addEventListener("DOMContentLoaded", async () => {
               return cachedUrl;
             }
 
-            // 使用限流器处理请求
-            return await shortUrlThrottle.throttledRequest(async () => {
+            // 使用全局限流器处理请求
+            return await globalShortUrlThrottle.throttledRequest(async () => {
               try {
-                const response = await chrome.runtime.sendMessage({
-                  action: "createShortUrl",
-                  url: url,
-                  service: selectedService,
-                });
+                const shortUrl = await createShortUrlDirect(
+                  url,
+                  selectedService,
+                );
 
-                if (response.shortUrl) {
-                  // 保存到缓存
-                  await shortUrlCache.set(
-                    url,
-                    selectedService,
-                    cleaningMode,
-                    response.shortUrl,
-                  );
-                  return response.shortUrl;
-                }
-
-                return url; // 如果失败则返回原URL
+                // 保存到缓存
+                await shortUrlCache.set(
+                  url,
+                  selectedService,
+                  cleaningMode,
+                  shortUrl,
+                );
+                return shortUrl;
               } catch (error) {
                 console.error("短链生成失败:", error);
                 return url; // 如果出错则返回原URL
@@ -869,10 +814,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       elements.previewText.appendChild(progressText);
 
       // 监听短链生成进度
-      const originalThrottledRequest = shortUrlThrottle.throttledRequest;
+      const originalThrottledRequest = globalShortUrlThrottle.throttledRequest;
       let completedCount = 0;
 
-      shortUrlThrottle.throttledRequest = async function (requestFn) {
+      globalShortUrlThrottle.throttledRequest = async function (requestFn) {
         const result = await originalThrottledRequest.call(this, requestFn);
         completedCount++;
         progressText.textContent = `${completedCount} / ${selectedTabsList.length}`;
@@ -882,7 +827,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const content = await formatOutput(selectedTabsList, format);
 
       // 恢复原始方法
-      shortUrlThrottle.throttledRequest = originalThrottledRequest;
+      globalShortUrlThrottle.throttledRequest = originalThrottledRequest;
 
       elements.previewText.textContent = content;
     } else {
@@ -947,10 +892,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
       // 监听短链生成进度
-      const originalThrottledRequest = shortUrlThrottle.throttledRequest;
+      const originalThrottledRequest = globalShortUrlThrottle.throttledRequest;
       let completedCount = 0;
 
-      shortUrlThrottle.throttledRequest = async function (requestFn) {
+      globalShortUrlThrottle.throttledRequest = async function (requestFn) {
         const result = await originalThrottledRequest.call(this, requestFn);
         completedCount++;
 
@@ -970,7 +915,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const content = await formatOutput(selectedTabsList, format);
 
       // 恢复原始方法
-      shortUrlThrottle.throttledRequest = originalThrottledRequest;
+      globalShortUrlThrottle.throttledRequest = originalThrottledRequest;
 
       success = await copyToClipboard(content);
     } else {

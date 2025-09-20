@@ -1,5 +1,59 @@
 // Shared constants for Arclet Copier
 
+// 短链请求限流器
+class ShortUrlThrottle {
+  constructor() {
+    this.concurrentLimit = 3; // 同时最多3个请求
+    this.requestQueue = [];
+    this.activeRequests = 0;
+    this.requestDelay = 200; // 请求间隔200ms
+    this.lastRequestTime = 0;
+  }
+
+  async throttledRequest(requestFn) {
+    return new Promise((resolve, reject) => {
+      this.requestQueue.push({ requestFn, resolve, reject });
+      this.processQueue();
+    });
+  }
+
+  async processQueue() {
+    if (
+      this.activeRequests >= this.concurrentLimit ||
+      this.requestQueue.length === 0
+    ) {
+      return;
+    }
+
+    const { requestFn, resolve, reject } = this.requestQueue.shift();
+    this.activeRequests++;
+
+    try {
+      // 确保请求间隔
+      const now = Date.now();
+      const timeSinceLastRequest = now - this.lastRequestTime;
+      if (timeSinceLastRequest < this.requestDelay) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.requestDelay - timeSinceLastRequest),
+        );
+      }
+
+      this.lastRequestTime = Date.now();
+      const result = await requestFn();
+      resolve(result);
+    } catch (error) {
+      reject(error);
+    } finally {
+      this.activeRequests--;
+      // 继续处理队列
+      setTimeout(() => this.processQueue(), 10);
+    }
+  }
+}
+
+// 创建全局短链限流器实例
+const globalShortUrlThrottle = new ShortUrlThrottle();
+
 // URL参数分类定义
 export const PARAM_CATEGORIES = {
   // 跟踪参数 - 可以安全移除
@@ -239,8 +293,8 @@ export const SHORT_URL_SERVICES = {
   },
 };
 
-// 创建短链的共享函数
-export async function createShortUrl(longUrl, service = "isgd") {
+// 创建短链的共享函数（不带限流，用于需要自定义限流的场景）
+export async function createShortUrlDirect(longUrl, service = "isgd") {
   const serviceConfig = SHORT_URL_SERVICES[service];
   if (!serviceConfig) {
     throw new Error(`Unknown short URL service: ${service}`);
@@ -283,6 +337,16 @@ export async function createShortUrl(longUrl, service = "isgd") {
     throw error;
   }
 }
+
+// 创建短链的共享函数（带限流）
+export async function createShortUrl(longUrl, service = "isgd") {
+  return globalShortUrlThrottle.throttledRequest(() =>
+    createShortUrlDirect(longUrl, service),
+  );
+}
+
+// 导出限流器类和实例，供需要自定义限流的场景使用
+export { ShortUrlThrottle, globalShortUrlThrottle };
 
 // i18n helper function
 export function getMessage(key, substitutions = []) {
