@@ -36,6 +36,9 @@
     "message": "去除 URL 参数"
   },
   "silentCopyFormat": {
+    "message": "静默复制格式"
+  },
+  "copyFormat": {
     "message": "复制格式"
   },
   "language": {

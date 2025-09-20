@@ -36,6 +36,9 @@
     "message": "Удалить Параметры URL"
   },
   "silentCopyFormat": {
+    "message": "Формат Тихого Копирования"
+  },
+  "copyFormat": {
     "message": "Формат Копирования"
   },
   "language": {

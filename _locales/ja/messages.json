@@ -36,6 +36,9 @@
     "message": "URLパラメータを除去"
   },
   "silentCopyFormat": {
+    "message": "サイレントコピー形式"
+  },
+  "copyFormat": {
     "message": "コピー形式"
   },
   "language": {
