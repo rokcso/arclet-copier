@@ -215,7 +215,6 @@ body {
     background: var(--arc-secondary);
     border-color: var(--arc-primary);
     color: var(--arc-primary);
-    transform: translateY(-1px);
 }
 
 .settings-icon {
