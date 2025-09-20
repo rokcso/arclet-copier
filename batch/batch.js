@@ -198,13 +198,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 加载设置
   async function loadSettings() {
     const result = await chrome.storage.sync.get([
-      "urlCleaning",
       "appearance",
       "themeColor",
+      "batchUrlCleaning",
+      "batchSilentCopyFormat",
+      "batchWebPagesOnly",
+      "batchRemoveDuplicates",
     ]);
 
     currentSettings = {
-      urlCleaning: result.urlCleaning || "smart",
+      urlCleaning: result.batchUrlCleaning || "smart",
       appearance: result.appearance || "system",
       themeColor: result.themeColor || "green",
     };
@@ -219,6 +222,36 @@ document.addEventListener("DOMContentLoaded", async () => {
       currentSettings.urlCleaning,
     );
     updateSliderPosition(elements.urlCleaningSwitch);
+
+    // 恢复批量页面专用设置
+    const silentCopyFormat = document.getElementById("silentCopyFormat");
+    const webPagesOnly = document.getElementById("webPagesOnly");
+
+    if (silentCopyFormat) {
+      silentCopyFormat.value = result.batchSilentCopyFormat || "url";
+    }
+    if (webPagesOnly) {
+      webPagesOnly.checked = result.batchWebPagesOnly !== false;
+    }
+    if (elements.removeDuplicates) {
+      elements.removeDuplicates.checked =
+        result.batchRemoveDuplicates !== false;
+    }
+  }
+
+  // 保存批量页面设置
+  async function saveBatchSettings() {
+    const silentCopyFormat = document.getElementById("silentCopyFormat");
+    const webPagesOnly = document.getElementById("webPagesOnly");
+
+    await chrome.storage.sync.set({
+      batchUrlCleaning: currentSettings.urlCleaning,
+      batchSilentCopyFormat: silentCopyFormat ? silentCopyFormat.value : "url",
+      batchWebPagesOnly: webPagesOnly ? webPagesOnly.checked : true,
+      batchRemoveDuplicates: elements.removeDuplicates
+        ? elements.removeDuplicates.checked
+        : true,
+    });
   }
 
   // 应用主题
@@ -293,6 +326,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           currentSettings.urlCleaning = newValue;
           updateSliderPosition(elements.urlCleaningSwitch);
           applyFilters();
+          saveBatchSettings();
         });
       });
     } else {
@@ -306,6 +340,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           currentSettings.urlCleaning = newValue;
           updateSliderPosition(elements.urlCleaningSwitch);
           applyFilters();
+          saveBatchSettings();
         });
       });
     }
@@ -984,11 +1019,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     .getElementById("windowScopeSelect")
     .addEventListener("change", refreshTabs);
 
-  document
-    .getElementById("webPagesOnly")
-    .addEventListener("change", applyFilters);
+  document.getElementById("webPagesOnly").addEventListener("change", () => {
+    applyFilters();
+    saveBatchSettings();
+  });
 
-  elements.removeDuplicates.addEventListener("change", applyFilters);
+  elements.removeDuplicates.addEventListener("change", () => {
+    applyFilters();
+    saveBatchSettings();
+  });
+
+  // 保存复制格式设置
+  const silentCopyFormat = document.getElementById("silentCopyFormat");
+  if (silentCopyFormat) {
+    silentCopyFormat.addEventListener("change", saveBatchSettings);
+  }
 
   // ESC 键关闭预览
   document.addEventListener("keydown", (e) => {
