@@ -335,70 +335,75 @@ body {
 .settings-grid {
     display: flex;
     flex-direction: column;
+    gap: 16px;
+}
+
+/* 设置区域分组 */
+.settings-section {
+    display: flex;
+    flex-direction: column;
     gap: 12px;
 }
 
-.quick-settings-row {
-    display: flex;
-    gap: 16px;
-    align-items: center;
+/* 主要设置（常用功能） */
+.primary-settings {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--arc-border);
+    margin-bottom: 4px;
 }
 
-.quick-settings-row .setting-row {
-    flex: 1;
-    margin: 0;
-}
-
-.detailed-settings-row {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-}
-
-.detailed-settings-row .setting-row {
-    flex: 1;
-    margin: 0;
-}
-
-/* 快速设置行的特殊样式 */
-.quick-settings-row .setting-row {
+.primary-settings .setting-row {
     min-height: 40px;
 }
 
-.quick-settings-row .setting-label {
-    font-size: 13px;
-    font-weight: 500;
-}
-
-/* 详细设置行的特殊样式 */
-.detailed-settings-row .setting-row {
+/* 高级设置（次要功能） */
+.advanced-settings .setting-row {
     min-height: 40px;
 }
 
-.detailed-settings-row .setting-label {
-    font-size: 13px;
+/* 统一所有设置项的文案权重 */
+.settings-section .setting-label {
+    font-size: 14px;
     font-weight: 500;
+    color: var(--arc-text-primary);
 }
 
-.detailed-settings-row .three-way-switch {
-    min-width: 140px;
-}
+/* 在宽屏上使用水平布局 */
+@media (min-width: 500px) {
+    .settings-section {
+        flex-direction: row;
+        gap: 20px;
+    }
 
-.detailed-settings-row .format-select {
-    min-width: 100px;
+    .settings-section .setting-row {
+        flex: 1;
+        margin: 0;
+    }
+
+    .advanced-settings .three-way-switch {
+        min-width: 140px;
+    }
+
+    .advanced-settings .format-select {
+        min-width: 120px;
+    }
 }
 
 /* 响应式设计：在小屏幕上变为垂直布局 */
-@media (max-width: 768px) {
-    .quick-settings-row,
-    .detailed-settings-row {
+@media (max-width: 499px) {
+    .settings-section {
         flex-direction: column;
-        gap: 8px;
+        gap: 12px;
     }
 
-    .quick-settings-row .setting-row,
-    .detailed-settings-row .setting-row {
+    .settings-section .setting-row {
         width: 100%;
+    }
+
+    .primary-settings {
+        border-bottom: none;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
     }
 }
 
@@ -703,28 +708,39 @@ body {
     color: var(--arc-text-primary);
 }
 
-/* Format Select - Same as Popup Page */
+/* Format Select - 优化视觉权重 */
 .format-select {
-    padding: 8px 12px;
-    border: 1.5px solid var(--arc-border);
+    padding: 7px 12px;
+    border: 1px solid var(--arc-border);
     border-radius: var(--arc-radius-sm);
-    background: var(--arc-background);
+    background: var(--arc-surface);
     font-size: 13px;
-    font-weight: 400;
+    font-weight: 500;
     color: var(--arc-text-primary);
     cursor: pointer;
     min-width: 100px;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
+    box-shadow: var(--arc-shadow-sm);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    padding-right: 32px;
 }
 
 .format-select:focus {
     outline: none;
     border-color: var(--arc-primary);
-    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+    box-shadow: 0 0 0 3px var(--glow-light);
+    background: var(--arc-background);
 }
 
 .format-select:hover {
     border-color: var(--arc-primary);
+    background: var(--arc-background);
+    transform: translateY(-1px);
+    box-shadow: var(--arc-shadow-md);
 }
 
 /* Three-way Switch - Same as Popup Page */

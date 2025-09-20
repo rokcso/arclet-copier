@@ -69,8 +69,8 @@
                         id="collapsibleSettingsContent"
                     >
                         <div class="settings-grid">
-                            <!-- 第一行：快速设置 -->
-                            <div class="quick-settings-row">
+                            <!-- 快速设置区域 -->
+                            <div class="settings-section primary-settings">
                                 <div class="setting-row">
                                     <span
                                         class="setting-label"
@@ -96,7 +96,7 @@
                                     <span
                                         class="setting-label"
                                         data-i18n="removeDuplicates"
-                                        >Deduplicate</span
+                                        >Remove Duplicates</span
                                     >
                                     <div class="setting-control">
                                         <input
@@ -114,8 +114,41 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- 第二行：详细设置 -->
-                            <div class="detailed-settings-row">
+
+                            <!-- 高级设置区域 -->
+                            <div class="settings-section advanced-settings">
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="silentCopyFormat"
+                                        >Copy Format</span
+                                    >
+                                    <div class="setting-control">
+                                        <select
+                                            id="silentCopyFormat"
+                                            class="format-select"
+                                        >
+                                            <option
+                                                value="url"
+                                                data-i18n="formatUrl"
+                                            >
+                                                URL
+                                            </option>
+                                            <option
+                                                value="markdown"
+                                                data-i18n="formatMarkdown"
+                                            >
+                                                Markdown
+                                            </option>
+                                            <option
+                                                value="shortUrl"
+                                                data-i18n="formatShortUrl"
+                                            >
+                                                Short URL
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="setting-row">
                                     <span
                                         class="setting-label"
@@ -151,38 +184,6 @@
                                             </div>
                                             <div class="switch-slider"></div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <span
-                                        class="setting-label"
-                                        data-i18n="silentCopyFormat"
-                                        >Copy Format</span
-                                    >
-                                    <div class="setting-control">
-                                        <select
-                                            id="silentCopyFormat"
-                                            class="format-select"
-                                        >
-                                            <option
-                                                value="url"
-                                                data-i18n="formatUrl"
-                                            >
-                                                URL
-                                            </option>
-                                            <option
-                                                value="markdown"
-                                                data-i18n="formatMarkdown"
-                                            >
-                                                Markdown
-                                            </option>
-                                            <option
-                                                value="shortUrl"
-                                                data-i18n="formatShortUrl"
-                                            >
-                                                Short URL
-                                            </option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>
