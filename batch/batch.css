@@ -55,21 +55,6 @@
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
 }
 
-[data-theme="dark"] .format-select {
-    background: var(--arc-surface);
-    border-color: var(--arc-border);
-    color: var(--arc-text-primary);
-}
-
-[data-theme="dark"] .format-select:focus {
-    border-color: var(--arc-primary);
-    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
-}
-
-[data-theme="dark"] .format-select:hover {
-    border-color: var(--arc-primary);
-}
-
 [data-theme="dark"] .three-way-switch {
     background: var(--arc-surface);
     border-color: var(--arc-border);
@@ -240,7 +225,7 @@ body {
 
 /* 第二层：操作区域 */
 .operations-section {
-    margin-bottom: 40px;
+    margin-bottom: 24px;
 }
 
 /* 可折叠设置区域样式 */
@@ -267,6 +252,23 @@ body {
     transition: all 0.2s ease;
     position: relative;
     margin-bottom: 0;
+}
+
+.settings-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--arc-border) 20%,
+        var(--arc-border) 80%,
+        transparent 100%
+    );
+    opacity: 0.6;
 }
 
 .settings-header:hover {
@@ -324,32 +326,33 @@ body {
 }
 
 .settings-card:not(.collapsed) .collapsible-settings-content {
-    max-height: 200px; /* 足够容纳双行设置的高度 */
+    max-height: 220px; /* 足够容纳双行设置的高度 */
     opacity: 1;
-    padding: 16px;
-    padding-top: 8px;
-    padding-bottom: 12px;
+    padding: 20px 16px 16px;
+    background: var(--arc-surface);
+    border-radius: 0 0 var(--arc-radius) var(--arc-radius);
+    margin: 0 1px 1px 1px; /* 创建内嵌效果 */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid transparent;
+    position: relative;
 }
 
 /* 设置网格布局 */
 .settings-grid {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 /* 设置区域分组 */
 .settings-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 /* 主要设置（常用功能） */
 .primary-settings {
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--arc-border);
-    margin-bottom: 4px;
 }
 
 .primary-settings .setting-row {
@@ -372,7 +375,7 @@ body {
 @media (min-width: 500px) {
     .settings-section {
         flex-direction: row;
-        gap: 20px;
+        gap: 80px;
     }
 
     .settings-section .setting-row {
@@ -383,27 +386,17 @@ body {
     .advanced-settings .three-way-switch {
         min-width: 140px;
     }
-
-    .advanced-settings .format-select {
-        min-width: 120px;
-    }
 }
 
 /* 响应式设计：在小屏幕上变为垂直布局 */
 @media (max-width: 499px) {
     .settings-section {
         flex-direction: column;
-        gap: 12px;
+        gap: 14px;
     }
 
     .settings-section .setting-row {
         width: 100%;
-    }
-
-    .primary-settings {
-        border-bottom: none;
-        padding-bottom: 8px;
-        margin-bottom: 8px;
     }
 }
 
@@ -708,39 +701,53 @@ body {
     color: var(--arc-text-primary);
 }
 
-/* Format Select - 优化视觉权重 */
+/* Format Select - Same as Popup Page */
 .format-select {
-    padding: 7px 12px;
-    border: 1px solid var(--arc-border);
+    padding: 8px 12px;
+    border: 1.5px solid var(--arc-border);
     border-radius: var(--arc-radius-sm);
-    background: var(--arc-surface);
+    background: var(--arc-background);
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--arc-text-primary);
     cursor: pointer;
     min-width: 100px;
-    transition: all 0.25s ease;
-    box-shadow: var(--arc-shadow-sm);
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px;
-    padding-right: 32px;
+    transition: all 0.2s ease;
 }
 
 .format-select:focus {
     outline: none;
     border-color: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
-    background: var(--arc-background);
+    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
 }
 
 .format-select:hover {
     border-color: var(--arc-primary);
-    background: var(--arc-background);
-    transform: translateY(-1px);
-    box-shadow: var(--arc-shadow-md);
+}
+
+[data-theme="dark"] .format-select {
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
+    color: var(--arc-text-primary);
+}
+
+[data-theme="dark"] .format-select:focus {
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+}
+
+[data-theme="dark"] .format-select:hover {
+    border-color: var(--arc-primary);
+}
+
+.format-select:focus {
+    outline: none;
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+}
+
+.format-select:hover {
+    border-color: var(--arc-primary);
 }
 
 /* Three-way Switch - Same as Popup Page */
