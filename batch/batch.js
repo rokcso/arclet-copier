@@ -130,7 +130,33 @@ document.addEventListener("DOMContentLoaded", async () => {
   // i18n 辅助函数
   function getLocalMessage(key, substitutions = []) {
     if (localeMessages[key] && localeMessages[key].message) {
-      return localeMessages[key].message;
+      let message = localeMessages[key].message;
+      // 处理占位符替换
+      substitutions.forEach((substitution, index) => {
+        const placeholder = `$${index + 1}$`;
+        message = message.replace(placeholder, substitution);
+      });
+      // 同时支持命名占位符，如 $count$
+      if (localeMessages[key].placeholders) {
+        Object.keys(localeMessages[key].placeholders).forEach(
+          (placeholderName) => {
+            const placeholder = `$${placeholderName}$`;
+            const placeholderConfig =
+              localeMessages[key].placeholders[placeholderName];
+            if (placeholderConfig && placeholderConfig.content) {
+              const contentIndex =
+                parseInt(placeholderConfig.content.replace("$", "")) - 1;
+              if (substitutions[contentIndex] !== undefined) {
+                message = message.replace(
+                  placeholder,
+                  substitutions[contentIndex],
+                );
+              }
+            }
+          },
+        );
+      }
+      return message;
     }
     return chrome.i18n.getMessage(key, substitutions) || key;
   }

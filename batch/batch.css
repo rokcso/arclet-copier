@@ -932,7 +932,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px;
+    padding: 12px 24px;
     background: var(--arc-background);
 }
 
@@ -969,7 +969,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 24px;
+    padding: 12px 24px;
     background: var(--arc-background);
     border-bottom: 1px solid var(--arc-border);
     gap: 16px;
