@@ -464,7 +464,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 渲染标签页列表
   function renderTabs() {
-    const container = elements.tabsList;
+    // 找到现有的tabsList，如果不存在则创建
+    let container = elements.tabsContainer.querySelector(".tabs-list");
+    if (!container) {
+      container = document.createElement("div");
+      container.className = "tabs-list";
+      elements.tabsContainer.appendChild(container);
+    }
+
+    // 清空现有内容
     container.innerHTML = "";
 
     // 显示操作栏
@@ -865,21 +873,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 刷新标签页列表
+  // 刷新标签页列表 - 优化版本，保留DOM结构只更新内容
   async function refreshTabs() {
+    // 显示加载状态
     elements.loading.style.display = "flex";
-    elements.tabsList.innerHTML = "";
-    elements.tabsControls.style.display = "none";
 
-    // 先获取窗口信息，然后更新选择器
+    // 保存当前的DOM结构中的tabsList引用
+    const existingTabsList = elements.tabsContainer.querySelector(".tabs-list");
+
+    // 获取窗口信息并更新选择器
     await getAllWindows();
     updateWindowSelector();
 
+    // 获取新的标签页数据
     allTabs = await getAllTabs();
     selectedTabs.clear();
+
+    // 应用过滤器并重新渲染（这将复用现有的tabsList）
     applyFilters();
     updateCopyButton();
 
+    // 隐藏加载状态
     elements.loading.style.display = "none";
   }
 
