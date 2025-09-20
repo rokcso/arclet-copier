@@ -1498,7 +1498,7 @@ body {
 }
 
 .tabs-container::-webkit-scrollbar {
-    width: 8px;
+    width: 4px;
 }
 
 .tabs-container::-webkit-scrollbar-track {

@@ -860,8 +860,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const collapseIcon = document.querySelector(".collapse-icon");
 
     // 获取当前折叠状态，默认为折叠
-    let isCollapsed =
-      localStorage.getItem("batchSettingsCollapsed") !== "false";
+    let isCollapsed = true;
     updateCollapseState();
 
     // 切换折叠状态
@@ -869,8 +868,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       isCollapsed = !isCollapsed;
       updateCollapseState();
 
-      // 保存状态到localStorage
-      localStorage.setItem("batchSettingsCollapsed", isCollapsed);
+      // 不保存状态，每次刷新都恢复折叠
     }
 
     // 更新折叠状态
