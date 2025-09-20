@@ -22,6 +22,7 @@ const filesToInclude = [
   "background/",
   "popup/",
   "options/",
+  "batch/",
   "offscreen/",
   "shared/",
   "assets/",

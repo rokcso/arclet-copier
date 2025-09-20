@@ -169,14 +169,14 @@ body {
     flex: 1;
 }
 
-.settings-header {
+.settings-basic-header {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-bottom: 20px;
 }
 
-.settings-header .card-title {
+.settings-basic-header .card-title {
     margin: 0;
 }
 
