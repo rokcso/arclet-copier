@@ -887,23 +887,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 更新折叠状态
     function updateCollapseState() {
+      const iconCollapsed = collapseIcon.querySelector(".icon-collapsed");
+      const iconExpanded = collapseIcon.querySelector(".icon-expanded");
+
       if (isCollapsed) {
         settingsCard.classList.add("collapsed");
-        collapseIcon.style.transform = "";
+        // 显示向外箭头（展开提示）
+        iconCollapsed.style.display = "block";
+        iconExpanded.style.display = "none";
       } else {
         settingsCard.classList.remove("collapsed");
-        collapseIcon.style.transform = "rotate(180deg)";
+        // 显示向内手势（收起提示）
+        iconCollapsed.style.display = "none";
+        iconExpanded.style.display = "block";
       }
-    }
-
-    // 监听设置变化，更新状态预览
-    function updateChangeIndicator() {
-      settingsCard.classList.add("has-changes");
-
-      // 2秒后移除变化指示器
-      setTimeout(() => {
-        settingsCard.classList.remove("has-changes");
-      }, 2000);
     }
 
     // 绑定点击事件
@@ -914,23 +911,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       toggleCollapse();
     });
-
-    // 监听设置变化
-    const settings = ["webPagesOnly", "removeDuplicates", "silentCopyFormat"];
-    settings.forEach((settingId) => {
-      const element = document.getElementById(settingId);
-      if (element) {
-        element.addEventListener("change", updateChangeIndicator);
-      }
-    });
-
-    // 监听三段滑块变化
-    const urlCleaningSwitch = document.getElementById("urlCleaningSwitch");
-    if (urlCleaningSwitch) {
-      urlCleaningSwitch.addEventListener("click", (e) => {
-        setTimeout(updateChangeIndicator, 100); // 延迟以等待状态更新
-      });
-    }
   }
 
   // 刷新标签页列表 - 优化版本，保留DOM结构只更新内容
