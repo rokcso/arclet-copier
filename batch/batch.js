@@ -907,6 +907,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   elements.refreshBtn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // 添加旋转动画类
+    const svg = elements.refreshBtn.querySelector("svg");
+    if (svg) {
+      svg.classList.add("animate");
+
+      // 监听动画结束事件，移除动画类
+      svg.addEventListener(
+        "animationend",
+        () => {
+          svg.classList.remove("animate");
+        },
+        { once: true },
+      );
+    }
+
     refreshTabs();
   });
 

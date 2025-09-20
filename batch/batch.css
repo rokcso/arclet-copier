@@ -1100,6 +1100,29 @@ body {
     box-shadow: var(--arc-shadow-md);
 }
 
+/* 按钮图标样式 */
+.refresh-btn svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+    flex-shrink: 0;
+}
+
+/* 定义旋转动画 */
+@keyframes spin-360 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 刷新按钮点击时的旋转动画 - 使用动画而不是过渡 */
+.refresh-btn svg.animate {
+    animation: spin-360 1s cubic-bezier(0.4, 0, 0.2, 1) 1;
+}
+
 .action-buttons {
     display: flex;
     align-items: center;
@@ -1245,7 +1268,7 @@ body {
 }
 
 .count {
-    font-weight: 600;
+    font-weight: 400;
     color: var(--arc-text-primary);
 }
 
