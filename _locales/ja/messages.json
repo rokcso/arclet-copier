@@ -3,7 +3,7 @@
     "message": "Arclet Copier - スマートURL コピーツール"
   },
   "extDescription": {
-    "message": "ワンクリックでURLをコピー、スマートなトラッキングパラメータ除去、Markdownフォーマット、短縮URL生成、QRコード生成に対応。キーボードショートカット、ダークテーマ、多言語サポート。"
+    "message": "ワンクリックでURLをコピー、バッチタブコピーサポート、スマートなトラッキングパラメータ除去、Markdownフォーマット、短縮URL生成、QRコード生成に対応。キーボードショートカット、ダークテーマ、多言語サポート。"
   },
   "copyUrlShortcut": {
     "message": "サイレントコピー"

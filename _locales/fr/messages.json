@@ -3,7 +3,7 @@
     "message": "Arclet Copier - Copieur d'URL Intelligent"
   },
   "extDescription": {
-    "message": "Copie d'URL en un clic avec suppression intelligente des paramètres de suivi, format Markdown, génération d'URL courtes et codes QR. Raccourcis clavier, thème sombre et support multilingue."
+    "message": "Copie d'URL en un clic avec support de copie en lot d'onglets, suppression intelligente des paramètres de suivi, format Markdown, génération d'URL courtes et codes QR. Raccourcis clavier, thème sombre et support multilingue."
   },
   "copyUrlShortcut": {
     "message": "Copie Silencieuse"

@@ -3,7 +3,7 @@
     "message": "Arclet Copier - Smart URL Copier"
   },
   "extDescription": {
-    "message": "One-click URL copying with smart tracking parameter removal, Markdown format, short URL generation, and QR code generation. Keyboard shortcuts, dark theme, and multi-language support."
+    "message": "One-click URL copying with batch tab copying support, smart tracking parameter removal, Markdown format, short URL generation, and QR code generation. Keyboard shortcuts, dark theme, and multi-language support."
   },
   "copyUrlShortcut": {
     "message": "Silent Copy"
