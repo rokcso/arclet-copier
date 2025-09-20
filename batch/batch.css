@@ -1136,19 +1136,28 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--arc-background);
-    border: 1px solid var(--arc-border);
+    gap: 6px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 500;
     color: var(--arc-text-primary);
     cursor: pointer;
-    border-radius: var(--arc-radius-sm);
+    border-radius: var(--arc-radius);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--arc-shadow-sm);
+    box-shadow:
+        0 1px 3px 0 rgb(0 0 0 / 0.1),
+        0 1px 2px 0 rgb(0 0 0 / 0.06);
     min-height: 36px;
     position: relative;
     overflow: hidden;
+}
+
+.control-btn svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
 }
 
 .control-btn::before {
@@ -1172,11 +1181,28 @@ body {
 }
 
 .control-btn:hover {
-    background: var(--arc-secondary);
-    border-color: var(--arc-primary);
+    background: #f2f2f2;
+    color: var(--arc-primary);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+}
+
+/* Dark theme support for control buttons */
+[data-theme="dark"] .control-btn {
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
     color: var(--arc-text-primary);
-    transform: translateY(-1px);
-    box-shadow: var(--arc-shadow-md);
+}
+
+[data-theme="dark"] .control-btn:hover {
+    background: var(--arc-secondary);
+    color: var(--arc-primary);
+}
+
+[data-theme="dark"] .control-btn::before {
+    display: none;
 }
 
 .control-btn.primary {
@@ -1189,7 +1215,6 @@ body {
 .control-btn.primary:hover {
     background: var(--arc-primary-hover);
     box-shadow: 0 4px 8px var(--glow-medium);
-    transform: translateY(-1px);
 }
 
 .control-btn:disabled {
@@ -1264,7 +1289,7 @@ body {
 }
 
 /* 刷新按钮点击时的旋转动画 - 使用动画而不是过渡 */
-.refresh-btn svg.animate {
+.control-btn svg.animate {
     animation: spin-360 1s cubic-bezier(0.4, 0, 0.2, 1) 1;
 }
 
@@ -1369,11 +1394,6 @@ body {
     .right-actions {
         justify-content: center;
         gap: 6px;
-    }
-
-    .refresh-btn {
-        padding: 6px 10px;
-        font-size: 13px;
     }
 
     /* 原有样式保持兼容 */
