@@ -209,7 +209,7 @@ body {
     justify-content: center;
     width: 40px;
     height: 40px;
-    border: 1px solid var(--arc-border);
+    border: 1px solid rgba(0, 0, 0, 0.03);
     background: var(--arc-background);
     color: var(--arc-text-secondary);
     border-radius: var(--arc-radius-sm);
@@ -1546,14 +1546,13 @@ body {
     display: flex;
     align-items: center;
     padding: 12px 16px;
-    border: 1px solid var(--arc-border);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: var(--arc-radius);
     margin-bottom: 12px;
     background: var(--arc-background);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     min-height: 60px;
-    box-shadow: var(--arc-shadow-sm);
     position: relative;
     overflow: hidden;
 }
@@ -1626,6 +1625,8 @@ body {
     margin-right: 12px;
     flex-shrink: 0;
     border-radius: 2px;
+    align-self: flex-start;
+    margin-top: 2px;
 }
 
 .tab-info {
