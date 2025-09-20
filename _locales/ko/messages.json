@@ -431,5 +431,11 @@
   },
   "loading": {
     "message": "로딩 중..."
+  },
+  "generatingShortUrls": {
+    "message": "단축 URL을 생성하고 있습니다. 잠시만 기다려 주세요..."
+  },
+  "shortUrlProgress": {
+    "message": "단축 URL 생성 중... ({current}/{total})"
   }
 }

@@ -433,5 +433,11 @@
   },
   "loading": {
     "message": "Cargando..."
+  },
+  "generatingShortUrls": {
+    "message": "Generando URLs cortas, por favor espera..."
+  },
+  "shortUrlProgress": {
+    "message": "Generando URLs cortas... ({current}/{total})"
   }
 }
