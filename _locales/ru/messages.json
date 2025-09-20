@@ -374,9 +374,6 @@
   "copySuccess": {
     "message": "Копирование успешно"
   },
-  "copyFailed": {
-    "message": "Ошибка копирования"
-  },
   "batchCopySuccess": {
     "message": "Пакетное копирование успешно"
   },

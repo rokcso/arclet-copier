@@ -372,9 +372,6 @@
   "copySuccess": {
     "message": "복사 성공"
   },
-  "copyFailed": {
-    "message": "복사 실패"
-  },
   "batchCopySuccess": {
     "message": "일괄 복사 성공"
   },

@@ -374,9 +374,6 @@
   "copySuccess": {
     "message": "Copia exitosa"
   },
-  "copyFailed": {
-    "message": "Error al copiar"
-  },
   "batchCopySuccess": {
     "message": "Copia por lotes exitosa"
   },

@@ -374,9 +374,6 @@
   "copySuccess": {
     "message": "コピー成功"
   },
-  "copyFailed": {
-    "message": "コピー失敗"
-  },
   "batchCopySuccess": {
     "message": "一括コピー成功"
   },

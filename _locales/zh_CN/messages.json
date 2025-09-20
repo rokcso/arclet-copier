@@ -372,9 +372,6 @@
   "copySuccess": {
     "message": "复制成功"
   },
-  "copyFailed": {
-    "message": "复制失败，请重试"
-  },
   "batchCopySuccess": {
     "message": "批量复制完成"
   },
