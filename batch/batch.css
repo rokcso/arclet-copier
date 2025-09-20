@@ -1532,15 +1532,12 @@ body {
 .tab-item:hover {
     background: var(--arc-surface);
     border-color: var(--arc-primary);
-    box-shadow: var(--arc-shadow-md);
 }
 
 .tab-item.selected {
     border-color: var(--arc-primary);
     background: var(--glow-light);
-    box-shadow:
-        0 0 0 3px var(--glow-light),
-        var(--arc-shadow-md);
+    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .tab-checkbox {
@@ -1606,16 +1603,6 @@ body {
     text-overflow: ellipsis;
     font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace;
     opacity: 0.9;
-}
-
-.tab-domain {
-    font-size: 11px;
-    color: var(--arc-text-muted);
-    background: var(--arc-secondary);
-    padding: 4px 8px;
-    border-radius: 4px;
-    margin-left: 12px;
-    flex-shrink: 0;
 }
 
 .watermark-text {

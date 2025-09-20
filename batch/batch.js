@@ -518,7 +518,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const processedUrl = processUrl(tab.url, currentSettings.urlCleaning);
-    const domain = getDomain(tab.url);
 
     const duplicateWatermark = isDuplicate
       ? `<span class="watermark-text" title="${getLocalMessage("duplicateUrl") || "重复的URL"}">${getLocalMessage("duplicate") || "DUPLICATE"}</span>`
@@ -535,7 +534,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
         <div class="tab-url">${escapeHtml(processedUrl)}</div>
       </div>
-      <div class="tab-domain">${escapeHtml(domain)}</div>
     `;
 
     // 事件监听
@@ -551,15 +549,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     return div;
-  }
-
-  // 获取域名
-  function getDomain(url) {
-    try {
-      return new URL(url).hostname;
-    } catch {
-      return url.split("/")[0] || "";
-    }
   }
 
   // HTML 转义
@@ -756,7 +745,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           tabs.map((tab) => ({
             title: tab.title,
             url: processUrl(tab.url, cleaningMode),
-            domain: getDomain(tab.url),
             favIconUrl: tab.favIconUrl,
           })),
           null,
