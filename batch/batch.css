@@ -703,7 +703,7 @@ body {
 
 /* Format Select - Same as Popup Page */
 .format-select {
-    padding: 8px 12px;
+    padding: 6px 12px;
     border: 1.5px solid var(--arc-border);
     border-radius: var(--arc-radius-sm);
     background: var(--arc-background);
@@ -1205,6 +1205,55 @@ body {
     display: none;
 }
 
+/* Support button styling - matches options page */
+.support-btn {
+    color: var(--arc-text-primary);
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.support-btn:hover {
+    color: var(--arc-primary);
+    background: var(--arc-surface);
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 2px var(--glow-light);
+}
+
+.support-btn svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+    margin-right: 6px;
+}
+
+.support-btn svg.animate {
+    animation: spin-360 0.6s cubic-bezier(0.4, 0, 0.2, 1) 1;
+}
+
+/* Smaller refresh button */
+#refreshBtn {
+    padding: 6px 8px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Align all control buttons height with refresh button */
+.support-btn,
+#previewBtn,
+#copyBtn {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+}
+
 .control-btn.primary {
     background: var(--arc-primary);
     color: white;
@@ -1373,7 +1422,7 @@ body {
 
     /* 两层布局响应式样式 */
     .header-layer {
-        padding: 16px 20px;
+        padding: 12px 16px;
         flex-wrap: wrap;
         gap: 12px;
     }
@@ -1496,14 +1545,14 @@ body {
 .tab-item {
     display: flex;
     align-items: center;
-    padding: 16px 20px;
+    padding: 12px 16px;
     border: 1px solid var(--arc-border);
     border-radius: var(--arc-radius);
     margin-bottom: 12px;
     background: var(--arc-background);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    min-height: 72px;
+    min-height: 60px;
     box-shadow: var(--arc-shadow-sm);
     position: relative;
     overflow: hidden;
@@ -1585,7 +1634,7 @@ body {
 }
 
 .tab-title {
-    font-weight: 500;
+    font-weight: 400;
     color: var(--arc-text-primary);
     margin-bottom: 4px;
     font-size: 16px;
