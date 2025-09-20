@@ -84,7 +84,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // DOM 元素
   const elements = {
     version: document.getElementById("version"),
-    moreSettingsBtn: document.getElementById("moreSettingsBtn"),
     refreshBtn: document.getElementById("refreshBtn"),
     selectNoneBtn: document.getElementById("selectNoneBtn"),
     invertSelectionBtn: document.getElementById("invertSelectionBtn"),
@@ -866,21 +865,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 3000);
   }
 
-  // 打开options页面
-  function openOptionsPage() {
-    chrome.tabs.create({
-      url: chrome.runtime.getURL("options/options.html"),
-    });
-  }
-
   // 设置折叠功能
   function initializeSettingsCollapse() {
     const settingsHeader = document.getElementById("settingsHeader");
     const settingsCard = document.querySelector(".settings-card");
     const collapseIcon = document.querySelector(".collapse-icon");
-    const settingsStatusPreview = document.getElementById(
-      "settingsStatusPreview",
-    );
 
     // 获取当前折叠状态，默认为折叠
     let isCollapsed =
@@ -905,46 +894,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         settingsCard.classList.remove("collapsed");
         collapseIcon.style.transform = "rotate(180deg)";
       }
-      updateSettingsPreview();
-    }
-
-    // 更新设置预览文本
-    function updateSettingsPreview() {
-      const webPagesOnly = document.getElementById("webPagesOnly").checked;
-      const removeDuplicates =
-        document.getElementById("removeDuplicates").checked;
-      const urlCleaning = document
-        .getElementById("urlCleaningSwitch")
-        .getAttribute("data-value");
-      const silentCopyFormat =
-        document.getElementById("silentCopyFormat").value;
-
-      if (isCollapsed) {
-        // 折叠时显示关键设置状态
-        const parts = [];
-        if (webPagesOnly) parts.push("仅网页");
-        if (removeDuplicates) parts.push("去重");
-
-        const cleaningText = {
-          off: "不清理",
-          smart: "智能清理",
-          aggressive: "全部清理",
-        }[urlCleaning];
-        parts.push(cleaningText);
-
-        settingsStatusPreview.textContent = ` · ${parts.join(" · ")}`;
-        settingsStatusPreview.style.display = "inline";
-      } else {
-        // 展开时隐藏状态预览
-        settingsStatusPreview.textContent = "";
-        settingsStatusPreview.style.display = "none";
-      }
     }
 
     // 监听设置变化，更新状态预览
     function updateChangeIndicator() {
       settingsCard.classList.add("has-changes");
-      updateSettingsPreview();
 
       // 2秒后移除变化指示器
       setTimeout(() => {
@@ -977,9 +931,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         setTimeout(updateChangeIndicator, 100); // 延迟以等待状态更新
       });
     }
-
-    // 初始化状态预览
-    updateSettingsPreview();
   }
 
   // 刷新标签页列表 - 优化版本，保留DOM结构只更新内容
@@ -1007,11 +958,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 事件监听器
-  elements.moreSettingsBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    openOptionsPage();
-  });
 
   elements.refreshBtn.addEventListener("click", (e) => {
     e.preventDefault();
