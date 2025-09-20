@@ -431,5 +431,11 @@
   },
   "loading": {
     "message": "加载中..."
+  },
+  "generatingShortUrls": {
+    "message": "正在生成短链，请稍候..."
+  },
+  "shortUrlProgress": {
+    "message": "正在生成短链... ({current}/{total})"
   }
 }
