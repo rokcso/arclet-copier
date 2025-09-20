@@ -23,9 +23,27 @@
 
             <!-- 第二层：设置区域 -->
             <div class="operations-section">
-                <div class="settings-card">
-                    <div class="settings-header">
-                        <h3 class="card-title" data-i18n="settings">设置</h3>
+                <div class="settings-card collapsed">
+                    <div class="settings-header" id="settingsHeader">
+                        <div class="settings-title-area">
+                            <span
+                                class="settings-title-text"
+                                data-i18n="settings"
+                                >设置</span
+                            >
+                            <span
+                                class="settings-status-preview"
+                                id="settingsStatusPreview"
+                            ></span>
+                            <svg
+                                class="collapse-icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path d="M7 10l5 5 5-5H7z" />
+                            </svg>
+                        </div>
                         <button class="more-settings-btn" id="moreSettingsBtn">
                             <svg
                                 class="settings-icon"
@@ -40,120 +58,126 @@
                             <span data-i18n="moreSettings">更多设置</span>
                         </button>
                     </div>
-                    <div class="card-content">
-                        <div class="settings-list">
-                            <div class="setting-row">
-                                <span
-                                    class="setting-label"
-                                    data-i18n="webPagesOnly"
-                                    >Web Pages Only</span
-                                >
-                                <div class="setting-control">
-                                    <input
-                                        type="checkbox"
-                                        id="webPagesOnly"
-                                        class="toggle-checkbox"
-                                        checked
-                                    />
-                                    <label
-                                        for="webPagesOnly"
-                                        class="toggle-label"
+                    <div
+                        class="collapsible-settings-content"
+                        id="collapsibleSettingsContent"
+                    >
+                        <div class="settings-grid">
+                            <!-- 第一行：快速设置 -->
+                            <div class="quick-settings-row">
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="webPagesOnly"
+                                        >Web Pages Only</span
                                     >
-                                        <span class="toggle-slider"></span>
-                                    </label>
+                                    <div class="setting-control">
+                                        <input
+                                            type="checkbox"
+                                            id="webPagesOnly"
+                                            class="toggle-checkbox"
+                                            checked
+                                        />
+                                        <label
+                                            for="webPagesOnly"
+                                            class="toggle-label"
+                                        >
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="setting-row">
-                                <span
-                                    class="setting-label"
-                                    data-i18n="removeDuplicates"
-                                    >Deduplicate</span
-                                >
-                                <div class="setting-control">
-                                    <input
-                                        type="checkbox"
-                                        id="removeDuplicates"
-                                        class="toggle-checkbox"
-                                        checked
-                                    />
-                                    <label
-                                        for="removeDuplicates"
-                                        class="toggle-label"
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="removeDuplicates"
+                                        >Deduplicate</span
                                     >
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="setting-row">
-                                <span
-                                    class="setting-label"
-                                    data-i18n="urlCleaning"
-                                    >URL Cleaning</span
-                                >
-                                <div class="setting-control">
-                                    <div
-                                        class="three-way-switch"
-                                        id="urlCleaningSwitch"
-                                        data-value="smart"
-                                    >
-                                        <div
-                                            class="switch-option"
-                                            data-value="off"
-                                            data-i18n="cleaningOff"
+                                    <div class="setting-control">
+                                        <input
+                                            type="checkbox"
+                                            id="removeDuplicates"
+                                            class="toggle-checkbox"
+                                            checked
+                                        />
+                                        <label
+                                            for="removeDuplicates"
+                                            class="toggle-label"
                                         >
-                                            Off
-                                        </div>
-                                        <div
-                                            class="switch-option"
-                                            data-value="smart"
-                                            data-i18n="cleaningSmart"
-                                        >
-                                            Smart
-                                        </div>
-                                        <div
-                                            class="switch-option"
-                                            data-value="aggressive"
-                                            data-i18n="cleaningAggressive"
-                                        >
-                                            All
-                                        </div>
-                                        <div class="switch-slider"></div>
+                                            <span class="toggle-slider"></span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="setting-row">
-                                <span
-                                    class="setting-label"
-                                    data-i18n="silentCopyFormat"
-                                    >Silent Copy Format</span
-                                >
-                                <div class="setting-control">
-                                    <select
-                                        id="silentCopyFormat"
-                                        class="format-select"
+                            <!-- 第二行：详细设置 -->
+                            <div class="detailed-settings-row">
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="urlCleaning"
+                                        >URL Cleaning</span
                                     >
-                                        <option
-                                            value="url"
-                                            data-i18n="formatUrl"
+                                    <div class="setting-control">
+                                        <div
+                                            class="three-way-switch"
+                                            id="urlCleaningSwitch"
+                                            data-value="smart"
                                         >
-                                            URL
-                                        </option>
-                                        <option
-                                            value="markdown"
-                                            data-i18n="formatMarkdown"
+                                            <div
+                                                class="switch-option"
+                                                data-value="off"
+                                                data-i18n="cleaningOff"
+                                            >
+                                                Off
+                                            </div>
+                                            <div
+                                                class="switch-option"
+                                                data-value="smart"
+                                                data-i18n="cleaningSmart"
+                                            >
+                                                Smart
+                                            </div>
+                                            <div
+                                                class="switch-option"
+                                                data-value="aggressive"
+                                                data-i18n="cleaningAggressive"
+                                            >
+                                                All
+                                            </div>
+                                            <div class="switch-slider"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="silentCopyFormat"
+                                        >Copy Format</span
+                                    >
+                                    <div class="setting-control">
+                                        <select
+                                            id="silentCopyFormat"
+                                            class="format-select"
                                         >
-                                            Markdown
-                                        </option>
-                                        <option
-                                            value="shortUrl"
-                                            data-i18n="formatShortUrl"
-                                        >
-                                            Short URL
-                                        </option>
-                                    </select>
+                                            <option
+                                                value="url"
+                                                data-i18n="formatUrl"
+                                            >
+                                                URL
+                                            </option>
+                                            <option
+                                                value="markdown"
+                                                data-i18n="formatMarkdown"
+                                            >
+                                                Markdown
+                                            </option>
+                                            <option
+                                                value="shortUrl"
+                                                data-i18n="formatShortUrl"
+                                            >
+                                                Short URL
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>

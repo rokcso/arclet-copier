@@ -270,12 +270,173 @@ body {
     margin-bottom: 40px;
 }
 
+/* 可折叠设置区域样式 */
 .settings-card {
-    background: var(--arc-surface);
+    background: var(--arc-background);
     border: 1px solid var(--arc-border);
-    border-radius: var(--arc-radius-lg);
-    padding: 24px;
-    box-shadow: var(--arc-shadow-sm);
+    border-radius: var(--arc-radius);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-card.collapsed {
+    background: rgba(var(--arc-primary), 0.05);
+    margin-bottom: 0;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    position: relative;
+    margin-bottom: 0;
+}
+
+.settings-header:hover {
+    background: rgba(var(--arc-primary), 0.1);
+}
+
+.settings-title-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.settings-title-area .settings-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--arc-primary);
+    opacity: 0.8;
+}
+
+.settings-title-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--arc-text-primary);
+}
+
+.settings-status-preview {
+    font-size: 12px;
+    color: var(--arc-text-muted);
+    margin-left: 8px;
+}
+
+.collapse-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--arc-text-secondary);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-card:not(.collapsed) .collapse-icon {
+    transform: rotate(180deg);
+}
+
+/* 可折叠内容区域 */
+.collapsible-settings-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+        max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.2s ease,
+        padding 0.2s ease;
+}
+
+.settings-card:not(.collapsed) .collapsible-settings-content {
+    max-height: 200px; /* 足够容纳双行设置的高度 */
+    opacity: 1;
+    padding: 16px;
+    padding-top: 8px;
+    padding-bottom: 12px;
+}
+
+/* 设置网格布局 */
+.settings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.quick-settings-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.quick-settings-row .setting-row {
+    flex: 1;
+    margin: 0;
+}
+
+.detailed-settings-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.detailed-settings-row .setting-row {
+    flex: 1;
+    margin: 0;
+}
+
+/* 快速设置行的特殊样式 */
+.quick-settings-row .setting-row {
+    min-height: 40px;
+}
+
+.quick-settings-row .setting-label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* 详细设置行的特殊样式 */
+.detailed-settings-row .setting-row {
+    min-height: 40px;
+}
+
+.detailed-settings-row .setting-label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.detailed-settings-row .three-way-switch {
+    min-width: 140px;
+}
+
+.detailed-settings-row .format-select {
+    min-width: 100px;
+}
+
+/* 响应式设计：在小屏幕上变为垂直布局 */
+@media (max-width: 768px) {
+    .quick-settings-row,
+    .detailed-settings-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .quick-settings-row .setting-row,
+    .detailed-settings-row .setting-row {
+        width: 100%;
+    }
+}
+
+/* 设置变化指示器 */
+.settings-card.has-changes .settings-title-text::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: var(--arc-primary);
+    border-radius: 50%;
+    margin-left: 6px;
+    display: inline-block;
+}
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
