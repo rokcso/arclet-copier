@@ -5,6 +5,8 @@ import {
   getMessage,
   createShortUrl,
   isValidWebUrl,
+  getAllTemplates,
+  templateEngine,
 } from "../shared/constants.js";
 
 // Constants
@@ -289,7 +291,57 @@ async function handleCopyUrl() {
     let contentToCopy;
     let successMessage;
 
-    if (settings.silentCopyFormat === "markdown") {
+    // 检查是否是自定义模板
+    if (settings.silentCopyFormat.startsWith("custom:")) {
+      const templateId = settings.silentCopyFormat.substring(7); // 移除 'custom:' 前缀
+
+      try {
+        const customTemplates = await getAllTemplates();
+        const template = customTemplates.find((t) => t.id === templateId);
+
+        if (!template) {
+          console.error("Template not found:", templateId);
+          // 回退到URL复制
+          contentToCopy = processUrl(tab.url, settings.urlCleaning);
+          successMessage = getMessage("urlCopied");
+        } else {
+          const title = await getPageTitle(tab.id, tab.url);
+
+          const context = {
+            url: tab.url,
+            title: title || "",
+            urlCleaning: settings.urlCleaning,
+            shortUrl: "",
+          };
+
+          // 如果模板包含shortUrl字段，生成短链
+          if (template.template.includes("{{shortUrl}}")) {
+            try {
+              const shortUrl = await handleCreateShortUrl(
+                tab.url,
+                settings.shortUrlService,
+              );
+              context.shortUrl = shortUrl;
+            } catch (error) {
+              console.error("Error generating short URL for template:", error);
+              context.shortUrl = processUrl(tab.url, settings.urlCleaning);
+            }
+          }
+
+          contentToCopy = await templateEngine.processTemplate(
+            template.template,
+            context,
+          );
+          successMessage =
+            getMessage("customTemplateCopied") || `${template.name} copied`;
+        }
+      } catch (error) {
+        console.error("Error processing custom template:", error);
+        // 回退到URL复制
+        contentToCopy = processUrl(tab.url, settings.urlCleaning);
+        successMessage = getMessage("urlCopied");
+      }
+    } else if (settings.silentCopyFormat === "markdown") {
       // 获取页面标题并创建 markdown 链接
       const title = await getPageTitle(tab.id, tab.url);
       contentToCopy = createMarkdownLink(tab.url, title, settings.urlCleaning);

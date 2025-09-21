@@ -5,6 +5,8 @@ import {
   getMessage,
   createShortUrlDirect,
   globalShortUrlThrottle,
+  getAllTemplates,
+  templateEngine,
 } from "../shared/constants.js";
 
 // 持久化短链缓存管理
@@ -187,6 +189,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
     });
+  }
+
+  // 加载自定义模板到复制格式选择器
+  async function loadCustomTemplates() {
+    const silentCopyFormat = document.getElementById("silentCopyFormat");
+    if (!silentCopyFormat) return;
+
+    try {
+      const customTemplates = await getAllTemplates();
+
+      // 清除之前添加的自定义模板选项
+      const existingCustomOptions = silentCopyFormat.querySelectorAll(
+        "[data-custom-template]",
+      );
+      existingCustomOptions.forEach((option) => option.remove());
+
+      // 为每个自定义模板添加选项
+      customTemplates.forEach((template) => {
+        const option = document.createElement("option");
+        option.value = `custom:${template.id}`;
+        option.textContent = `${template.icon} ${template.name}`;
+        option.setAttribute("data-custom-template", "true");
+        silentCopyFormat.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Failed to load custom templates:", error);
+    }
   }
 
   // 加载版本信息
@@ -706,6 +735,94 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function formatOutput(tabs, format) {
     const cleaningMode = currentSettings.urlCleaning;
 
+    // 检查是否是自定义模板
+    if (format.startsWith("custom:")) {
+      const templateId = format.substring(7); // 移除 'custom:' 前缀
+
+      try {
+        const customTemplates = await getAllTemplates();
+        const template = customTemplates.find((t) => t.id === templateId);
+
+        if (!template) {
+          console.error("Template not found:", templateId);
+          return tabs
+            .map((tab) => processUrl(tab.url, cleaningMode))
+            .join("\n");
+        }
+
+        // 处理多个tab，每个tab一行
+        const results = await Promise.all(
+          tabs.map(async (tab) => {
+            const context = {
+              url: tab.url,
+              title: tab.title || "",
+              urlCleaning: cleaningMode,
+              // 如果模板需要短链，这里可以生成
+              shortUrl: "",
+            };
+
+            // 如果模板包含shortUrl字段，生成短链
+            if (template.template.includes("{{shortUrl}}")) {
+              try {
+                const result = await chrome.storage.sync.get([
+                  "shortUrlService",
+                ]);
+                const selectedService = result.shortUrlService || "isgd";
+                const url = processUrl(tab.url, cleaningMode);
+
+                // 检查缓存
+                const cachedUrl = await shortUrlCache.get(
+                  url,
+                  selectedService,
+                  cleaningMode,
+                );
+                if (cachedUrl) {
+                  context.shortUrl = cachedUrl;
+                } else {
+                  // 生成新的短链
+                  context.shortUrl =
+                    await globalShortUrlThrottle.throttledRequest(async () => {
+                      try {
+                        const shortUrl = await createShortUrlDirect(
+                          url,
+                          selectedService,
+                        );
+                        await shortUrlCache.set(
+                          url,
+                          selectedService,
+                          cleaningMode,
+                          shortUrl,
+                        );
+                        return shortUrl;
+                      } catch (error) {
+                        console.error("短链生成失败:", error);
+                        return url;
+                      }
+                    });
+                }
+              } catch (error) {
+                console.error(
+                  "Error generating short URL for template:",
+                  error,
+                );
+                context.shortUrl = processUrl(tab.url, cleaningMode);
+              }
+            }
+
+            return await templateEngine.processTemplate(
+              template.template,
+              context,
+            );
+          }),
+        );
+
+        return results.join("\n");
+      } catch (error) {
+        console.error("Error processing custom template:", error);
+        return tabs.map((tab) => processUrl(tab.url, cleaningMode)).join("\n");
+      }
+    }
+
     switch (format) {
       case "text":
       case "url":
@@ -1117,6 +1234,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 初始化
   await initializeI18n();
   loadVersion();
+  await loadCustomTemplates(); // 加载自定义模板
   await loadSettings();
   initializeUrlCleaningSwitch();
   initializeSettingsCollapse(); // 添加设置折叠功能

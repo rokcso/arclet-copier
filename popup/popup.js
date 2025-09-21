@@ -3,6 +3,8 @@ import {
   getMessage,
   SHORT_URL_SERVICES,
   isValidWebUrl,
+  getAllTemplates,
+  templateEngine,
 } from "../shared/constants.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -130,6 +132,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     // Fallback to Chrome i18n API
     return chrome.i18n.getMessage(key, substitutions) || key;
+  }
+
+  // 加载自定义模板到静默复制格式选择器
+  async function loadCustomTemplates() {
+    const silentCopyFormat = elements.silentCopyFormat;
+    if (!silentCopyFormat) return;
+
+    try {
+      const customTemplates = await getAllTemplates();
+
+      // 清除之前添加的自定义模板选项
+      const existingCustomOptions = silentCopyFormat.querySelectorAll(
+        "[data-custom-template]",
+      );
+      existingCustomOptions.forEach((option) => option.remove());
+
+      // 为每个自定义模板添加选项
+      customTemplates.forEach((template) => {
+        const option = document.createElement("option");
+        option.value = `custom:${template.id}`;
+        option.textContent = `${template.icon} ${template.name}`;
+        option.setAttribute("data-custom-template", "true");
+        silentCopyFormat.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Failed to load custom templates:", error);
+    }
   }
 
   // DOM elements
@@ -938,6 +967,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlCleaningSwitch = initializeUrlCleaningSelect();
   initializeQRModal(); // Initialize QR modal
   await loadSettings();
+  await loadCustomTemplates(); // 加载自定义模板
   await initializeTheme(); // Initialize theme after loading settings
   await initializeI18n(); // Load UI with saved language
   await getCurrentUrl();
