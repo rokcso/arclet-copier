@@ -538,5 +538,35 @@
   },
   "moreFieldsBtn": {
     "message": "Mais Variáveis"
+  },
+  "presetMarkdownName": {
+    "message": "Link Markdown"
+  },
+  "presetMarkdownDesc": {
+    "message": "Formato de link Markdown padrão, perfeito para documentação técnica e notas"
+  },
+  "presetPlainName": {
+    "message": "Texto Simples"
+  },
+  "presetPlainDesc": {
+    "message": "Formato de texto simples com título e URL separados por hífen"
+  },
+  "presetDevDocName": {
+    "message": "Documentação de Desenvolvedor"
+  },
+  "presetDevDocDesc": {
+    "message": "Formato de link com informações do domínio, ideal para documentação de desenvolvimento"
+  },
+  "presetCitationName": {
+    "message": "Citação Acadêmica"
+  },
+  "presetCitationDesc": {
+    "message": "Formato de citação com data, adequado para pesquisa acadêmica e referências"
+  },
+  "presetSocialName": {
+    "message": "Compartilhamento Social"
+  },
+  "presetSocialDesc": {
+    "message": "Formato de compartilhamento conciso, perfeito para redes sociais e mensagens instantâneas"
   }
 }

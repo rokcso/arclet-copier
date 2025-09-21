@@ -538,5 +538,35 @@
   },
   "moreFieldsBtn": {
     "message": "Больше Переменных"
+  },
+  "presetMarkdownName": {
+    "message": "Ссылка Markdown"
+  },
+  "presetMarkdownDesc": {
+    "message": "Стандартный формат ссылки Markdown, идеально подходит для технической документации и заметок"
+  },
+  "presetPlainName": {
+    "message": "Простой Текст"
+  },
+  "presetPlainDesc": {
+    "message": "Простой текстовый формат с заголовком и URL, разделенными тире"
+  },
+  "presetDevDocName": {
+    "message": "Документация Разработчика"
+  },
+  "presetDevDocDesc": {
+    "message": "Формат ссылки с информацией о домене, идеальный для документации разработки"
+  },
+  "presetCitationName": {
+    "message": "Академическая Цитата"
+  },
+  "presetCitationDesc": {
+    "message": "Формат цитирования с датой, подходящий для академических исследований и ссылок"
+  },
+  "presetSocialName": {
+    "message": "Социальный Обмен"
+  },
+  "presetSocialDesc": {
+    "message": "Краткий формат для обмена, идеально подходит для социальных сетей и мгновенных сообщений"
   }
 }

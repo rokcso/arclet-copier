@@ -457,10 +457,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     item.className = "template-item";
     item.dataset.templateId = template.id;
 
+    // Get localized name and description for preset templates
+    const templateName =
+      template.isPreset && template.nameKey
+        ? getLocalMessage(template.nameKey) || template.nameKey
+        : template.name;
+
+    const templateDescription =
+      template.isPreset && template.descriptionKey
+        ? getLocalMessage(template.descriptionKey) || template.descriptionKey
+        : template.description;
+
     item.innerHTML = `
       <div class="template-header">
         <div class="template-icon">${template.icon}</div>
-        <div class="template-name">${escapeHtml(template.name)}</div>
+        <div class="template-name">${escapeHtml(templateName)}</div>
         <div class="template-actions">
           <button class="template-action-btn edit" data-action="edit" title="编辑">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -477,7 +488,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
       </div>
       <div class="template-content">${escapeHtml(template.template)}</div>
-      ${!template.isPreset && template.description ? `<div class="template-description">${escapeHtml(template.description)}</div>` : ""}
+      ${templateDescription ? `<div class="template-description">${escapeHtml(templateDescription)}</div>` : ""}
     `;
 
     // Add event listeners for actions
@@ -509,7 +520,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 预置模板：创建副本模式
         elements.templateModalTitle.textContent =
           getLocalMessage("copyTemplate") || "创建模板副本";
-        elements.templateName.value = template.name;
+        const templateName = template.nameKey
+          ? getLocalMessage(template.nameKey) || template.nameKey
+          : template.name;
+        elements.templateName.value = templateName;
         currentEditingTemplate = null; // 重置为创建模式
       } else {
         // 自定义模板：编辑模式
@@ -544,11 +558,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function deleteTemplate(template) {
+    // Get localized template name for confirmation dialog
+    const templateName =
+      template.isPreset && template.nameKey
+        ? getLocalMessage(template.nameKey) || template.nameKey
+        : template.name;
+
     const confirmMessage = template.isPreset
-      ? getLocalMessage("confirmHideTemplate") ||
-        `确定要隐藏模板"${template.name}"吗？`
-      : getLocalMessage("confirmDeleteTemplate") ||
-        `确定要删除模板"${template.name}"吗？`;
+      ? getLocalMessage("confirmHideTemplate")?.replace(
+          "{name}",
+          templateName,
+        ) || `确定要隐藏模板"${templateName}"吗？`
+      : getLocalMessage("confirmDeleteTemplate")?.replace(
+          "{name}",
+          templateName,
+        ) || `确定要删除模板"${templateName}"吗？`;
 
     if (!confirm(confirmMessage)) {
       return;

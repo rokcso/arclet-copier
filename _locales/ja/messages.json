@@ -538,5 +538,35 @@
   },
   "moreFieldsBtn": {
     "message": "その他の変数"
+  },
+  "presetMarkdownName": {
+    "message": "Markdownリンク"
+  },
+  "presetMarkdownDesc": {
+    "message": "標準的なMarkdownリンク形式、技術文書やメモに最適"
+  },
+  "presetPlainName": {
+    "message": "プレーンテキスト"
+  },
+  "presetPlainDesc": {
+    "message": "タイトルとURLをダッシュで区切ったシンプルなテキスト形式"
+  },
+  "presetDevDocName": {
+    "message": "開発者向けドキュメント"
+  },
+  "presetDevDocDesc": {
+    "message": "ドメイン情報付きのリンク形式、開発ドキュメントに理想的"
+  },
+  "presetCitationName": {
+    "message": "学術引用"
+  },
+  "presetCitationDesc": {
+    "message": "日付付きの引用形式、学術研究や参考文献に適している"
+  },
+  "presetSocialName": {
+    "message": "ソーシャル共有"
+  },
+  "presetSocialDesc": {
+    "message": "簡潔な共有形式、ソーシャルメディアやインスタントメッセージに最適"
   }
 }

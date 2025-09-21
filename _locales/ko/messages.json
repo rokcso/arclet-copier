@@ -539,5 +539,35 @@
   },
   "moreFieldsBtn": {
     "message": "더 많은 변수"
+  },
+  "presetMarkdownName": {
+    "message": "마크다운 링크"
+  },
+  "presetMarkdownDesc": {
+    "message": "표준 마크다운 링크 형식, 기술 문서와 메모에 완벽"
+  },
+  "presetPlainName": {
+    "message": "일반 텍스트"
+  },
+  "presetPlainDesc": {
+    "message": "제목과 URL이 대시로 구분된 간단한 텍스트 형식"
+  },
+  "presetDevDocName": {
+    "message": "개발자 문서"
+  },
+  "presetDevDocDesc": {
+    "message": "도메인 정보가 포함된 링크 형식, 개발 문서에 이상적"
+  },
+  "presetCitationName": {
+    "message": "학술 인용"
+  },
+  "presetCitationDesc": {
+    "message": "날짜가 포함된 인용 형식, 학술 연구와 참고 문헌에 적합"
+  },
+  "presetSocialName": {
+    "message": "소셜 공유"
+  },
+  "presetSocialDesc": {
+    "message": "간결한 공유 형식, 소셜 미디어와 인스턴트 메시징에 완벽"
   }
 }
