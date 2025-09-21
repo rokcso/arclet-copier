@@ -457,16 +457,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     item.className = "template-item";
     item.dataset.templateId = template.id;
 
-    // Get localized name and description for preset templates
+    // Get localized name for preset templates
     const templateName =
       template.isPreset && template.nameKey
         ? getLocalMessage(template.nameKey) || template.nameKey
         : template.name;
-
-    const templateDescription =
-      template.isPreset && template.descriptionKey
-        ? getLocalMessage(template.descriptionKey) || template.descriptionKey
-        : template.description;
 
     item.innerHTML = `
       <div class="template-header">
@@ -488,7 +483,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
       </div>
       <div class="template-content">${escapeHtml(template.template)}</div>
-      ${templateDescription ? `<div class="template-description">${escapeHtml(templateDescription)}</div>` : ""}
     `;
 
     // Add event listeners for actions

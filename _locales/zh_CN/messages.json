@@ -540,31 +540,16 @@
   "presetMarkdownName": {
     "message": "Markdown 链接"
   },
-  "presetMarkdownDesc": {
-    "message": "标准的 Markdown 链接格式，适合技术文档和笔记"
-  },
   "presetPlainName": {
     "message": "纯文本格式"
-  },
-  "presetPlainDesc": {
-    "message": "简洁的文本格式，标题和链接用短横线分隔"
   },
   "presetDevDocName": {
     "message": "开发文档"
   },
-  "presetDevDocDesc": {
-    "message": "包含域名信息的链接格式，适合开发文档整理"
-  },
   "presetCitationName": {
     "message": "学术引用"
   },
-  "presetCitationDesc": {
-    "message": "包含日期的引用格式，适合学术研究和资料收集"
-  },
   "presetSocialName": {
     "message": "社交分享"
-  },
-  "presetSocialDesc": {
-    "message": "简洁的分享格式，适合社交媒体和即时通讯"
   }
 }

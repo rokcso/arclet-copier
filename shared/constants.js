@@ -429,7 +429,6 @@ export const PRESET_TEMPLATES = [
     template: "[{{title}}]({{url}})",
     icon: "📝",
     isPreset: true,
-    descriptionKey: "presetMarkdownDesc",
   },
   {
     id: "preset_plain",
@@ -437,7 +436,6 @@ export const PRESET_TEMPLATES = [
     template: "{{title}} - {{url}}",
     icon: "📄",
     isPreset: true,
-    descriptionKey: "presetPlainDesc",
   },
   {
     id: "preset_dev_doc",
@@ -445,7 +443,6 @@ export const PRESET_TEMPLATES = [
     template: "[{{title}}]({{url}}) - {{hostname}}",
     icon: "💻",
     isPreset: true,
-    descriptionKey: "presetDevDocDesc",
   },
   {
     id: "preset_citation",
@@ -453,7 +450,6 @@ export const PRESET_TEMPLATES = [
     template: "{{title}} ({{date}}) {{url}}",
     icon: "📚",
     isPreset: true,
-    descriptionKey: "presetCitationDesc",
   },
   {
     id: "preset_social",
@@ -461,7 +457,6 @@ export const PRESET_TEMPLATES = [
     template: "{{title}} {{url}}",
     icon: "🔗",
     isPreset: true,
-    descriptionKey: "presetSocialDesc",
   },
 ];
 

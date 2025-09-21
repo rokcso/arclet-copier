@@ -542,31 +542,17 @@
   "presetMarkdownName": {
     "message": "Enlace Markdown"
   },
-  "presetMarkdownDesc": {
-    "message": "Formato de enlace Markdown estándar, perfecto para documentación técnica y notas"
-  },
+
   "presetPlainName": {
     "message": "Texto Plano"
-  },
-  "presetPlainDesc": {
-    "message": "Formato de texto simple con título y URL separados por guión"
   },
   "presetDevDocName": {
     "message": "Documentación de Desarrollador"
   },
-  "presetDevDocDesc": {
-    "message": "Formato de enlace con información del dominio, ideal para documentación de desarrollo"
-  },
   "presetCitationName": {
     "message": "Cita Académica"
   },
-  "presetCitationDesc": {
-    "message": "Formato de cita con fecha, adecuado para investigación académica y referencias"
-  },
   "presetSocialName": {
     "message": "Compartir Social"
-  },
-  "presetSocialDesc": {
-    "message": "Formato conciso para compartir, perfecto para redes sociales y mensajería instantánea"
   }
 }

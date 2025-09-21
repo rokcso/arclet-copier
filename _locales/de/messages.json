@@ -542,31 +542,19 @@
   "presetMarkdownName": {
     "message": "Markdown-Link"
   },
-  "presetMarkdownDesc": {
-    "message": "Standard-Markdown-Link-Format, perfekt für technische Dokumentation und Notizen"
-  },
+
   "presetPlainName": {
     "message": "Einfacher Text"
   },
-  "presetPlainDesc": {
-    "message": "Einfaches Textformat mit Titel und URL durch Bindestrich getrennt"
-  },
+
   "presetDevDocName": {
     "message": "Entwicklerdokumentation"
   },
-  "presetDevDocDesc": {
-    "message": "Link-Format mit Domain-Informationen, ideal für Entwicklungsdokumentation"
-  },
+
   "presetCitationName": {
     "message": "Akademisches Zitat"
   },
-  "presetCitationDesc": {
-    "message": "Zitierformat mit Datum, geeignet für akademische Forschung und Referenzen"
-  },
   "presetSocialName": {
     "message": "Social Sharing"
-  },
-  "presetSocialDesc": {
-    "message": "Prägnantes Sharing-Format, perfekt für soziale Medien und Instant Messaging"
   }
 }
