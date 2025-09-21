@@ -348,6 +348,283 @@ export async function createShortUrl(longUrl, service = "isgd") {
 // 导出限流器类和实例，供需要自定义限流的场景使用
 export { ShortUrlThrottle, globalShortUrlThrottle };
 
+// 模板字段定义
+export const TEMPLATE_FIELDS = {
+  // 基础字段
+  url: {
+    name: "URL",
+    description: "当前页面URL（应用清理规则）",
+    example: "https://example.com/page",
+    category: "basic",
+  },
+  originalUrl: {
+    name: "原始URL",
+    description: "原始URL（不应用清理规则）",
+    example: "https://example.com/page?utm_source=test",
+    category: "basic",
+  },
+  title: {
+    name: "页面标题",
+    description: "当前页面的标题",
+    example: "示例页面 - 网站名称",
+    category: "basic",
+  },
+  hostname: {
+    name: "域名",
+    description: "网站域名",
+    example: "example.com",
+    category: "basic",
+  },
+  domain: {
+    name: "完整域名",
+    description: "包含协议的完整域名",
+    example: "https://example.com",
+    category: "basic",
+  },
+  shortUrl: {
+    name: "短链接",
+    description: "自动生成的短链接",
+    example: "https://is.gd/abc123",
+    category: "basic",
+  },
+
+  // 时间字段
+  date: {
+    name: "日期",
+    description: "当前日期",
+    example: "2024-01-15",
+    category: "time",
+  },
+  time: {
+    name: "时间",
+    description: "当前时间",
+    example: "14:30:25",
+    category: "time",
+  },
+  datetime: {
+    name: "日期时间",
+    description: "完整的日期时间",
+    example: "2024-01-15 14:30:25",
+    category: "time",
+  },
+  timestamp: {
+    name: "时间戳",
+    description: "Unix时间戳",
+    example: "1705315825",
+    category: "time",
+  },
+  iso: {
+    name: "ISO时间",
+    description: "ISO格式的时间",
+    example: "2024-01-15T14:30:25.000Z",
+    category: "time",
+  },
+};
+
+// 预设模板
+export const PRESET_TEMPLATES = [
+  {
+    id: "preset_markdown",
+    name: "Markdown链接",
+    template: "[{{title}}]({{url}})",
+    icon: "📝",
+    isPreset: true,
+    description: "标准的Markdown链接格式",
+  },
+  {
+    id: "preset_plain",
+    name: "纯文本",
+    template: "{{title}} - {{url}}",
+    icon: "📄",
+    isPreset: true,
+    description: "简单的文本格式",
+  },
+  {
+    id: "preset_dev_doc",
+    name: "开发文档",
+    template: "[{{title}}]({{url}}) - {{hostname}}",
+    icon: "💻",
+    isPreset: true,
+    description: "适合开发文档的链接格式",
+  },
+  {
+    id: "preset_citation",
+    name: "学术引用",
+    template: "{{title}} ({{date}}) {{url}}",
+    icon: "📚",
+    isPreset: true,
+    description: "适合学术引用的格式",
+  },
+  {
+    id: "preset_social",
+    name: "社交分享",
+    template: "{{title}} {{url}}",
+    icon: "🔗",
+    isPreset: true,
+    description: "适合社交媒体分享",
+  },
+];
+
+// 模板引擎 - 处理模板变量替换
+export class TemplateEngine {
+  constructor() {
+    this.fieldProcessors = new Map();
+    this.initializeFieldProcessors();
+  }
+
+  initializeFieldProcessors() {
+    // 基础字段处理器
+    this.fieldProcessors.set("url", (context) =>
+      processUrl(context.url, context.urlCleaning),
+    );
+    this.fieldProcessors.set("originalUrl", (context) => context.url);
+    this.fieldProcessors.set("title", (context) => context.title || "");
+    this.fieldProcessors.set("hostname", (context) => {
+      try {
+        return new URL(context.url).hostname;
+      } catch {
+        return "";
+      }
+    });
+    this.fieldProcessors.set("domain", (context) => {
+      try {
+        const url = new URL(context.url);
+        return `${url.protocol}//${url.host}`;
+      } catch {
+        return "";
+      }
+    });
+    this.fieldProcessors.set("shortUrl", (context) => context.shortUrl || "");
+
+    // 时间字段处理器
+    const now = new Date();
+    this.fieldProcessors.set("date", () => now.toISOString().split("T")[0]);
+    this.fieldProcessors.set("time", () => now.toTimeString().split(" ")[0]);
+    this.fieldProcessors.set("datetime", () => {
+      return (
+        now.getFullYear() +
+        "-" +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(now.getDate()).padStart(2, "0") +
+        " " +
+        String(now.getHours()).padStart(2, "0") +
+        ":" +
+        String(now.getMinutes()).padStart(2, "0") +
+        ":" +
+        String(now.getSeconds()).padStart(2, "0")
+      );
+    });
+    this.fieldProcessors.set("timestamp", () =>
+      Math.floor(now.getTime() / 1000).toString(),
+    );
+    this.fieldProcessors.set("iso", () => now.toISOString());
+  }
+
+  // 处理模板，替换所有变量
+  async processTemplate(template, context) {
+    if (!template) return "";
+
+    // 匹配 {{fieldName}} 模式
+    const fieldPattern = /\{\{([^}]+)\}\}/g;
+
+    return template.replace(fieldPattern, (match, fieldName) => {
+      const processor = this.fieldProcessors.get(fieldName.trim());
+      if (processor) {
+        try {
+          return processor(context) || "";
+        } catch (error) {
+          console.warn(`Error processing field ${fieldName}:`, error);
+          return match; // 返回原始匹配，而不是空字符串
+        }
+      }
+      return match; // 未知字段保持原样
+    });
+  }
+
+  // 验证模板语法
+  validateTemplate(template) {
+    if (!template) return { valid: false, error: "Template is empty" };
+
+    const fieldPattern = /\{\{([^}]+)\}\}/g;
+    const matches = [...template.matchAll(fieldPattern)];
+    const errors = [];
+
+    for (const match of matches) {
+      const fieldName = match[1].trim();
+      if (!this.fieldProcessors.has(fieldName)) {
+        errors.push(`Unknown field: ${fieldName}`);
+      }
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors: errors,
+      fields: matches.map((m) => m[1].trim()),
+    };
+  }
+
+  // 获取模板中使用的字段
+  getTemplateFields(template) {
+    const fieldPattern = /\{\{([^}]+)\}\}/g;
+    const fields = new Set();
+    let match;
+
+    while ((match = fieldPattern.exec(template)) !== null) {
+      fields.add(match[1].trim());
+    }
+
+    return Array.from(fields);
+  }
+}
+
+// 全局模板引擎实例
+export const templateEngine = new TemplateEngine();
+
+// 模板管理工具函数
+export async function getCustomTemplates() {
+  try {
+    const result = await chrome.storage.sync.get(["customTemplates"]);
+    return result.customTemplates || [];
+  } catch (error) {
+    console.error("Failed to load custom templates:", error);
+    return [];
+  }
+}
+
+export async function saveCustomTemplates(templates) {
+  try {
+    await chrome.storage.sync.set({ customTemplates: templates });
+    return true;
+  } catch (error) {
+    console.error("Failed to save custom templates:", error);
+    return false;
+  }
+}
+
+export async function getAllTemplates() {
+  const customTemplates = await getCustomTemplates();
+  return [...PRESET_TEMPLATES, ...customTemplates];
+}
+
+export function generateTemplateId() {
+  return "custom_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+}
+
+export function createTemplate(name, template, icon = "📝") {
+  return {
+    id: generateTemplateId(),
+    name: name.trim(),
+    template: template.trim(),
+    icon: icon,
+    isPreset: false,
+    createdAt: new Date().toISOString(),
+    lastUsed: null,
+    usageCount: 0,
+    description: "",
+  };
+}
+
 // i18n helper function
 export function getMessage(key, substitutions = []) {
   return chrome.i18n.getMessage(key, substitutions);

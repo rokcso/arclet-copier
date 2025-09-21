@@ -1,4 +1,13 @@
-import { getMessage } from "../shared/constants.js";
+import {
+  getMessage,
+  getAllTemplates,
+  getCustomTemplates,
+  saveCustomTemplates,
+  createTemplate,
+  templateEngine,
+  TEMPLATE_FIELDS,
+  PRESET_TEMPLATES,
+} from "../shared/constants.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Locale data
@@ -40,7 +49,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     notification: document.getElementById("notification"),
     ratingBtn: document.getElementById("ratingBtn"),
     feedbackBtn: document.getElementById("feedbackBtn"),
+
+    // Template management elements
+    templateList: document.getElementById("templateList"),
+    addTemplateBtn: document.getElementById("addTemplateBtn"),
+    templateModal: document.getElementById("templateModal"),
+    templateModalTitle: document.getElementById("templateModalTitle"),
+    templateModalClose: document.getElementById("templateModalClose"),
+    templateName: document.getElementById("templateName"),
+    templateIcon: document.getElementById("templateIcon"),
+    templateContent: document.getElementById("templateContent"),
+    templatePreview: document.getElementById("templatePreview"),
+    templateValidation: document.getElementById("templateValidation"),
+    templateSaveBtn: document.getElementById("templateSaveBtn"),
+    templateCancelBtn: document.getElementById("templateCancelBtn"),
+    previewRefreshBtn: document.getElementById("previewRefreshBtn"),
+    moreFieldsBtn: document.getElementById("moreFieldsBtn"),
+    moreFieldsPanel: document.getElementById("moreFieldsPanel"),
   };
+
+  // Template management state
+  let currentEditingTemplate = null;
+  let allTemplates = [];
 
   // Load version from manifest
   function loadVersion() {
@@ -398,6 +428,377 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // Template management functions
+  async function loadTemplates() {
+    try {
+      allTemplates = await getAllTemplates();
+      renderTemplateList();
+    } catch (error) {
+      console.error("Failed to load templates:", error);
+      showNotification("Failed to load templates", "error");
+    }
+  }
+
+  function renderTemplateList() {
+    if (!elements.templateList) return;
+
+    elements.templateList.innerHTML = "";
+
+    allTemplates.forEach((template) => {
+      const templateItem = createTemplateItem(template);
+      elements.templateList.appendChild(templateItem);
+    });
+  }
+
+  function createTemplateItem(template) {
+    const item = document.createElement("div");
+    item.className = "template-item" + (template.isPreset ? " preset" : "");
+    item.dataset.templateId = template.id;
+
+    item.innerHTML = `
+      <div class="template-icon">${template.icon}</div>
+      <div class="template-info">
+        <div class="template-name">${escapeHtml(template.name)}</div>
+        <div class="template-content">${escapeHtml(template.template)}</div>
+        ${template.description ? `<div class="template-description">${escapeHtml(template.description)}</div>` : ""}
+      </div>
+      <div class="template-actions">
+        ${
+          !template.isPreset
+            ? `
+          <button class="template-action-btn edit" data-action="edit" title="编辑">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="template-action-btn delete" data-action="delete" title="删除">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3,6 5,6 21,6"></polyline>
+              <path d="m19,6 v14 a2,2 0 0,1 -2,2 H7 a2,2 0 0,1 -2,-2 V6 m3,0 V4 a2,2 0 0,1 2,-2 h4 a2,2 0 0,1 2,2 v2"></path>
+            </svg>
+          </button>
+        `
+            : ""
+        }
+      </div>
+    `;
+
+    // Add event listeners for actions
+    const editBtn = item.querySelector('[data-action="edit"]');
+    const deleteBtn = item.querySelector('[data-action="delete"]');
+
+    if (editBtn) {
+      editBtn.addEventListener("click", () => editTemplate(template));
+    }
+
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", () => deleteTemplate(template));
+    }
+
+    return item;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function showTemplateModal(template = null) {
+    currentEditingTemplate = template;
+
+    if (template) {
+      elements.templateModalTitle.textContent =
+        getLocalMessage("editTemplate") || "编辑模板";
+      elements.templateName.value = template.name;
+      elements.templateIcon.value = template.icon;
+      elements.templateContent.value = template.template;
+    } else {
+      elements.templateModalTitle.textContent =
+        getLocalMessage("createTemplate") || "创建模板";
+      elements.templateName.value = "";
+      elements.templateIcon.value = "📝";
+      elements.templateContent.value = "";
+    }
+
+    updateTemplatePreview();
+    validateTemplate();
+    elements.templateModal.classList.add("show");
+    elements.templateName.focus();
+  }
+
+  function hideTemplateModal() {
+    elements.templateModal.classList.remove("show");
+    currentEditingTemplate = null;
+    clearValidation();
+  }
+
+  function editTemplate(template) {
+    showTemplateModal(template);
+  }
+
+  async function deleteTemplate(template) {
+    if (
+      !confirm(
+        getLocalMessage("confirmDeleteTemplate") ||
+          `确定要删除模板"${template.name}"吗？`,
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const customTemplates = await getCustomTemplates();
+      const updatedTemplates = customTemplates.filter(
+        (t) => t.id !== template.id,
+      );
+      await saveCustomTemplates(updatedTemplates);
+
+      showNotification(getLocalMessage("templateDeleted") || "模板已删除");
+      await loadTemplates();
+    } catch (error) {
+      console.error("Failed to delete template:", error);
+      showNotification(
+        getLocalMessage("templateDeleteFailed") || "删除模板失败",
+        "error",
+      );
+    }
+  }
+
+  async function saveTemplate() {
+    const name = elements.templateName.value.trim();
+    const icon = elements.templateIcon.value.trim();
+    const content = elements.templateContent.value.trim();
+
+    if (!name) {
+      showValidationError(
+        getLocalMessage("templateNameRequired") || "请输入模板名称",
+      );
+      return;
+    }
+
+    if (!content) {
+      showValidationError(
+        getLocalMessage("templateContentRequired") || "请输入模板内容",
+      );
+      return;
+    }
+
+    const validation = templateEngine.validateTemplate(content);
+    if (!validation.valid) {
+      showValidationError(validation.errors.join(", "));
+      return;
+    }
+
+    try {
+      const customTemplates = await getCustomTemplates();
+
+      if (currentEditingTemplate) {
+        // Update existing template
+        const index = customTemplates.findIndex(
+          (t) => t.id === currentEditingTemplate.id,
+        );
+        if (index !== -1) {
+          customTemplates[index] = {
+            ...currentEditingTemplate,
+            name,
+            icon,
+            template: content,
+            lastUsed: new Date().toISOString(),
+          };
+        }
+      } else {
+        // Create new template
+        const newTemplate = createTemplate(name, content, icon);
+        customTemplates.push(newTemplate);
+      }
+
+      await saveCustomTemplates(customTemplates);
+
+      showNotification(
+        currentEditingTemplate
+          ? getLocalMessage("templateUpdated") || "模板已更新"
+          : getLocalMessage("templateCreated") || "模板已创建",
+      );
+
+      hideTemplateModal();
+      await loadTemplates();
+    } catch (error) {
+      console.error("Failed to save template:", error);
+      showValidationError(
+        getLocalMessage("templateSaveFailed") || "保存模板失败",
+      );
+    }
+  }
+
+  function updateTemplatePreview() {
+    const content = elements.templateContent.value.trim();
+    const previewContent =
+      elements.templatePreview.querySelector(".preview-content");
+
+    if (!content) {
+      previewContent.innerHTML = `<span class="preview-placeholder">${getLocalMessage("previewPlaceholder") || "输入模板内容以查看预览"}</span>`;
+      return;
+    }
+
+    // Create mock context for preview
+    const mockContext = {
+      url: "https://github.com/rokcso/arclet-copier",
+      title: "Arclet Copier - GitHub",
+      urlCleaning: "smart",
+    };
+
+    templateEngine
+      .processTemplate(content, mockContext)
+      .then((result) => {
+        previewContent.textContent = result;
+      })
+      .catch((error) => {
+        previewContent.innerHTML = `<span style="color: #ef4444;">预览错误: ${error.message}</span>`;
+      });
+  }
+
+  function validateTemplate() {
+    const content = elements.templateContent.value.trim();
+
+    if (!content) {
+      clearValidation();
+      return;
+    }
+
+    const validation = templateEngine.validateTemplate(content);
+
+    if (validation.valid) {
+      showValidationSuccess(getLocalMessage("templateValid") || "模板格式正确");
+    } else {
+      showValidationError(validation.errors.join(", "));
+    }
+
+    // Update save button state
+    const nameValid = elements.templateName.value.trim().length > 0;
+    elements.templateSaveBtn.disabled = !(validation.valid && nameValid);
+  }
+
+  function showValidationError(message) {
+    elements.templateValidation.className = "template-validation error";
+    elements.templateValidation.textContent = message;
+  }
+
+  function showValidationSuccess(message) {
+    elements.templateValidation.className = "template-validation success";
+    elements.templateValidation.textContent = message;
+  }
+
+  function clearValidation() {
+    elements.templateValidation.className = "template-validation";
+    elements.templateValidation.textContent = "";
+  }
+
+  function insertField(fieldName) {
+    const textarea = elements.templateContent;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const fieldText = `{{${fieldName}}}`;
+
+    textarea.value = text.substring(0, start) + fieldText + text.substring(end);
+    textarea.focus();
+    textarea.setSelectionRange(
+      start + fieldText.length,
+      start + fieldText.length,
+    );
+
+    updateTemplatePreview();
+    validateTemplate();
+  }
+
+  function toggleMoreFields() {
+    const panel = elements.moreFieldsPanel;
+    const btn = elements.moreFieldsBtn;
+
+    if (panel.classList.contains("show")) {
+      panel.classList.remove("show");
+      btn.textContent = "更多字段 ▼";
+    } else {
+      panel.classList.add("show");
+      btn.textContent = "更多字段 ▲";
+    }
+  }
+
+  function initializeTemplateManagement() {
+    if (!elements.templateList) return;
+
+    // Add template button
+    elements.addTemplateBtn?.addEventListener("click", () => {
+      showTemplateModal();
+    });
+
+    // Modal close events
+    elements.templateModalClose?.addEventListener("click", hideTemplateModal);
+    elements.templateCancelBtn?.addEventListener("click", hideTemplateModal);
+
+    // Click outside modal to close
+    elements.templateModal?.addEventListener("click", (e) => {
+      if (e.target === elements.templateModal) {
+        hideTemplateModal();
+      }
+    });
+
+    // Save template
+    elements.templateSaveBtn?.addEventListener("click", saveTemplate);
+
+    // Template content changes
+    elements.templateContent?.addEventListener("input", () => {
+      updateTemplatePreview();
+      validateTemplate();
+    });
+
+    elements.templateName?.addEventListener("input", validateTemplate);
+
+    // Preview refresh
+    elements.previewRefreshBtn?.addEventListener(
+      "click",
+      updateTemplatePreview,
+    );
+
+    // More fields toggle
+    elements.moreFieldsBtn?.addEventListener("click", toggleMoreFields);
+
+    // Icon picker
+    const iconOptions = document.querySelectorAll(".icon-option");
+    iconOptions.forEach((option) => {
+      option.addEventListener("click", () => {
+        const icon = option.dataset.icon;
+        if (elements.templateIcon) {
+          elements.templateIcon.value = icon;
+        }
+      });
+    });
+
+    // Field insertion buttons
+    const fieldButtons = document.querySelectorAll(".field-btn[data-field]");
+    fieldButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const field = btn.dataset.field;
+        insertField(field);
+      });
+    });
+
+    // Keyboard shortcuts
+    elements.templateContent?.addEventListener("keydown", (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === "s") {
+          e.preventDefault();
+          saveTemplate();
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          updateTemplatePreview();
+        }
+      }
+    });
+  }
+
   // 初始化所有组件
   async function initialize() {
     // Load version
@@ -416,6 +817,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeAppearanceSwitch();
     initializeColorPicker();
     initializeEventListeners();
+
+    // Initialize template management
+    initializeTemplateManagement();
+    await loadTemplates();
   }
 
   // Start initialization
