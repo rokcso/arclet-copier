@@ -246,7 +246,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 12px 24px;
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease;
@@ -258,8 +258,8 @@ body {
     content: "";
     position: absolute;
     bottom: 0;
-    left: 16px;
-    right: 16px;
+    left: 24px;
+    right: 24px;
     height: 1px;
     background: linear-gradient(
         to right,
@@ -1073,7 +1073,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: 12px 24px 8px 24px;
     background: var(--arc-background);
 }
 
@@ -1110,7 +1110,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: 8px 24px;
     background: var(--arc-background);
     border-bottom: 1px solid var(--arc-border);
     gap: 16px;
@@ -1413,7 +1413,7 @@ body {
 
     /* 两层布局响应式样式 */
     .header-layer {
-        padding: 8px 16px;
+        padding: 12px 24px 8px 24px;
         flex-wrap: wrap;
         gap: 12px;
     }
@@ -1422,7 +1422,7 @@ body {
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
-        padding: 8px 16px;
+        padding: 8px 24px;
     }
 
     .action-buttons {
@@ -1484,7 +1484,7 @@ body {
 .tabs-container {
     max-height: 500px;
     overflow-y: auto;
-    padding: 20px 16px;
+    padding: 8px 24px;
     background: var(--arc-surface);
 }
 
