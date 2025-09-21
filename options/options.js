@@ -104,6 +104,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
+    // Apply localization to all elements with data-i18n-placeholder attribute
+    const i18nPlaceholderElements = document.querySelectorAll(
+      "[data-i18n-placeholder]",
+    );
+    i18nPlaceholderElements.forEach((element) => {
+      const key = element.getAttribute("data-i18n-placeholder");
+      const message = getLocalMessage(key);
+      if (message && message !== key) {
+        element.placeholder = message;
+      }
+    });
+
     // Update page title
     document.title =
       getLocalMessage("optionsTitle") || "Arclet Copier - Settings";

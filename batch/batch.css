@@ -328,7 +328,7 @@ body {
 .settings-card:not(.collapsed) .collapsible-settings-content {
     max-height: 220px; /* 足够容纳双行设置的高度 */
     opacity: 1;
-    padding: 20px 16px 16px;
+    padding: 20px 24px 16px;
     background: var(--arc-surface);
     border-radius: 0 0 var(--arc-radius) var(--arc-radius);
     margin: 0 1px 1px 1px; /* 创建内嵌效果 */
