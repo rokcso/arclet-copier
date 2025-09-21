@@ -307,7 +307,7 @@
                                 <input
                                     type="text"
                                     id="templateName"
-                                    placeholder="输入模板名称..."
+                                    data-i18n-placeholder="templateNamePlaceholder"
                                 />
                             </div>
 
@@ -370,7 +370,7 @@
                                 <div class="template-editor">
                                     <textarea
                                         id="templateContent"
-                                        placeholder="输入模板内容，使用 {{字段名}} 格式插入变量..."
+                                        data-i18n-placeholder="templateContentPlaceholder"
                                         rows="4"
                                     ></textarea>
                                     <div class="template-editor-toolbar">
@@ -440,7 +440,9 @@
                                                 <span class="field-name"
                                                     >{{url}}</span
                                                 >
-                                                <span class="field-desc"
+                                                <span
+                                                    class="field-desc"
+                                                    data-i18n="fieldDescUrl"
                                                     >当前页面URL</span
                                                 >
                                             </button>
@@ -464,7 +466,9 @@
                                                 <span class="field-name"
                                                     >{{title}}</span
                                                 >
-                                                <span class="field-desc"
+                                                <span
+                                                    class="field-desc"
+                                                    data-i18n="fieldDescTitle"
                                                     >页面标题</span
                                                 >
                                             </button>
@@ -476,7 +480,9 @@
                                                 <span class="field-name"
                                                     >{{hostname}}</span
                                                 >
-                                                <span class="field-desc"
+                                                <span
+                                                    class="field-desc"
+                                                    data-i18n="fieldDescDomain"
                                                     >域名</span
                                                 >
                                             </button>
@@ -488,7 +494,9 @@
                                                 <span class="field-name"
                                                     >{{domain}}</span
                                                 >
-                                                <span class="field-desc"
+                                                <span
+                                                    class="field-desc"
+                                                    data-i18n="fieldDescHost"
                                                     >完整域名</span
                                                 >
                                             </button>
@@ -518,7 +526,9 @@
                                                 <span class="field-name"
                                                     >{{date}}</span
                                                 >
-                                                <span class="field-desc"
+                                                <span
+                                                    class="field-desc"
+                                                    data-i18n="fieldDescDate"
                                                     >当前日期</span
                                                 >
                                             </button>
@@ -530,7 +540,9 @@
                                                 <span class="field-name"
                                                     >{{time}}</span
                                                 >
-                                                <span class="field-desc"
+                                                <span
+                                                    class="field-desc"
+                                                    data-i18n="fieldDescTime"
                                                     >当前时间</span
                                                 >
                                             </button>
@@ -554,7 +566,9 @@
                                                 <span class="field-name"
                                                     >{{timestamp}}</span
                                                 >
-                                                <span class="field-desc"
+                                                <span
+                                                    class="field-desc"
+                                                    data-i18n="fieldDescTimestamp"
                                                     >时间戳</span
                                                 >
                                             </button>
@@ -624,7 +638,7 @@
                                 type="button"
                                 class="template-btn template-btn-primary"
                                 id="templateSaveBtn"
-                                data-i18n="save"
+                                data-i18n="saveTemplate"
                             >
                                 保存
                             </button>

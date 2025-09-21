@@ -553,5 +553,68 @@
   },
   "presetSocialName": {
     "message": "Social Sharing"
+  },
+  "templateNamePlaceholder": {
+    "message": "Enter template name..."
+  },
+  "templateContentPlaceholder": {
+    "message": "Enter template content, use {{url}}, {{title}} and other variables..."
+  },
+  "saveTemplate": {
+    "message": "Save Template"
+  },
+  "emojiCategoryCommon": {
+    "message": "Common"
+  },
+  "emojiCategorySmileys": {
+    "message": "Smileys & Emotion"
+  },
+  "emojiCategoryPeople": {
+    "message": "People & Body"
+  },
+  "emojiCategoryAnimals": {
+    "message": "Animals & Nature"
+  },
+  "emojiCategoryFood": {
+    "message": "Food & Drink"
+  },
+  "emojiCategoryTravel": {
+    "message": "Travel & Places"
+  },
+  "emojiCategoryActivities": {
+    "message": "Activities"
+  },
+  "emojiCategoryObjects": {
+    "message": "Objects"
+  },
+  "emojiCategorySymbols": {
+    "message": "Symbols"
+  },
+  "emojiCategoryFlags": {
+    "message": "Flags"
+  },
+  "fieldDescUrl": {
+    "message": "Current page URL"
+  },
+  "fieldDescTitle": {
+    "message": "Current page title"
+  },
+  "fieldDescDomain": {
+    "message": "Website domain name"
+  },
+  "fieldDescHost": {
+    "message": "Website hostname"
+  },
+  "fieldDescDate": {
+    "message": "Current date (YYYY-MM-DD)"
+  },
+  "fieldDescTime": {
+    "message": "Current time (HH:MM:SS)"
+  },
+  "fieldDescTimestamp": {
+    "message": "Current timestamp (Unix timestamp)"
+  },
+  "deleteTemplate": {
+    "message": "Delete"
   }
 }

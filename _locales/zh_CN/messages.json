@@ -551,5 +551,68 @@
   },
   "presetSocialName": {
     "message": "社交分享"
+  },
+  "templateNamePlaceholder": {
+    "message": "输入模板名称..."
+  },
+  "templateContentPlaceholder": {
+    "message": "输入模板内容，使用 {{变量名}} 格式插入变量..."
+  },
+  "emojiCategoryCommon": {
+    "message": "常用"
+  },
+  "emojiCategorySmileys": {
+    "message": "表情"
+  },
+  "emojiCategoryHearts": {
+    "message": "爱心"
+  },
+  "emojiCategoryNature": {
+    "message": "自然"
+  },
+  "emojiCategoryActivities": {
+    "message": "活动"
+  },
+  "emojiCategoryFood": {
+    "message": "食物"
+  },
+  "emojiCategoryTravel": {
+    "message": "交通"
+  },
+  "fieldDescUrl": {
+    "message": "当前页面URL"
+  },
+  "fieldDescOriginalUrl": {
+    "message": "原始URL"
+  },
+  "fieldDescTitle": {
+    "message": "页面标题"
+  },
+  "fieldDescHostname": {
+    "message": "域名"
+  },
+  "fieldDescDomain": {
+    "message": "完整域名"
+  },
+  "fieldDescShortUrl": {
+    "message": "短链接"
+  },
+  "fieldDescDate": {
+    "message": "当前日期"
+  },
+  "fieldDescTime": {
+    "message": "当前时间"
+  },
+  "fieldDescDatetime": {
+    "message": "日期时间"
+  },
+  "fieldDescTimestamp": {
+    "message": "时间戳"
+  },
+  "fieldDescIso": {
+    "message": "ISO时间"
+  },
+  "deleteTemplate": {
+    "message": "删除"
   }
 }

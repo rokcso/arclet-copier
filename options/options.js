@@ -474,7 +474,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
           </button>
-          <button class="template-action-btn delete" data-action="delete" title="删除">
+          <button class="template-action-btn delete" data-action="delete" title="${getLocalMessage("deleteTemplate") || "删除"}">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3,6 5,6 21,6"></polyline>
               <path d="m19,6 v14 a2,2 0 0,1 -2,2 H7 a2,2 0 0,1 -2,-2 V6 m3,0 V4 a2,2 0 0,1 2,-2 h4 a2,2 0 0,1 2,2 v2"></path>
@@ -946,16 +946,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // Helper function to get display names for categories
       const getCategoryDisplayName = (category) => {
-        const names = {
-          common: "常用",
-          smileys: "表情",
-          hearts: "爱心",
-          nature: "自然",
-          activities: "活动",
-          food: "食物",
-          travel: "交通",
+        const keyMap = {
+          common: "emojiCategoryCommon",
+          smileys: "emojiCategorySmileys",
+          hearts: "emojiCategorySmileys", // Map hearts to smileys category
+          nature: "emojiCategoryAnimals", // Map nature to animals category
+          activities: "emojiCategoryActivities",
+          food: "emojiCategoryFood",
+          travel: "emojiCategoryTravel",
         };
-        return names[category] || category;
+        const i18nKey = keyMap[category];
+        return i18nKey ? getLocalMessage(i18nKey) || category : category;
       };
 
       const gridsHTML = Object.entries(emojiData)

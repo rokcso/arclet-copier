@@ -557,5 +557,68 @@
   },
   "presetSocialName": {
     "message": "소셜 공유"
+  },
+  "templateNamePlaceholder": {
+    "message": "템플릿 이름을 입력하세요..."
+  },
+  "templateContentPlaceholder": {
+    "message": "템플릿 내용을 입력하세요. {{url}}, {{title}} 등의 변수를 사용하세요..."
+  },
+  "saveTemplate": {
+    "message": "템플릿 저장"
+  },
+  "emojiCategoryCommon": {
+    "message": "일반"
+  },
+  "emojiCategorySmileys": {
+    "message": "웃는 얼굴과 감정"
+  },
+  "emojiCategoryPeople": {
+    "message": "사람과 몸"
+  },
+  "emojiCategoryAnimals": {
+    "message": "동물과 자연"
+  },
+  "emojiCategoryFood": {
+    "message": "음식과 음료"
+  },
+  "emojiCategoryTravel": {
+    "message": "여행과 장소"
+  },
+  "emojiCategoryActivities": {
+    "message": "활동"
+  },
+  "emojiCategoryObjects": {
+    "message": "물건"
+  },
+  "emojiCategorySymbols": {
+    "message": "기호"
+  },
+  "emojiCategoryFlags": {
+    "message": "깃발"
+  },
+  "fieldDescUrl": {
+    "message": "현재 페이지의 URL"
+  },
+  "fieldDescTitle": {
+    "message": "현재 페이지의 제목"
+  },
+  "fieldDescDomain": {
+    "message": "웹사이트 도메인 이름"
+  },
+  "fieldDescHost": {
+    "message": "웹사이트 호스트 이름"
+  },
+  "fieldDescDate": {
+    "message": "현재 날짜 (YYYY-MM-DD)"
+  },
+  "fieldDescTime": {
+    "message": "현재 시간 (HH:MM:SS)"
+  },
+  "fieldDescTimestamp": {
+    "message": "현재 타임스탬프 (Unix timestamp)"
+  },
+  "deleteTemplate": {
+    "message": "삭제"
   }
 }

@@ -556,5 +556,68 @@
   },
   "presetSocialName": {
     "message": "Социальный Обмен"
+  },
+  "templateNamePlaceholder": {
+    "message": "Введите название шаблона..."
+  },
+  "templateContentPlaceholder": {
+    "message": "Введите содержимое шаблона, используйте {{url}}, {{title}} и другие переменные..."
+  },
+  "saveTemplate": {
+    "message": "Сохранить Шаблон"
+  },
+  "emojiCategoryCommon": {
+    "message": "Общие"
+  },
+  "emojiCategorySmileys": {
+    "message": "Улыбки и Эмоции"
+  },
+  "emojiCategoryPeople": {
+    "message": "Люди и Тело"
+  },
+  "emojiCategoryAnimals": {
+    "message": "Животные и Природа"
+  },
+  "emojiCategoryFood": {
+    "message": "Еда и Напитки"
+  },
+  "emojiCategoryTravel": {
+    "message": "Путешествия и Места"
+  },
+  "emojiCategoryActivities": {
+    "message": "Активности"
+  },
+  "emojiCategoryObjects": {
+    "message": "Объекты"
+  },
+  "emojiCategorySymbols": {
+    "message": "Символы"
+  },
+  "emojiCategoryFlags": {
+    "message": "Флаги"
+  },
+  "fieldDescUrl": {
+    "message": "URL текущей страницы"
+  },
+  "fieldDescTitle": {
+    "message": "Заголовок текущей страницы"
+  },
+  "fieldDescDomain": {
+    "message": "Доменное имя веб-сайта"
+  },
+  "fieldDescHost": {
+    "message": "Имя хоста веб-сайта"
+  },
+  "fieldDescDate": {
+    "message": "Текущая дата (YYYY-MM-DD)"
+  },
+  "fieldDescTime": {
+    "message": "Текущее время (HH:MM:SS)"
+  },
+  "fieldDescTimestamp": {
+    "message": "Текущая временная метка (Unix timestamp)"
+  },
+  "deleteTemplate": {
+    "message": "Удалить"
   }
 }

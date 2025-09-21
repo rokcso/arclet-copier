@@ -556,5 +556,68 @@
   },
   "presetSocialName": {
     "message": "ソーシャル共有"
+  },
+  "templateNamePlaceholder": {
+    "message": "テンプレート名を入力..."
+  },
+  "templateContentPlaceholder": {
+    "message": "テンプレート内容を入力、{{url}}、{{title}}などの変数を使用..."
+  },
+  "saveTemplate": {
+    "message": "テンプレートを保存"
+  },
+  "emojiCategoryCommon": {
+    "message": "一般"
+  },
+  "emojiCategorySmileys": {
+    "message": "スマイリーと感情"
+  },
+  "emojiCategoryPeople": {
+    "message": "人物と体"
+  },
+  "emojiCategoryAnimals": {
+    "message": "動物と自然"
+  },
+  "emojiCategoryFood": {
+    "message": "食べ物と飲み物"
+  },
+  "emojiCategoryTravel": {
+    "message": "旅行と場所"
+  },
+  "emojiCategoryActivities": {
+    "message": "アクティビティ"
+  },
+  "emojiCategoryObjects": {
+    "message": "オブジェクト"
+  },
+  "emojiCategorySymbols": {
+    "message": "シンボル"
+  },
+  "emojiCategoryFlags": {
+    "message": "旗"
+  },
+  "fieldDescUrl": {
+    "message": "現在のページのURL"
+  },
+  "fieldDescTitle": {
+    "message": "現在のページのタイトル"
+  },
+  "fieldDescDomain": {
+    "message": "ウェブサイトのドメイン名"
+  },
+  "fieldDescHost": {
+    "message": "ウェブサイトのホスト名"
+  },
+  "fieldDescDate": {
+    "message": "現在の日付 (YYYY-MM-DD)"
+  },
+  "fieldDescTime": {
+    "message": "現在の時刻 (HH:MM:SS)"
+  },
+  "fieldDescTimestamp": {
+    "message": "現在のタイムスタンプ (Unix timestamp)"
+  },
+  "deleteTemplate": {
+    "message": "削除"
   }
 }
