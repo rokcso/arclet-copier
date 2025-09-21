@@ -782,16 +782,317 @@ document.addEventListener("DOMContentLoaded", async () => {
     // More fields toggle
     elements.moreFieldsBtn?.addEventListener("click", toggleMoreFields);
 
-    // Icon picker
-    const iconOptions = document.querySelectorAll(".icon-option");
-    iconOptions.forEach((option) => {
-      option.addEventListener("click", () => {
-        const icon = option.dataset.icon;
-        if (elements.templateIcon) {
-          elements.templateIcon.value = icon;
+    // Smart emoji picker functionality
+    const emojiPickerTrigger = document.getElementById("emojiPickerTrigger");
+    const emojiPicker = document.getElementById("emojiPicker");
+
+    // Curated emoji sets for different categories (local data, no external dependencies)
+    const emojiData = {
+      common: [
+        "📝",
+        "📄",
+        "💻",
+        "📚",
+        "📋",
+        "🔗",
+        "🏷️",
+        "⭐",
+        "📌",
+        "🔖",
+        "📂",
+        "📁",
+        "🗂️",
+        "📊",
+        "📈",
+        "📉",
+        "🔧",
+        "⚙️",
+        "🔨",
+      ],
+      smileys: [
+        "😀",
+        "😃",
+        "😄",
+        "😁",
+        "😊",
+        "😉",
+        "🤗",
+        "🤔",
+        "😎",
+        "🥳",
+        "😍",
+        "🤩",
+        "😘",
+        "😋",
+        "😜",
+        "🤪",
+      ],
+      hearts: [
+        "❤️",
+        "💙",
+        "💚",
+        "💛",
+        "🧡",
+        "💜",
+        "🖤",
+        "🤍",
+        "💯",
+        "💥",
+        "💫",
+        "✨",
+      ],
+      nature: [
+        "🌱",
+        "🌿",
+        "🍀",
+        "🌳",
+        "🌲",
+        "🌺",
+        "🌸",
+        "🌼",
+        "🌻",
+        "🌹",
+        "🌷",
+        "💐",
+        "🌍",
+        "🌎",
+        "🌏",
+        "🌙",
+        "⭐",
+        "🌟",
+      ],
+      activities: [
+        "⚽",
+        "🏀",
+        "🎾",
+        "🎯",
+        "🎮",
+        "🎨",
+        "🎭",
+        "🎵",
+        "🎶",
+        "🎤",
+        "🎧",
+        "🏆",
+        "🎪",
+      ],
+      food: [
+        "🍎",
+        "🍊",
+        "🍋",
+        "🍌",
+        "🍉",
+        "🍇",
+        "🍓",
+        "🍅",
+        "🥕",
+        "🌽",
+        "🍞",
+        "🧀",
+        "🍕",
+        "🍔",
+        "☕",
+        "🍵",
+      ],
+      travel: [
+        "✈️",
+        "🚗",
+        "🚕",
+        "🚌",
+        "🚎",
+        "🏎️",
+        "🚓",
+        "🚑",
+        "🚒",
+        "🚐",
+        "🛻",
+        "🚛",
+        "🚚",
+        "🚨",
+        "🚔",
+      ],
+    };
+
+    // Initialize emoji picker with dynamic content generation
+    function initializeEmojiPicker() {
+      if (!emojiPicker) return;
+
+      // Generate emoji picker HTML dynamically
+      const categoriesHTML = Object.keys(emojiData)
+        .map((category) => {
+          const firstEmoji = emojiData[category][0];
+          const isActive = category === "common" ? "active" : "";
+          return `<button type="button" class="emoji-category-btn ${isActive}" data-category="${category}">${firstEmoji}</button>`;
+        })
+        .join("");
+
+      // Helper function to get display names for categories
+      const getCategoryDisplayName = (category) => {
+        const names = {
+          common: "常用",
+          smileys: "表情",
+          hearts: "爱心",
+          nature: "自然",
+          activities: "活动",
+          food: "食物",
+          travel: "交通",
+        };
+        return names[category] || category;
+      };
+
+      const gridsHTML = Object.entries(emojiData)
+        .map(([category, emojis]) => {
+          const emojiElements = emojis
+            .map(
+              (emoji) =>
+                `<span class="emoji-option" data-emoji="${emoji}">${emoji}</span>`,
+            )
+            .join("");
+          return `
+            <div class="emoji-category-section" data-category="${category}" id="emoji-category-${category}">
+              <div class="emoji-category-title">${getCategoryDisplayName(category)}</div>
+              <div class="emoji-grid">${emojiElements}</div>
+            </div>
+          `;
+        })
+        .join("");
+
+      emojiPicker.innerHTML = `
+        <div class="emoji-picker-header">
+          <div class="emoji-categories">
+            ${categoriesHTML}
+          </div>
+        </div>
+        <div class="emoji-picker-content">
+          ${gridsHTML}
+        </div>
+      `;
+
+      // Add event listeners after content is generated
+      setupEmojiPickerEvents();
+
+      // Set up scroll listener to update active category
+      setupScrollListener();
+    }
+
+    function setupEmojiPickerEvents() {
+      // Toggle emoji picker
+      emojiPickerTrigger?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        emojiPicker.classList.toggle("show");
+      });
+
+      // Close emoji picker when clicking outside
+      document.addEventListener("click", (e) => {
+        if (
+          !emojiPicker.contains(e.target) &&
+          !emojiPickerTrigger.contains(e.target)
+        ) {
+          emojiPicker.classList.remove("show");
         }
       });
-    });
+
+      // Use event delegation for dynamically generated content
+      emojiPicker.addEventListener("click", (e) => {
+        // Handle category button clicks
+        if (e.target.classList.contains("emoji-category-btn")) {
+          const category = e.target.dataset.category;
+          console.log("Category clicked:", category); // Debug log
+
+          // Update active category button
+          emojiPicker
+            .querySelectorAll(".emoji-category-btn")
+            .forEach((b) => b.classList.remove("active"));
+          e.target.classList.add("active");
+
+          // Scroll to the corresponding category section
+          const targetSection = emojiPicker.querySelector(
+            `#emoji-category-${category}`,
+          );
+          const pickerContent = emojiPicker.querySelector(
+            ".emoji-picker-content",
+          );
+
+          if (targetSection && pickerContent) {
+            const sectionTop =
+              targetSection.offsetTop - pickerContent.offsetTop;
+
+            console.log(
+              `Scrolling to category ${category}, position: ${sectionTop}`,
+            ); // Debug log
+
+            // Smooth scroll to the target section
+            pickerContent.scrollTo({
+              top: sectionTop,
+              behavior: "smooth",
+            });
+          }
+        }
+
+        // Handle emoji selection
+        if (e.target.classList.contains("emoji-option")) {
+          const emoji = e.target.dataset.emoji;
+          console.log("Emoji selected:", emoji); // Debug log
+          if (elements.templateIcon) {
+            elements.templateIcon.value = emoji;
+          }
+          emojiPicker.classList.remove("show");
+        }
+      });
+    }
+
+    // Set up scroll listener to auto-update active category
+    function setupScrollListener() {
+      const pickerContent = emojiPicker?.querySelector(".emoji-picker-content");
+      if (!pickerContent) return;
+
+      let scrollTimeout;
+      pickerContent.addEventListener("scroll", () => {
+        // Debounce scroll events
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          updateActiveCategoryOnScroll();
+        }, 100);
+      });
+    }
+
+    function updateActiveCategoryOnScroll() {
+      const pickerContent = emojiPicker.querySelector(".emoji-picker-content");
+      const categoryBtns = emojiPicker.querySelectorAll(".emoji-category-btn");
+      const sections = emojiPicker.querySelectorAll(".emoji-category-section");
+
+      if (!pickerContent || !sections.length) return;
+
+      const scrollTop = pickerContent.scrollTop;
+      const containerTop = pickerContent.offsetTop;
+
+      // Find the section that's currently most visible
+      let activeCategory = null;
+      let minDistance = Infinity;
+
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop - containerTop;
+        const distance = Math.abs(scrollTop - sectionTop);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          activeCategory = section.dataset.category;
+        }
+      });
+
+      // Update active category button
+      if (activeCategory) {
+        categoryBtns.forEach((btn) => {
+          btn.classList.toggle(
+            "active",
+            btn.dataset.category === activeCategory,
+          );
+        });
+      }
+    }
+
+    // Initialize the emoji picker
+    initializeEmojiPicker();
 
     // Field insertion buttons
     const fieldButtons = document.querySelectorAll(".field-btn[data-field]");
