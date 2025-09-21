@@ -582,7 +582,19 @@
 
                             <!-- 预览 -->
                             <div class="template-form-group">
-                                <label data-i18n="templatePreview">预览</label>
+                                <div class="template-preview-header">
+                                    <label data-i18n="templatePreview"
+                                        >预览</label
+                                    >
+                                    <button
+                                        type="button"
+                                        class="preview-refresh-btn"
+                                        id="previewRefreshBtn"
+                                        data-i18n="refreshPreview"
+                                    >
+                                        刷新预览
+                                    </button>
+                                </div>
                                 <div
                                     class="template-preview"
                                     id="templatePreview"
@@ -594,14 +606,6 @@
                                             >输入模板内容以查看预览</span
                                         >
                                     </div>
-                                    <button
-                                        type="button"
-                                        class="preview-refresh-btn"
-                                        id="previewRefreshBtn"
-                                        data-i18n="refreshPreview"
-                                    >
-                                        刷新预览
-                                    </button>
                                 </div>
                             </div>
 

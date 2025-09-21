@@ -994,6 +994,7 @@ select.setting-control:hover {
     font-size: 20px;
     min-width: 24px;
     text-align: center;
+    padding: 4px;
 }
 
 .template-name {
@@ -1211,9 +1212,11 @@ select.setting-control:hover {
 }
 
 .template-icon-picker input {
-    width: 60px;
+    width: 30px;
+    height: 30px;
     text-align: center;
     font-size: 16px;
+    padding: 4px;
 }
 
 .template-icon-suggestions {
@@ -1359,19 +1362,34 @@ select.setting-control:hover {
     overflow: hidden;
 }
 
-.preview-content {
-    padding: 16px;
-    min-height: 60px;
-    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--arc-text-primary);
-    word-break: break-all;
+.template-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background: linear-gradient(
         135deg,
         var(--arc-surface) 0%,
-        var(--glow-light) 100%
+        rgba(var(--arc-primary), 0.02) 100%
     );
+}
+
+.template-preview-header label {
+    font-weight: 600;
+    color: var(--arc-text-primary);
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+}
+
+.preview-content {
+    padding: 12px;
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--arc-text-primary);
+    word-break: break-all;
+    background: var(--arc-surface);
+    border-radius: 0 0 var(--arc-radius-sm) var(--arc-radius-sm);
 }
 
 .preview-placeholder {
@@ -1381,22 +1399,23 @@ select.setting-control:hover {
 }
 
 .preview-refresh-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 4px 8px;
+    padding: 6px 12px;
+    margin: 4px;
     border: 1px solid var(--arc-border);
-    border-radius: 4px;
+    border-radius: 6px;
     background: var(--arc-background);
     color: var(--arc-text-secondary);
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .preview-refresh-btn:hover {
     border-color: var(--arc-primary);
     color: var(--arc-primary);
+    background: var(--arc-surface);
 }
 
 /* 验证信息 */
