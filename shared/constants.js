@@ -621,12 +621,26 @@ export async function getAllTemplates() {
   const customTemplates = await getCustomTemplates();
   const hiddenPresetIds = await getHiddenPresetTemplates();
 
-  // 过滤掉被隐藏的预置模板
+  // 创建自定义模板ID映射，用于检查是否有用户自定义版本
+  const customTemplateIds = new Set(customTemplates.map((t) => t.id));
+
+  // 过滤掉被隐藏的预置模板，以及已有用户自定义版本的预置模板
   const visiblePresetTemplates = PRESET_TEMPLATES.filter(
-    (template) => !hiddenPresetIds.includes(template.id),
+    (template) =>
+      !hiddenPresetIds.includes(template.id) &&
+      !customTemplateIds.has(template.id),
   );
 
-  return [...visiblePresetTemplates, ...customTemplates];
+  // 将用户自定义模板按是否为预置模板分组
+  const customizedPresetTemplates = customTemplates.filter((t) => t.isPreset);
+  const pureCustomTemplates = customTemplates.filter((t) => !t.isPreset);
+
+  // 返回顺序：用户自定义的预置模板 -> 原始预置模板 -> 纯自定义模板
+  return [
+    ...customizedPresetTemplates,
+    ...visiblePresetTemplates,
+    ...pureCustomTemplates,
+  ];
 }
 
 export function generateTemplateId() {

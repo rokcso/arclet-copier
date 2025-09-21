@@ -463,10 +463,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         ? getLocalMessage(template.nameKey) || template.nameKey
         : template.name;
 
+    // 检查是否为已自定义的预置模板
+    const showResetBtn = template.isPreset && template.isCustomized;
+
     item.innerHTML = `
       <div class="template-header">
         <div class="template-icon">${template.icon}</div>
-        <div class="template-name">${escapeHtml(templateName)}</div>
+        <div class="template-name">${escapeHtml(templateName)}${showResetBtn ? ' <span class="customized-indicator">(已修改)</span>' : ""}</div>
         <div class="template-actions">
           <button class="template-action-btn edit" data-action="edit" title="编辑">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -474,6 +477,18 @@ document.addEventListener("DOMContentLoaded", async () => {
               <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
           </button>
+          ${
+            showResetBtn
+              ? `
+          <button class="template-action-btn reset" data-action="reset" title="${getLocalMessage("resetTemplate") || "重置为默认"}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23,4 23,10 17,10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+          </button>
+          `
+              : ""
+          }
           <button class="template-action-btn delete" data-action="delete" title="${getLocalMessage("deleteTemplate") || "删除"}">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3,6 5,6 21,6"></polyline>
@@ -488,6 +503,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Add event listeners for actions
     const editBtn = item.querySelector('[data-action="edit"]');
     const deleteBtn = item.querySelector('[data-action="delete"]');
+    const resetBtn = item.querySelector('[data-action="reset"]');
 
     if (editBtn) {
       editBtn.addEventListener("click", () => editTemplate(template));
@@ -495,6 +511,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (deleteBtn) {
       deleteBtn.addEventListener("click", () => deleteTemplate(template));
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => resetTemplate(template));
     }
 
     return item;
@@ -510,21 +530,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentEditingTemplate = template;
 
     if (template) {
-      if (template.isPreset) {
-        // 预置模板：创建副本模式
-        elements.templateModalTitle.textContent =
-          getLocalMessage("copyTemplate") || "创建模板副本";
-        const templateName = template.nameKey
+      // 统一的编辑模式，无论是预置还是自定义模板
+      elements.templateModalTitle.textContent =
+        getLocalMessage("editTemplate") || "编辑模板";
+
+      // 获取模板名称
+      const templateName =
+        template.isPreset && template.nameKey
           ? getLocalMessage(template.nameKey) || template.nameKey
           : template.name;
-        elements.templateName.value = templateName;
-        currentEditingTemplate = null; // 重置为创建模式
-      } else {
-        // 自定义模板：编辑模式
-        elements.templateModalTitle.textContent =
-          getLocalMessage("editTemplate") || "编辑模板";
-        elements.templateName.value = template.name;
-      }
+
+      elements.templateName.value = templateName;
       elements.templateIcon.value = template.icon;
       elements.templateContent.value = template.template;
     } else {
@@ -549,6 +565,45 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function editTemplate(template) {
     showTemplateModal(template);
+  }
+
+  async function resetTemplate(template) {
+    if (!template.isPreset || !template.isCustomized) {
+      return;
+    }
+
+    const templateName = template.nameKey
+      ? getLocalMessage(template.nameKey) || template.nameKey
+      : template.name;
+
+    const confirmMessage =
+      getLocalMessage("confirmResetTemplate")?.replace(
+        "{name}",
+        templateName,
+      ) || `确定要将模板"${templateName}"重置为默认版本吗？`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      const customTemplates = await getCustomTemplates();
+      const updatedTemplates = customTemplates.filter(
+        (t) => t.id !== template.id,
+      );
+
+      await saveCustomTemplates(updatedTemplates);
+      showNotification(
+        getLocalMessage("templateReset") || "模板已重置为默认版本",
+      );
+      await loadTemplates();
+    } catch (error) {
+      console.error("Failed to reset template:", error);
+      showNotification(
+        getLocalMessage("templateResetFailed") || "重置模板失败",
+        "error",
+      );
+    }
   }
 
   async function deleteTemplate(template) {
@@ -630,18 +685,40 @@ document.addEventListener("DOMContentLoaded", async () => {
       const customTemplates = await getCustomTemplates();
 
       if (currentEditingTemplate) {
-        // Update existing template
-        const index = customTemplates.findIndex(
-          (t) => t.id === currentEditingTemplate.id,
-        );
-        if (index !== -1) {
-          customTemplates[index] = {
+        if (currentEditingTemplate.isPreset) {
+          // 预置模板：保存为自定义版本，覆盖原预置模板
+          const existingIndex = customTemplates.findIndex(
+            (t) => t.id === currentEditingTemplate.id,
+          );
+
+          const updatedTemplate = {
             ...currentEditingTemplate,
             name,
             icon,
             template: content,
             lastUsed: new Date().toISOString(),
+            isCustomized: true, // 标记为用户自定义版本
           };
+
+          if (existingIndex !== -1) {
+            customTemplates[existingIndex] = updatedTemplate;
+          } else {
+            customTemplates.push(updatedTemplate);
+          }
+        } else {
+          // 自定义模板：直接更新
+          const index = customTemplates.findIndex(
+            (t) => t.id === currentEditingTemplate.id,
+          );
+          if (index !== -1) {
+            customTemplates[index] = {
+              ...currentEditingTemplate,
+              name,
+              icon,
+              template: content,
+              lastUsed: new Date().toISOString(),
+            };
+          }
         }
       } else {
         // Create new template
