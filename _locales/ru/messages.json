@@ -583,6 +583,9 @@
   "fieldDescTitle": {
     "message": "Заголовок текущей страницы"
   },
+  "fieldDescHostname": {
+    "message": "Имя хоста веб-сайта"
+  },
   "fieldDescDomain": {
     "message": "Доменное имя веб-сайта"
   },
@@ -597,6 +600,18 @@
   },
   "fieldDescTimestamp": {
     "message": "Текущая временная метка (Unix timestamp)"
+  },
+  "fieldDescOriginalUrl": {
+    "message": "Исходный URL"
+  },
+  "fieldDescShortUrl": {
+    "message": "Короткий URL"
+  },
+  "fieldDescDatetime": {
+    "message": "Дата и время"
+  },
+  "fieldDescIso": {
+    "message": "Формат времени ISO"
   },
   "deleteTemplate": {
     "message": "Удалить"

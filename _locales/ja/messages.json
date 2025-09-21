@@ -583,6 +583,9 @@
   "fieldDescTitle": {
     "message": "現在のページのタイトル"
   },
+  "fieldDescHostname": {
+    "message": "ウェブサイトのホスト名"
+  },
   "fieldDescDomain": {
     "message": "ウェブサイトのドメイン名"
   },
@@ -597,6 +600,18 @@
   },
   "fieldDescTimestamp": {
     "message": "現在のタイムスタンプ (Unix timestamp)"
+  },
+  "fieldDescOriginalUrl": {
+    "message": "元のURL"
+  },
+  "fieldDescShortUrl": {
+    "message": "短縮URL"
+  },
+  "fieldDescDatetime": {
+    "message": "日付と時刻"
+  },
+  "fieldDescIso": {
+    "message": "ISO時刻形式"
   },
   "deleteTemplate": {
     "message": "削除"

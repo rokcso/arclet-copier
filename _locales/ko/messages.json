@@ -584,6 +584,9 @@
   "fieldDescTitle": {
     "message": "현재 페이지의 제목"
   },
+  "fieldDescHostname": {
+    "message": "웹사이트 호스트명"
+  },
   "fieldDescDomain": {
     "message": "웹사이트 도메인 이름"
   },
@@ -598,6 +601,18 @@
   },
   "fieldDescTimestamp": {
     "message": "현재 타임스탬프 (Unix timestamp)"
+  },
+  "fieldDescOriginalUrl": {
+    "message": "원본 URL"
+  },
+  "fieldDescShortUrl": {
+    "message": "단축 URL"
+  },
+  "fieldDescDatetime": {
+    "message": "날짜와 시간"
+  },
+  "fieldDescIso": {
+    "message": "ISO 시간 형식"
   },
   "deleteTemplate": {
     "message": "삭제"

@@ -583,6 +583,9 @@
   "fieldDescTitle": {
     "message": "Título da página atual"
   },
+  "fieldDescHostname": {
+    "message": "Nome do host do site"
+  },
   "fieldDescDomain": {
     "message": "Nome do domínio do site"
   },
@@ -597,6 +600,18 @@
   },
   "fieldDescTimestamp": {
     "message": "Timestamp atual (timestamp Unix)"
+  },
+  "fieldDescOriginalUrl": {
+    "message": "URL original"
+  },
+  "fieldDescShortUrl": {
+    "message": "URL curta"
+  },
+  "fieldDescDatetime": {
+    "message": "Data e hora"
+  },
+  "fieldDescIso": {
+    "message": "Formato de tempo ISO"
   },
   "deleteTemplate": {
     "message": "Excluir"
