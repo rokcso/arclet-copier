@@ -458,26 +458,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     item.dataset.templateId = template.id;
 
     item.innerHTML = `
-      <div class="template-icon">${template.icon}</div>
-      <div class="template-info">
+      <div class="template-header">
+        <div class="template-icon">${template.icon}</div>
         <div class="template-name">${escapeHtml(template.name)}</div>
-        <div class="template-content">${escapeHtml(template.template)}</div>
-        ${!template.isPreset && template.description ? `<div class="template-description">${escapeHtml(template.description)}</div>` : ""}
+        <div class="template-actions">
+          <button class="template-action-btn edit" data-action="edit" title="编辑">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button class="template-action-btn delete" data-action="delete" title="删除">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3,6 5,6 21,6"></polyline>
+              <path d="m19,6 v14 a2,2 0 0,1 -2,2 H7 a2,2 0 0,1 -2,-2 V6 m3,0 V4 a2,2 0 0,1 2,-2 h4 a2,2 0 0,1 2,2 v2"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="template-actions">
-        <button class="template-action-btn edit" data-action="edit" title="编辑">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-          </svg>
-        </button>
-        <button class="template-action-btn delete" data-action="delete" title="删除">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3,6 5,6 21,6"></polyline>
-            <path d="m19,6 v14 a2,2 0 0,1 -2,2 H7 a2,2 0 0,1 -2,-2 V6 m3,0 V4 a2,2 0 0,1 2,-2 h4 a2,2 0 0,1 2,2 v2"></path>
-          </svg>
-        </button>
-      </div>
+      <div class="template-content">${escapeHtml(template.template)}</div>
+      ${!template.isPreset && template.description ? `<div class="template-description">${escapeHtml(template.description)}</div>` : ""}
     `;
 
     // Add event listeners for actions
@@ -509,7 +509,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 预置模板：创建副本模式
         elements.templateModalTitle.textContent =
           getLocalMessage("copyTemplate") || "创建模板副本";
-        elements.templateName.value = template.name + " - 副本";
+        elements.templateName.value = template.name;
         currentEditingTemplate = null; // 重置为创建模式
       } else {
         // 自定义模板：编辑模式
