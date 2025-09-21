@@ -983,13 +983,7 @@ select.setting-control:hover {
     transform: translateY(-1px);
 }
 
-.template-item.preset {
-    background: linear-gradient(
-        135deg,
-        var(--arc-surface) 0%,
-        var(--glow-light) 100%
-    );
-}
+/* 移除预置模板特殊样式，使用统一外观 */
 
 .template-icon {
     font-size: 20px;
@@ -1066,6 +1060,8 @@ select.setting-control:hover {
     background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
 }
+
+/* 预置徽章样式已移除 */
 
 .template-add-btn {
     display: flex;

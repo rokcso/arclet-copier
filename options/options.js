@@ -7,6 +7,8 @@ import {
   templateEngine,
   TEMPLATE_FIELDS,
   PRESET_TEMPLATES,
+  getHiddenPresetTemplates,
+  saveHiddenPresetTemplates,
 } from "../shared/constants.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -452,7 +454,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function createTemplateItem(template) {
     const item = document.createElement("div");
-    item.className = "template-item" + (template.isPreset ? " preset" : "");
+    item.className = "template-item";
     item.dataset.templateId = template.id;
 
     item.innerHTML = `
@@ -460,27 +462,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       <div class="template-info">
         <div class="template-name">${escapeHtml(template.name)}</div>
         <div class="template-content">${escapeHtml(template.template)}</div>
-        ${template.description ? `<div class="template-description">${escapeHtml(template.description)}</div>` : ""}
+        ${!template.isPreset && template.description ? `<div class="template-description">${escapeHtml(template.description)}</div>` : ""}
       </div>
       <div class="template-actions">
-        ${
-          !template.isPreset
-            ? `
-          <button class="template-action-btn edit" data-action="edit" title="编辑">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-          </button>
-          <button class="template-action-btn delete" data-action="delete" title="删除">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3,6 5,6 21,6"></polyline>
-              <path d="m19,6 v14 a2,2 0 0,1 -2,2 H7 a2,2 0 0,1 -2,-2 V6 m3,0 V4 a2,2 0 0,1 2,-2 h4 a2,2 0 0,1 2,2 v2"></path>
-            </svg>
-          </button>
-        `
-            : ""
-        }
+        <button class="template-action-btn edit" data-action="edit" title="编辑">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
+        <button class="template-action-btn delete" data-action="delete" title="删除">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"></polyline>
+            <path d="m19,6 v14 a2,2 0 0,1 -2,2 H7 a2,2 0 0,1 -2,-2 V6 m3,0 V4 a2,2 0 0,1 2,-2 h4 a2,2 0 0,1 2,2 v2"></path>
+          </svg>
+        </button>
       </div>
     `;
 
@@ -509,9 +505,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentEditingTemplate = template;
 
     if (template) {
-      elements.templateModalTitle.textContent =
-        getLocalMessage("editTemplate") || "编辑模板";
-      elements.templateName.value = template.name;
+      if (template.isPreset) {
+        // 预置模板：创建副本模式
+        elements.templateModalTitle.textContent =
+          getLocalMessage("copyTemplate") || "创建模板副本";
+        elements.templateName.value = template.name + " - 副本";
+        currentEditingTemplate = null; // 重置为创建模式
+      } else {
+        // 自定义模板：编辑模式
+        elements.templateModalTitle.textContent =
+          getLocalMessage("editTemplate") || "编辑模板";
+        elements.templateName.value = template.name;
+      }
       elements.templateIcon.value = template.icon;
       elements.templateContent.value = template.template;
     } else {
@@ -539,30 +544,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function deleteTemplate(template) {
-    if (
-      !confirm(
-        getLocalMessage("confirmDeleteTemplate") ||
-          `确定要删除模板"${template.name}"吗？`,
-      )
-    ) {
+    const confirmMessage = template.isPreset
+      ? getLocalMessage("confirmHideTemplate") ||
+        `确定要隐藏模板"${template.name}"吗？`
+      : getLocalMessage("confirmDeleteTemplate") ||
+        `确定要删除模板"${template.name}"吗？`;
+
+    if (!confirm(confirmMessage)) {
       return;
     }
 
     try {
-      const customTemplates = await getCustomTemplates();
-      const updatedTemplates = customTemplates.filter(
-        (t) => t.id !== template.id,
-      );
-      await saveCustomTemplates(updatedTemplates);
+      if (template.isPreset) {
+        // 预置模板：添加到隐藏列表
+        const hiddenIds = await getHiddenPresetTemplates();
+        if (!hiddenIds.includes(template.id)) {
+          hiddenIds.push(template.id);
+          await saveHiddenPresetTemplates(hiddenIds);
+        }
+        showNotification(getLocalMessage("templateHidden") || "模板已隐藏");
+      } else {
+        // 自定义模板：真正删除
+        const customTemplates = await getCustomTemplates();
+        const updatedTemplates = customTemplates.filter(
+          (t) => t.id !== template.id,
+        );
+        await saveCustomTemplates(updatedTemplates);
+        showNotification(getLocalMessage("templateDeleted") || "模板已删除");
+      }
 
-      showNotification(getLocalMessage("templateDeleted") || "模板已删除");
       await loadTemplates();
     } catch (error) {
       console.error("Failed to delete template:", error);
-      showNotification(
-        getLocalMessage("templateDeleteFailed") || "删除模板失败",
-        "error",
-      );
+      const errorMessage = template.isPreset
+        ? getLocalMessage("templateHideFailed") || "隐藏模板失败"
+        : getLocalMessage("templateDeleteFailed") || "删除模板失败";
+      showNotification(errorMessage, "error");
     }
   }
 

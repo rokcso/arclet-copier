@@ -602,9 +602,36 @@ export async function saveCustomTemplates(templates) {
   }
 }
 
+export async function getHiddenPresetTemplates() {
+  try {
+    const result = await chrome.storage.sync.get(["hiddenPresetTemplates"]);
+    return result.hiddenPresetTemplates || [];
+  } catch (error) {
+    console.error("Failed to load hidden preset templates:", error);
+    return [];
+  }
+}
+
+export async function saveHiddenPresetTemplates(hiddenIds) {
+  try {
+    await chrome.storage.sync.set({ hiddenPresetTemplates: hiddenIds });
+    return true;
+  } catch (error) {
+    console.error("Failed to save hidden preset templates:", error);
+    return false;
+  }
+}
+
 export async function getAllTemplates() {
   const customTemplates = await getCustomTemplates();
-  return [...PRESET_TEMPLATES, ...customTemplates];
+  const hiddenPresetIds = await getHiddenPresetTemplates();
+
+  // 过滤掉被隐藏的预置模板
+  const visiblePresetTemplates = PRESET_TEMPLATES.filter(
+    (template) => !hiddenPresetIds.includes(template.id),
+  );
+
+  return [...visiblePresetTemplates, ...customTemplates];
 }
 
 export function generateTemplateId() {
