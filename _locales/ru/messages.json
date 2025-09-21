@@ -439,5 +439,104 @@
   },
   "shortUrlProgress": {
     "message": "Создание коротких URL... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "Шаблоны Формата Копирования"
+  },
+  "addTemplate": {
+    "message": "Создать Новый Шаблон"
+  },
+  "editTemplate": {
+    "message": "Редактировать Шаблон"
+  },
+  "copyTemplate": {
+    "message": "Создать Копию"
+  },
+  "createTemplate": {
+    "message": "Создать Шаблон"
+  },
+  "templateName": {
+    "message": "Название Шаблона"
+  },
+  "templateIcon": {
+    "message": "Иконка Шаблона"
+  },
+  "templateContent": {
+    "message": "Содержимое Шаблона"
+  },
+  "templatePreview": {
+    "message": "Живой Предпросмотр"
+  },
+  "refreshPreview": {
+    "message": "Обновить Предпросмотр"
+  },
+  "previewPlaceholder": {
+    "message": "Введите содержимое шаблона для просмотра в реальном времени"
+  },
+  "insertField": {
+    "message": "Вставить Переменную"
+  },
+  "basicFields": {
+    "message": "Основные Переменные"
+  },
+  "timeFields": {
+    "message": "Переменные Времени"
+  },
+  "templateNameRequired": {
+    "message": "Пожалуйста, введите название шаблона"
+  },
+  "templateContentRequired": {
+    "message": "Пожалуйста, введите содержимое шаблона"
+  },
+  "templateValid": {
+    "message": "Формат шаблона корректен"
+  },
+  "templateSaveFailed": {
+    "message": "Ошибка сохранения шаблона, попробуйте снова"
+  },
+  "templateCreated": {
+    "message": "Шаблон успешно создан"
+  },
+  "templateUpdated": {
+    "message": "Шаблон успешно обновлён"
+  },
+  "templateDeleted": {
+    "message": "Шаблон успешно удалён"
+  },
+  "templateHidden": {
+    "message": "Шаблон скрыт"
+  },
+  "templateDeleteFailed": {
+    "message": "Ошибка удаления шаблона"
+  },
+  "templateHideFailed": {
+    "message": "Ошибка скрытия шаблона"
+  },
+  "confirmDeleteTemplate": {
+    "message": "Вы уверены, что хотите удалить шаблон \"{name}\"? Это действие нельзя отменить."
+  },
+  "confirmHideTemplate": {
+    "message": "Вы уверены, что хотите скрыть предустановленный шаблон \"{name}\"? Вы можете показать его снова в настройках."
+  },
+  "customTemplates": {
+    "message": "Пользовательские Шаблоны"
+  },
+  "customTemplatesDesc": {
+    "message": "Создавайте и управляйте пользовательскими шаблонами формата копирования с богатыми комбинациями переменных"
+  },
+  "templateHelpText": {
+    "message": "Используйте формат {{имяПеременной}} для вставки динамического содержимого, например {{url}}, {{title}} и т.д."
+  },
+  "templateExamples": {
+    "message": "Примеры Шаблонов"
+  },
+  "noTemplatesYet": {
+    "message": "Пока нет пользовательских шаблонов. Нажмите \"Создать Новый Шаблон\" для начала"
+  },
+  "templateVariableHelp": {
+    "message": "Справка по Переменным"
+  },
+  "moreFieldsBtn": {
+    "message": "Больше Переменных"
   }
 }

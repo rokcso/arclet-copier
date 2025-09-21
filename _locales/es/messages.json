@@ -439,5 +439,104 @@
   },
   "shortUrlProgress": {
     "message": "Generando URLs cortas... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "Plantillas de Formato de Copia"
+  },
+  "addTemplate": {
+    "message": "Crear Nueva Plantilla"
+  },
+  "editTemplate": {
+    "message": "Editar Plantilla"
+  },
+  "copyTemplate": {
+    "message": "Crear Copia"
+  },
+  "createTemplate": {
+    "message": "Crear Plantilla"
+  },
+  "templateName": {
+    "message": "Nombre de la Plantilla"
+  },
+  "templateIcon": {
+    "message": "Icono de la Plantilla"
+  },
+  "templateContent": {
+    "message": "Contenido de la Plantilla"
+  },
+  "templatePreview": {
+    "message": "Vista Previa en Vivo"
+  },
+  "refreshPreview": {
+    "message": "Actualizar Vista Previa"
+  },
+  "previewPlaceholder": {
+    "message": "Ingresa el contenido de la plantilla para ver la vista previa en vivo"
+  },
+  "insertField": {
+    "message": "Insertar Variable"
+  },
+  "basicFields": {
+    "message": "Variables Básicas"
+  },
+  "timeFields": {
+    "message": "Variables de Tiempo"
+  },
+  "templateNameRequired": {
+    "message": "Por favor ingresa el nombre de la plantilla"
+  },
+  "templateContentRequired": {
+    "message": "Por favor ingresa el contenido de la plantilla"
+  },
+  "templateValid": {
+    "message": "El formato de la plantilla es válido"
+  },
+  "templateSaveFailed": {
+    "message": "Error al guardar la plantilla, inténtalo de nuevo"
+  },
+  "templateCreated": {
+    "message": "Plantilla creada exitosamente"
+  },
+  "templateUpdated": {
+    "message": "Plantilla actualizada exitosamente"
+  },
+  "templateDeleted": {
+    "message": "Plantilla eliminada exitosamente"
+  },
+  "templateHidden": {
+    "message": "Plantilla ocultada"
+  },
+  "templateDeleteFailed": {
+    "message": "Error al eliminar la plantilla"
+  },
+  "templateHideFailed": {
+    "message": "Error al ocultar la plantilla"
+  },
+  "confirmDeleteTemplate": {
+    "message": "¿Estás seguro de que quieres eliminar la plantilla \"{name}\"? Esta acción no se puede deshacer."
+  },
+  "confirmHideTemplate": {
+    "message": "¿Estás seguro de que quieres ocultar la plantilla predefinida \"{name}\"? Puedes mostrarla nuevamente en la configuración."
+  },
+  "customTemplates": {
+    "message": "Plantillas Personalizadas"
+  },
+  "customTemplatesDesc": {
+    "message": "Crea y administra tus plantillas personalizadas de formato de copia con combinaciones ricas de variables"
+  },
+  "templateHelpText": {
+    "message": "Usa el formato {{nombreVariable}} para insertar contenido dinámico, como {{url}}, {{title}}, etc."
+  },
+  "templateExamples": {
+    "message": "Ejemplos de Plantillas"
+  },
+  "noTemplatesYet": {
+    "message": "Aún no hay plantillas personalizadas. Haz clic en \"Crear Nueva Plantilla\" para comenzar"
+  },
+  "templateVariableHelp": {
+    "message": "Referencia de Variables"
+  },
+  "moreFieldsBtn": {
+    "message": "Más Variables"
   }
 }

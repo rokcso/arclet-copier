@@ -439,5 +439,104 @@
   },
   "shortUrlProgress": {
     "message": "Generating short URLs... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "Copy Format Templates"
+  },
+  "addTemplate": {
+    "message": "Create New Template"
+  },
+  "editTemplate": {
+    "message": "Edit Template"
+  },
+  "copyTemplate": {
+    "message": "Create Copy"
+  },
+  "createTemplate": {
+    "message": "Create Template"
+  },
+  "templateName": {
+    "message": "Template Name"
+  },
+  "templateIcon": {
+    "message": "Template Icon"
+  },
+  "templateContent": {
+    "message": "Template Content"
+  },
+  "templatePreview": {
+    "message": "Live Preview"
+  },
+  "refreshPreview": {
+    "message": "Refresh Preview"
+  },
+  "previewPlaceholder": {
+    "message": "Enter template content to see live preview"
+  },
+  "insertField": {
+    "message": "Insert Variable"
+  },
+  "basicFields": {
+    "message": "Basic Variables"
+  },
+  "timeFields": {
+    "message": "Time Variables"
+  },
+  "templateNameRequired": {
+    "message": "Please enter template name"
+  },
+  "templateContentRequired": {
+    "message": "Please enter template content"
+  },
+  "templateValid": {
+    "message": "Template format is valid"
+  },
+  "templateSaveFailed": {
+    "message": "Failed to save template, please try again"
+  },
+  "templateCreated": {
+    "message": "Template created successfully"
+  },
+  "templateUpdated": {
+    "message": "Template updated successfully"
+  },
+  "templateDeleted": {
+    "message": "Template deleted successfully"
+  },
+  "templateHidden": {
+    "message": "Template hidden"
+  },
+  "templateDeleteFailed": {
+    "message": "Failed to delete template"
+  },
+  "templateHideFailed": {
+    "message": "Failed to hide template"
+  },
+  "confirmDeleteTemplate": {
+    "message": "Are you sure you want to delete template \"{name}\"? This action cannot be undone."
+  },
+  "confirmHideTemplate": {
+    "message": "Are you sure you want to hide preset template \"{name}\"? You can show it again in settings."
+  },
+  "customTemplates": {
+    "message": "Custom Templates"
+  },
+  "customTemplatesDesc": {
+    "message": "Create and manage your custom copy format templates with rich variable combinations"
+  },
+  "templateHelpText": {
+    "message": "Use {{variableName}} format to insert dynamic content, like {{url}}, {{title}}, etc."
+  },
+  "templateExamples": {
+    "message": "Template Examples"
+  },
+  "noTemplatesYet": {
+    "message": "No custom templates yet. Click \"Create New Template\" to get started"
+  },
+  "templateVariableHelp": {
+    "message": "Variable Reference"
+  },
+  "moreFieldsBtn": {
+    "message": "More Variables"
   }
 }

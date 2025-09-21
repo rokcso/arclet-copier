@@ -439,5 +439,104 @@
   },
   "shortUrlProgress": {
     "message": "Kurz-URLs werden generiert... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "Kopierformat-Vorlagen"
+  },
+  "addTemplate": {
+    "message": "Neue Vorlage erstellen"
+  },
+  "editTemplate": {
+    "message": "Vorlage bearbeiten"
+  },
+  "copyTemplate": {
+    "message": "Kopie erstellen"
+  },
+  "createTemplate": {
+    "message": "Vorlage erstellen"
+  },
+  "templateName": {
+    "message": "Vorlagenname"
+  },
+  "templateIcon": {
+    "message": "Vorlagen-Symbol"
+  },
+  "templateContent": {
+    "message": "Vorlageninhalt"
+  },
+  "templatePreview": {
+    "message": "Live-Vorschau"
+  },
+  "refreshPreview": {
+    "message": "Vorschau aktualisieren"
+  },
+  "previewPlaceholder": {
+    "message": "Vorlageninhalt eingeben, um Live-Vorschau zu sehen"
+  },
+  "insertField": {
+    "message": "Variable einfügen"
+  },
+  "basicFields": {
+    "message": "Grundvariablen"
+  },
+  "timeFields": {
+    "message": "Zeitvariablen"
+  },
+  "templateNameRequired": {
+    "message": "Bitte Vorlagennamen eingeben"
+  },
+  "templateContentRequired": {
+    "message": "Bitte Vorlageninhalt eingeben"
+  },
+  "templateValid": {
+    "message": "Vorlagenformat ist gültig"
+  },
+  "templateSaveFailed": {
+    "message": "Speichern der Vorlage fehlgeschlagen, bitte erneut versuchen"
+  },
+  "templateCreated": {
+    "message": "Vorlage erfolgreich erstellt"
+  },
+  "templateUpdated": {
+    "message": "Vorlage erfolgreich aktualisiert"
+  },
+  "templateDeleted": {
+    "message": "Vorlage erfolgreich gelöscht"
+  },
+  "templateHidden": {
+    "message": "Vorlage ausgeblendet"
+  },
+  "templateDeleteFailed": {
+    "message": "Löschen der Vorlage fehlgeschlagen"
+  },
+  "templateHideFailed": {
+    "message": "Ausblenden der Vorlage fehlgeschlagen"
+  },
+  "confirmDeleteTemplate": {
+    "message": "Sind Sie sicher, dass Sie die Vorlage \"{name}\" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+  },
+  "confirmHideTemplate": {
+    "message": "Sind Sie sicher, dass Sie die Preset-Vorlage \"{name}\" ausblenden möchten? Sie können sie in den Einstellungen wieder anzeigen."
+  },
+  "customTemplates": {
+    "message": "Benutzerdefinierte Vorlagen"
+  },
+  "customTemplatesDesc": {
+    "message": "Erstellen und verwalten Sie Ihre benutzerdefinierten Kopierformat-Vorlagen mit umfangreichen Variablenkombinationen"
+  },
+  "templateHelpText": {
+    "message": "Verwenden Sie das Format {{variableName}} zum Einfügen dynamischer Inhalte, wie {{url}}, {{title}}, etc."
+  },
+  "templateExamples": {
+    "message": "Vorlagenbeispiele"
+  },
+  "noTemplatesYet": {
+    "message": "Noch keine benutzerdefinierten Vorlagen. Klicken Sie auf \"Neue Vorlage erstellen\", um zu beginnen"
+  },
+  "templateVariableHelp": {
+    "message": "Variablenreferenz"
+  },
+  "moreFieldsBtn": {
+    "message": "Weitere Variablen"
   }
 }

@@ -736,10 +736,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (panel.classList.contains("show")) {
       panel.classList.remove("show");
-      btn.textContent = "更多字段 ▼";
+      btn.textContent = getLocalMessage("moreFieldsBtn") + " ▼";
     } else {
       panel.classList.add("show");
-      btn.textContent = "更多字段 ▲";
+      btn.textContent = getLocalMessage("moreFieldsBtn") + " ▲";
     }
   }
 

@@ -439,5 +439,104 @@
   },
   "shortUrlProgress": {
     "message": "短縮URLを生成中... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "コピーフォーマットテンプレート"
+  },
+  "addTemplate": {
+    "message": "新しいテンプレートを作成"
+  },
+  "editTemplate": {
+    "message": "テンプレートを編集"
+  },
+  "copyTemplate": {
+    "message": "コピーを作成"
+  },
+  "createTemplate": {
+    "message": "テンプレートを作成"
+  },
+  "templateName": {
+    "message": "テンプレート名"
+  },
+  "templateIcon": {
+    "message": "テンプレートアイコン"
+  },
+  "templateContent": {
+    "message": "テンプレート内容"
+  },
+  "templatePreview": {
+    "message": "ライブプレビュー"
+  },
+  "refreshPreview": {
+    "message": "プレビューを更新"
+  },
+  "previewPlaceholder": {
+    "message": "テンプレート内容を入力してライブプレビューを表示"
+  },
+  "insertField": {
+    "message": "変数を挿入"
+  },
+  "basicFields": {
+    "message": "基本変数"
+  },
+  "timeFields": {
+    "message": "時間変数"
+  },
+  "templateNameRequired": {
+    "message": "テンプレート名を入力してください"
+  },
+  "templateContentRequired": {
+    "message": "テンプレート内容を入力してください"
+  },
+  "templateValid": {
+    "message": "テンプレート形式が有効です"
+  },
+  "templateSaveFailed": {
+    "message": "テンプレートの保存に失敗しました。再試行してください"
+  },
+  "templateCreated": {
+    "message": "テンプレートが正常に作成されました"
+  },
+  "templateUpdated": {
+    "message": "テンプレートが正常に更新されました"
+  },
+  "templateDeleted": {
+    "message": "テンプレートが正常に削除されました"
+  },
+  "templateHidden": {
+    "message": "テンプレートが非表示になりました"
+  },
+  "templateDeleteFailed": {
+    "message": "テンプレートの削除に失敗しました"
+  },
+  "templateHideFailed": {
+    "message": "テンプレートの非表示に失敗しました"
+  },
+  "confirmDeleteTemplate": {
+    "message": "テンプレート\"{name}\"を削除してもよろしいですか？この操作は元に戻せません。"
+  },
+  "confirmHideTemplate": {
+    "message": "プリセットテンプレート\"{name}\"を非表示にしてもよろしいですか？設定で再度表示できます。"
+  },
+  "customTemplates": {
+    "message": "カスタムテンプレート"
+  },
+  "customTemplatesDesc": {
+    "message": "豊富な変数の組み合わせでカスタムコピーフォーマットテンプレートを作成・管理"
+  },
+  "templateHelpText": {
+    "message": "{{variableName}}形式を使用して動的コンテンツを挿入します。例：{{url}}、{{title}}など"
+  },
+  "templateExamples": {
+    "message": "テンプレート例"
+  },
+  "noTemplatesYet": {
+    "message": "まだカスタムテンプレートがありません。「新しいテンプレートを作成」をクリックして開始"
+  },
+  "templateVariableHelp": {
+    "message": "変数リファレンス"
+  },
+  "moreFieldsBtn": {
+    "message": "その他の変数"
   }
 }

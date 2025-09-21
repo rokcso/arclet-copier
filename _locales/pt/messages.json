@@ -439,5 +439,104 @@
   },
   "shortUrlProgress": {
     "message": "Gerando URLs curtas... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "Modelos de Formato de Cópia"
+  },
+  "addTemplate": {
+    "message": "Criar Novo Modelo"
+  },
+  "editTemplate": {
+    "message": "Editar Modelo"
+  },
+  "copyTemplate": {
+    "message": "Criar Cópia"
+  },
+  "createTemplate": {
+    "message": "Criar Modelo"
+  },
+  "templateName": {
+    "message": "Nome do Modelo"
+  },
+  "templateIcon": {
+    "message": "Ícone do Modelo"
+  },
+  "templateContent": {
+    "message": "Conteúdo do Modelo"
+  },
+  "templatePreview": {
+    "message": "Pré-visualização ao Vivo"
+  },
+  "refreshPreview": {
+    "message": "Atualizar Pré-visualização"
+  },
+  "previewPlaceholder": {
+    "message": "Digite o conteúdo do modelo para ver a pré-visualização ao vivo"
+  },
+  "insertField": {
+    "message": "Inserir Variável"
+  },
+  "basicFields": {
+    "message": "Variáveis Básicas"
+  },
+  "timeFields": {
+    "message": "Variáveis de Tempo"
+  },
+  "templateNameRequired": {
+    "message": "Por favor, insira o nome do modelo"
+  },
+  "templateContentRequired": {
+    "message": "Por favor, insira o conteúdo do modelo"
+  },
+  "templateValid": {
+    "message": "O formato do modelo é válido"
+  },
+  "templateSaveFailed": {
+    "message": "Falha ao salvar o modelo, tente novamente"
+  },
+  "templateCreated": {
+    "message": "Modelo criado com sucesso"
+  },
+  "templateUpdated": {
+    "message": "Modelo atualizado com sucesso"
+  },
+  "templateDeleted": {
+    "message": "Modelo excluído com sucesso"
+  },
+  "templateHidden": {
+    "message": "Modelo ocultado"
+  },
+  "templateDeleteFailed": {
+    "message": "Falha ao excluir o modelo"
+  },
+  "templateHideFailed": {
+    "message": "Falha ao ocultar o modelo"
+  },
+  "confirmDeleteTemplate": {
+    "message": "Tem certeza de que deseja excluir o modelo \"{name}\"? Esta ação não pode ser desfeita."
+  },
+  "confirmHideTemplate": {
+    "message": "Tem certeza de que deseja ocultar o modelo predefinido \"{name}\"? Você pode mostrá-lo novamente nas configurações."
+  },
+  "customTemplates": {
+    "message": "Modelos Personalizados"
+  },
+  "customTemplatesDesc": {
+    "message": "Crie e gerencie seus modelos personalizados de formato de cópia com combinações ricas de variáveis"
+  },
+  "templateHelpText": {
+    "message": "Use o formato {{nomeVariavel}} para inserir conteúdo dinâmico, como {{url}}, {{title}}, etc."
+  },
+  "templateExamples": {
+    "message": "Exemplos de Modelos"
+  },
+  "noTemplatesYet": {
+    "message": "Ainda não há modelos personalizados. Clique em \"Criar Novo Modelo\" para começar"
+  },
+  "templateVariableHelp": {
+    "message": "Referência de Variáveis"
+  },
+  "moreFieldsBtn": {
+    "message": "Mais Variáveis"
   }
 }

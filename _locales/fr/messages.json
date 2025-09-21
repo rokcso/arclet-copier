@@ -439,5 +439,104 @@
   },
   "shortUrlProgress": {
     "message": "Génération d'URLs courtes... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "Modèles de Format de Copie"
+  },
+  "addTemplate": {
+    "message": "Créer un Nouveau Modèle"
+  },
+  "editTemplate": {
+    "message": "Modifier le Modèle"
+  },
+  "copyTemplate": {
+    "message": "Créer une Copie"
+  },
+  "createTemplate": {
+    "message": "Créer un Modèle"
+  },
+  "templateName": {
+    "message": "Nom du Modèle"
+  },
+  "templateIcon": {
+    "message": "Icône du Modèle"
+  },
+  "templateContent": {
+    "message": "Contenu du Modèle"
+  },
+  "templatePreview": {
+    "message": "Aperçu en Direct"
+  },
+  "refreshPreview": {
+    "message": "Actualiser l'Aperçu"
+  },
+  "previewPlaceholder": {
+    "message": "Entrez le contenu du modèle pour voir l'aperçu en direct"
+  },
+  "insertField": {
+    "message": "Insérer une Variable"
+  },
+  "basicFields": {
+    "message": "Variables de Base"
+  },
+  "timeFields": {
+    "message": "Variables de Temps"
+  },
+  "templateNameRequired": {
+    "message": "Veuillez entrer le nom du modèle"
+  },
+  "templateContentRequired": {
+    "message": "Veuillez entrer le contenu du modèle"
+  },
+  "templateValid": {
+    "message": "Le format du modèle est valide"
+  },
+  "templateSaveFailed": {
+    "message": "Échec de la sauvegarde du modèle, veuillez réessayer"
+  },
+  "templateCreated": {
+    "message": "Modèle créé avec succès"
+  },
+  "templateUpdated": {
+    "message": "Modèle mis à jour avec succès"
+  },
+  "templateDeleted": {
+    "message": "Modèle supprimé avec succès"
+  },
+  "templateHidden": {
+    "message": "Modèle masqué"
+  },
+  "templateDeleteFailed": {
+    "message": "Échec de la suppression du modèle"
+  },
+  "templateHideFailed": {
+    "message": "Échec du masquage du modèle"
+  },
+  "confirmDeleteTemplate": {
+    "message": "Êtes-vous sûr de vouloir supprimer le modèle \"{name}\" ? Cette action ne peut pas être annulée."
+  },
+  "confirmHideTemplate": {
+    "message": "Êtes-vous sûr de vouloir masquer le modèle prédéfini \"{name}\" ? Vous pouvez le réafficher dans les paramètres."
+  },
+  "customTemplates": {
+    "message": "Modèles Personnalisés"
+  },
+  "customTemplatesDesc": {
+    "message": "Créez et gérez vos modèles de format de copie personnalisés avec de riches combinaisons de variables"
+  },
+  "templateHelpText": {
+    "message": "Utilisez le format {{nomVariable}} pour insérer du contenu dynamique, comme {{url}}, {{title}}, etc."
+  },
+  "templateExamples": {
+    "message": "Exemples de Modèles"
+  },
+  "noTemplatesYet": {
+    "message": "Aucun modèle personnalisé pour le moment. Cliquez sur \"Créer un Nouveau Modèle\" pour commencer"
+  },
+  "templateVariableHelp": {
+    "message": "Référence des Variables"
+  },
+  "moreFieldsBtn": {
+    "message": "Plus de Variables"
   }
 }

@@ -437,5 +437,104 @@
   },
   "shortUrlProgress": {
     "message": "正在生成短链... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "复制格式模板"
+  },
+  "addTemplate": {
+    "message": "创建新模板"
+  },
+  "editTemplate": {
+    "message": "编辑模板"
+  },
+  "copyTemplate": {
+    "message": "创建副本"
+  },
+  "createTemplate": {
+    "message": "创建模板"
+  },
+  "templateName": {
+    "message": "模板名称"
+  },
+  "templateIcon": {
+    "message": "模板图标"
+  },
+  "templateContent": {
+    "message": "模板内容"
+  },
+  "templatePreview": {
+    "message": "实时预览"
+  },
+  "refreshPreview": {
+    "message": "刷新预览"
+  },
+  "previewPlaceholder": {
+    "message": "输入模板内容以查看预览效果"
+  },
+  "insertField": {
+    "message": "插入变量"
+  },
+  "basicFields": {
+    "message": "基础变量"
+  },
+  "timeFields": {
+    "message": "时间变量"
+  },
+  "templateNameRequired": {
+    "message": "请输入模板名称"
+  },
+  "templateContentRequired": {
+    "message": "请输入模板内容"
+  },
+  "templateValid": {
+    "message": "模板格式正确"
+  },
+  "templateSaveFailed": {
+    "message": "保存模板失败，请重试"
+  },
+  "templateCreated": {
+    "message": "模板创建成功"
+  },
+  "templateUpdated": {
+    "message": "模板更新成功"
+  },
+  "templateDeleted": {
+    "message": "模板删除成功"
+  },
+  "templateHidden": {
+    "message": "模板已隐藏"
+  },
+  "templateDeleteFailed": {
+    "message": "删除模板失败"
+  },
+  "templateHideFailed": {
+    "message": "隐藏模板失败"
+  },
+  "confirmDeleteTemplate": {
+    "message": "确定要删除模板"{name}"吗？删除后无法恢复。"
+  },
+  "confirmHideTemplate": {
+    "message": "确定要隐藏预设模板"{name}"吗？可在设置中重新显示。"
+  },
+  "customTemplates": {
+    "message": "自定义模板"
+  },
+  "customTemplatesDesc": {
+    "message": "创建和管理您的专属复制格式模板，支持丰富的变量组合"
+  },
+  "templateHelpText": {
+    "message": "使用 {{变量名}} 格式插入动态内容，如 {{url}}、{{title}} 等"
+  },
+  "templateExamples": {
+    "message": "常用模板示例"
+  },
+  "noTemplatesYet": {
+    "message": "暂无自定义模板，点击"创建新模板"开始使用"
+  },
+  "templateVariableHelp": {
+    "message": "变量说明"
+  },
+  "moreFieldsBtn": {
+    "message": "更多变量"
   }
 }

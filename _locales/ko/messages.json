@@ -437,5 +437,107 @@
   },
   "shortUrlProgress": {
     "message": "단축 URL 생성 중... ({current}/{total})"
+  },
+  "windowScope": {
+    "message": "창 범위"
+  },
+  "copyTemplatesSection": {
+    "message": "복사 형식 템플릿"
+  },
+  "addTemplate": {
+    "message": "새 템플릿 생성"
+  },
+  "editTemplate": {
+    "message": "템플릿 편집"
+  },
+  "copyTemplate": {
+    "message": "복사본 생성"
+  },
+  "createTemplate": {
+    "message": "템플릿 생성"
+  },
+  "templateName": {
+    "message": "템플릿 이름"
+  },
+  "templateIcon": {
+    "message": "템플릿 아이콘"
+  },
+  "templateContent": {
+    "message": "템플릿 내용"
+  },
+  "templatePreview": {
+    "message": "실시간 미리보기"
+  },
+  "refreshPreview": {
+    "message": "미리보기 새로고침"
+  },
+  "previewPlaceholder": {
+    "message": "템플릿 내용을 입력하여 실시간 미리보기를 확인하세요"
+  },
+  "insertField": {
+    "message": "변수 삽입"
+  },
+  "basicFields": {
+    "message": "기본 변수"
+  },
+  "timeFields": {
+    "message": "시간 변수"
+  },
+  "templateNameRequired": {
+    "message": "템플릿 이름을 입력해주세요"
+  },
+  "templateContentRequired": {
+    "message": "템플릿 내용을 입력해주세요"
+  },
+  "templateValid": {
+    "message": "템플릿 형식이 유효합니다"
+  },
+  "templateSaveFailed": {
+    "message": "템플릿 저장에 실패했습니다. 다시 시도해주세요"
+  },
+  "templateCreated": {
+    "message": "템플릿이 성공적으로 생성되었습니다"
+  },
+  "templateUpdated": {
+    "message": "템플릿이 성공적으로 업데이트되었습니다"
+  },
+  "templateDeleted": {
+    "message": "템플릿이 성공적으로 삭제되었습니다"
+  },
+  "templateHidden": {
+    "message": "템플릿이 숨겨졌습니다"
+  },
+  "templateDeleteFailed": {
+    "message": "템플릿 삭제에 실패했습니다"
+  },
+  "templateHideFailed": {
+    "message": "템플릿 숨기기에 실패했습니다"
+  },
+  "confirmDeleteTemplate": {
+    "message": "템플릿 \"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+  },
+  "confirmHideTemplate": {
+    "message": "프리셋 템플릿 \"{name}\"을(를) 숨기시겠습니까? 설정에서 다시 표시할 수 있습니다."
+  },
+  "customTemplates": {
+    "message": "사용자 정의 템플릿"
+  },
+  "customTemplatesDesc": {
+    "message": "풍부한 변수 조합으로 사용자 정의 복사 형식 템플릿을 생성하고 관리하세요"
+  },
+  "templateHelpText": {
+    "message": "{{변수이름}} 형식을 사용하여 동적 콘텐츠를 삽입하세요. 예: {{url}}, {{title}} 등"
+  },
+  "templateExamples": {
+    "message": "템플릿 예시"
+  },
+  "noTemplatesYet": {
+    "message": "아직 사용자 정의 템플릿이 없습니다. \"새 템플릿 생성\"을 클릭하여 시작하세요"
+  },
+  "templateVariableHelp": {
+    "message": "변수 참조"
+  },
+  "moreFieldsBtn": {
+    "message": "더 많은 변수"
   }
 }
