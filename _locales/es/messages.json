@@ -515,9 +515,7 @@
   "confirmDeleteTemplate": {
     "message": "¿Estás seguro de que quieres eliminar la plantilla \"{name}\"? Esta acción no se puede deshacer."
   },
-  "confirmHideTemplate": {
-    "message": "¿Estás seguro de que quieres ocultar la plantilla predefinida \"{name}\"? Puedes mostrarla nuevamente en la configuración."
-  },
+
   "customTemplates": {
     "message": "Plantillas Personalizadas"
   },
@@ -539,22 +537,7 @@
   "moreFieldsBtn": {
     "message": "Más Variables"
   },
-  "presetMarkdownName": {
-    "message": "Enlace Markdown"
-  },
 
-  "presetPlainName": {
-    "message": "Texto Plano"
-  },
-  "presetDevDocName": {
-    "message": "Documentación de Desarrollador"
-  },
-  "presetCitationName": {
-    "message": "Cita Académica"
-  },
-  "presetSocialName": {
-    "message": "Compartir Social"
-  },
   "templateNamePlaceholder": {
     "message": "Ingresa el nombre de la plantilla..."
   },

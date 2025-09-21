@@ -515,9 +515,7 @@
   "confirmDeleteTemplate": {
     "message": "Sind Sie sicher, dass Sie die Vorlage \"{name}\" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
   },
-  "confirmHideTemplate": {
-    "message": "Sind Sie sicher, dass Sie die Preset-Vorlage \"{name}\" ausblenden möchten? Sie können sie in den Einstellungen wieder anzeigen."
-  },
+
   "customTemplates": {
     "message": "Benutzerdefinierte Vorlagen"
   },
@@ -539,24 +537,7 @@
   "moreFieldsBtn": {
     "message": "Weitere Variablen"
   },
-  "presetMarkdownName": {
-    "message": "Markdown-Link"
-  },
 
-  "presetPlainName": {
-    "message": "Einfacher Text"
-  },
-
-  "presetDevDocName": {
-    "message": "Entwicklerdokumentation"
-  },
-
-  "presetCitationName": {
-    "message": "Akademisches Zitat"
-  },
-  "presetSocialName": {
-    "message": "Social Sharing"
-  },
   "templateNamePlaceholder": {
     "message": "Vorlagennamen eingeben..."
   },

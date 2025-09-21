@@ -516,9 +516,7 @@
   "confirmDeleteTemplate": {
     "message": "템플릿 \"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
   },
-  "confirmHideTemplate": {
-    "message": "프리셋 템플릿 \"{name}\"을(를) 숨기시겠습니까? 설정에서 다시 표시할 수 있습니다."
-  },
+
   "customTemplates": {
     "message": "사용자 정의 템플릿"
   },
@@ -540,24 +538,7 @@
   "moreFieldsBtn": {
     "message": "더 많은 변수"
   },
-  "presetMarkdownName": {
-    "message": "마크다운 링크"
-  },
 
-  "presetPlainName": {
-    "message": "일반 텍스트"
-  },
-
-  "presetDevDocName": {
-    "message": "개발자 문서"
-  },
-
-  "presetCitationName": {
-    "message": "학술 인용"
-  },
-  "presetSocialName": {
-    "message": "소셜 공유"
-  },
   "templateNamePlaceholder": {
     "message": "템플릿 이름을 입력하세요..."
   },

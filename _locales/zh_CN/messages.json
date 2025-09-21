@@ -511,10 +511,7 @@
     "message": "隐藏模板失败"
   },
   "confirmDeleteTemplate": {
-    "message": "确定要删除模板"{name}"吗？删除后无法恢复。"
-  },
-  "confirmHideTemplate": {
-    "message": "确定要隐藏预设模板"{name}"吗？可在设置中重新显示。"
+    "message": "确定要删除模板\"{name}\"吗？删除后无法恢复。"
   },
   "customTemplates": {
     "message": "自定义模板"
@@ -529,28 +526,13 @@
     "message": "常用模板示例"
   },
   "noTemplatesYet": {
-    "message": "暂无自定义模板，点击"创建新模板"开始使用"
+    "message": "暂无自定义模板，点击\"创建新模板\"开始使用"
   },
   "templateVariableHelp": {
     "message": "变量说明"
   },
   "moreFieldsBtn": {
     "message": "更多变量"
-  },
-  "presetMarkdownName": {
-    "message": "Markdown 链接"
-  },
-  "presetPlainName": {
-    "message": "纯文本格式"
-  },
-  "presetDevDocName": {
-    "message": "开发文档"
-  },
-  "presetCitationName": {
-    "message": "学术引用"
-  },
-  "presetSocialName": {
-    "message": "社交分享"
   },
   "templateNamePlaceholder": {
     "message": "输入模板名称..."

@@ -515,9 +515,7 @@
   "confirmDeleteTemplate": {
     "message": "Êtes-vous sûr de vouloir supprimer le modèle \"{name}\" ? Cette action ne peut pas être annulée."
   },
-  "confirmHideTemplate": {
-    "message": "Êtes-vous sûr de vouloir masquer le modèle prédéfini \"{name}\" ? Vous pouvez le réafficher dans les paramètres."
-  },
+
   "customTemplates": {
     "message": "Modèles Personnalisés"
   },
@@ -539,24 +537,7 @@
   "moreFieldsBtn": {
     "message": "Plus de Variables"
   },
-  "presetMarkdownName": {
-    "message": "Lien Markdown"
-  },
 
-  "presetPlainName": {
-    "message": "Texte Brut"
-  },
-
-  "presetDevDocName": {
-    "message": "Documentation Développeur"
-  },
-
-  "presetCitationName": {
-    "message": "Citation Académique"
-  },
-  "presetSocialName": {
-    "message": "Partage Social"
-  },
   "templateNamePlaceholder": {
     "message": "Entrez le nom du modèle..."
   },

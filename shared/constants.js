@@ -421,45 +421,6 @@ export const TEMPLATE_FIELDS = {
   },
 };
 
-// 预设模板
-export const PRESET_TEMPLATES = [
-  {
-    id: "preset_markdown",
-    nameKey: "presetMarkdownName",
-    template: "[{{title}}]({{url}})",
-    icon: "📝",
-    isPreset: true,
-  },
-  {
-    id: "preset_plain",
-    nameKey: "presetPlainName",
-    template: "{{title}} - {{url}}",
-    icon: "📄",
-    isPreset: true,
-  },
-  {
-    id: "preset_dev_doc",
-    nameKey: "presetDevDocName",
-    template: "[{{title}}]({{url}}) - {{hostname}}",
-    icon: "💻",
-    isPreset: true,
-  },
-  {
-    id: "preset_citation",
-    nameKey: "presetCitationName",
-    template: "{{title}} ({{date}}) {{url}}",
-    icon: "📚",
-    isPreset: true,
-  },
-  {
-    id: "preset_social",
-    nameKey: "presetSocialName",
-    template: "{{title}} {{url}}",
-    icon: "🔗",
-    isPreset: true,
-  },
-];
-
 // 模板引擎 - 处理模板变量替换
 export class TemplateEngine {
   constructor() {
@@ -597,50 +558,11 @@ export async function saveCustomTemplates(templates) {
   }
 }
 
-export async function getHiddenPresetTemplates() {
-  try {
-    const result = await chrome.storage.sync.get(["hiddenPresetTemplates"]);
-    return result.hiddenPresetTemplates || [];
-  } catch (error) {
-    console.error("Failed to load hidden preset templates:", error);
-    return [];
-  }
-}
-
-export async function saveHiddenPresetTemplates(hiddenIds) {
-  try {
-    await chrome.storage.sync.set({ hiddenPresetTemplates: hiddenIds });
-    return true;
-  } catch (error) {
-    console.error("Failed to save hidden preset templates:", error);
-    return false;
-  }
-}
-
 export async function getAllTemplates() {
   const customTemplates = await getCustomTemplates();
-  const hiddenPresetIds = await getHiddenPresetTemplates();
 
-  // 创建自定义模板ID映射，用于检查是否有用户自定义版本
-  const customTemplateIds = new Set(customTemplates.map((t) => t.id));
-
-  // 过滤掉被隐藏的预置模板，以及已有用户自定义版本的预置模板
-  const visiblePresetTemplates = PRESET_TEMPLATES.filter(
-    (template) =>
-      !hiddenPresetIds.includes(template.id) &&
-      !customTemplateIds.has(template.id),
-  );
-
-  // 将用户自定义模板按是否为预置模板分组
-  const customizedPresetTemplates = customTemplates.filter((t) => t.isPreset);
-  const pureCustomTemplates = customTemplates.filter((t) => !t.isPreset);
-
-  // 返回顺序：用户自定义的预置模板 -> 原始预置模板 -> 纯自定义模板
-  return [
-    ...customizedPresetTemplates,
-    ...visiblePresetTemplates,
-    ...pureCustomTemplates,
-  ];
+  // 只返回用户自定义的模板
+  return customTemplates;
 }
 
 export function generateTemplateId() {

@@ -515,9 +515,7 @@
   "confirmDeleteTemplate": {
     "message": "Are you sure you want to delete template \"{name}\"? This action cannot be undone."
   },
-  "confirmHideTemplate": {
-    "message": "Are you sure you want to hide preset template \"{name}\"? You can show it again in settings."
-  },
+
   "customTemplates": {
     "message": "Custom Templates"
   },
@@ -539,21 +537,7 @@
   "moreFieldsBtn": {
     "message": "More Variables"
   },
-  "presetMarkdownName": {
-    "message": "Markdown Link"
-  },
-  "presetPlainName": {
-    "message": "Plain Text"
-  },
-  "presetDevDocName": {
-    "message": "Developer Documentation"
-  },
-  "presetCitationName": {
-    "message": "Academic Citation"
-  },
-  "presetSocialName": {
-    "message": "Social Sharing"
-  },
+
   "templateNamePlaceholder": {
     "message": "Enter template name..."
   },

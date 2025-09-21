@@ -515,9 +515,7 @@
   "confirmDeleteTemplate": {
     "message": "テンプレート\"{name}\"を削除してもよろしいですか？この操作は元に戻せません。"
   },
-  "confirmHideTemplate": {
-    "message": "プリセットテンプレート\"{name}\"を非表示にしてもよろしいですか？設定で再度表示できます。"
-  },
+
   "customTemplates": {
     "message": "カスタムテンプレート"
   },
@@ -539,24 +537,7 @@
   "moreFieldsBtn": {
     "message": "その他の変数"
   },
-  "presetMarkdownName": {
-    "message": "Markdownリンク"
-  },
 
-  "presetPlainName": {
-    "message": "プレーンテキスト"
-  },
-
-  "presetDevDocName": {
-    "message": "開発者向けドキュメント"
-  },
-
-  "presetCitationName": {
-    "message": "学術引用"
-  },
-  "presetSocialName": {
-    "message": "ソーシャル共有"
-  },
   "templateNamePlaceholder": {
     "message": "テンプレート名を入力..."
   },

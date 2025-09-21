@@ -515,9 +515,7 @@
   "confirmDeleteTemplate": {
     "message": "Tem certeza de que deseja excluir o modelo \"{name}\"? Esta ação não pode ser desfeita."
   },
-  "confirmHideTemplate": {
-    "message": "Tem certeza de que deseja ocultar o modelo predefinido \"{name}\"? Você pode mostrá-lo novamente nas configurações."
-  },
+
   "customTemplates": {
     "message": "Modelos Personalizados"
   },
@@ -539,24 +537,7 @@
   "moreFieldsBtn": {
     "message": "Mais Variáveis"
   },
-  "presetMarkdownName": {
-    "message": "Link Markdown"
-  },
 
-  "presetPlainName": {
-    "message": "Texto Simples"
-  },
-
-  "presetDevDocName": {
-    "message": "Documentação de Desenvolvedor"
-  },
-
-  "presetCitationName": {
-    "message": "Citação Acadêmica"
-  },
-  "presetSocialName": {
-    "message": "Compartilhamento Social"
-  },
   "templateNamePlaceholder": {
     "message": "Digite o nome do modelo..."
   },

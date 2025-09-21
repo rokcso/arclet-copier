@@ -515,9 +515,7 @@
   "confirmDeleteTemplate": {
     "message": "Вы уверены, что хотите удалить шаблон \"{name}\"? Это действие нельзя отменить."
   },
-  "confirmHideTemplate": {
-    "message": "Вы уверены, что хотите скрыть предустановленный шаблон \"{name}\"? Вы можете показать его снова в настройках."
-  },
+
   "customTemplates": {
     "message": "Пользовательские Шаблоны"
   },
@@ -539,24 +537,7 @@
   "moreFieldsBtn": {
     "message": "Больше Переменных"
   },
-  "presetMarkdownName": {
-    "message": "Ссылка Markdown"
-  },
 
-  "presetPlainName": {
-    "message": "Простой Текст"
-  },
-
-  "presetDevDocName": {
-    "message": "Документация Разработчика"
-  },
-
-  "presetCitationName": {
-    "message": "Академическая Цитата"
-  },
-  "presetSocialName": {
-    "message": "Социальный Обмен"
-  },
   "templateNamePlaceholder": {
     "message": "Введите название шаблона..."
   },
