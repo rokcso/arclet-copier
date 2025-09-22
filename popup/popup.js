@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 加载自定义模板到静默复制格式选择器
-  async function loadCustomTemplates() {
+  async function loadCustomTemplates(preserveValue = null) {
     await loadTemplatesIntoSelect(elements.silentCopyFormat, {
       includeIcons: true,
       clearExisting: true,
@@ -144,6 +144,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Failed to load custom templates in popup:", error);
       },
     });
+
+    // 如果指定了要保持的值，则恢复它
+    if (preserveValue) {
+      // 使用 setTimeout 确保 DOM 更新完成后再设置值
+      setTimeout(() => {
+        elements.silentCopyFormat.value = preserveValue;
+      }, 0);
+    }
   }
 
   // 监听模板变更消息
@@ -367,7 +375,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cleaningSelect = elements.removeParamsToggle;
     cleaningSelect.setAttribute("data-value", cleaningMode);
 
-    elements.silentCopyFormat.value = result.silentCopyFormat || "url";
+    // 不在这里设置 silentCopyFormat.value，而是返回它
+    const silentCopyFormat = result.silentCopyFormat || "url";
 
     // Load appearance setting for theme application
     const savedAppearance = result.appearance || "system";
@@ -399,6 +408,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Load theme color setting, default to green
     const savedThemeColor = result.themeColor || "green";
     applyThemeColor(savedThemeColor);
+
+    return { silentCopyFormat };
   }
 
   // 保存设置
@@ -970,8 +981,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlCleaningSwitch = initializeUrlCleaningSelect();
   initializeQRModal(); // Initialize QR modal
   setupTemplateChangeListener(); // 设置模板变更监听器
-  await loadSettings();
-  await loadCustomTemplates(); // 加载自定义模板
+
+  // 先加载设置获取保存的值，然后加载模板并恢复选择
+  const settings = await loadSettings();
+  await loadCustomTemplates(settings.silentCopyFormat); // 加载自定义模板并恢复保存的值
   await initializeTheme(); // Initialize theme after loading settings
   await initializeI18n(); // Load UI with saved language
   await getCurrentUrl();
