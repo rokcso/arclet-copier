@@ -23,6 +23,5 @@
   "bugs": {
     "url": "https://github.com/rokcso/arclet-copier/issues"
   },
-  "license": "MIT",
-  "devDependencies": {}
+  "license": "MIT"
 }
