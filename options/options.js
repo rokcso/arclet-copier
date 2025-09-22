@@ -653,6 +653,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       url: "https://github.com/rokcso/arclet-copier",
       title: "Arclet Copier - GitHub",
       urlCleaning: "smart",
+      shortUrl: "https://is.gd/abc123",
     };
 
     templateEngine
@@ -661,7 +662,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         previewContent.textContent = result;
       })
       .catch((error) => {
-        previewContent.innerHTML = `<span style="color: #ef4444;">预览错误: ${error.message}</span>`;
+        previewContent.innerHTML = `<span style="color: #ef4444;">预览错误: ${escapeHtml(error.message)}</span>`;
       });
   }
 

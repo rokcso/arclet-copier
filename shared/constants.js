@@ -437,26 +437,44 @@ export class TemplateEngine {
     this.fieldProcessors.set("title", (context) => context.title || "");
     this.fieldProcessors.set("hostname", (context) => {
       try {
+        if (!context.url) return "";
         return new URL(context.url).hostname;
-      } catch {
+      } catch (error) {
+        console.warn(
+          "TemplateEngine: Invalid URL for hostname field:",
+          context.url,
+        );
         return "";
       }
     });
     this.fieldProcessors.set("domain", (context) => {
       try {
+        if (!context.url) return "";
         const url = new URL(context.url);
         return `${url.protocol}//${url.host}`;
-      } catch {
+      } catch (error) {
+        console.warn(
+          "TemplateEngine: Invalid URL for domain field:",
+          context.url,
+        );
         return "";
       }
     });
     this.fieldProcessors.set("shortUrl", (context) => context.shortUrl || "");
 
-    // 时间字段处理器
-    const now = new Date();
-    this.fieldProcessors.set("date", () => now.toISOString().split("T")[0]);
-    this.fieldProcessors.set("time", () => now.toTimeString().split(" ")[0]);
+    // 时间字段处理器 - 修复：每次调用时获取当前时间
+    this.fieldProcessors.set("date", () => {
+      const now = new Date();
+      return now.toISOString().split("T")[0];
+    });
+
+    this.fieldProcessors.set("time", () => {
+      const now = new Date();
+      return now.toTimeString().split(" ")[0];
+    });
+
     this.fieldProcessors.set("datetime", () => {
+      const now = new Date();
       return (
         now.getFullYear() +
         "-" +
@@ -471,53 +489,128 @@ export class TemplateEngine {
         String(now.getSeconds()).padStart(2, "0")
       );
     });
-    this.fieldProcessors.set("timestamp", () =>
-      Math.floor(now.getTime() / 1000).toString(),
-    );
-    this.fieldProcessors.set("iso", () => now.toISOString());
+
+    this.fieldProcessors.set("timestamp", () => {
+      const now = new Date();
+      return Math.floor(now.getTime() / 1000).toString();
+    });
+
+    this.fieldProcessors.set("iso", () => {
+      const now = new Date();
+      return now.toISOString();
+    });
   }
 
   // 处理模板，替换所有变量
   async processTemplate(template, context) {
     if (!template) return "";
 
-    // 匹配 {{fieldName}} 模式
-    const fieldPattern = /\{\{([^}]+)\}\}/g;
+    // 验证输入参数
+    if (!context || typeof context !== "object") {
+      console.warn(
+        "TemplateEngine: Invalid context provided, using empty context",
+      );
+      context = {};
+    }
 
-    return template.replace(fieldPattern, (match, fieldName) => {
-      const processor = this.fieldProcessors.get(fieldName.trim());
-      if (processor) {
+    try {
+      // 匹配 {{fieldName}} 模式
+      const fieldPattern = /\{\{([^}]+)\}\}/g;
+
+      return template.replace(fieldPattern, (match, fieldName) => {
         try {
-          return processor(context) || "";
+          const trimmedFieldName = fieldName.trim();
+          const processor = this.fieldProcessors.get(trimmedFieldName);
+
+          if (processor) {
+            const result = processor(context);
+            // 确保返回字符串类型
+            return result != null ? String(result) : "";
+          } else {
+            console.warn(
+              `TemplateEngine: Unknown field '${trimmedFieldName}' in template`,
+            );
+            return match; // 未知字段保持原样
+          }
         } catch (error) {
-          console.warn(`Error processing field ${fieldName}:`, error);
-          return match; // 返回原始匹配，而不是空字符串
+          console.error(
+            `TemplateEngine: Error processing field '${fieldName}':`,
+            error,
+          );
+          return match; // 出错时返回原始匹配
         }
-      }
-      return match; // 未知字段保持原样
-    });
+      });
+    } catch (error) {
+      console.error("TemplateEngine: Template processing failed:", error);
+      return template; // 降级处理，返回原始模板
+    }
   }
 
   // 验证模板语法
   validateTemplate(template) {
-    if (!template) return { valid: false, error: "Template is empty" };
+    if (!template)
+      return { valid: false, errors: ["Template is empty"], fields: [] };
 
-    const fieldPattern = /\{\{([^}]+)\}\}/g;
-    const matches = [...template.matchAll(fieldPattern)];
-    const errors = [];
-
-    for (const match of matches) {
-      const fieldName = match[1].trim();
-      if (!this.fieldProcessors.has(fieldName)) {
-        errors.push(`Unknown field: ${fieldName}`);
-      }
+    if (typeof template !== "string") {
+      return {
+        valid: false,
+        errors: ["Template must be a string"],
+        fields: [],
+      };
     }
 
-    return {
-      valid: errors.length === 0,
-      errors: errors,
-      fields: matches.map((m) => m[1].trim()),
-    };
+    try {
+      const fieldPattern = /\{\{([^}]+)\}\}/g;
+      const matches = [...template.matchAll(fieldPattern)];
+      const errors = [];
+      const fields = [];
+
+      for (const match of matches) {
+        const fieldName = match[1].trim();
+
+        // 检查字段名是否为空
+        if (!fieldName) {
+          errors.push("Empty field name found: {{}}");
+          continue;
+        }
+
+        // 检查字段名是否包含无效字符
+        if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(fieldName)) {
+          errors.push(
+            `Invalid field name: ${fieldName} (only letters, numbers, and underscores allowed)`,
+          );
+          continue;
+        }
+
+        // 检查字段是否存在
+        if (!this.fieldProcessors.has(fieldName)) {
+          errors.push(`Unknown field: ${fieldName}`);
+          continue;
+        }
+
+        fields.push(fieldName);
+      }
+
+      // 检查是否有未闭合的大括号
+      const openBraces = (template.match(/\{\{/g) || []).length;
+      const closeBraces = (template.match(/\}\}/g) || []).length;
+      if (openBraces !== closeBraces) {
+        errors.push("Unmatched braces in template");
+      }
+
+      return {
+        valid: errors.length === 0,
+        errors: errors,
+        fields: [...new Set(fields)], // 去重
+      };
+    } catch (error) {
+      console.error("TemplateEngine: Template validation failed:", error);
+      return {
+        valid: false,
+        errors: ["Template validation failed due to internal error"],
+        fields: [],
+      };
+    }
   }
 
   // 获取模板中使用的字段
