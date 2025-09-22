@@ -664,12 +664,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // Create mock context for preview
+    // Create comprehensive mock context for preview based on arcletcopier.com
     const mockContext = {
-      url: "https://github.com/rokcso/arclet-copier",
-      title: "Arclet Copier - GitHub",
+      url: "https://arcletcopier.com/?utm_source=chrome&utm_medium=extension&utm_campaign=template_test&ref=github#features",
+      title:
+        "Arclet Copier - Clean & Efficient Chrome Extension for Quick URL Copying",
       urlCleaning: "smart",
-      shortUrl: "https://is.gd/abc123",
+      shortUrl: "https://is.gd/ArcletCopy",
     };
 
     templateEngine
