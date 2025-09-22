@@ -578,7 +578,7 @@
     "message": "Drapeaux"
   },
   "fieldDescUrl": {
-    "message": "URL de la page actuelle"
+    "message": "URL de la page actuelle (affectée par les paramètres de nettoyage d'URL)"
   },
   "fieldDescTitle": {
     "message": "Titre de la page actuelle"
@@ -602,7 +602,7 @@
     "message": "Horodatage actuel (timestamp Unix)"
   },
   "fieldDescOriginalUrl": {
-    "message": "URL originale"
+    "message": "URL originale (version complète non nettoyée)"
   },
   "fieldDescShortUrl": {
     "message": "URL courte"

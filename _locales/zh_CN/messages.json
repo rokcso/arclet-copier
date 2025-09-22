@@ -562,10 +562,10 @@
     "message": "交通"
   },
   "fieldDescUrl": {
-    "message": "当前页面URL"
+    "message": "当前页面URL (受参数清理设置影响)"
   },
   "fieldDescOriginalUrl": {
-    "message": "原始URL"
+    "message": "原始URL (完整未清理版本)"
   },
   "fieldDescTitle": {
     "message": "页面标题"

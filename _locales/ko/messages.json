@@ -579,7 +579,7 @@
     "message": "깃발"
   },
   "fieldDescUrl": {
-    "message": "현재 페이지의 URL"
+    "message": "현재 페이지의 URL (URL 정리 설정의 영향을 받음)"
   },
   "fieldDescTitle": {
     "message": "현재 페이지의 제목"
@@ -603,7 +603,7 @@
     "message": "현재 타임스탬프 (Unix timestamp)"
   },
   "fieldDescOriginalUrl": {
-    "message": "원본 URL"
+    "message": "원본 URL (완전한 미정리 버전)"
   },
   "fieldDescShortUrl": {
     "message": "단축 URL"

@@ -578,7 +578,7 @@
     "message": "Banderas"
   },
   "fieldDescUrl": {
-    "message": "URL de la página actual"
+    "message": "URL de la página actual (afectada por configuración de limpieza de URL)"
   },
   "fieldDescTitle": {
     "message": "Título de la página actual"
@@ -602,7 +602,7 @@
     "message": "Marca de tiempo actual (timestamp Unix)"
   },
   "fieldDescOriginalUrl": {
-    "message": "URL original"
+    "message": "URL original (versión completa sin limpiar)"
   },
   "fieldDescShortUrl": {
     "message": "URL corta"

@@ -578,7 +578,7 @@
     "message": "Flags"
   },
   "fieldDescUrl": {
-    "message": "Current page URL"
+    "message": "Current page URL (affected by URL cleaning settings)"
   },
   "fieldDescTitle": {
     "message": "Current page title"
@@ -602,7 +602,7 @@
     "message": "Current timestamp (Unix timestamp)"
   },
   "fieldDescOriginalUrl": {
-    "message": "Original URL"
+    "message": "Original URL (complete uncleaned version)"
   },
   "fieldDescShortUrl": {
     "message": "Short URL"

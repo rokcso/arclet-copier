@@ -578,7 +578,7 @@
     "message": "Flaggen"
   },
   "fieldDescUrl": {
-    "message": "URL der aktuellen Seite"
+    "message": "URL der aktuellen Seite (von URL-Bereinigungseinstellungen betroffen)"
   },
   "fieldDescTitle": {
     "message": "Titel der aktuellen Seite"
@@ -602,7 +602,7 @@
     "message": "Aktueller Zeitstempel (Unix-Zeitstempel)"
   },
   "fieldDescOriginalUrl": {
-    "message": "Original-URL"
+    "message": "Original-URL (vollständige unbereinigte Version)"
   },
   "fieldDescShortUrl": {
     "message": "Kurz-URL"
