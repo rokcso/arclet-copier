@@ -883,27 +883,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
         return shortUrls.join("\n");
 
-      case "html":
-        const items = tabs
-          .map((tab) => {
-            const url = processUrl(tab.url, cleaningMode);
-            const title = escapeHtml(tab.title || getLocalMessage("untitled"));
-            return `  <li><a href="${escapeHtml(url)}">${title}</a></li>`;
-          })
-          .join("\n");
-        return `<ul>\n${items}\n</ul>`;
-
-      case "json":
-        return JSON.stringify(
-          tabs.map((tab) => ({
-            title: tab.title,
-            url: processUrl(tab.url, cleaningMode),
-            favIconUrl: tab.favIconUrl,
-          })),
-          null,
-          2,
-        );
-
       default:
         return tabs.map((tab) => processUrl(tab.url, cleaningMode)).join("\n");
     }
