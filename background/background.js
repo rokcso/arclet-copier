@@ -7,6 +7,7 @@ import {
   isValidWebUrl,
   getAllTemplates,
   templateEngine,
+  processTemplateWithFallback,
 } from "../shared/constants.js";
 
 // Constants
@@ -296,45 +297,44 @@ async function handleCopyUrl() {
       const templateId = settings.silentCopyFormat.substring(7); // 移除 'custom:' 前缀
 
       try {
-        const customTemplates = await getAllTemplates();
-        const template = customTemplates.find((t) => t.id === templateId);
+        const title = await getPageTitle(tab.id, tab.url);
+        const context = {
+          url: tab.url,
+          title: title || "",
+          urlCleaning: settings.urlCleaning,
+          shortUrl: "",
+        };
 
-        if (!template) {
-          console.error("Template not found:", templateId);
-          // 回退到URL复制
-          contentToCopy = processUrl(tab.url, settings.urlCleaning);
-          successMessage = getMessage("urlCopied");
-        } else {
-          const title = await getPageTitle(tab.id, tab.url);
+        // 检查模板是否需要短链并生成
+        const template = await getAllTemplates().then((templates) =>
+          templates.find((t) => t.id === templateId),
+        );
 
-          const context = {
-            url: tab.url,
-            title: title || "",
-            urlCleaning: settings.urlCleaning,
-            shortUrl: "",
-          };
-
-          // 如果模板包含shortUrl字段，生成短链
-          if (template.template.includes("{{shortUrl}}")) {
-            try {
-              const shortUrl = await handleCreateShortUrl(
-                tab.url,
-                settings.shortUrlService,
-              );
-              context.shortUrl = shortUrl;
-            } catch (error) {
-              console.error("Error generating short URL for template:", error);
-              context.shortUrl = processUrl(tab.url, settings.urlCleaning);
-            }
+        if (template && template.template.includes("{{shortUrl}}")) {
+          try {
+            const shortUrl = await handleCreateShortUrl(
+              tab.url,
+              settings.shortUrlService,
+            );
+            context.shortUrl = shortUrl;
+          } catch (error) {
+            console.error("Error generating short URL for template:", error);
+            context.shortUrl = processUrl(tab.url, settings.urlCleaning);
           }
-
-          contentToCopy = await templateEngine.processTemplate(
-            template.template,
-            context,
-          );
-          successMessage =
-            getMessage("customTemplateCopied") || `${template.name} copied`;
         }
+
+        // 使用标准化处理函数
+        const result = await processTemplateWithFallback(
+          templateId,
+          context,
+          processUrl(tab.url, settings.urlCleaning),
+        );
+
+        contentToCopy = result.content;
+        successMessage = result.success
+          ? getMessage("customTemplateCopied") ||
+            `${result.templateName} copied`
+          : getMessage("urlCopied");
       } catch (error) {
         console.error("Error processing custom template:", error);
         // 回退到URL复制

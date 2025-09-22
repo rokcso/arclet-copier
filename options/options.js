@@ -6,6 +6,7 @@ import {
   createTemplate,
   templateEngine,
   TEMPLATE_FIELDS,
+  TemplateChangeNotifier,
 } from "../shared/constants.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -560,6 +561,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         (t) => t.id !== template.id,
       );
       await saveCustomTemplates(updatedTemplates);
+
+      // 通知其他页面模板已删除
+      await TemplateChangeNotifier.notify("deleted", template.id);
+
       showNotification(getLocalMessage("templateDeleted") || "模板已删除");
 
       await loadTemplates();
@@ -621,6 +626,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       await saveCustomTemplates(customTemplates);
+
+      // 通知其他页面模板已变更
+      if (currentEditingTemplate) {
+        await TemplateChangeNotifier.notify(
+          "updated",
+          currentEditingTemplate.id,
+        );
+      } else {
+        const newTemplateId = customTemplates[customTemplates.length - 1].id;
+        await TemplateChangeNotifier.notify("created", newTemplateId);
+      }
 
       showNotification(
         currentEditingTemplate

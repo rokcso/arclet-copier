@@ -7,6 +7,9 @@ import {
   globalShortUrlThrottle,
   getAllTemplates,
   templateEngine,
+  loadTemplatesIntoSelect,
+  processTemplateWithFallback,
+  findTemplateById,
 } from "../shared/constants.js";
 
 // 持久化短链缓存管理
@@ -194,28 +197,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 加载自定义模板到复制格式选择器
   async function loadCustomTemplates() {
     const silentCopyFormat = document.getElementById("silentCopyFormat");
-    if (!silentCopyFormat) return;
+    await loadTemplatesIntoSelect(silentCopyFormat, {
+      includeIcons: true,
+      clearExisting: true,
+      onError: (error) => {
+        console.error("Failed to load custom templates in batch:", error);
+      },
+    });
+  }
 
-    try {
-      const customTemplates = await getAllTemplates();
+  // 监听模板变更消息
+  function setupTemplateChangeListener() {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === "TEMPLATE_CHANGED") {
+        console.log(
+          `Batch received template change notification: ${message.changeType}`,
+        );
 
-      // 清除之前添加的自定义模板选项
-      const existingCustomOptions = silentCopyFormat.querySelectorAll(
-        "[data-custom-template]",
-      );
-      existingCustomOptions.forEach((option) => option.remove());
+        // 重新加载模板到选择器
+        loadCustomTemplates().catch((error) => {
+          console.error("Failed to reload templates after change:", error);
+        });
 
-      // 为每个自定义模板添加选项
-      customTemplates.forEach((template) => {
-        const option = document.createElement("option");
-        option.value = `custom:${template.id}`;
-        option.textContent = `${template.icon} ${template.name}`;
-        option.setAttribute("data-custom-template", "true");
-        silentCopyFormat.appendChild(option);
-      });
-    } catch (error) {
-      console.error("Failed to load custom templates:", error);
-    }
+        sendResponse({ received: true });
+      }
+    });
   }
 
   // 加载版本信息
@@ -740,15 +746,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const templateId = format.substring(7); // 移除 'custom:' 前缀
 
       try {
-        const customTemplates = await getAllTemplates();
-        const template = customTemplates.find((t) => t.id === templateId);
-
-        if (!template) {
-          console.error("Template not found:", templateId);
-          return tabs
-            .map((tab) => processUrl(tab.url, cleaningMode))
-            .join("\n");
-        }
+        const template = await findTemplateById(templateId);
 
         // 处理多个tab，每个tab一行
         const results = await Promise.all(
@@ -757,7 +755,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               url: tab.url,
               title: tab.title || "",
               urlCleaning: cleaningMode,
-              // 如果模板需要短链，这里可以生成
               shortUrl: "",
             };
 
@@ -809,16 +806,20 @@ document.addEventListener("DOMContentLoaded", async () => {
               }
             }
 
-            return await templateEngine.processTemplate(
-              template.template,
+            const result = await processTemplateWithFallback(
+              templateId,
               context,
+              processUrl(tab.url, cleaningMode),
             );
+
+            return result.content;
           }),
         );
 
         return results.join("\n");
       } catch (error) {
         console.error("Error processing custom template:", error);
+        // 使用fallback处理
         return tabs.map((tab) => processUrl(tab.url, cleaningMode)).join("\n");
       }
     }
@@ -1234,6 +1235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 初始化
   await initializeI18n();
   loadVersion();
+  setupTemplateChangeListener(); // 设置模板变更监听器
   await loadCustomTemplates(); // 加载自定义模板
   await loadSettings();
   initializeUrlCleaningSwitch();

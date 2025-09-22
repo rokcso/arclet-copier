@@ -5,6 +5,7 @@ import {
   isValidWebUrl,
   getAllTemplates,
   templateEngine,
+  loadTemplatesIntoSelect,
 } from "../shared/constants.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -136,29 +137,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 加载自定义模板到静默复制格式选择器
   async function loadCustomTemplates() {
-    const silentCopyFormat = elements.silentCopyFormat;
-    if (!silentCopyFormat) return;
+    await loadTemplatesIntoSelect(elements.silentCopyFormat, {
+      includeIcons: true,
+      clearExisting: true,
+      onError: (error) => {
+        console.error("Failed to load custom templates in popup:", error);
+      },
+    });
+  }
 
-    try {
-      const customTemplates = await getAllTemplates();
+  // 监听模板变更消息
+  function setupTemplateChangeListener() {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === "TEMPLATE_CHANGED") {
+        console.log(
+          `Popup received template change notification: ${message.changeType}`,
+        );
 
-      // 清除之前添加的自定义模板选项
-      const existingCustomOptions = silentCopyFormat.querySelectorAll(
-        "[data-custom-template]",
-      );
-      existingCustomOptions.forEach((option) => option.remove());
+        // 重新加载模板到选择器
+        loadCustomTemplates().catch((error) => {
+          console.error("Failed to reload templates after change:", error);
+        });
 
-      // 为每个自定义模板添加选项
-      customTemplates.forEach((template) => {
-        const option = document.createElement("option");
-        option.value = `custom:${template.id}`;
-        option.textContent = `${template.icon} ${template.name}`;
-        option.setAttribute("data-custom-template", "true");
-        silentCopyFormat.appendChild(option);
-      });
-    } catch (error) {
-      console.error("Failed to load custom templates:", error);
-    }
+        sendResponse({ received: true });
+      }
+    });
   }
 
   // DOM elements
@@ -966,6 +969,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   loadVersion(); // Load version from manifest
   const urlCleaningSwitch = initializeUrlCleaningSelect();
   initializeQRModal(); // Initialize QR modal
+  setupTemplateChangeListener(); // 设置模板变更监听器
   await loadSettings();
   await loadCustomTemplates(); // 加载自定义模板
   await initializeTheme(); // Initialize theme after loading settings

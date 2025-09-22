@@ -676,6 +676,138 @@ export function createTemplate(name, template, icon = "📝") {
   };
 }
 
+// 模板变更通知机制
+export class TemplateChangeNotifier {
+  static async notify(changeType, templateId = null) {
+    try {
+      // 发送消息到所有扩展页面
+      await chrome.runtime.sendMessage({
+        type: "TEMPLATE_CHANGED",
+        changeType, // 'created', 'updated', 'deleted'
+        templateId,
+        timestamp: Date.now(),
+      });
+      console.log(`Template change notified: ${changeType}`, templateId);
+    } catch (error) {
+      // 忽略无接收者的错误（正常情况，因为不是所有页面都在监听）
+      if (!error.message?.includes("Could not establish connection")) {
+        console.error("Failed to notify template change:", error);
+      }
+    }
+  }
+}
+
+// 通用模板加载函数 - 解决代码重复问题
+export async function loadTemplatesIntoSelect(selectElement, options = {}) {
+  if (!selectElement) {
+    console.warn("loadTemplatesIntoSelect: selectElement is null");
+    return;
+  }
+
+  const { includeIcons = true, clearExisting = true, onError = null } = options;
+
+  try {
+    const customTemplates = await getAllTemplates();
+
+    if (clearExisting) {
+      // 清除之前添加的自定义模板选项
+      const existingCustomOptions = selectElement.querySelectorAll(
+        "[data-custom-template]",
+      );
+      existingCustomOptions.forEach((option) => option.remove());
+    }
+
+    // 为每个自定义模板添加选项
+    customTemplates.forEach((template) => {
+      const option = document.createElement("option");
+      option.value = `custom:${template.id}`;
+      option.textContent = includeIcons
+        ? `${template.icon} ${template.name}`
+        : template.name;
+      option.setAttribute("data-custom-template", "true");
+      option.setAttribute("data-template-id", template.id);
+      selectElement.appendChild(option);
+    });
+
+    console.log(
+      `Loaded ${customTemplates.length} custom templates into select`,
+    );
+  } catch (error) {
+    console.error("Failed to load custom templates:", error);
+    if (onError) {
+      onError(error);
+    }
+  }
+}
+
+// 标准化的模板查找和错误处理
+export async function findTemplateById(templateId) {
+  try {
+    if (!templateId) {
+      throw new Error("Template ID is required");
+    }
+
+    const customTemplates = await getAllTemplates();
+    const template = customTemplates.find((t) => t.id === templateId);
+
+    if (!template) {
+      throw new Error(`Template not found: ${templateId}`);
+    }
+
+    return template;
+  } catch (error) {
+    console.error("Failed to find template:", error);
+    throw error; // 重新抛出，让调用者处理
+  }
+}
+
+// 标准化的模板处理错误处理
+export async function processTemplateWithFallback(
+  templateId,
+  context,
+  fallbackContent = null,
+) {
+  try {
+    const template = await findTemplateById(templateId);
+
+    // 如果模板包含shortUrl字段，确保上下文中有shortUrl
+    if (template.template.includes("{{shortUrl}}") && !context.shortUrl) {
+      console.warn(
+        "Template requires shortUrl but context does not provide it",
+      );
+      // 可以选择生成shortUrl或者使用原URL作为fallback
+      context.shortUrl = context.url
+        ? processUrl(context.url, context.urlCleaning)
+        : "";
+    }
+
+    const result = await templateEngine.processTemplate(
+      template.template,
+      context,
+    );
+
+    return {
+      success: true,
+      content: result,
+      templateName: template.name,
+    };
+  } catch (error) {
+    console.error("Template processing failed:", error);
+
+    // 使用fallback内容
+    const fallback =
+      fallbackContent ||
+      (context.url ? processUrl(context.url, context.urlCleaning) : "");
+
+    return {
+      success: false,
+      content: fallback,
+      error: error.message,
+      templateName: null,
+    };
+  }
+}
+
 // i18n helper function
 export function getMessage(key, substitutions = []) {
   return chrome.i18n.getMessage(key, substitutions);
