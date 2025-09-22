@@ -531,11 +531,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateTemplatePreview();
     validateTemplate();
     elements.templateModal.classList.add("show");
+    document.body.classList.add("modal-open"); // 阻止背景滚动
     elements.templateName.focus();
   }
 
   function hideTemplateModal() {
     elements.templateModal.classList.remove("show");
+    document.body.classList.remove("modal-open"); // 恢复背景滚动
     currentEditingTemplate = null;
     clearValidation();
   }
