@@ -145,11 +145,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       },
     });
 
-    // 如果指定了要保持的值，则恢复它
+    // 如果指定了要保持的值，则恢复它并验证
     if (preserveValue) {
       // 使用 setTimeout 确保 DOM 更新完成后再设置值
       setTimeout(() => {
-        elements.silentCopyFormat.value = preserveValue;
+        // 检查该值是否在选项中存在
+        const optionExists = Array.from(elements.silentCopyFormat.options).some(
+          (option) => option.value === preserveValue,
+        );
+
+        if (optionExists) {
+          elements.silentCopyFormat.value = preserveValue;
+        } else {
+          // 静默处理模板不存在的情况，避免在扩展管理页面显示错误
+          elements.silentCopyFormat.value = "url";
+          // 保存回退值
+          saveSettings();
+        }
       }, 0);
     }
   }
@@ -162,10 +174,62 @@ document.addEventListener("DOMContentLoaded", async () => {
           `Popup received template change notification: ${message.changeType}`,
         );
 
+        // 保存当前选中的值
+        const currentValue = elements.silentCopyFormat.value;
+
         // 重新加载模板到选择器
-        loadCustomTemplates().catch((error) => {
-          console.error("Failed to reload templates after change:", error);
-        });
+        loadCustomTemplates()
+          .then(() => {
+            // 使用多重延迟和检查确保修复生效
+            setTimeout(() => {
+              const selectElement = elements.silentCopyFormat;
+
+              // 检查当前值是否在选项中
+              const optionExists = Array.from(selectElement.options).some(
+                (option) => option.value === currentValue,
+              );
+
+              if (optionExists) {
+                // 如果选项存在，设置值
+                selectElement.value = currentValue;
+              } else {
+                // 如果选项不存在，静默回退到默认格式
+
+                // 方法1：直接设置 selectedIndex
+                const urlOption = Array.from(selectElement.options).findIndex(
+                  (option) => option.value === "url",
+                );
+                if (urlOption !== -1) {
+                  selectElement.selectedIndex = urlOption;
+                }
+
+                // 方法2：设置 value (双保险)
+                selectElement.value = "url";
+
+                // 方法3：手动触发变更事件
+                selectElement.dispatchEvent(
+                  new Event("change", { bubbles: true }),
+                );
+
+                // 保存设置
+                saveSettings();
+
+                // 最后检查：如果仍然没有选中任何选项，强制选中第一个
+                setTimeout(() => {
+                  if (selectElement.selectedIndex === -1) {
+                    selectElement.selectedIndex = 0;
+                    selectElement.dispatchEvent(
+                      new Event("change", { bubbles: true }),
+                    );
+                    saveSettings();
+                  }
+                }, 5);
+              }
+            }, 50); // 增加延迟确保DOM完全更新
+          })
+          .catch((error) => {
+            console.error("Failed to reload templates after change:", error);
+          });
 
         sendResponse({ received: true });
       }

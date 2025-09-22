@@ -1454,6 +1454,11 @@ select.setting-control:hover {
     font-size: 10px;
     color: var(--arc-text-muted);
     line-height: 1.2;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+    text-align: left;
 }
 
 /* 更多字段面板 */
@@ -1489,6 +1494,7 @@ select.setting-control:hover {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 8px;
+    align-items: stretch;
 }
 
 /* 预览区域 */
