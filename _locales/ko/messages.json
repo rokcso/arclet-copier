@@ -3,7 +3,7 @@
     "message": "Arclet Copier - 스마트 URL 복사 도구"
   },
   "extDescription": {
-    "message": "원클릭 URL 복사와 배치 탭 복사 지원, 스마트 추적 파라미터 제거, 마크다운 형식, 단축 URL 생성 및 QR 코드 생성. 키보드 단축키, 다크 테마, 다국어 지원."
+    "message": "URL 복사 및 배치 지원, 파라미터 필터링, 마크다운, 단축 URL 및 QR 코드. 단축키와 다크 테마."
   },
   "copyUrlShortcut": {
     "message": "무음 복사"

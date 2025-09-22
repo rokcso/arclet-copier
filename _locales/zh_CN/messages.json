@@ -3,7 +3,7 @@
     "message": "Arclet Copier - 智能链接复制工具"
   },
   "extDescription": {
-    "message": "一键复制网页链接，支持批量复制多个标签页，智能清理跟踪参数，支持 Markdown 格式、短链生成和二维码生成。快捷键静默复制，深色主题，多语言界面。"
+    "message": "复制网页链接，支持批量复制、参数过滤、Markdown 格式、短链和二维码生成。快捷键、深色主题。"
   },
   "copyUrlShortcut": {
     "message": "静默复制"

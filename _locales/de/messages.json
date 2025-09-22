@@ -3,7 +3,7 @@
     "message": "Arclet Copier - Intelligenter URL-Kopierer"
   },
   "extDescription": {
-    "message": "Ein-Klick-URL-Kopieren mit Batch-Tab-Kopier-Unterstützung, intelligenter Entfernung von Tracking-Parametern, Markdown-Format, Kurz-URL-Generierung und QR-Code-Generierung. Tastenkürzel, dunkles Design und mehrsprachige Unterstützung."
+    "message": "URL-Kopieren mit Batch-Support, Parameter-Filter, Markdown, Kurz-URLs und QR-Codes. Tastenkürzel und dunkles Design."
   },
   "copyUrlShortcut": {
     "message": "Stilles Kopieren"
