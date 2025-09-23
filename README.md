@@ -246,7 +246,7 @@ npm run build
 
 ## 许可证
 
-MIT License - 详见 [LICENSE](LICENSE) 文件
+GPL-3.0 License - 详见 [LICENSE](LICENSE) 文件
 
 ## 更新日志
 
