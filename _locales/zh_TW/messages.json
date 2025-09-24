@@ -1,0 +1,602 @@
+{
+  "extName": {
+    "message": "Arclet Copier - 智能連結複製工具"
+  },
+  "extDescription": {
+    "message": "複製網頁連結，支援批量複製、參數過濾、Markdown 格式、短鏈和二維碼生成。快捷鍵、深色主題。"
+  },
+  "copyUrlShortcut": {
+    "message": "靜默複製"
+  },
+  "currentUrl": {
+    "message": "當前 URL"
+  },
+  "currentPage": {
+    "message": "當前頁面"
+  },
+  "gettingTitle": {
+    "message": "獲取頁面標題中..."
+  },
+  "noPageTitle": {
+    "message": "無標題頁面"
+  },
+  "errorTitle": {
+    "message": "錯誤"
+  },
+  "copyUrl": {
+    "message": "複製 URL"
+  },
+  "copyAsMarkdown": {
+    "message": "複製為 Markdown"
+  },
+  "settings": {
+    "message": "設定"
+  },
+  "removeUrlParams": {
+    "message": "去除 URL 參數"
+  },
+  "silentCopyFormat": {
+    "message": "靜默複製格式"
+  },
+  "copyFormat": {
+    "message": "複製格式"
+  },
+  "language": {
+    "message": "語言"
+  },
+  "formatUrl": {
+    "message": "URL"
+  },
+  "formatMarkdown": {
+    "message": "Markdown"
+  },
+  "formatShortUrl": {
+    "message": "短鏈"
+  },
+  "languageEn": {
+    "message": "🇺🇸 English"
+  },
+  "languageZh": {
+    "message": "🇨🇳 簡體中文"
+  },
+  "languageZhTw": {
+    "message": "🇹🇼 繁體中文"
+  },
+  "languageEs": {
+    "message": "🇪🇸 Español"
+  },
+  "languageJa": {
+    "message": "🇯🇵 日本語"
+  },
+  "languageDe": {
+    "message": "🇩🇪 Deutsch"
+  },
+  "languageFr": {
+    "message": "🇫🇷 Français"
+  },
+  "languagePt": {
+    "message": "🇵🇹 Português"
+  },
+  "languageRu": {
+    "message": "🇷🇺 Русский"
+  },
+  "languageKo": {
+    "message": "🇰🇷 한국어"
+  },
+  "gettingUrl": {
+    "message": "獲取 URL 中..."
+  },
+  "urlCopied": {
+    "message": "URL 已複製到剪貼板"
+  },
+  "markdownCopied": {
+    "message": "Markdown 連結已複製到剪貼板"
+  },
+  "shortUrlCopied": {
+    "message": "短鏈已複製到剪貼板"
+  },
+  "noUrl": {
+    "message": "無法獲取 URL"
+  },
+  "getUrlFailed": {
+    "message": "獲取 URL 失敗"
+  },
+  "copyFailed": {
+    "message": "複製失敗，請重試"
+  },
+  "noTab": {
+    "message": "無法獲取當前分頁"
+  },
+  "restrictedPage": {
+    "message": "當前頁面為系統頁面，請點選擴充功能圖示使用複製功能"
+  },
+  "markdownLinkCopied": {
+    "message": "Markdown 連結已複製到剪貼板"
+  },
+  "copied": {
+    "message": "已複製"
+  },
+  "languageChangeNotification": {
+    "message": "語言切換成功"
+  },
+  "removeParamsEnabled": {
+    "message": "已開啟 URL 參數過濾"
+  },
+  "removeParamsDisabled": {
+    "message": "已關閉 URL 參數過濾"
+  },
+  "silentCopyFormatChanged": {
+    "message": "靜默複製格式已更改"
+  },
+  "generateQR": {
+    "message": "生成二維碼"
+  },
+  "qrCodeTitle": {
+    "message": "二維碼"
+  },
+  "appearance": {
+    "message": "外觀"
+  },
+  "appearanceSystem": {
+    "message": "自動"
+  },
+  "appearanceLight": {
+    "message": "明亮"
+  },
+  "appearanceDark": {
+    "message": "深色"
+  },
+  "appearanceChanged": {
+    "message": "外觀切換成功"
+  },
+  "urlCleaning": {
+    "message": "URL 清理"
+  },
+  "cleaningOff": {
+    "message": "關閉"
+  },
+  "cleaningSmart": {
+    "message": "智能"
+  },
+  "cleaningAggressive": {
+    "message": "所有"
+  },
+  "cleaningDisabled": {
+    "message": "已關閉 URL 清理"
+  },
+  "smartCleaningEnabled": {
+    "message": "已啟用智能清理 - 移除追蹤參數"
+  },
+  "aggressiveCleaningEnabled": {
+    "message": "已啟用激進清理 - 移除所有參數"
+  },
+  "copyQRCode": {
+    "message": "複製二維碼圖片"
+  },
+  "qrCodeCopied": {
+    "message": "二維碼圖片已複製到剪貼板"
+  },
+  "qrCodeCopyFailed": {
+    "message": "二維碼圖片複製失敗"
+  },
+  "copyCurrentUrl": {
+    "message": "複製當前 URL"
+  },
+  "themeColor": {
+    "message": "主題色"
+  },
+  "themeColorChanged": {
+    "message": "主題色切換成功"
+  },
+  "chromeNotifications": {
+    "message": "Chrome 通知"
+  },
+  "notificationsEnabled": {
+    "message": "已啟用 Chrome 通知"
+  },
+  "notificationsDisabled": {
+    "message": "已停用 Chrome 通知"
+  },
+  "generateShortUrl": {
+    "message": "生成短鏈"
+  },
+  "shortUrlService": {
+    "message": "短鏈服務"
+  },
+  "serviceIsgd": {
+    "message": "is.gd"
+  },
+  "serviceTinyurl": {
+    "message": "TinyURL"
+  },
+  "shortUrlServiceChanged": {
+    "message": "短鏈服務已更改"
+  },
+  "generating": {
+    "message": "生成中..."
+  },
+  "shortUrlGenerated": {
+    "message": "短鏈已生成並複製到剪貼板"
+  },
+  "shortUrlFailed": {
+    "message": "短鏈生成失敗，請重試"
+  },
+  "invalidUrlForShortening": {
+    "message": "當前URL不支援短鏈生成（僅支援http/https網頁連結）"
+  },
+  "moreSettings": {
+    "message": "更多設定"
+  },
+  "optionsTitle": {
+    "message": "Arclet Copier - 設定"
+  },
+  "generalSettings": {
+    "message": "一般設定"
+  },
+  "appearanceSettings": {
+    "message": "外觀設定"
+  },
+  "aboutSection": {
+    "message": "關於"
+  },
+  "shortUrlServiceDesc": {
+    "message": "選擇生成短鏈時使用的服務"
+  },
+  "chromeNotificationsDesc": {
+    "message": "啟用後將顯示操作完成通知"
+  },
+  "languageDesc": {
+    "message": "選擇介面顯示語言"
+  },
+  "appearanceDesc": {
+    "message": "選擇介面主題模式"
+  },
+  "themeColorDesc": {
+    "message": "選擇介面主題顏色"
+  },
+  "version": {
+    "message": "版本"
+  },
+  "developer": {
+    "message": "開發者"
+  },
+  "officialWebsite": {
+    "message": "官方網站"
+  },
+  "githubRepo": {
+    "message": "GitHub 儲存庫"
+  },
+  "developerTwitter": {
+    "message": "開發者 X"
+  },
+  "supportSection": {
+    "message": "支援我們"
+  },
+  "ratingTitle": {
+    "message": "喜歡 Arclet Copier？"
+  },
+  "ratingDescription": {
+    "message": "如果這個擴充功能對您有幫助，請在 Chrome 應用程式商店給我們一個好評！您的支援是我們前進的動力。"
+  },
+  "rateNow": {
+    "message": "立即評價"
+  },
+  "feedbackTitle": {
+    "message": "回饋建議"
+  },
+  "feedbackDescription": {
+    "message": "遇到問題或有新功能建議？歡迎透過電子郵件聯絡我們，我們會認真回覆每一封郵件。"
+  },
+  "contactDeveloper": {
+    "message": "聯絡開發者"
+  },
+  "feedbackEmailSubject": {
+    "message": "Arclet Copier - 回饋建議"
+  },
+  "feedbackEmailBody": {
+    "message": "您好！\n\n我在使用 Arclet Copier 時有以下回饋：\n\n\n\n感謝您的時間！"
+  },
+  "batchCopy": {
+    "message": "批量複製"
+  },
+  "batchTitle": {
+    "message": "Arclet Copier - 批量複製連結"
+  },
+  "filters": {
+    "message": "過濾器"
+  },
+  "currentWindow": {
+    "message": "當前視窗"
+  },
+  "allWindows": {
+    "message": "所有視窗"
+  },
+  "urlType": {
+    "message": "頁面類型"
+  },
+  "webPages": {
+    "message": "網頁連結 (HTTP/HTTPS)"
+  },
+  "extensionPages": {
+    "message": "擴充功能頁面"
+  },
+  "systemPages": {
+    "message": "系統頁面"
+  },
+  "removeDuplicates": {
+    "message": "去重"
+  },
+  "outputFormat": {
+    "message": "匯出格式"
+  },
+  "formatText": {
+    "message": "純文字"
+  },
+  "formatHtml": {
+    "message": "HTML"
+  },
+  "formatJson": {
+    "message": "JSON"
+  },
+  "selectAll": {
+    "message": "全選"
+  },
+  "selectNone": {
+    "message": "清空選擇"
+  },
+  "invertSelection": {
+    "message": "反選"
+  },
+  "selected": {
+    "message": "已選擇"
+  },
+  "loadingTabs": {
+    "message": "正在載入分頁清單..."
+  },
+  "noTabsFound": {
+    "message": "未找到符合條件的分頁"
+  },
+  "preview": {
+    "message": "預覽"
+  },
+  "copySelected": {
+    "message": "複製選中項"
+  },
+  "previewTitle": {
+    "message": "複製預覽"
+  },
+  "previewStats": {
+    "message": "將複製 {count} 個連結"
+  },
+  "cancel": {
+    "message": "取消"
+  },
+  "copy": {
+    "message": "複製"
+  },
+  "copySuccess": {
+    "message": "複製成功"
+  },
+  "batchCopySuccess": {
+    "message": "批量複製完成"
+  },
+  "untitled": {
+    "message": "無標題"
+  },
+  "tabsList": {
+    "message": "分頁清單"
+  },
+  "refresh": {
+    "message": "重新整理"
+  },
+  "clearSelection": {
+    "message": "清空"
+  },
+  "deduplicate": {
+    "message": "去重"
+  },
+  "batchSettings": {
+    "message": "批量設定"
+  },
+  "urlTypes": {
+    "message": "連結類型"
+  },
+  "filterSettings": {
+    "message": "篩選設定"
+  },
+  "outputSettings": {
+    "message": "匯出設定"
+  },
+  "currentWindowShort": {
+    "message": "當前"
+  },
+  "allWindowsShort": {
+    "message": "全部"
+  },
+  "windowTabsCount": {
+    "message": "$count$個",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "webPagesOnly": {
+    "message": "僅網頁"
+  },
+  "duplicateUrl": {
+    "message": "重複連結"
+  },
+  "duplicate": {
+    "message": "重複"
+  },
+  "loading": {
+    "message": "載入中..."
+  },
+  "generatingShortUrls": {
+    "message": "正在生成短鏈，請稍候..."
+  },
+  "shortUrlProgress": {
+    "message": "正在生成短鏈... ({current}/{total})"
+  },
+  "copyTemplatesSection": {
+    "message": "複製格式樣板"
+  },
+  "addTemplate": {
+    "message": "建立新樣板"
+  },
+  "editTemplate": {
+    "message": "編輯樣板"
+  },
+  "copyTemplate": {
+    "message": "建立副本"
+  },
+  "createTemplate": {
+    "message": "建立樣板"
+  },
+  "templateName": {
+    "message": "樣板名稱"
+  },
+  "templateIcon": {
+    "message": "樣板圖示"
+  },
+  "templateContent": {
+    "message": "樣板內容"
+  },
+  "templatePreview": {
+    "message": "即時預覽"
+  },
+  "refreshPreview": {
+    "message": "重新整理預覽"
+  },
+  "previewPlaceholder": {
+    "message": "輸入樣板內容以查看預覽效果"
+  },
+  "insertField": {
+    "message": "插入變數"
+  },
+  "basicFields": {
+    "message": "基礎變數"
+  },
+  "timeFields": {
+    "message": "時間變數"
+  },
+  "templateNameRequired": {
+    "message": "請輸入樣板名稱"
+  },
+  "templateContentRequired": {
+    "message": "請輸入樣板內容"
+  },
+  "templateValid": {
+    "message": "樣板格式正確"
+  },
+  "templateSaveFailed": {
+    "message": "儲存樣板失敗，請重試"
+  },
+  "templateCreated": {
+    "message": "樣板建立成功"
+  },
+  "templateUpdated": {
+    "message": "樣板更新成功"
+  },
+  "templateDeleted": {
+    "message": "樣板刪除成功"
+  },
+  "templateHidden": {
+    "message": "樣板已隱藏"
+  },
+  "templateDeleteFailed": {
+    "message": "刪除樣板失敗"
+  },
+  "templateHideFailed": {
+    "message": "隱藏樣板失敗"
+  },
+  "confirmDeleteTemplate": {
+    "message": "確定要刪除樣板\"{name}\"嗎？刪除後無法復原。"
+  },
+  "customTemplates": {
+    "message": "自訂樣板"
+  },
+  "customTemplatesDesc": {
+    "message": "建立和管理您的專屬複製格式樣板，支援豐富的變數組合"
+  },
+  "templateHelpText": {
+    "message": "使用 {{變數名}} 格式插入動態內容，如 {{url}}、{{title}} 等"
+  },
+  "templateExamples": {
+    "message": "常用樣板範例"
+  },
+  "noTemplatesYet": {
+    "message": "暫無自訂樣板，點選\"建立新樣板\"開始使用"
+  },
+  "templateVariableHelp": {
+    "message": "變數說明"
+  },
+  "moreFieldsBtn": {
+    "message": "更多變數"
+  },
+  "templateNamePlaceholder": {
+    "message": "輸入樣板名稱..."
+  },
+  "templateContentPlaceholder": {
+    "message": "輸入樣板內容，使用 {{變數名}} 格式插入變數..."
+  },
+  "emojiCategoryCommon": {
+    "message": "常用"
+  },
+  "emojiCategorySmileys": {
+    "message": "表情"
+  },
+  "emojiCategoryHearts": {
+    "message": "愛心"
+  },
+  "emojiCategoryNature": {
+    "message": "自然"
+  },
+  "emojiCategoryActivities": {
+    "message": "活動"
+  },
+  "emojiCategoryFood": {
+    "message": "食物"
+  },
+  "emojiCategoryTravel": {
+    "message": "交通"
+  },
+  "fieldDescUrl": {
+    "message": "當前頁面URL (受參數清理設定影響)"
+  },
+  "fieldDescOriginalUrl": {
+    "message": "原始URL (完整未清理版本)"
+  },
+  "fieldDescTitle": {
+    "message": "頁面標題"
+  },
+  "fieldDescHostname": {
+    "message": "網域名稱"
+  },
+  "fieldDescDomain": {
+    "message": "完整網域名稱"
+  },
+  "fieldDescShortUrl": {
+    "message": "短連結"
+  },
+  "fieldDescDate": {
+    "message": "當前日期"
+  },
+  "fieldDescTime": {
+    "message": "當前時間"
+  },
+  "fieldDescDatetime": {
+    "message": "日期時間"
+  },
+  "fieldDescTimestamp": {
+    "message": "時間戳"
+  },
+  "fieldDescIso": {
+    "message": "ISO時間"
+  },
+  "deleteTemplate": {
+    "message": "刪除"
+  }
+}

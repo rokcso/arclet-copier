@@ -59,6 +59,9 @@
   "languageZh": {
     "message": "🇨🇳 简体中文"
   },
+  "languageZhTw": {
+    "message": "🇹🇼 繁體中文"
+  },
   "languageEs": {
     "message": "🇪🇸 Español"
   },

@@ -326,7 +326,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const browserLang = chrome.i18n.getUILanguage();
     let defaultLang = "en"; // default fallback
     if (browserLang.startsWith("zh")) {
-      defaultLang = "zh_CN";
+      // 更精确的繁简中文检测
+      if (
+        browserLang === "zh-TW" ||
+        browserLang === "zh-HK" ||
+        browserLang === "zh-MO"
+      ) {
+        defaultLang = "zh_TW";
+      } else {
+        defaultLang = "zh_CN";
+      }
     } else if (browserLang.startsWith("es")) {
       defaultLang = "es";
     } else if (browserLang.startsWith("ja")) {
