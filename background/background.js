@@ -11,7 +11,7 @@ import {
 } from "../shared/constants.js";
 
 // 导入分析模块
-import { trackUserInstallOnce } from "../shared/analytics.js";
+import { trackExtensionInstall } from "../shared/analytics.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -124,18 +124,15 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     ],
   });
 
-  // 处理用户安装统计
+  // 处理扩展安装统计（包含安装和更新）
   try {
     if (details.reason === "install") {
-      console.log("Extension installed, tracking user install...");
-      await trackUserInstallOnce("install");
+      await trackExtensionInstall("install");
     } else if (details.reason === "update") {
-      console.log("Extension updated, checking if install tracking needed...");
-      // 对于更新，仍然检查是否需要记录安装（防止遗漏）
-      await trackUserInstallOnce("update");
+      await trackExtensionInstall("update");
     }
   } catch (error) {
-    console.warn("Failed to track installation:", error);
+    console.warn("Failed to track extension installation:", error);
     // 不阻止扩展正常运行
   }
 });
