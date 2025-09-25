@@ -20,23 +20,24 @@ export async function sendEvent(eventName, customProperties = {}) {
     // 获取或生成用户 ID
     const userId = await getUserId();
 
+    // 获取当前时间
+    const now = new Date();
+    const timestamp = now.getTime(); // Unix timestamp in milliseconds
+    const isoString = now.toISOString();
+    const timeString = isoString.split("T")[1].split(".")[0]; // HH:MM:SS format
+    const dateString = isoString.split("T")[0]; // YYYY-MM-DD format
+
     // 合并公共属性和自定义属性到 data 字段
     const eventData = {
       $user_id: userId,
-      $timestamp: new Date().toISOString(),
-      $date: new Date().toISOString().split("T")[0],
+      $timestamp: timestamp,
+      $time: timeString,
+      $date: dateString,
       $platform: getPlatform(),
       $browser: getBrowser(),
       $version: chrome.runtime.getManifest().version,
       ...customProperties, // 自定义属性可以覆盖公共属性
     };
-
-    // 将所有属性转为字符串
-    const stringifiedData = {};
-    for (const [key, value] of Object.entries(eventData)) {
-      stringifiedData[key] =
-        value === null || value === undefined ? null : String(value);
-    }
 
     // 构建 Umami 标准格式
     const payload = {
@@ -45,7 +46,7 @@ export async function sendEvent(eventName, customProperties = {}) {
         website: UMAMI_CONFIG.websiteId,
         name: eventName,
         language: chrome.i18n.getUILanguage(),
-        data: stringifiedData,
+        data: eventData,
       },
     };
 
