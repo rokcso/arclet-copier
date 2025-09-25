@@ -242,7 +242,6 @@ export async function sendEventsBatch(events) {
         name: event.name,
         language: chrome.i18n.getUILanguage(),
         data: event.data,
-        timestamp: event.timestamp,
       })),
     };
 
@@ -278,7 +277,7 @@ async function sendEventWithRetry(eventData, options = {}) {
         },
       };
 
-      const success = await sendToUmami(payload, eventData.name, timeout);
+      const success = await sendToUmami(payload, eventData.name, timeout, true);
       if (success) {
         // 记录成功发送的事件（用于去重）
         await recordSentEvent(eventData.name, eventData.data);
@@ -316,14 +315,16 @@ async function buildEventData(eventName, customProperties = {}) {
   const now = new Date();
   const timestamp = now.getTime();
   const isoString = now.toISOString();
-  const timeString = isoString.split("T")[1].split(".")[0];
-  const dateString = isoString.split("T")[0];
+
+  // 确保时间一致性：都基于同一个时间点
+  const timeString = isoString.split("T")[1].split(".")[0]; // UTC 时间
+  const dateString = isoString.split("T")[0]; // UTC 日期
 
   const data = {
     $user_id: userId,
-    $timestamp: timestamp,
-    $time: timeString,
-    $date: dateString,
+    $timestamp: timestamp, // Unix 毫秒时间戳
+    $time: timeString, // HH:MM:SS (UTC)
+    $date: dateString, // YYYY-MM-DD (UTC)
     $platform: getPlatform(),
     $browser: getBrowser(),
     $version: chrome.runtime.getManifest().version,
@@ -333,21 +334,25 @@ async function buildEventData(eventName, customProperties = {}) {
   return {
     name: eventName,
     data,
-    timestamp,
   };
 }
 
 // ===== 内部方法 =====
 
 // 发送数据到 Umami API
-async function sendToUmami(payload, eventName, timeout = CONFIG.umami.timeout) {
+async function sendToUmami(
+  payload,
+  eventName,
+  timeout = CONFIG.umami.timeout,
+  forceFetch = false,
+) {
   const endpoint = `${CONFIG.umami.apiUrl}/api/send`;
   const payloadString = JSON.stringify(payload);
 
   try {
-    // 优先使用 navigator.sendBeacon（更可靠，特别是在页面卸载时）
-    if (navigator.sendBeacon && !timeout) {
-      // sendBeacon 不支持超时控制，只在不需要超时时使用
+    // 优先使用 navigator.sendBeacon（更可靠，特别适用于批量和队列事件）
+    // 但对于需要精确超时控制的立即发送事件，可以强制使用 fetch
+    if (navigator.sendBeacon && !forceFetch) {
       const blob = new Blob([payloadString], {
         type: "application/json",
       });
@@ -438,7 +443,7 @@ function generateUserId() {
     .join("")
     .slice(0, 8);
 
-  return `user_${randomPart}`;
+  return `u_${randomPart}`;
 }
 
 // 环境检测
