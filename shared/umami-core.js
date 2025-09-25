@@ -44,6 +44,7 @@ export async function sendEvent(eventName, customProperties = {}) {
       type: "event",
       payload: {
         website: UMAMI_CONFIG.websiteId,
+        hostname: chrome.runtime.id,
         name: eventName,
         language: chrome.i18n.getUILanguage(),
         data: eventData,

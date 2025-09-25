@@ -48,7 +48,6 @@
         "$browser": "chrome", 
         "$version": "1.6.0",
         "install_type": "install",
-        "install_date": "2024-01-01",
         "previous_version": "1.5.0"
       }
     }

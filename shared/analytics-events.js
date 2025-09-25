@@ -16,7 +16,6 @@ export async function trackInstall(installReason = "install") {
     // 构建自定义事件数据（公共属性由 sendEvent 自动添加）
     const customEventData = {
       install_type: installReason, // "install" 或 "update"
-      install_date: new Date().toISOString().split("T")[0],
     };
 
     // 如果是更新，添加之前的版本信息
