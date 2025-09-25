@@ -86,22 +86,26 @@ export async function trackCopy(copyData) {
     };
 
     // Always include all fields, use null for missing values
-    eventData.template_id = templateId || null;
-    eventData.template_name = templateName || null;
-    eventData.url_cleaning = urlCleaning || null;
+    eventData.template_id = templateId !== undefined ? templateId : null;
+    eventData.template_name = templateName !== undefined ? templateName : null;
+    eventData.url_cleaning = urlCleaning !== undefined ? urlCleaning : null;
     eventData.duration = typeof duration === "number" ? duration : null;
 
     // shortService only relevant for shortUrl format
     if (format === "shortUrl") {
-      eventData.short_service = shortService || null;
+      eventData.short_service =
+        shortService !== undefined ? shortService : null;
     }
 
     // Error info for failed operations
     if (!success) {
-      eventData.error_type = errorType || null;
-      eventData.error_message = errorMessage
-        ? errorMessage.substring(0, 100)
-        : null;
+      eventData.error_type = errorType !== undefined ? errorType : null;
+      eventData.error_message =
+        errorMessage !== undefined
+          ? errorMessage
+            ? errorMessage.substring(0, 100)
+            : errorMessage
+          : null;
     }
 
     return await sendEvent("copy", eventData);
@@ -122,9 +126,14 @@ export async function trackCopy(copyData) {
 export async function trackError(errorType, component, message, metadata = {}) {
   try {
     return await sendEvent("error", {
-      error_type: errorType,
-      component,
-      message: message?.substring(0, 200), // Limit message length
+      error_type: errorType !== undefined ? errorType : null,
+      component: component !== undefined ? component : null,
+      message:
+        message !== undefined
+          ? message
+            ? message.substring(0, 200)
+            : message
+          : null,
       ...metadata,
     });
   } catch (error) {

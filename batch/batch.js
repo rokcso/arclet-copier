@@ -1098,10 +1098,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       source: "batch",
       success: success,
       duration: duration,
-      urlCleaning: urlCleaning || null,
+      urlCleaning: urlCleaning !== undefined ? urlCleaning : null,
       templateId: null,
       templateName: null,
-      shortService: format === "shortUrl" ? shortService || null : null,
+      shortService:
+        format === "shortUrl"
+          ? shortService !== undefined
+            ? shortService
+            : null
+          : null,
       errorType: success ? null : "clipboard",
       errorMessage: success ? null : "Batch copy failed",
     };

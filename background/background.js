@@ -399,11 +399,16 @@ async function handleCopyUrl() {
       source: "shortcut",
       success: true,
       duration,
-      urlCleaning: settings.urlCleaning || null,
-      templateId: templateId || null,
-      templateName: templateName || null,
+      urlCleaning:
+        settings.urlCleaning !== undefined ? settings.urlCleaning : null,
+      templateId: templateId !== undefined ? templateId : null,
+      templateName: templateName !== undefined ? templateName : null,
       shortService:
-        copyFormat === "shortUrl" ? settings.shortUrlService || null : null,
+        copyFormat === "shortUrl"
+          ? settings.shortUrlService !== undefined
+            ? settings.shortUrlService
+            : null
+          : null,
       errorType: null,
       errorMessage: null,
     };
@@ -462,11 +467,16 @@ async function handleCopyUrl() {
       source: "shortcut",
       success: false,
       duration,
-      urlCleaning: settings.urlCleaning || null,
+      urlCleaning:
+        settings.urlCleaning !== undefined ? settings.urlCleaning : null,
       templateId: null,
       templateName: null,
       shortService:
-        failedFormat === "shortUrl" ? settings.shortUrlService || null : null,
+        failedFormat === "shortUrl"
+          ? settings.shortUrlService !== undefined
+            ? settings.shortUrlService
+            : null
+          : null,
       errorType,
       errorMessage: error.message,
     };

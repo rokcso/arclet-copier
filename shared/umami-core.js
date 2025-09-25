@@ -102,11 +102,15 @@ async function sendToUmami(payload) {
  * @returns {string} - Platform name
  */
 function getPlatform() {
-  const userAgent = navigator.userAgent.toLowerCase();
-  if (userAgent.includes("mac")) return "mac";
-  if (userAgent.includes("win")) return "windows";
-  if (userAgent.includes("linux")) return "linux";
-  return "unknown";
+  try {
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (userAgent.includes("mac")) return "mac";
+    if (userAgent.includes("win")) return "windows";
+    if (userAgent.includes("linux")) return "linux";
+    return null;
+  } catch (error) {
+    return null;
+  }
 }
 
 /**
@@ -114,11 +118,15 @@ function getPlatform() {
  * @returns {string} - Browser name
  */
 function getBrowser() {
-  const userAgent = navigator.userAgent.toLowerCase();
-  if (userAgent.includes("edg/")) return "edge";
-  if (userAgent.includes("chrome/")) return "chrome";
-  if (userAgent.includes("firefox/")) return "firefox";
-  return "unknown";
+  try {
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (userAgent.includes("edg/")) return "edge";
+    if (userAgent.includes("chrome/")) return "chrome";
+    if (userAgent.includes("firefox/")) return "firefox";
+    return null;
+  } catch (error) {
+    return null;
+  }
 }
 
 /**
@@ -129,25 +137,25 @@ function getBrowserVersion() {
   try {
     const userAgent = navigator.userAgent;
     const chromeMatch = userAgent.match(/Chrome\/(\d+\.\d+)/);
-    if (chromeMatch) {
+    if (chromeMatch && chromeMatch[1]) {
       return chromeMatch[1];
     }
 
     // Fallback for Edge
     const edgeMatch = userAgent.match(/Edg\/(\d+\.\d+)/);
-    if (edgeMatch) {
+    if (edgeMatch && edgeMatch[1]) {
       return edgeMatch[1];
     }
 
     // Firefox
     const firefoxMatch = userAgent.match(/Firefox\/(\d+\.\d+)/);
-    if (firefoxMatch) {
+    if (firefoxMatch && firefoxMatch[1]) {
       return firefoxMatch[1];
     }
 
-    return "unknown";
+    return null;
   } catch (error) {
-    return "unknown";
+    return null;
   }
 }
 
