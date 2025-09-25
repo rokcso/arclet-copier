@@ -831,11 +831,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("使用缓存的短链:", cachedShortUrl);
 
         // 复制短链到剪贴板
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(cachedShortUrl);
-        } else {
-          fallbackCopy(cachedShortUrl);
+        let copySuccess = false;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(cachedShortUrl);
+            copySuccess = true;
+          } else {
+            fallbackCopy(cachedShortUrl);
+            copySuccess = true;
+          }
+        } catch (error) {
+          console.error("短链复制失败:", error);
         }
+
+        // 记录短链复制事件（缓存）
+        trackCopy({
+          format: "shortUrl",
+          source: "popup",
+          success: copySuccess,
+          shortService: selectedService,
+          duration: Date.now() - startTime,
+          errorType: copySuccess ? null : "clipboard",
+          errorMessage: copySuccess ? null : "Cache copy failed",
+        }).catch((error) => {
+          console.warn("Failed to track cached shortUrl copy:", error);
+        });
 
         // 显示成功通知
         const serviceName =
@@ -866,11 +886,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("短链已缓存:", response.shortUrl);
 
         // 复制短链到剪贴板
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(response.shortUrl);
-        } else {
-          fallbackCopy(response.shortUrl);
+        let copySuccess = false;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(response.shortUrl);
+            copySuccess = true;
+          } else {
+            fallbackCopy(response.shortUrl);
+            copySuccess = true;
+          }
+        } catch (error) {
+          console.error("短链复制失败:", error);
         }
+
+        // 记录短链复制事件（新生成）
+        trackCopy({
+          format: "shortUrl",
+          source: "popup",
+          success: copySuccess,
+          shortService: selectedService,
+          duration: Date.now() - startTime,
+          errorType: copySuccess ? null : "clipboard",
+          errorMessage: copySuccess ? null : "Generated copy failed",
+        }).catch((error) => {
+          console.warn("Failed to track generated shortUrl copy:", error);
+        });
 
         // 显示成功通知
         const serviceName =
@@ -975,6 +1015,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     copyOperationStates.copyQRCode = true;
+    const startTime = Date.now();
 
     try {
       const canvas = elements.qrCodeContainer.querySelector("canvas");
@@ -994,6 +1035,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             const clipboardItem = new ClipboardItem({ "image/png": blob });
             await navigator.clipboard.write([clipboardItem]);
 
+            // 记录成功的QR码复制事件
+            const duration = Date.now() - startTime;
+            trackCopy({
+              format: "qrcode",
+              source: "popup",
+              success: true,
+              duration,
+            }).catch((error) => {
+              console.warn("Failed to track QR code copy:", error);
+            });
+
             // 复制成功后立即关闭二维码模态框
             hideQRModal();
 
@@ -1008,6 +1060,20 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
         } catch (error) {
           console.error("复制二维码图片失败:", error);
+
+          // 记录失败的QR码复制事件
+          const duration = Date.now() - startTime;
+          trackCopy({
+            format: "qrcode",
+            source: "popup",
+            success: false,
+            duration,
+            errorType: "clipboard",
+            errorMessage: error.message,
+          }).catch((trackError) => {
+            console.warn("Failed to track QR code copy error:", trackError);
+          });
+
           showArcNotification(
             getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败",
           );

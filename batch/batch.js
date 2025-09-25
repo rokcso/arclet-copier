@@ -12,6 +12,8 @@ import {
   findTemplateById,
 } from "../shared/constants.js";
 
+import { trackCopy } from "../shared/analytics.js";
+
 // 持久化短链缓存管理
 class PersistentShortUrlCache {
   constructor() {
@@ -1042,6 +1044,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const format = document.getElementById("silentCopyFormat").value;
     let success = false;
+    const startTime = Date.now();
 
     // 如果是短链格式且有多个URL，显示进度通知
     if (format === "shortUrl" && selectedTabsList.length > 1) {
@@ -1080,6 +1083,37 @@ document.addEventListener("DOMContentLoaded", async () => {
       const content = await formatOutput(selectedTabsList, format);
       success = await copyToClipboard(content);
     }
+
+    // 记录批量复制事件
+    const duration = Date.now() - startTime;
+    const urlCleaning =
+      document
+        .getElementById("removeParamsToggle")
+        ?.getAttribute("data-value") || "smart";
+    const shortService =
+      document.getElementById("shortUrlService")?.value || "isgd";
+
+    const trackData = {
+      format: format === "silentCopyFormat" ? "url" : format,
+      source: "batch",
+      success: success,
+      urlCleaning: urlCleaning,
+      duration: duration,
+    };
+
+    // 只在使用短链时添加 shortService
+    if (format === "shortUrl") {
+      trackData.shortService = shortService;
+    }
+
+    if (!success) {
+      trackData.errorType = "clipboard";
+      trackData.errorMessage = "Batch copy failed";
+    }
+
+    trackCopy(trackData).catch((error) => {
+      console.warn("Failed to track batch copy:", error);
+    });
 
     if (success) {
       showNotification(
