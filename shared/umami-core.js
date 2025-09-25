@@ -1,62 +1,44 @@
 // Umami 分析核心 - 通用上报引擎
 
-// ===== 配置 =====
-const CONFIG = {
-  // Umami 服务配置
-  umami: {
-    websiteId: "c0b57f97-5293-42d9-8ec2-4708e4ea68ae",
-    apiUrl: "https://umami.lunarye.com",
-    timeout: 8000, // 8秒超时，更激进
-  },
+// ===== 简化后的配置 =====
+const WEBSITE_ID = "c0b57f97-5293-42d9-8ec2-4708e4ea68ae";
+const API_URL = "https://umami.lunarye.com";
+const TIMEOUT = 8000;
 
-  // 重试配置
-  retry: {
-    maxAttempts: 3,
-    baseDelay: 800, // 更快的基础延迟
-    maxDelay: 5000, // 最大延迟限制
-  },
+// 队列和重试参数
+const MAX_ATTEMPTS = 3;
+const BASE_DELAY = 800;
+const MAX_DELAY = 5000;
+const QUEUE_SIZE = 50;
+const BATCH_SIZE = 8;
+const PROCESS_INTERVAL = 2000;
 
-  // 队列配置
-  queue: {
-    maxSize: 50, // 更小的队列，更快处理
-    batchSize: 8, // 更小的批次，更频繁发送
-    processInterval: 2000, // 2秒处理一次
-  },
-
-  // 去重配置
-  dedup: {
-    intervals: {
-      install: 60000, // 1分钟
-      update: 60000, // 1分钟
-      copy: 500, // 0.5秒
-      error: 3000, // 3秒
-      default: 5000, // 5秒
-    },
-    cleanupInterval: 6 * 60 * 60 * 1000, // 6小时清理一次
-  },
-
-  // 存储配置
-  storage: {
-    keys: {
-      userId: "analytics_uid",
-      queue: "analytics_queue",
-      installRecorded: "analytics_installed",
-      installDate: "analytics_install_date",
-      lastVersion: "analytics_version",
-      dedupPrefix: "dedup_",
-    },
-    maxRetries: 2, // 存储重试次数减少
-  },
-
-  // 开发配置
-  debug: false,
+// 去重间隔（毫秒）
+const DEDUP_INTERVALS = {
+  install: 60000,
+  update: 60000,
+  copy: 500,
+  error: 3000,
+  default: 5000,
 };
+
+// 存储键名
+const STORAGE_KEYS = {
+  userId: "analytics_uid",
+  queue: "analytics_queue",
+  installRecorded: "analytics_installed",
+  installDate: "analytics_install_date",
+  lastVersion: "analytics_version",
+  dedupPrefix: "dedup_",
+};
+
+const DEBUG = false;
 
 // 事件队列管理
 class EventQueue {
   constructor() {
-    this.storageKey = CONFIG.storage.keys.queue;
-    this.maxQueueSize = CONFIG.queue.maxSize;
+    this.storageKey = STORAGE_KEYS.queue;
+    this.maxQueueSize = QUEUE_SIZE;
     this.processing = false;
     this.processTimer = null;
 
@@ -109,7 +91,7 @@ class EventQueue {
       const failed = [];
 
       // 批量处理事件
-      const batches = chunkArray(queue, CONFIG.queue.batchSize);
+      const batches = chunkArray(queue, BATCH_SIZE);
 
       for (const batch of batches) {
         try {
@@ -120,7 +102,7 @@ class EventQueue {
             // 增加重试次数
             batch.forEach((event) => {
               event.retryCount = (event.retryCount || 0) + 1;
-              if (event.retryCount < CONFIG.retry.maxAttempts) {
+              if (event.retryCount < MAX_ATTEMPTS) {
                 failed.push(event);
               } else {
                 console.warn(
@@ -162,7 +144,7 @@ class EventQueue {
           console.warn("Auto queue processing failed:", error);
         });
       }
-    }, CONFIG.queue.processInterval);
+    }, PROCESS_INTERVAL);
   }
 
   // 停止自动处理
@@ -180,43 +162,24 @@ const eventQueue = new EventQueue();
 // ===== 核心事件发送方法 =====
 
 /**
- * 统一的事件发送方法
+ * 统一的事件发送方法 - 所有事件都走队列处理
  * 自动添加公共属性：user_id, timestamp, date, platform, browser, version
  * @param {string} eventName - 事件名称
  * @param {Object} customProperties - 自定义事件属性
- * @param {Object} options - 发送选项
  * @returns {Promise<boolean>} - 发送是否成功
  */
-export async function sendEvent(
-  eventName,
-  customProperties = {},
-  options = {},
-) {
-  const {
-    immediate = false, // 是否立即发送，不进入队列
-    skipDedup = false, // 是否跳过去重检查
-    maxRetries = CONFIG.retry.maxAttempts,
-    timeout = CONFIG.umami.timeout,
-  } = options;
-
+export async function sendEvent(eventName, customProperties = {}) {
   try {
-    // 检查去重（除非明确跳过）
-    if (!skipDedup && (await isDuplicateEvent(eventName, customProperties))) {
+    // 检查去重
+    if (await isDuplicateEvent(eventName, customProperties)) {
       debugLog(`Duplicate event blocked: ${eventName}`);
       return false;
     }
 
-    // 构建事件数据
+    // 构建事件数据并加入队列
     const eventData = await buildEventData(eventName, customProperties);
-
-    if (immediate) {
-      // 立即发送
-      return await sendEventWithRetry(eventData, { maxRetries, timeout });
-    } else {
-      // 加入队列 (自动处理器会定期处理)
-      await eventQueue.enqueue(eventData);
-      return true;
-    }
+    await eventQueue.enqueue(eventData);
+    return true;
   } catch (error) {
     console.error(`Error processing event "${eventName}":`, error);
     return false;
@@ -224,7 +187,7 @@ export async function sendEvent(
 }
 
 /**
- * 批量发送事件
+ * 批量发送事件（逐个发送单个事件）
  * @param {Array} events - 事件数组
  * @returns {Promise<boolean>} - 发送是否成功
  */
@@ -234,77 +197,34 @@ export async function sendEventsBatch(events) {
   try {
     debugLog(`Sending batch of ${events.length} events`);
 
-    const payload = {
-      type: "events",
-      payload: events.map((event) => ({
-        website: CONFIG.umami.websiteId,
-        hostname: chrome.runtime.id,
-        name: event.name,
-        language: chrome.i18n.getUILanguage(),
-        data: event.data,
-      })),
-    };
+    let successCount = 0;
 
-    return await sendToUmami(payload, `batch(${events.length})`);
+    // 逐个发送事件
+    for (const event of events) {
+      const payload = {
+        type: "event",
+        payload: {
+          website: WEBSITE_ID,
+          hostname: chrome.runtime.id,
+          name: event.name,
+          language: chrome.i18n.getUILanguage(),
+          data: event.data,
+        },
+      };
+
+      const success = await sendToUmami(payload, event.name);
+      if (success) {
+        successCount++;
+      }
+    }
+
+    const allSuccess = successCount === events.length;
+    debugLog(`Batch complete: ${successCount}/${events.length} events sent`);
+    return allSuccess;
   } catch (error) {
     console.error("Batch send failed:", error);
     return false;
   }
-}
-
-/**
- * 立即发送单个事件（带重试）
- * @param {Object} eventData - 事件数据
- * @param {Object} options - 选项
- * @returns {Promise<boolean>}
- */
-async function sendEventWithRetry(eventData, options = {}) {
-  const {
-    maxRetries = UMAMI_CONFIG.maxRetries,
-    timeout = UMAMI_CONFIG.timeout,
-  } = options;
-
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const payload = {
-        type: "event",
-        payload: {
-          website: CONFIG.umami.websiteId,
-          hostname: chrome.runtime.id,
-          name: eventData.name,
-          language: chrome.i18n.getUILanguage(),
-          data: eventData.data,
-        },
-      };
-
-      const success = await sendToUmami(payload, eventData.name, timeout, true);
-      if (success) {
-        // 记录成功发送的事件（用于去重）
-        await recordSentEvent(eventData.name, eventData.data);
-        return true;
-      }
-
-      if (attempt < maxRetries) {
-        const delay = Math.min(
-          CONFIG.retry.baseDelay * Math.pow(2, attempt - 1),
-          CONFIG.retry.maxDelay,
-        );
-        debugLog(
-          `Retry ${attempt} failed, waiting ${delay}ms before retry ${attempt + 1}`,
-        );
-        await sleep(delay);
-      }
-    } catch (error) {
-      console.error(
-        `Attempt ${attempt} failed for event "${eventData.name}":`,
-        error,
-      );
-      if (attempt === maxRetries) {
-        return false;
-      }
-    }
-  }
-  return false;
 }
 
 /**
@@ -340,19 +260,13 @@ async function buildEventData(eventName, customProperties = {}) {
 // ===== 内部方法 =====
 
 // 发送数据到 Umami API
-async function sendToUmami(
-  payload,
-  eventName,
-  timeout = CONFIG.umami.timeout,
-  forceFetch = false,
-) {
-  const endpoint = `${CONFIG.umami.apiUrl}/api/send`;
+async function sendToUmami(payload, eventName) {
+  const endpoint = `${API_URL}/api/send`;
   const payloadString = JSON.stringify(payload);
 
   try {
-    // 优先使用 navigator.sendBeacon（更可靠，特别适用于批量和队列事件）
-    // 但对于需要精确超时控制的立即发送事件，可以强制使用 fetch
-    if (navigator.sendBeacon && !forceFetch) {
+    // 优先使用 navigator.sendBeacon
+    if (navigator.sendBeacon) {
       const blob = new Blob([payloadString], {
         type: "application/json",
       });
@@ -361,16 +275,12 @@ async function sendToUmami(
       if (success) {
         debugLog(`Event "${eventName}" sent successfully via sendBeacon`);
         return true;
-      } else {
-        debugLog(
-          `sendBeacon failed for event "${eventName}", falling back to fetch`,
-        );
       }
     }
 
-    // 使用 fetch + 超时控制
+    // sendBeacon 失败时使用 fetch 备用
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
     try {
       const response = await fetch(endpoint, {
@@ -391,21 +301,12 @@ async function sendToUmami(
         debugLog(`Event "${eventName}" sent successfully via fetch`);
         return true;
       } else {
-        console.warn(
-          `Failed to send event "${eventName}":`,
-          response.status,
-          response.statusText,
-        );
+        console.warn(`Failed to send event "${eventName}":`, response.status);
         return false;
       }
     } catch (fetchError) {
       clearTimeout(timeoutId);
-
-      if (fetchError.name === "AbortError") {
-        console.warn(`Request timeout for event "${eventName}"`);
-      } else {
-        console.error(`Fetch failed for event "${eventName}":`, fetchError);
-      }
+      console.warn(`Request failed for event "${eventName}":`, fetchError);
       return false;
     }
   } catch (error) {
@@ -417,14 +318,14 @@ async function sendToUmami(
 // 用户 ID 管理
 async function getUserId() {
   try {
-    const result = await safeStorageGet([CONFIG.storage.keys.userId]);
-    if (result[CONFIG.storage.keys.userId]) {
-      return result[CONFIG.storage.keys.userId];
+    const result = await safeStorageGet([STORAGE_KEYS.userId]);
+    if (result[STORAGE_KEYS.userId]) {
+      return result[STORAGE_KEYS.userId];
     }
 
     // 生成新的用户 ID
     const newUserId = generateUserId();
-    await safeStorageSet(CONFIG.storage.keys.userId, newUserId);
+    await safeStorageSet(STORAGE_KEYS.userId, newUserId);
     debugLog("Generated new user ID:", newUserId);
     return newUserId;
   } catch (error) {
@@ -467,81 +368,40 @@ function getPlatform() {
 
 /**
  * 安全的存储写入操作
- * @param {string} key - 存储键
- * @param {*} value - 存储值
- * @param {number} maxRetries - 最大重试次数
- * @returns {Promise<boolean>}
  */
-async function safeStorageSet(
-  key,
-  value,
-  maxRetries = CONFIG.storage.maxRetries,
-) {
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      await chrome.storage.local.set({ [key]: value });
-      return true;
-    } catch (error) {
-      console.warn(`Storage set attempt ${i + 1} failed:`, error);
-      if (i === maxRetries - 1) {
-        console.error(
-          `Failed to set storage key "${key}" after ${maxRetries} attempts`,
-        );
-        return false;
-      }
-      await sleep(100 * (i + 1)); // 递增延迟
-    }
+async function safeStorageSet(key, value) {
+  try {
+    await chrome.storage.local.set({ [key]: value });
+    return true;
+  } catch (error) {
+    console.warn(`Storage set failed for key "${key}":`, error);
+    return false;
   }
-  return false;
 }
 
 /**
  * 安全的存储读取操作
- * @param {string|Array} keys - 存储键
- * @param {number} maxRetries - 最大重试次数
- * @returns {Promise<Object>}
  */
-async function safeStorageGet(keys, maxRetries = CONFIG.storage.maxRetries) {
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      return await chrome.storage.local.get(keys);
-    } catch (error) {
-      console.warn(`Storage get attempt ${i + 1} failed:`, error);
-      if (i === maxRetries - 1) {
-        console.error(
-          `Failed to get storage keys after ${maxRetries} attempts`,
-        );
-        return {};
-      }
-      await sleep(100 * (i + 1));
-    }
+async function safeStorageGet(keys) {
+  try {
+    return await chrome.storage.local.get(keys);
+  } catch (error) {
+    console.warn(`Storage get failed:`, error);
+    return {};
   }
-  return {};
 }
 
 /**
  * 安全的存储删除操作
- * @param {string|Array} keys - 要删除的键
- * @param {number} maxRetries - 最大重试次数
- * @returns {Promise<boolean>}
  */
-async function safeStorageRemove(keys, maxRetries = CONFIG.storage.maxRetries) {
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      await chrome.storage.local.remove(keys);
-      return true;
-    } catch (error) {
-      console.warn(`Storage remove attempt ${i + 1} failed:`, error);
-      if (i === maxRetries - 1) {
-        console.error(
-          `Failed to remove storage keys after ${maxRetries} attempts`,
-        );
-        return false;
-      }
-      await sleep(100 * (i + 1));
-    }
+async function safeStorageRemove(keys) {
+  try {
+    await chrome.storage.local.remove(keys);
+    return true;
+  } catch (error) {
+    console.warn(`Storage remove failed:`, error);
+    return false;
   }
-  return false;
 }
 
 /**
@@ -569,10 +429,9 @@ function chunkArray(array, size) {
 
 /**
  * 调试日志
- * @param {...any} args - 日志参数
  */
 function debugLog(...args) {
-  if (CONFIG.debug) {
+  if (DEBUG) {
     console.log("[Analytics Debug]", ...args);
   }
 }
@@ -606,75 +465,50 @@ function sanitizeEventData(data) {
   return sanitized;
 }
 
-// ===== 事件去重机制 =====
+// ===== 优化的去重机制 =====
+
+// 内存去重缓存 - 减少存储读写
+const dedupCache = new Map();
+const CACHE_CLEANUP_INTERVAL = 5 * 60 * 1000; // 5分钟清理一次
 
 /**
- * 检查是否为重复事件
- * @param {string} eventName - 事件名称
- * @param {Object} eventData - 事件数据
- * @returns {Promise<boolean>} - 是否为重复事件
+ * 检查是否为重复事件（优化版本 - 使用内存缓存）
  */
 async function isDuplicateEvent(eventName, eventData) {
   try {
     const eventKey = generateEventKey(eventName, eventData);
-    const dedupKey = `${CONFIG.storage.keys.dedupPrefix}${eventKey}`;
-    const result = await safeStorageGet([dedupKey]);
-
-    const lastEventTime = result[dedupKey];
-    if (!lastEventTime) return false;
-
     const now = Date.now();
-    const timeDiff = now - lastEventTime;
+    const interval = DEDUP_INTERVALS[eventName] || DEDUP_INTERVALS.default;
 
-    const dedupIntervals = CONFIG.dedup.intervals;
-
-    const interval = dedupIntervals[eventName] || dedupIntervals.default;
-
-    if (timeDiff < interval) {
-      debugLog(
-        `Duplicate event detected: ${eventName}, time diff: ${timeDiff}ms`,
-      );
+    // 先检查内存缓存
+    const lastTime = dedupCache.get(eventKey);
+    if (lastTime && now - lastTime < interval) {
+      debugLog(`Duplicate event blocked (cache): ${eventName}`);
       return true;
+    }
+
+    // 缓存中没有，记录当前时间
+    dedupCache.set(eventKey, now);
+
+    // 定期清理缓存
+    if (dedupCache.size > 100) {
+      cleanupDedupCache();
     }
 
     return false;
   } catch (error) {
     console.warn("Failed to check duplicate event:", error);
-    return false; // 出错时不阻止发送
+    return false;
   }
 }
 
 /**
- * 记录已发送的事件（用于去重）
- * @param {string} eventName - 事件名称
- * @param {Object} eventData - 事件数据
- */
-async function recordSentEvent(eventName, eventData) {
-  try {
-    const eventKey = generateEventKey(eventName, eventData);
-    const now = Date.now();
-    const dedupKey = `${CONFIG.storage.keys.dedupPrefix}${eventKey}`;
-
-    await safeStorageSet(dedupKey, now);
-
-    // 定期清理过期的去重记录
-    setTimeout(() => cleanupDedupRecords(), 1000);
-  } catch (error) {
-    console.warn("Failed to record sent event:", error);
-  }
-}
-
-/**
- * 生成事件唯一键（用于去重）
- * @param {string} eventName - 事件名称
- * @param {Object} eventData - 事件数据
- * @returns {string} - 事件唯一键
+ * 生成事件唯一键
  */
 function generateEventKey(eventName, eventData) {
-  // 提取关键字段用于生成唯一键
   const keyFields = {
     install: ["install_type"],
-    update: ["install_type", "previous_version"],
+    update: ["install_type"],
     copy: ["format", "source"],
     error: ["error_type", "component"],
   };
@@ -692,34 +526,24 @@ function generateEventKey(eventName, eventData) {
 }
 
 /**
- * 清理过期的去重记录
+ * 清理过期的内存缓存
  */
-async function cleanupDedupRecords() {
-  try {
-    const result = await chrome.storage.local.get();
-    const now = Date.now();
-    const expireTime = CONFIG.dedup.cleanupInterval;
-    const keysToRemove = [];
+function cleanupDedupCache() {
+  const now = Date.now();
+  const expiredKeys = [];
 
-    for (const [key, value] of Object.entries(result)) {
-      if (
-        key.startsWith(CONFIG.storage.keys.dedupPrefix) &&
-        typeof value === "number"
-      ) {
-        if (now - value > expireTime) {
-          keysToRemove.push(key);
-        }
-      }
+  for (const [key, time] of dedupCache.entries()) {
+    if (now - time > Math.max(...Object.values(DEDUP_INTERVALS))) {
+      expiredKeys.push(key);
     }
-
-    if (keysToRemove.length > 0) {
-      await safeStorageRemove(keysToRemove);
-      debugLog(`Cleaned up ${keysToRemove.length} expired dedup records`);
-    }
-  } catch (error) {
-    console.warn("Failed to cleanup dedup records:", error);
   }
+
+  expiredKeys.forEach((key) => dedupCache.delete(key));
+  debugLog(`Cleaned up ${expiredKeys.length} expired cache entries`);
 }
+
+// 定期清理内存缓存
+setInterval(cleanupDedupCache, CACHE_CLEANUP_INTERVAL);
 
 // ===== 队列管理和队列处理 API =====
 

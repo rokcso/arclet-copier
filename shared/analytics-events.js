@@ -10,19 +10,14 @@ import { sendEvent } from "./umami-core.js";
  * @param {Object} options - 发送选项
  * @returns {Promise<boolean>} - 是否成功
  */
-export async function trackInstall(installReason = "install", options = {}) {
+export async function trackInstall(installReason = "install") {
   try {
     console.log(`Extension ${installReason}, tracking installation event...`);
 
-    // 构建自定义事件数据（公共属性由 sendEvent 自动添加）
+    // 构建事件数据
     const customEventData = {
-      install_type: installReason, // "install" 或 "update"
+      install_type: installReason,
     };
-
-    // 如果是更新，添加之前的版本信息
-    if (installReason === "update") {
-      customEventData.previous_version = await getPreviousVersion();
-    }
 
     // 检查防重复逻辑（只对首次安装生效）
     if (installReason === "install") {
@@ -33,13 +28,8 @@ export async function trackInstall(installReason = "install", options = {}) {
       }
     }
 
-    // 发送统一的安装事件（sendEvent 会自动添加公共属性和去重检查）
-    // 对于安装事件，使用立即发送模式确保可靠性
-    const success = await sendEvent("install", customEventData, {
-      immediate: true, // 立即发送，不进入队列
-      skipDedup: installReason === "update", // 更新事件跳过去重，因为已有存储层面的检查
-      ...options,
-    });
+    // 发送事件（统一走队列）
+    const success = await sendEvent("install", customEventData);
 
     if (success) {
       // 更新存储记录
@@ -178,11 +168,7 @@ export async function trackCopy(format, source, customData = {}) {
       ...customData,
     };
 
-    // 复制事件使用队列模式，允许批量发送
-    return await sendEvent("copy", eventData, {
-      immediate: false, // 使用队列
-      skipDedup: false, // 启用去重
-    });
+    return await sendEvent("copy", eventData);
   } catch (error) {
     console.error("trackCopy failed:", error);
     return false;
@@ -202,15 +188,11 @@ export async function trackError(errorType, component, message, metadata = {}) {
     const eventData = {
       error_type: errorType,
       component,
-      message: message?.substring(0, 200), // 限制错误消息长度
+      message: message?.substring(0, 200),
       ...metadata,
     };
 
-    // 错误事件立即发送，确保及时记录
-    return await sendEvent("error", eventData, {
-      immediate: true,
-      skipDedup: false,
-    });
+    return await sendEvent("error", eventData);
   } catch (error) {
     console.error("trackError failed:", error);
     return false;

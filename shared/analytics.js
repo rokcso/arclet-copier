@@ -10,4 +10,4 @@ export {
 } from "./umami-core.js";
 
 // 从事件模块导出具体事件方法
-export { trackInstall, trackCopy, trackError } from "./analytics-events.js";
+export { trackInstall } from "./analytics-events.js";
