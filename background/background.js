@@ -198,12 +198,7 @@ async function getUserSettings() {
     "shortUrlService",
   ]);
 
-  // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
-  let cleaningMode = settings.urlCleaning;
-  if (!cleaningMode && typeof settings.removeParams === "boolean") {
-    cleaningMode = settings.removeParams ? "aggressive" : "off";
-  }
-  cleaningMode = cleaningMode || "smart";
+  const cleaningMode = settings.urlCleaning || "off";
 
   return {
     urlCleaning: cleaningMode,

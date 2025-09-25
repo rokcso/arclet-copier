@@ -432,11 +432,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ]);
 
     // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
-    let cleaningMode = result.urlCleaning;
-    if (!cleaningMode && typeof result.removeParams === "boolean") {
-      cleaningMode = result.removeParams ? "aggressive" : "off";
-    }
-    cleaningMode = cleaningMode || "smart";
+    const cleaningMode = result.urlCleaning || "off";
 
     const cleaningSelect = elements.removeParamsToggle;
     cleaningSelect.setAttribute("data-value", cleaningMode);

@@ -307,7 +307,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ]);
 
     currentSettings = {
-      urlCleaning: result.batchUrlCleaning || "smart",
+      urlCleaning: result.batchUrlCleaning || "off",
       appearance: result.appearance || "system",
       themeColor: result.themeColor || "green",
     };
@@ -1089,7 +1089,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const urlCleaning =
       document
         .getElementById("removeParamsToggle")
-        ?.getAttribute("data-value") || "smart";
+        ?.getAttribute("data-value") || "off";
     const shortService =
       document.getElementById("shortUrlService")?.value || "isgd";
 
