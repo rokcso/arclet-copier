@@ -368,19 +368,170 @@ export function getAnalytics(config = {}) {
   return globalAnalytics;
 }
 
-// 便捷函数：记录用户安装或更新
+// 统一的事件发送方法 - 推荐使用这个方法
+export async function sendEvent(eventName, customProperties = {}) {
+  try {
+    // 获取或生成用户 ID
+    const userId = await getUserId();
+
+    // 构建公共事件属性
+    const commonProperties = {
+      user_id: userId,
+      version: chrome.runtime.getManifest().version,
+      locale: chrome.i18n.getUILanguage(),
+      browser: getBrowser(),
+      platform: getPlatform(),
+      timestamp: new Date().toISOString(),
+      date: new Date().toISOString().split("T")[0],
+    };
+
+    // 合并公共属性和自定义属性
+    const eventData = {
+      ...commonProperties,
+      ...customProperties, // 自定义属性可以覆盖公共属性
+    };
+
+    // 将所有属性转为字符串
+    const stringifiedData = {};
+    for (const [key, value] of Object.entries(eventData)) {
+      stringifiedData[key] =
+        value === null || value === undefined ? null : String(value);
+    }
+
+    // 构建 Umami 标准格式
+    const payload = {
+      type: "event",
+      payload: {
+        website: "c0b57f97-5293-42d9-8ec2-4708e4ea68ae",
+        url: "/extension",
+        name: eventName,
+        hostname: "arclet-copier-extension",
+        language: chrome.i18n.getUILanguage(),
+        screen: "1920x1080",
+        data: stringifiedData,
+      },
+    };
+
+    // 发送到 Umami - 优先使用 sendBeacon
+    const endpoint = "https://umami.lunarye.com/api/send";
+    const payloadString = JSON.stringify(payload);
+
+    try {
+      // 优先使用 navigator.sendBeacon（更可靠，特别是在页面卸载时）
+      if (navigator.sendBeacon) {
+        // 使用 Blob 确保正确的 Content-Type
+        const blob = new Blob([payloadString], {
+          type: "application/json",
+        });
+
+        const success = navigator.sendBeacon(endpoint, blob);
+        if (success) {
+          console.log(`Event "${eventName}" sent successfully via sendBeacon`);
+          return true;
+        } else {
+          console.warn(
+            `sendBeacon failed for event "${eventName}", falling back to fetch`,
+          );
+        }
+      }
+
+      // 回退到 fetch + keepalive
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "Arclet-Copier-Extension",
+        },
+        body: payloadString,
+        keepalive: true,
+        mode: "cors",
+      });
+
+      if (response.ok) {
+        console.log(`Event "${eventName}" sent successfully via fetch`);
+        return true;
+      } else {
+        console.warn(`Failed to send event "${eventName}":`, response.status);
+        return false;
+      }
+    } catch (fetchError) {
+      console.error(
+        `Both sendBeacon and fetch failed for event "${eventName}":`,
+        fetchError,
+      );
+      return false;
+    }
+  } catch (error) {
+    console.error(`Error sending event "${eventName}":`, error);
+    return false;
+  }
+}
+
+// 辅助函数：获取用户 ID
+async function getUserId() {
+  try {
+    const result = await chrome.storage.local.get(["analytics_user_id"]);
+    if (result.analytics_user_id) {
+      return result.analytics_user_id;
+    }
+
+    // 生成新的用户 ID
+    const newUserId = generateUserId();
+    await chrome.storage.local.set({ analytics_user_id: newUserId });
+    console.log("Generated new user ID:", newUserId);
+    return newUserId;
+  } catch (error) {
+    console.error("Failed to get/generate user ID:", error);
+    return generateUserId(); // 返回临时 ID
+  }
+}
+
+// 辅助函数：生成用户 ID
+function generateUserId() {
+  const nanoTime = performance.now().toString(36).replace(".", "");
+  const random = Math.random().toString(36).substr(2, 8);
+  const timePart = nanoTime.slice(-6);
+  const randomPart = random.slice(0, 6);
+  return `user_${randomPart}${timePart}`;
+}
+
+// 辅助函数：获取浏览器信息
+function getBrowser() {
+  const userAgent = navigator.userAgent.toLowerCase();
+  if (userAgent.includes("edg/")) return "edge";
+  if (userAgent.includes("chrome/")) return "chrome";
+  if (userAgent.includes("firefox/")) return "firefox";
+  return "unknown";
+}
+
+// 辅助函数：获取平台信息
+function getPlatform() {
+  const userAgent = navigator.userAgent.toLowerCase();
+  if (userAgent.includes("mac")) return "mac";
+  if (userAgent.includes("win")) return "windows";
+  if (userAgent.includes("linux")) return "linux";
+  return "unknown";
+}
+
+// 便捷函数：记录用户安装或更新 - 使用新的统一方法
 export async function trackUserInstallOnce(installReason = "install") {
   try {
-    const analytics = getAnalytics();
-
     if (installReason === "update") {
       // 更新事件：总是记录，不检查是否已记录
       console.log("Extension updated, tracking user update...");
-      const success = await analytics.trackUserUpdate();
+
+      const previousVersion = await getPreviousVersion();
+      const currentVersion = chrome.runtime.getManifest().version;
+
+      const success = await sendEvent("user_update", {
+        install_type: "update",
+        install_date: new Date().toISOString().split("T")[0],
+        previous_version: previousVersion,
+        current_version: currentVersion,
+      });
 
       if (success) {
-        // 保存当前版本信息用于下次更新
-        await analytics.saveCurrentVersion();
+        await saveCurrentVersion();
         console.log("User update tracked successfully");
         return true;
       } else {
@@ -389,19 +540,20 @@ export async function trackUserInstallOnce(installReason = "install") {
       }
     } else {
       // 安装事件：检查是否已记录，只记录一次
-      const alreadyRecorded = await analytics.isInstallRecorded();
+      const alreadyRecorded = await isInstallRecorded();
       if (alreadyRecorded) {
         console.log("User install already recorded, skipping");
         return false;
       }
 
-      // 记录安装
-      const success = await analytics.trackUserInstall(installReason);
+      const success = await sendEvent("user_install", {
+        install_type: "install",
+        install_date: new Date().toISOString().split("T")[0],
+      });
 
       if (success) {
-        // 标记为已记录，并保存当前版本
-        await analytics.markInstallRecorded();
-        await analytics.saveCurrentVersion();
+        await markInstallRecorded();
+        await saveCurrentVersion();
         console.log("User install tracked successfully");
         return true;
       } else {
@@ -412,5 +564,51 @@ export async function trackUserInstallOnce(installReason = "install") {
   } catch (error) {
     console.error("trackUserInstallOnce failed:", error);
     return false;
+  }
+}
+
+// 辅助函数：检查是否已记录安装
+async function isInstallRecorded() {
+  try {
+    const result = await chrome.storage.local.get([
+      "analytics_install_recorded",
+    ]);
+    return result.analytics_install_recorded === true;
+  } catch (error) {
+    console.warn("Failed to check install record:", error);
+    return false;
+  }
+}
+
+// 辅助函数：标记安装已记录
+async function markInstallRecorded() {
+  try {
+    await chrome.storage.local.set({
+      analytics_install_recorded: true,
+      analytics_install_date: new Date().toISOString(),
+    });
+    console.log("Install marked as recorded");
+  } catch (error) {
+    console.warn("Failed to mark install as recorded:", error);
+  }
+}
+
+// 辅助函数：获取之前的版本
+async function getPreviousVersion() {
+  try {
+    const result = await chrome.storage.local.get(["analytics_last_version"]);
+    return result.analytics_last_version || "unknown";
+  } catch (error) {
+    return "unknown";
+  }
+}
+
+// 辅助函数：保存当前版本
+async function saveCurrentVersion() {
+  try {
+    const currentVersion = chrome.runtime.getManifest().version;
+    await chrome.storage.local.set({ analytics_last_version: currentVersion });
+  } catch (error) {
+    console.warn("Failed to save current version:", error);
   }
 }
