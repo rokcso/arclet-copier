@@ -10,6 +10,9 @@ import {
   processTemplateWithFallback,
 } from "../shared/constants.js";
 
+// 导入分析模块
+import { trackUserInstallOnce } from "../shared/analytics.js";
+
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
 
@@ -103,8 +106,9 @@ class PersistentShortUrlCache {
 // 创建持久化短链缓存实例
 const shortUrlCache = new PersistentShortUrlCache();
 
-// 创建右键菜单
-chrome.runtime.onInstalled.addListener(() => {
+// 创建右键菜单和处理扩展安装
+chrome.runtime.onInstalled.addListener(async (details) => {
+  // 创建右键菜单
   chrome.contextMenus.create({
     id: "copy-current-url",
     title: chrome.i18n.getMessage("copyCurrentUrl") || "复制当前 URL",
@@ -119,6 +123,21 @@ chrome.runtime.onInstalled.addListener(() => {
       "audio",
     ],
   });
+
+  // 处理用户安装统计
+  try {
+    if (details.reason === "install") {
+      console.log("Extension installed, tracking user install...");
+      await trackUserInstallOnce("install");
+    } else if (details.reason === "update") {
+      console.log("Extension updated, checking if install tracking needed...");
+      // 对于更新，仍然检查是否需要记录安装（防止遗漏）
+      await trackUserInstallOnce("update");
+    }
+  } catch (error) {
+    console.warn("Failed to track installation:", error);
+    // 不阻止扩展正常运行
+  }
 });
 
 // 监听右键菜单点击事件

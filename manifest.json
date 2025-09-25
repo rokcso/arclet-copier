@@ -15,7 +15,11 @@
     "clipboardWrite",
     "contextMenus"
   ],
-  "host_permissions": ["https://is.gd/*", "https://tinyurl.com/*"],
+  "host_permissions": [
+    "https://is.gd/*",
+    "https://tinyurl.com/*",
+    "https://umami.lunarye.com/*"
+  ],
   "web_accessible_resources": [
     {
       "resources": ["_locales/*/*.json"],
