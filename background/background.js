@@ -11,7 +11,7 @@ import {
 } from "../shared/constants.js";
 
 // 导入分析模块
-import { trackInstall } from "../shared/analytics.js";
+import { trackInstall, trackCopy } from "../shared/analytics.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -300,6 +300,7 @@ async function handleCopyUrl() {
 
   copyOperationStates.copyUrl = true;
   let settings;
+  const startTime = Date.now();
 
   try {
     const tab = await getCurrentTab();
@@ -307,10 +308,14 @@ async function handleCopyUrl() {
 
     let contentToCopy;
     let successMessage;
+    let copyFormat;
+    let templateId = null;
+    let templateName = null;
 
     // 检查是否是自定义模板
     if (settings.silentCopyFormat.startsWith("custom:")) {
-      const templateId = settings.silentCopyFormat.substring(7); // 移除 'custom:' 前缀
+      templateId = settings.silentCopyFormat.substring(7); // 移除 'custom:' 前缀
+      copyFormat = "custom";
 
       try {
         const title = await getPageTitle(tab.id, tab.url);
@@ -326,16 +331,19 @@ async function handleCopyUrl() {
           templates.find((t) => t.id === templateId),
         );
 
-        if (template && template.template.includes("{{shortUrl}}")) {
-          try {
-            const shortUrl = await handleCreateShortUrl(
-              tab.url,
-              settings.shortUrlService,
-            );
-            context.shortUrl = shortUrl;
-          } catch (error) {
-            console.error("Error generating short URL for template:", error);
-            context.shortUrl = processUrl(tab.url, settings.urlCleaning);
+        if (template) {
+          templateName = template.name;
+          if (template.template.includes("{{shortUrl}}")) {
+            try {
+              const shortUrl = await handleCreateShortUrl(
+                tab.url,
+                settings.shortUrlService,
+              );
+              context.shortUrl = shortUrl;
+            } catch (error) {
+              console.error("Error generating short URL for template:", error);
+              context.shortUrl = processUrl(tab.url, settings.urlCleaning);
+            }
           }
         }
 
@@ -356,13 +364,16 @@ async function handleCopyUrl() {
         // 回退到URL复制
         contentToCopy = processUrl(tab.url, settings.urlCleaning);
         successMessage = getMessage("urlCopied");
+        copyFormat = "url"; // 修正格式类型
       }
     } else if (settings.silentCopyFormat === "markdown") {
+      copyFormat = "markdown";
       // 获取页面标题并创建 markdown 链接
       const title = await getPageTitle(tab.id, tab.url);
       contentToCopy = createMarkdownLink(tab.url, title, settings.urlCleaning);
       successMessage = getMessage("markdownLinkCopied");
     } else if (settings.silentCopyFormat === "shortUrl") {
+      copyFormat = "shortUrl";
       // 验证URL是否适合生成短链
       if (!isValidWebUrl(tab.url)) {
         throw new Error(
@@ -378,12 +389,34 @@ async function handleCopyUrl() {
       contentToCopy = shortUrl;
       successMessage = getMessage("shortUrlCopied");
     } else {
+      copyFormat = "url";
       // 默认复制 URL
       contentToCopy = processUrl(tab.url, settings.urlCleaning);
       successMessage = getMessage("urlCopied");
     }
 
     await copyToClipboard(contentToCopy);
+
+    // 记录成功的复制事件
+    const duration = Date.now() - startTime;
+    const trackData = {
+      format: copyFormat,
+      source: "shortcut",
+      success: true,
+      templateId,
+      templateName,
+      urlCleaning: settings.urlCleaning,
+      duration,
+    };
+
+    // 只在使用短链时添加 shortService
+    if (copyFormat === "shortUrl") {
+      trackData.shortService = settings.shortUrlService;
+    }
+
+    trackCopy(trackData).catch((error) => {
+      console.warn("Failed to track copy event:", error);
+    });
 
     if (settings.chromeNotifications) {
       showNotification(EXTENSION_NAME, successMessage);
@@ -424,6 +457,30 @@ async function handleCopyUrl() {
     if (!isUserValidationError) {
       console.error("复制 URL 失败:", error);
     }
+
+    // 记录失败的复制事件
+    const duration = Date.now() - startTime;
+    const errorType = isUserValidationError ? "validation" : "system";
+    const failedFormat = settings.silentCopyFormat || "url";
+
+    const trackData = {
+      format: failedFormat,
+      source: "shortcut",
+      success: false,
+      urlCleaning: settings.urlCleaning,
+      duration,
+      errorType,
+      errorMessage: error.message,
+    };
+
+    // 只在尝试使用短链时添加 shortService
+    if (failedFormat === "shortUrl") {
+      trackData.shortService = settings.shortUrlService;
+    }
+
+    trackCopy(trackData).catch((trackError) => {
+      console.warn("Failed to track failed copy event:", trackError);
+    });
 
     if (settings.chromeNotifications) {
       showNotification(EXTENSION_NAME, message);

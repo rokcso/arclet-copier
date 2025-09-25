@@ -8,6 +8,8 @@ import {
   loadTemplatesIntoSelect,
 } from "../shared/constants.js";
 
+import { trackCopy } from "../shared/analytics.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
   const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -628,6 +630,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     copyOperationStates.copyUrl = true;
+    const startTime = Date.now();
 
     try {
       const cleaningSelect = elements.removeParamsToggle;
@@ -642,19 +645,51 @@ document.addEventListener("DOMContentLoaded", async () => {
         fallbackCopy(processedUrl);
       }
 
+      // 记录成功的复制事件
+      const duration = Date.now() - startTime;
+      trackCopy({
+        format: "url",
+        source: "popup",
+        success: true,
+        urlCleaning: cleaningMode,
+        duration,
+      }).catch((error) => {
+        console.warn("Failed to track copy event:", error);
+      });
+
       showStatus();
     } catch (error) {
       console.error("复制失败:", error);
+      let fallbackSuccess = false;
+
       // 使用fallback复制方法
       try {
         const cleaningSelect = elements.removeParamsToggle;
         const cleaningMode = cleaningSelect.getAttribute("data-value");
         const processedUrl = processUrl(currentUrl, cleaningMode);
         fallbackCopy(processedUrl);
+        fallbackSuccess = true;
         showStatus();
       } catch (fallbackError) {
         console.error("降级复制也失败:", fallbackError);
       }
+
+      // 记录复制事件（成功或失败）
+      const duration = Date.now() - startTime;
+      const cleaningSelect = elements.removeParamsToggle;
+      const cleaningMode = cleaningSelect.getAttribute("data-value");
+
+      trackCopy({
+        format: "url",
+        source: "popup",
+        success: fallbackSuccess,
+        urlCleaning: cleaningMode,
+        duration,
+        errorType: fallbackSuccess ? null : "clipboard",
+        errorMessage: fallbackSuccess ? null : error.message,
+      }).catch((trackError) => {
+        console.warn("Failed to track copy event:", trackError);
+      });
     } finally {
       // 300ms后重置状态
       setTimeout(() => {
@@ -679,6 +714,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     copyOperationStates.copyMarkdown = true;
+    const startTime = Date.now();
 
     try {
       const markdownLink = createMarkdownLink(currentUrl, currentTitle);
@@ -691,17 +727,52 @@ document.addEventListener("DOMContentLoaded", async () => {
         fallbackCopy(markdownLink);
       }
 
+      // 记录成功的复制事件
+      const duration = Date.now() - startTime;
+      const cleaningSelect = elements.removeParamsToggle;
+      const cleaningMode = cleaningSelect.getAttribute("data-value");
+
+      trackCopy({
+        format: "markdown",
+        source: "popup",
+        success: true,
+        urlCleaning: cleaningMode,
+        duration,
+      }).catch((error) => {
+        console.warn("Failed to track markdown copy event:", error);
+      });
+
       showArcNotification(getLocalMessage("markdownCopied"));
     } catch (error) {
       console.error("Markdown复制失败:", error);
+      let fallbackSuccess = false;
+
       // 使用fallback复制方法
       try {
         const markdownLink = createMarkdownLink(currentUrl, currentTitle);
         fallbackCopy(markdownLink);
+        fallbackSuccess = true;
         showArcNotification(getLocalMessage("markdownCopied"));
       } catch (fallbackError) {
         console.error("Markdown降级复制也失败:", fallbackError);
       }
+
+      // 记录复制事件（成功或失败）
+      const duration = Date.now() - startTime;
+      const cleaningSelect = elements.removeParamsToggle;
+      const cleaningMode = cleaningSelect.getAttribute("data-value");
+
+      trackCopy({
+        format: "markdown",
+        source: "popup",
+        success: fallbackSuccess,
+        urlCleaning: cleaningMode,
+        duration,
+        errorType: fallbackSuccess ? null : "clipboard",
+        errorMessage: fallbackSuccess ? null : error.message,
+      }).catch((trackError) => {
+        console.warn("Failed to track markdown copy event:", trackError);
+      });
     } finally {
       // 300ms后重置状态
       setTimeout(() => {
