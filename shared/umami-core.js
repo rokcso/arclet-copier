@@ -3,6 +3,7 @@
 const WEBSITE_ID = "c0b57f97-5293-42d9-8ec2-4708e4ea68ae";
 const API_URL = "https://umami.lunarye.com";
 const TIMEOUT = 5000;
+const USER_ID_STORAGE_KEY = "analytics_user_id";
 
 /**
  * Send event to Umami with common properties
@@ -27,6 +28,7 @@ export async function sendEvent(eventName, eventData = {}) {
         language: chrome.i18n.getUILanguage(),
         data: {
           // Common properties with $ prefix
+          $user_id: await getUserId(),
           $version: chrome.runtime.getManifest().version,
           $platform: getPlatform(),
           $browser_name: getBrowser(),
@@ -146,5 +148,32 @@ function getBrowserVersion() {
     return "unknown";
   } catch (error) {
     return "unknown";
+  }
+}
+
+/**
+ * Get or generate user ID
+ * @returns {Promise<string>} - User ID (e.g., "u_a1b2c3d4e")
+ */
+async function getUserId() {
+  try {
+    // Try to get existing user ID
+    const result = await chrome.storage.local.get([USER_ID_STORAGE_KEY]);
+    if (result[USER_ID_STORAGE_KEY]) {
+      return result[USER_ID_STORAGE_KEY];
+    }
+
+    // Generate new user ID using UUID first 9 chars
+    const userId = "u_" + crypto.randomUUID().replace(/-/g, "").substring(0, 9);
+
+    // Save to storage
+    await chrome.storage.local.set({ [USER_ID_STORAGE_KEY]: userId });
+
+    console.log("Generated new user ID:", userId);
+    return userId;
+  } catch (error) {
+    console.warn("Failed to get/generate user ID:", error);
+    // Return a temporary user ID as fallback
+    return "u_" + crypto.randomUUID().replace(/-/g, "").substring(0, 9);
   }
 }
