@@ -11,7 +11,7 @@ import {
 } from "../shared/constants.js";
 
 // 导入分析模块
-import { trackExtensionInstall } from "../shared/analytics.js";
+import { trackInstall } from "../shared/analytics.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -127,9 +127,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   // 处理扩展安装统计（包含安装和更新）
   try {
     if (details.reason === "install") {
-      await trackExtensionInstall("install");
+      await trackInstall("install");
     } else if (details.reason === "update") {
-      await trackExtensionInstall("update");
+      await trackInstall("update");
     }
   } catch (error) {
     console.warn("Failed to track extension installation:", error);

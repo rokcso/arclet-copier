@@ -3,7 +3,7 @@
 // ===== 配置 =====
 const UMAMI_CONFIG = {
   websiteId: "c0b57f97-5293-42d9-8ec2-4708e4ea68ae",
-  apiUrl: "https://umami.lunarye.com"
+  apiUrl: "https://umami.lunarye.com",
 };
 
 // ===== 核心事件发送方法 =====
@@ -20,20 +20,14 @@ export async function sendEvent(eventName, customProperties = {}) {
     // 获取或生成用户 ID
     const userId = await getUserId();
 
-    // 构建公共事件属性（标准化）
-    // 以下 6 个属性会自动添加到所有事件中
-    const commonProperties = {
-      user_id: userId,
-      timestamp: new Date().toISOString(),
-      date: new Date().toISOString().split("T")[0],
-      platform: getPlatform(),
-      browser: getBrowser(),
-      version: chrome.runtime.getManifest().version,
-    };
-
-    // 合并公共属性和自定义属性
+    // 合并公共属性和自定义属性到 data 字段
     const eventData = {
-      ...commonProperties,
+      $user_id: userId,
+      $timestamp: new Date().toISOString(),
+      $date: new Date().toISOString().split("T")[0],
+      $platform: getPlatform(),
+      $browser: getBrowser(),
+      $version: chrome.runtime.getManifest().version,
       ...customProperties, // 自定义属性可以覆盖公共属性
     };
 

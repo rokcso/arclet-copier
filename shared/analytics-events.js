@@ -1,6 +1,6 @@
 // 分析事件定义 - 具体的业务事件
 
-import { sendEvent } from './umami-core.js';
+import { sendEvent } from "./umami-core.js";
 
 // ===== 扩展安装事件 =====
 
@@ -9,7 +9,7 @@ import { sendEvent } from './umami-core.js';
  * @param {string} installReason - "install" 或 "update"
  * @returns {Promise<boolean>} - 是否成功
  */
-export async function trackExtensionInstall(installReason = "install") {
+export async function trackInstall(installReason = "install") {
   try {
     console.log(`Extension ${installReason}, tracking installation event...`);
 
@@ -50,67 +50,9 @@ export async function trackExtensionInstall(installReason = "install") {
       return false;
     }
   } catch (error) {
-    console.error("trackExtensionInstall failed:", error);
+    console.error("trackInstall failed:", error);
     return false;
   }
-}
-
-// ===== 未来可扩展的其他事件 =====
-
-/**
- * 记录用户操作事件
- * @param {string} action - 操作类型
- * @param {Object} properties - 操作相关属性
- * @returns {Promise<boolean>} - 是否成功
- */
-export async function trackUserAction(action, properties = {}) {
-  return await sendEvent("user_action", {
-    action_type: action,
-    ...properties,
-  });
-}
-
-/**
- * 记录复制操作事件
- * @param {string} copyType - 复制类型
- * @param {Object} properties - 复制相关属性
- * @returns {Promise<boolean>} - 是否成功
- */
-export async function trackCopyOperation(copyType, properties = {}) {
-  return await sendEvent("copy_operation", {
-    copy_type: copyType,
-    ...properties,
-  });
-}
-
-/**
- * 记录设置更改事件
- * @param {string} settingName - 设置名称
- * @param {string} oldValue - 旧值
- * @param {string} newValue - 新值
- * @returns {Promise<boolean>} - 是否成功
- */
-export async function trackSettingsChange(settingName, oldValue, newValue) {
-  return await sendEvent("settings_change", {
-    setting_name: settingName,
-    old_value: oldValue,
-    new_value: newValue,
-  });
-}
-
-/**
- * 记录错误事件
- * @param {string} errorType - 错误类型
- * @param {string} errorMessage - 错误消息
- * @param {string} feature - 相关功能
- * @returns {Promise<boolean>} - 是否成功
- */
-export async function trackError(errorType, errorMessage, feature) {
-  return await sendEvent("error_occurred", {
-    error_type: errorType,
-    error_message: errorMessage,
-    feature: feature,
-  });
 }
 
 // ===== 安装状态管理辅助函数 =====
@@ -118,7 +60,9 @@ export async function trackError(errorType, errorMessage, feature) {
 // 检查是否已记录安装
 async function isInstallRecorded() {
   try {
-    const result = await chrome.storage.local.get(["analytics_install_recorded"]);
+    const result = await chrome.storage.local.get([
+      "analytics_install_recorded",
+    ]);
     return result.analytics_install_recorded === true;
   } catch (error) {
     console.warn("Failed to check install record:", error);
