@@ -34,7 +34,7 @@ export async function trackInstall(installReason = "install") {
     }
 
     // 发送统一的安装事件（sendEvent 会自动添加公共属性）
-    const success = await sendEvent("extension_install", customEventData);
+    const success = await sendEvent("install", customEventData);
 
     if (success) {
       // 更新存储记录
