@@ -28,7 +28,7 @@ export async function trackInstall(installReason = "install") {
       if (installReason === "install") {
         await chrome.storage.local.set({
           analytics_installed: true,
-          analytics_install_date: new Date().toISOString(),
+          analytics_install_date: Date.now(),
         });
       }
 

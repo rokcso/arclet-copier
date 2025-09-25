@@ -29,7 +29,8 @@ export async function sendEvent(eventName, eventData = {}) {
           // Common properties with $ prefix
           $version: chrome.runtime.getManifest().version,
           $platform: getPlatform(),
-          $browser: getBrowser(),
+          $browser_name: getBrowser(),
+          $browser_version: getBrowserVersion(),
           $timestamp: timestamp,
           $date: dateString,
           $time: timeString,
@@ -116,4 +117,34 @@ function getBrowser() {
   if (userAgent.includes("chrome/")) return "chrome";
   if (userAgent.includes("firefox/")) return "firefox";
   return "unknown";
+}
+
+/**
+ * Get browser version
+ * @returns {string} - Browser version (e.g., "120.0")
+ */
+function getBrowserVersion() {
+  try {
+    const userAgent = navigator.userAgent;
+    const chromeMatch = userAgent.match(/Chrome\/(\d+\.\d+)/);
+    if (chromeMatch) {
+      return chromeMatch[1];
+    }
+
+    // Fallback for Edge
+    const edgeMatch = userAgent.match(/Edg\/(\d+\.\d+)/);
+    if (edgeMatch) {
+      return edgeMatch[1];
+    }
+
+    // Firefox
+    const firefoxMatch = userAgent.match(/Firefox\/(\d+\.\d+)/);
+    if (firefoxMatch) {
+      return firefoxMatch[1];
+    }
+
+    return "unknown";
+  } catch (error) {
+    return "unknown";
+  }
 }
