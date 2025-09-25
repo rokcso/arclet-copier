@@ -85,23 +85,23 @@ export async function trackCopy(copyData) {
       success,
     };
 
-    // Add optional template info
-    if (templateId) eventData.template_id = templateId;
-    if (templateName) eventData.template_name = templateName;
+    // Always include all fields, use null for missing values
+    eventData.template_id = templateId || null;
+    eventData.template_name = templateName || null;
+    eventData.url_cleaning = urlCleaning || null;
+    eventData.duration = typeof duration === "number" ? duration : null;
 
-    // Add settings info
-    if (urlCleaning) eventData.url_cleaning = urlCleaning;
-    if (shortService && format === "shortUrl")
-      eventData.short_service = shortService;
+    // shortService only relevant for shortUrl format
+    if (format === "shortUrl") {
+      eventData.short_service = shortService || null;
+    }
 
-    // Add performance metrics
-    if (typeof duration === "number") eventData.duration = duration;
-
-    // Add error info if failed
+    // Error info for failed operations
     if (!success) {
-      if (errorType) eventData.error_type = errorType;
-      if (errorMessage)
-        eventData.error_message = errorMessage.substring(0, 100);
+      eventData.error_type = errorType || null;
+      eventData.error_message = errorMessage
+        ? errorMessage.substring(0, 100)
+        : null;
     }
 
     return await sendEvent("copy", eventData);

@@ -1097,19 +1097,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       format: format === "silentCopyFormat" ? "url" : format,
       source: "batch",
       success: success,
-      urlCleaning: urlCleaning,
       duration: duration,
+      urlCleaning: urlCleaning || null,
+      templateId: null,
+      templateName: null,
+      shortService: format === "shortUrl" ? shortService || null : null,
+      errorType: success ? null : "clipboard",
+      errorMessage: success ? null : "Batch copy failed",
     };
-
-    // 只在使用短链时添加 shortService
-    if (format === "shortUrl") {
-      trackData.shortService = shortService;
-    }
-
-    if (!success) {
-      trackData.errorType = "clipboard";
-      trackData.errorMessage = "Batch copy failed";
-    }
 
     trackCopy(trackData).catch((error) => {
       console.warn("Failed to track batch copy:", error);

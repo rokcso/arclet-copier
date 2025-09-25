@@ -398,16 +398,15 @@ async function handleCopyUrl() {
       format: copyFormat,
       source: "shortcut",
       success: true,
-      templateId,
-      templateName,
-      urlCleaning: settings.urlCleaning,
       duration,
+      urlCleaning: settings.urlCleaning || null,
+      templateId: templateId || null,
+      templateName: templateName || null,
+      shortService:
+        copyFormat === "shortUrl" ? settings.shortUrlService || null : null,
+      errorType: null,
+      errorMessage: null,
     };
-
-    // 只在使用短链时添加 shortService
-    if (copyFormat === "shortUrl") {
-      trackData.shortService = settings.shortUrlService;
-    }
 
     trackCopy(trackData).catch((error) => {
       console.warn("Failed to track copy event:", error);
@@ -462,16 +461,15 @@ async function handleCopyUrl() {
       format: failedFormat,
       source: "shortcut",
       success: false,
-      urlCleaning: settings.urlCleaning,
       duration,
+      urlCleaning: settings.urlCleaning || null,
+      templateId: null,
+      templateName: null,
+      shortService:
+        failedFormat === "shortUrl" ? settings.shortUrlService || null : null,
       errorType,
       errorMessage: error.message,
     };
-
-    // 只在尝试使用短链时添加 shortService
-    if (failedFormat === "shortUrl") {
-      trackData.shortService = settings.shortUrlService;
-    }
 
     trackCopy(trackData).catch((trackError) => {
       console.warn("Failed to track failed copy event:", trackError);

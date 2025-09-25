@@ -643,13 +643,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // 记录成功的复制事件
       const duration = Date.now() - startTime;
-      trackCopy({
+      const trackData = {
         format: "url",
         source: "popup",
         success: true,
-        urlCleaning: cleaningMode,
         duration,
-      }).catch((error) => {
+        urlCleaning: cleaningMode || null,
+        templateId: null,
+        templateName: null,
+        shortService: null,
+        errorType: null,
+        errorMessage: null,
+      };
+
+      trackCopy(trackData).catch((error) => {
         console.warn("Failed to track copy event:", error);
       });
 
@@ -675,15 +682,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       const cleaningSelect = elements.removeParamsToggle;
       const cleaningMode = cleaningSelect.getAttribute("data-value");
 
-      trackCopy({
+      const trackData = {
         format: "url",
         source: "popup",
         success: fallbackSuccess,
-        urlCleaning: cleaningMode,
         duration,
+        urlCleaning: cleaningMode || null,
+        templateId: null,
+        templateName: null,
+        shortService: null,
         errorType: fallbackSuccess ? null : "clipboard",
         errorMessage: fallbackSuccess ? null : error.message,
-      }).catch((trackError) => {
+      };
+
+      trackCopy(trackData).catch((trackError) => {
         console.warn("Failed to track copy event:", trackError);
       });
     } finally {
@@ -732,8 +744,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         format: "markdown",
         source: "popup",
         success: true,
-        urlCleaning: cleaningMode,
         duration,
+        urlCleaning: cleaningMode || null,
+        templateId: null,
+        templateName: null,
+        shortService: null,
+        errorType: null,
+        errorMessage: null,
       }).catch((error) => {
         console.warn("Failed to track markdown copy event:", error);
       });
@@ -762,8 +779,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         format: "markdown",
         source: "popup",
         success: fallbackSuccess,
-        urlCleaning: cleaningMode,
         duration,
+        urlCleaning: cleaningMode || null,
+        templateId: null,
+        templateName: null,
+        shortService: null,
         errorType: fallbackSuccess ? null : "clipboard",
         errorMessage: fallbackSuccess ? null : error.message,
       }).catch((trackError) => {
@@ -845,8 +865,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           format: "shortUrl",
           source: "popup",
           success: copySuccess,
-          shortService: selectedService,
           duration: Date.now() - startTime,
+          urlCleaning: null,
+          templateId: null,
+          templateName: null,
+          shortService: selectedService || null,
           errorType: copySuccess ? null : "clipboard",
           errorMessage: copySuccess ? null : "Cache copy failed",
         }).catch((error) => {
@@ -900,8 +923,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           format: "shortUrl",
           source: "popup",
           success: copySuccess,
-          shortService: selectedService,
           duration: Date.now() - startTime,
+          urlCleaning: null,
+          templateId: null,
+          templateName: null,
+          shortService: selectedService || null,
           errorType: copySuccess ? null : "clipboard",
           errorMessage: copySuccess ? null : "Generated copy failed",
         }).catch((error) => {
@@ -1038,6 +1064,12 @@ document.addEventListener("DOMContentLoaded", async () => {
               source: "popup",
               success: true,
               duration,
+              urlCleaning: null,
+              templateId: null,
+              templateName: null,
+              shortService: null,
+              errorType: null,
+              errorMessage: null,
             }).catch((error) => {
               console.warn("Failed to track QR code copy:", error);
             });
@@ -1064,6 +1096,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             source: "popup",
             success: false,
             duration,
+            urlCleaning: null,
+            templateId: null,
+            templateName: null,
+            shortService: null,
             errorType: "clipboard",
             errorMessage: error.message,
           }).catch((trackError) => {
