@@ -105,7 +105,7 @@ class NotificationHelper {
     }
   }
 
-  // 通过 content script 显示页面通知
+  // 通过 content script 显示页面通知 - 激进版本，立即发送
   async showPageNotificationViaContentScript(options) {
     try {
       // 获取当前活跃标签页
@@ -120,7 +120,7 @@ class NotificationHelper {
 
       const tab = tabs[0];
 
-      // 检查是否为受限页面
+      // 只检查URL限制，跳过其他所有检查
       if (this.isRestrictedUrl(tab.url)) {
         console.log(
           `Cannot send message to restricted URL: ${tab.url}, falling back to Chrome notification`,
@@ -128,22 +128,12 @@ class NotificationHelper {
         return await this.showChromeNotification(options);
       }
 
-      // 检查标签页是否完全加载
-      if (tab.status !== "complete") {
-        console.log(
-          "Tab not fully loaded, falling back to Chrome notification",
-        );
-        return await this.showChromeNotification(options);
-      }
-
-      // 尝试发送消息到content script，带超时和重试机制
-      return await this.sendMessageWithRetry(
+      // 立即发送消息，不等待任何状态检查
+      return await this.sendMessageImmediately(
         tab.id,
         {
           type: "SHOW_PAGE_NOTIFICATION",
-          title: options.title,
           message: options.message,
-          notificationType: options.type,
         },
         options,
       );
@@ -154,53 +144,41 @@ class NotificationHelper {
     }
   }
 
-  // 带重试机制的消息发送
-  async sendMessageWithRetry(tabId, message, fallbackOptions, maxRetries = 2) {
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      try {
-        // 使用Promise包装消息发送，添加超时
-        const response = await Promise.race([
-          new Promise((resolve, reject) => {
-            chrome.tabs.sendMessage(tabId, message, (response) => {
-              if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError.message));
-              } else {
-                resolve(response);
-              }
-            });
-          }),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Message timeout")), 1000),
-          ),
-        ]);
+  // 立即发送消息 - 激进版本，不等待，不重试
+  async sendMessageImmediately(tabId, message, fallbackOptions) {
+    try {
+      // 立即发送消息，短超时时间
+      const response = await Promise.race([
+        new Promise((resolve, reject) => {
+          chrome.tabs.sendMessage(tabId, message, (response) => {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve(response);
+            }
+          });
+        }),
+        new Promise(
+          (_, reject) =>
+            setTimeout(() => reject(new Error("Message timeout")), 500), // 极短超时
+        ),
+      ]);
 
-        if (response && response.success) {
-          console.log("Page notification sent successfully");
-          return true;
-        } else {
-          console.log(
-            `Content script responded but failed (attempt ${attempt + 1})`,
-          );
-        }
-      } catch (error) {
+      if (response && response.success) {
+        console.log("Aggressive page notification sent immediately");
+        return true;
+      } else {
         console.log(
-          `Message send failed (attempt ${attempt + 1}): ${error.message}`,
+          "Content script responded but failed, falling back to Chrome notification",
         );
-
-        if (attempt === maxRetries - 1) {
-          // 最后一次尝试失败，回退到Chrome通知
-          console.log(
-            "All attempts failed, falling back to Chrome notification",
-          );
-          return await this.showChromeNotification(fallbackOptions);
-        }
-
-        // 等待一小段时间后重试
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        return await this.showChromeNotification(fallbackOptions);
       }
+    } catch (error) {
+      console.log(
+        `Immediate message send failed: ${error.message}, falling back to Chrome notification`,
+      );
+      return await this.showChromeNotification(fallbackOptions);
     }
-
-    return false;
   }
 
   // 检查是否为受限URL
