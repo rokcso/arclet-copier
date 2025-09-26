@@ -13,7 +13,8 @@
     "notifications",
     "offscreen",
     "clipboardWrite",
-    "contextMenus"
+    "contextMenus",
+    "scripting"
   ],
   "host_permissions": [
     "https://is.gd/*",
@@ -62,5 +63,13 @@
     "64": "assets/icons/icon64.png",
     "128": "assets/icons/icon128.png",
     "256": "assets/icons/icon256.png"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js"],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ]
 }

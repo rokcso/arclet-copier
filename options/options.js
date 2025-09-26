@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     version: document.getElementById("version"),
     aboutVersion: document.getElementById("aboutVersion"),
     shortUrlServiceSelect: document.getElementById("shortUrlServiceSelect"),
-    notificationCheckbox: document.getElementById("notificationCheckbox"),
+    notificationSwitch: document.getElementById("notificationSwitch"),
     languageSelect: document.getElementById("languageSelect"),
     appearanceSwitch: document.getElementById("appearanceSwitch"),
     colorPicker: document.getElementById("colorPicker"),
@@ -280,6 +280,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   }
 
+  // 初始化通知方式滑块
+  function initializeNotificationSwitch() {
+    const notificationOptions = [
+      { value: "off", key: null },
+      { value: "chrome", key: null },
+      { value: "page", key: null },
+    ];
+
+    return initializeThreeWaySwitch(
+      elements.notificationSwitch,
+      notificationOptions,
+      async (value) => {
+        await saveSettings();
+        showNotification(
+          getLocalMessage("notificationTypeChanged") ||
+            "Notification type changed successfully!",
+        );
+      },
+    );
+  }
+
   // 初始化主题
   async function initializeTheme() {
     const savedTheme = await settingsManager.getSetting("appearance");
@@ -311,7 +332,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "appearance",
       "language",
       "themeColor",
-      "chromeNotifications",
+      "notificationType",
     ]);
 
     // Load short URL service setting
@@ -342,8 +363,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
 
-    // Load Chrome notifications setting
-    elements.notificationCheckbox.checked = settings.chromeNotifications;
+    // Load notification type setting
+    if (elements.notificationSwitch) {
+      elements.notificationSwitch.setAttribute(
+        "data-value",
+        settings.notificationType,
+      );
+    }
   }
 
   // 保存设置
@@ -362,7 +388,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       appearance: appearanceSwitch.getAttribute("data-value"),
       language: elements.languageSelect.value,
       themeColor: currentThemeColor,
-      chromeNotifications: elements.notificationCheckbox.checked,
+      notificationType: elements.notificationSwitch.getAttribute("data-value"),
     });
   }
 
@@ -375,15 +401,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         getLocalMessage("shortUrlServiceChanged") ||
           "Short URL service changed successfully!",
       );
-    });
-
-    // Notification checkbox
-    elements.notificationCheckbox.addEventListener("change", async () => {
-      await saveSettings();
-      const message = elements.notificationCheckbox.checked
-        ? getLocalMessage("notificationsEnabled") || "Notifications enabled"
-        : getLocalMessage("notificationsDisabled") || "Notifications disabled";
-      showNotification(message);
     });
 
     // Language select
@@ -1122,6 +1139,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Initialize UI components
     initializeAppearanceSwitch();
+    initializeNotificationSwitch();
     initializeColorPicker();
     initializeEventListeners();
 

@@ -9,14 +9,14 @@ class SettingsManager {
 
     // 默认设置值
     this.defaults = {
-      urlCleaning: 'off',
-      silentCopyFormat: 'url',
-      appearance: 'system',
+      urlCleaning: "off",
+      silentCopyFormat: "url",
+      appearance: "system",
       language: this.detectDefaultLanguage(),
-      themeColor: 'green',
-      chromeNotifications: true,
-      shortUrlService: 'isgd',
-      removeParams: false // 向后兼容
+      themeColor: "green",
+      notificationType: "chrome", // 'off', 'chrome', 'page'
+      shortUrlService: "isgd",
+      removeParams: false, // 向后兼容
     };
   }
 
@@ -71,8 +71,21 @@ class SettingsManager {
       const settings = { ...this.defaults, ...result };
 
       // 处理向后兼容性
-      if (result.removeParams !== undefined && result.urlCleaning === undefined) {
-        settings.urlCleaning = result.removeParams ? 'smart' : 'off';
+      if (
+        result.removeParams !== undefined &&
+        result.urlCleaning === undefined
+      ) {
+        settings.urlCleaning = result.removeParams ? "smart" : "off";
+      }
+
+      // 兼容旧的 chromeNotifications 设置
+      if (
+        result.chromeNotifications !== undefined &&
+        result.notificationType === undefined
+      ) {
+        settings.notificationType = result.chromeNotifications
+          ? "chrome"
+          : "off";
       }
 
       // 更新缓存
@@ -84,7 +97,7 @@ class SettingsManager {
 
       return settings;
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      console.error("Failed to load settings:", error);
       return this.defaults;
     }
   }
@@ -108,7 +121,7 @@ class SettingsManager {
 
       return true;
     } catch (error) {
-      console.error('Failed to update settings:', error);
+      console.error("Failed to update settings:", error);
       return false;
     }
   }
@@ -128,7 +141,7 @@ class SettingsManager {
   async getSettings(keys) {
     const allSettings = await this.getAllSettings();
     const result = {};
-    keys.forEach(key => {
+    keys.forEach((key) => {
       result[key] = allSettings[key];
     });
     return result;

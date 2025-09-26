@@ -14,6 +14,7 @@ import {
 
 import { trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
+import notificationHelper from "../shared/notification-helper.js";
 
 // 持久化短链缓存管理
 class PersistentShortUrlCache {
@@ -1105,20 +1106,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           `已复制 ${selectedTabsList.length} 个URL`,
       );
 
-      // 检查是否显示 Chrome 通知
-      const chromeNotifications = await settingsManager.getSetting(
-        "chromeNotifications",
+      // 显示通知
+      await notificationHelper.success(
+        getLocalMessage("batchCopySuccess") ||
+          `批量复制成功: ${selectedTabsList.length} 个URL`,
       );
-      if (chromeNotifications) {
-        chrome.notifications.create({
-          type: "basic",
-          iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
-          title: chrome.i18n.getMessage("extName"),
-          message:
-            getLocalMessage("batchCopySuccess") ||
-            `批量复制成功: ${selectedTabsList.length} 个URL`,
-        });
-      }
     } else {
       showNotification(getLocalMessage("copyFailed") || "复制失败");
     }

@@ -10,6 +10,7 @@ import {
 
 import { trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
+import notificationHelper from "../shared/notification-helper.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
@@ -907,40 +908,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             `Short URL generated and copied! (${serviceName})`,
         );
 
-        // 检查Chrome通知设置
-        const settings = await chrome.storage.sync.get(["chromeNotifications"]);
-        const chromeNotificationsEnabled =
-          settings.chromeNotifications !== false;
-
-        if (chromeNotificationsEnabled) {
-          try {
-            const notificationOptions = {
-              type: "basic",
-              iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
-              title: EXTENSION_NAME,
-              message:
-                getLocalMessage("shortUrlGenerated") ||
-                `Short URL generated: ${response.shortUrl}`,
-            };
-
-            chrome.notifications.create(
-              notificationOptions,
-              (notificationId) => {
-                if (chrome.runtime.lastError) {
-                  console.error(
-                    "通知创建失败:",
-                    chrome.runtime.lastError.message ||
-                      chrome.runtime.lastError,
-                  );
-                } else {
-                  console.log("通知创建成功:", notificationId);
-                }
-              },
-            );
-          } catch (error) {
-            console.error("通知 API 调用失败:", error);
-          }
-        }
+        // 显示通知
+        await notificationHelper.success(
+          getLocalMessage("shortUrlGenerated") ||
+            `Short URL generated: ${response.shortUrl}`,
+        );
       } else {
         throw new Error(response.error || "Failed to generate short URL");
       }
@@ -966,33 +938,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 显示Arc风格通知
     showArcNotification(getLocalMessage("urlCopied"));
 
-    // 检查Chrome通知设置
-    const settings = await chrome.storage.sync.get(["chromeNotifications"]);
-    const chromeNotificationsEnabled = settings.chromeNotifications !== false;
-
-    if (chromeNotificationsEnabled) {
-      try {
-        const notificationOptions = {
-          type: "basic",
-          iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
-          title: EXTENSION_NAME,
-          message: getLocalMessage("urlCopied"),
-        };
-
-        chrome.notifications.create(notificationOptions, (notificationId) => {
-          if (chrome.runtime.lastError) {
-            console.error(
-              "通知创建失败:",
-              chrome.runtime.lastError.message || chrome.runtime.lastError,
-            );
-          } else {
-            console.log("通知创建成功:", notificationId);
-          }
-        });
-      } catch (error) {
-        console.error("通知 API 调用失败:", error);
-      }
-    }
+    // 显示通知
+    await notificationHelper.success(getLocalMessage("urlCopied"));
   }
 
   // 复制二维码图片到剪贴板

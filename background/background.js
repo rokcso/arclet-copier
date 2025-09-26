@@ -13,6 +13,7 @@ import {
 // 导入分析模块
 import { trackInstall, trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
+import notificationHelper from "../shared/notification-helper.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -411,9 +412,8 @@ async function handleCopyUrl() {
       console.warn("Failed to track copy event:", error);
     });
 
-    if (settings.chromeNotifications) {
-      showNotification(EXTENSION_NAME, successMessage);
-    }
+    // 显示通知
+    await notificationHelper.success(successMessage);
   } catch (error) {
     // 如果settings未获取到，尝试重新获取或使用默认设置
     if (!settings) {
@@ -479,9 +479,8 @@ async function handleCopyUrl() {
       console.warn("Failed to track failed copy event:", trackError);
     });
 
-    if (settings.chromeNotifications) {
-      showNotification(EXTENSION_NAME, message);
-    }
+    // 显示通知
+    await notificationHelper.success(message);
   } finally {
     // 重置状态
     setTimeout(() => {
@@ -534,25 +533,4 @@ async function ensureOffscreenDocument() {
     console.error("Failed to create offscreen document:", error);
     throw error;
   }
-}
-
-// 显示通知
-function showNotification(title, message) {
-  const notificationOptions = {
-    type: "basic",
-    iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
-    title,
-    message,
-  };
-
-  chrome.notifications.create(notificationOptions, (notificationId) => {
-    if (chrome.runtime.lastError) {
-      console.error(
-        "通知创建失败:",
-        chrome.runtime.lastError.message || chrome.runtime.lastError,
-      );
-    } else {
-      console.log("通知创建成功:", notificationId);
-    }
-  });
 }

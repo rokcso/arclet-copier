@@ -188,14 +188,26 @@
   "themeColorChanged": {
     "message": "主题色切换成功"
   },
-  "chromeNotifications": {
-    "message": "Chrome 通知"
+  "notificationType": {
+    "message": "通知方式"
   },
   "notificationsEnabled": {
     "message": "已启用 Chrome 通知"
   },
   "notificationsDisabled": {
     "message": "已禁用 Chrome 通知"
+  },
+  "notificationOff": {
+    "message": "关闭"
+  },
+  "notificationChrome": {
+    "message": "Chrome"
+  },
+  "notificationPage": {
+    "message": "页面"
+  },
+  "notificationTypeChanged": {
+    "message": "通知方式已更改"
   },
   "generateShortUrl": {
     "message": "生成短链"
@@ -242,8 +254,8 @@
   "shortUrlServiceDesc": {
     "message": "选择生成短链时使用的服务"
   },
-  "chromeNotificationsDesc": {
-    "message": "启用后将显示操作完成通知"
+  "notificationTypeDesc": {
+    "message": "选择操作完成后的通知显示方式"
   },
   "languageDesc": {
     "message": "选择界面显示语言"

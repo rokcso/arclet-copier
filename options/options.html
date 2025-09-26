@@ -54,27 +54,41 @@
                         <div class="setting-info">
                             <span
                                 class="setting-label"
-                                data-i18n="chromeNotifications"
-                                >Chrome 通知</span
+                                data-i18n="notificationType"
+                                >通知方式</span
                             >
                             <span
                                 class="setting-description"
-                                data-i18n="chromeNotificationsDesc"
-                                >启用后将显示操作完成通知</span
+                                data-i18n="notificationTypeDesc"
+                                >选择操作完成后的通知显示方式</span
                             >
                         </div>
                         <div class="setting-control">
-                            <input
-                                type="checkbox"
-                                id="notificationCheckbox"
-                                class="toggle-checkbox"
-                            />
-                            <label
-                                for="notificationCheckbox"
-                                class="toggle-label"
+                            <div
+                                class="three-way-switch"
+                                id="notificationSwitch"
+                                data-value="chrome"
                             >
-                                <span class="toggle-slider"></span>
-                            </label>
+                                <div
+                                    class="switch-option"
+                                    data-i18n="notificationOff"
+                                >
+                                    关闭
+                                </div>
+                                <div
+                                    class="switch-option"
+                                    data-i18n="notificationChrome"
+                                >
+                                    Chrome 通知
+                                </div>
+                                <div
+                                    class="switch-option"
+                                    data-i18n="notificationPage"
+                                >
+                                    页面通知
+                                </div>
+                                <div class="switch-slider"></div>
+                            </div>
                         </div>
                     </div>
 
