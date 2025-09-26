@@ -24,6 +24,7 @@ const filesToInclude = [
   "options/",
   "batch/",
   "offscreen/",
+  "content/",
   "shared/",
   "assets/",
   "_locales/",

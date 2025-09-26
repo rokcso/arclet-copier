@@ -7,7 +7,10 @@ class ArcletPageNotifications {
     this.notificationId = 0;
     this.notifications = new Map();
     this.defaultDuration = 3000;
+    this.themeColor = "green";
+    this.appearance = "system";
     this.init();
+    this.loadThemeSettings();
   }
 
   init() {
@@ -17,8 +20,42 @@ class ArcletPageNotifications {
     this.container.id = "arclet-notification-container";
     this.container.className = "arclet-notifications";
 
+    // 初始设置主题
+    this.applyTheme();
+
     this.addStyles();
     document.body.appendChild(this.container);
+  }
+
+  async loadThemeSettings() {
+    try {
+      const result = await chrome.storage.sync.get([
+        "themeColor",
+        "appearance",
+      ]);
+      this.themeColor = result.themeColor || "green";
+      this.appearance = result.appearance || "system";
+      this.applyTheme();
+    } catch (error) {
+      console.log("Failed to load theme settings:", error);
+    }
+  }
+
+  applyTheme() {
+    if (!this.container) return;
+
+    // 设置主题色
+    this.container.setAttribute("data-color", this.themeColor);
+
+    // 设置外观主题
+    if (this.appearance === "dark") {
+      this.container.setAttribute("data-theme", "dark");
+    } else if (this.appearance === "light") {
+      this.container.removeAttribute("data-theme");
+    } else {
+      // system mode - 由CSS媒体查询自动处理
+      this.container.removeAttribute("data-theme");
+    }
   }
 
   addStyles() {
@@ -27,169 +64,174 @@ class ArcletPageNotifications {
     const style = document.createElement("style");
     style.id = "arclet-notification-styles";
     style.textContent = `
+      /* Arclet页面通知样式 - 与popup通知保持一致 */
       .arclet-notifications {
         position: fixed;
         top: 20px;
         right: 20px;
         z-index: 2147483647;
         pointer-events: none;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        font-weight: 400;
+        line-height: 1.5;
       }
 
       .arclet-notification {
-        background: var(--notification-bg, #fff);
-        color: var(--notification-color, #333);
-        border: 1px solid var(--notification-border, #e0e0e0);
-        border-radius: 8px;
-        padding: 12px 16px;
-        margin-bottom: 8px;
-        min-width: 280px;
-        max-width: 400px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        pointer-events: auto;
         position: relative;
-        overflow: hidden;
-        transform: translateX(100%);
-        opacity: 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .arclet-notification.show {
-        transform: translateX(0);
-        opacity: 1;
-      }
-
-      .arclet-notification.hide {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-
-      .arclet-notification-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 4px;
-      }
-
-      .arclet-notification-title {
-        font-weight: 600;
+        background: var(--toast-bg, #86efac);
+        color: var(--toast-text, #166534);
+        padding: 12px 16px;
+        border-radius: 16px;
         font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .arclet-notification-close {
-        background: none;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-        color: var(--notification-close, #666);
-        padding: 0;
-        width: 20px;
-        height: 20px;
+        font-weight: 600;
+        opacity: 0;
+        transform: scale(0.3);
+        transform-origin: center top;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 12px var(--toast-shadow, rgba(134, 239, 172, 0.4));
+        pointer-events: auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 4px;
-        opacity: 0.7;
-        transition: opacity 0.2s;
-      }
-
-      .arclet-notification-close:hover {
-        opacity: 1;
-        background: var(--notification-close-hover, #f5f5f5);
-      }
-
-      .arclet-notification-message {
-        font-size: 13px;
+        min-width: 200px;
+        max-width: 323px;
+        width: fit-content;
+        text-align: center;
         line-height: 1.4;
-        color: var(--notification-message, #666);
+        word-wrap: break-word;
+        hyphens: auto;
+        border: 1.5px solid var(--toast-border, #22c55e);
+        box-sizing: border-box;
+        margin-bottom: 8px;
       }
 
-      .arclet-notification-progress {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 2px;
-        background: var(--notification-progress, #4CAF50);
-        transition: width linear;
+      .arclet-notification.show {
+        opacity: 1;
+        transform: scale(1);
       }
 
-      /* 成功通知样式 */
-      .arclet-notification.success {
-        --notification-bg: #f8fff8;
-        --notification-border: #4CAF50;
-        --notification-progress: #4CAF50;
+      .arclet-notification.hide {
+        opacity: 0;
+        transform: scale(0.3);
       }
 
-      .arclet-notification.success .arclet-notification-title {
-        color: #2E7D32;
+      .notification-text {
+        display: block;
+        width: 100%;
+        text-align: center;
+        line-height: 1.4;
+        word-wrap: break-word;
+        white-space: normal;
       }
 
-      /* 错误通知样式 */
-      .arclet-notification.error {
-        --notification-bg: #fff8f8;
-        --notification-border: #f44336;
-        --notification-progress: #f44336;
+      /* 主题色定义 - 与popup.css保持一致 */
+      .arclet-notifications[data-color="blue"] {
+        --toast-bg: #bfdbfe;
+        --toast-text: #1e3a8a;
+        --toast-border: #3b82f6;
+        --toast-shadow: rgba(59, 130, 246, 0.4);
       }
 
-      .arclet-notification.error .arclet-notification-title {
-        color: #C62828;
+      .arclet-notifications[data-color="green"] {
+        --toast-bg: #86efac;
+        --toast-text: #166534;
+        --toast-border: #22c55e;
+        --toast-shadow: rgba(134, 239, 172, 0.4);
       }
 
-      /* 警告通知样式 */
-      .arclet-notification.warning {
-        --notification-bg: #fffbf0;
-        --notification-border: #FF9800;
-        --notification-progress: #FF9800;
+      .arclet-notifications[data-color="orange"] {
+        --toast-bg: #fed7aa;
+        --toast-text: #9a3412;
+        --toast-border: #f97316;
+        --toast-shadow: rgba(249, 115, 22, 0.4);
       }
 
-      .arclet-notification.warning .arclet-notification-title {
-        color: #E65100;
+      .arclet-notifications[data-color="yellow"] {
+        --toast-bg: #fef3c7;
+        --toast-text: #92400e;
+        --toast-border: #eab308;
+        --toast-shadow: rgba(234, 179, 8, 0.4);
       }
 
-      /* 信息通知样式 */
-      .arclet-notification.info {
-        --notification-bg: #f0f8ff;
-        --notification-border: #2196F3;
-        --notification-progress: #2196F3;
+      .arclet-notifications[data-color="purple"] {
+        --toast-bg: #ddd6fe;
+        --toast-text: #5b21b6;
+        --toast-border: #8b5cf6;
+        --toast-shadow: rgba(139, 92, 246, 0.4);
       }
 
-      .arclet-notification.info .arclet-notification-title {
-        color: #1565C0;
-      }
-
-      /* 深色模式支持 */
+      /* 深色模式主题色 */
       @media (prefers-color-scheme: dark) {
-        .arclet-notification {
-          --notification-bg: #2d2d2d;
-          --notification-color: #fff;
-          --notification-border: #444;
-          --notification-message: #ccc;
-          --notification-close: #aaa;
-          --notification-close-hover: #444;
+        .arclet-notifications[data-color="blue"] {
+          --toast-bg: #1e3a8a;
+          --toast-text: #bfdbfe;
+          --toast-border: #60a5fa;
+          --toast-shadow: rgba(96, 165, 250, 0.3);
         }
 
-        .arclet-notification.success {
-          --notification-bg: #1a2e1a;
-          --notification-border: #4CAF50;
+        .arclet-notifications[data-color="green"] {
+          --toast-bg: #065f46;
+          --toast-text: #d1fae5;
+          --toast-border: #10b981;
+          --toast-shadow: rgba(16, 185, 129, 0.3);
         }
 
-        .arclet-notification.error {
-          --notification-bg: #2e1a1a;
-          --notification-border: #f44336;
+        .arclet-notifications[data-color="orange"] {
+          --toast-bg: #9a3412;
+          --toast-text: #fed7aa;
+          --toast-border: #fb923c;
+          --toast-shadow: rgba(251, 146, 60, 0.3);
         }
 
-        .arclet-notification.warning {
-          --notification-bg: #2e2a1a;
-          --notification-border: #FF9800;
+        .arclet-notifications[data-color="yellow"] {
+          --toast-bg: #92400e;
+          --toast-text: #fef3c7;
+          --toast-border: #fbbf24;
+          --toast-shadow: rgba(251, 191, 36, 0.3);
         }
 
-        .arclet-notification.info {
-          --notification-bg: #1a222e;
-          --notification-border: #2196F3;
+        .arclet-notifications[data-color="purple"] {
+          --toast-bg: #5b21b6;
+          --toast-text: #ddd6fe;
+          --toast-border: #a78bfa;
+          --toast-shadow: rgba(167, 139, 250, 0.3);
         }
+      }
+
+      /* 用户手动设置的深色模式 */
+      .arclet-notifications[data-theme="dark"][data-color="blue"] {
+        --toast-bg: #1e3a8a;
+        --toast-text: #bfdbfe;
+        --toast-border: #60a5fa;
+        --toast-shadow: rgba(96, 165, 250, 0.3);
+      }
+
+      .arclet-notifications[data-theme="dark"][data-color="green"] {
+        --toast-bg: #065f46;
+        --toast-text: #d1fae5;
+        --toast-border: #10b981;
+        --toast-shadow: rgba(16, 185, 129, 0.3);
+      }
+
+      .arclet-notifications[data-theme="dark"][data-color="orange"] {
+        --toast-bg: #9a3412;
+        --toast-text: #fed7aa;
+        --toast-border: #fb923c;
+        --toast-shadow: rgba(251, 146, 60, 0.3);
+      }
+
+      .arclet-notifications[data-theme="dark"][data-color="yellow"] {
+        --toast-bg: #92400e;
+        --toast-text: #fef3c7;
+        --toast-border: #fbbf24;
+        --toast-shadow: rgba(251, 191, 36, 0.3);
+      }
+
+      .arclet-notifications[data-theme="dark"][data-color="purple"] {
+        --toast-bg: #5b21b6;
+        --toast-text: #ddd6fe;
+        --toast-border: #a78bfa;
+        --toast-shadow: rgba(167, 139, 250, 0.3);
       }
     `;
 
@@ -198,22 +240,13 @@ class ArcletPageNotifications {
 
   show(options = {}) {
     const {
-      title = "Arclet Copier",
+      title = "",
       message = "",
-      type = "success",
       duration = this.defaultDuration,
-      closable = true,
-      icon = this.getTypeIcon(type),
     } = options;
 
     const id = ++this.notificationId;
-    const notification = this.createNotificationElement(id, {
-      title,
-      message,
-      type,
-      closable,
-      icon,
-    });
+    const notification = this.createNotificationElement(id, { message });
 
     this.notifications.set(id, notification);
     this.container.appendChild(notification.element);
@@ -225,7 +258,6 @@ class ArcletPageNotifications {
 
     // 自动关闭
     if (duration > 0) {
-      this.startProgressBar(notification.element, duration);
       notification.timeout = setTimeout(() => {
         this.hide(id);
       }, duration);
@@ -234,60 +266,22 @@ class ArcletPageNotifications {
     return id;
   }
 
-  createNotificationElement(id, { title, message, type, closable, icon }) {
+  createNotificationElement(id, { message }) {
     const element = document.createElement("div");
-    element.className = `arclet-notification ${type}`;
+    element.className = "arclet-notification";
     element.dataset.id = id;
 
-    const headerHtml = `
-      <div class="arclet-notification-header">
-        <div class="arclet-notification-title">
-          ${icon ? `<span>${icon}</span>` : ""}
-          ${title}
-        </div>
-        ${closable ? '<button class="arclet-notification-close" aria-label="Close">×</button>' : ""}
-      </div>
-    `;
+    // 使用与popup完全相同的结构
+    const textElement = document.createElement("span");
+    textElement.className = "notification-text";
+    textElement.textContent = message || "";
 
-    const messageHtml = message
-      ? `<div class="arclet-notification-message">${message}</div>`
-      : "";
-    const progressHtml = '<div class="arclet-notification-progress"></div>';
-
-    element.innerHTML = headerHtml + messageHtml + progressHtml;
-
-    // 添加关闭事件
-    if (closable) {
-      const closeBtn = element.querySelector(".arclet-notification-close");
-      closeBtn?.addEventListener("click", () => this.hide(id));
-    }
+    element.appendChild(textElement);
 
     return {
       element,
       timeout: null,
     };
-  }
-
-  getTypeIcon(type) {
-    const icons = {
-      success: "✓",
-      error: "✕",
-      warning: "⚠",
-      info: "ℹ",
-    };
-    return icons[type] || "";
-  }
-
-  startProgressBar(element, duration) {
-    const progressBar = element.querySelector(".arclet-notification-progress");
-    if (!progressBar) return;
-
-    progressBar.style.width = "100%";
-    progressBar.style.transitionDuration = `${duration}ms`;
-
-    requestAnimationFrame(() => {
-      progressBar.style.width = "0%";
-    });
   }
 
   hide(id) {
@@ -328,12 +322,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.type === "SHOW_PAGE_NOTIFICATION") {
     try {
-      const { title, message, notificationType } = request;
+      const { message } = request;
 
       pageNotifications.show({
-        title: title || "Arclet Copier",
         message: message || "",
-        type: notificationType || "success",
       });
 
       console.log("Page notification shown successfully");
