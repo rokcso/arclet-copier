@@ -11,6 +11,10 @@ import {
 
 import settingsManager from "../shared/settings-manager.js";
 import toast from "../shared/toast.js";
+import {
+  initializeThreeWaySwitch,
+  getUrlCleaningOptions,
+} from "../shared/three-way-switch.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Locale data
@@ -122,68 +126,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Update page title
     document.title =
       getLocalMessage("optionsTitle") || "Arclet Copier - Settings";
-  }
-
-  // 通用三段滑块初始化函数
-  function initializeThreeWaySwitch(switchElement, options, onChange) {
-    if (!switchElement) return;
-
-    const switchOptions = switchElement.querySelectorAll(".switch-option");
-
-    // 计算滑块的自适应位置和宽度
-    function updateSliderPosition() {
-      const currentValue = switchElement.getAttribute("data-value");
-      const currentIndex = options.findIndex(
-        (opt) => opt.value === currentValue,
-      );
-
-      if (currentIndex === -1) return;
-
-      // 清除所有active状态
-      switchOptions.forEach((option) => option.classList.remove("active"));
-
-      // 设置当前选项为active
-      if (switchOptions[currentIndex]) {
-        switchOptions[currentIndex].classList.add("active");
-      }
-
-      // 修复滑块位置计算 - 解决超出容器问题
-      const optionElement = switchOptions[currentIndex];
-      const optionWidth = optionElement.offsetWidth;
-      const optionLeft = optionElement.offsetLeft;
-
-      // 获取容器的padding值
-      const containerStyle = getComputedStyle(switchElement);
-      const containerPadding = parseFloat(containerStyle.paddingLeft);
-
-      // 关键修复：translateX需要减去容器padding，因为滑块已经有left: 3px的基础定位
-      const sliderTranslateX = optionLeft - containerPadding;
-
-      // 更新CSS变量来控制滑块
-      switchElement.style.setProperty("--slider-width", `${optionWidth}px`);
-      switchElement.style.setProperty("--slider-x", `${sliderTranslateX}px`);
-    }
-
-    // 为每个选项添加点击事件
-    switchOptions.forEach((option, index) => {
-      option.addEventListener("click", () => {
-        const newValue = options[index].value;
-        switchElement.setAttribute("data-value", newValue);
-        updateSliderPosition();
-
-        if (onChange) {
-          onChange(newValue, options[index]);
-        }
-      });
-    });
-
-    // 初始化位置
-    updateSliderPosition();
-
-    // 窗口大小变化时重新计算
-    window.addEventListener("resize", updateSliderPosition);
-
-    return { updateSliderPosition };
   }
 
   // 主题相关函数

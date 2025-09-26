@@ -11,6 +11,12 @@ import {
 import { trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
 import toast from "../shared/toast.js";
+import shortUrlCache from "../shared/short-url-cache.js";
+import {
+  initializeThreeWaySwitch,
+  getUrlCleaningOptions,
+  setThreeWaySwitchValue,
+} from "../shared/three-way-switch.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
@@ -39,78 +45,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     generateShortUrl: false,
     copyQRCode: false,
   };
-
-  // 持久化短链缓存管理
-  class PersistentShortUrlCache {
-    constructor() {
-      this.storageKey = "arclet_shorturl_cache";
-      this.maxSize = 100; // 最大缓存数量
-      this.ttl = 24 * 60 * 60 * 1000; // 24小时过期
-    }
-
-    getKey(url, service, cleaningMode) {
-      const processedUrl = processUrl(url, cleaningMode);
-      return `${service}:${processedUrl}`;
-    }
-
-    async get(url, service, cleaningMode) {
-      try {
-        const key = this.getKey(url, service, cleaningMode);
-        const result = await chrome.storage.local.get([this.storageKey]);
-        const cache = result[this.storageKey] || {};
-        const item = cache[key];
-
-        if (item && Date.now() - item.timestamp < this.ttl) {
-          console.log("使用持久化缓存 (popup):", item.shortUrl);
-          return item.shortUrl;
-        }
-
-        // 清理过期项
-        if (item) {
-          delete cache[key];
-          await chrome.storage.local.set({ [this.storageKey]: cache });
-        }
-
-        return null;
-      } catch (error) {
-        console.error("缓存读取失败:", error);
-        return null;
-      }
-    }
-
-    async set(url, service, cleaningMode, shortUrl) {
-      try {
-        const key = this.getKey(url, service, cleaningMode);
-        const result = await chrome.storage.local.get([this.storageKey]);
-        let cache = result[this.storageKey] || {};
-
-        // LRU清理
-        const keys = Object.keys(cache);
-        if (keys.length >= this.maxSize) {
-          // 删除最旧的项
-          const oldestKey = keys.reduce((oldest, current) =>
-            cache[current].timestamp < cache[oldest].timestamp
-              ? current
-              : oldest,
-          );
-          delete cache[oldestKey];
-        }
-
-        cache[key] = {
-          shortUrl,
-          timestamp: Date.now(),
-        };
-
-        await chrome.storage.local.set({ [this.storageKey]: cache });
-        console.log("短链已持久化缓存 (popup):", shortUrl);
-      } catch (error) {
-        console.error("缓存保存失败:", error);
-      }
-    }
-  }
-
-  // 创建持久化短链缓存实例
-  const shortUrlCache = new PersistentShortUrlCache();
 
   // Locale data
   let currentLocale = "zh_CN";
@@ -296,75 +230,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 通用三段滑块初始化函数
-  function initializeThreeWaySwitch(switchElement, options, onChange) {
-    if (!switchElement) return;
-
-    const switchOptions = switchElement.querySelectorAll(".switch-option");
-
-    // 计算滑块的自适应位置和宽度
-    function updateSliderPosition() {
-      const currentValue = switchElement.getAttribute("data-value");
-      const currentIndex = options.findIndex(
-        (opt) => opt.value === currentValue,
-      );
-
-      if (currentIndex === -1) return;
-
-      // 清除所有active状态
-      switchOptions.forEach((option) => option.classList.remove("active"));
-
-      // 设置当前选项为active
-      if (switchOptions[currentIndex]) {
-        switchOptions[currentIndex].classList.add("active");
-      }
-
-      // 修复滑块位置计算 - 解决超出容器问题
-      const optionElement = switchOptions[currentIndex];
-      const optionWidth = optionElement.offsetWidth;
-      const optionLeft = optionElement.offsetLeft;
-
-      // 获取容器的padding值
-      const containerStyle = getComputedStyle(switchElement);
-      const containerPadding = parseFloat(containerStyle.paddingLeft);
-
-      // 关键修复：translateX需要减去容器padding，因为滑块已经有left: 2px的基础定位
-      const sliderTranslateX = optionLeft - containerPadding;
-
-      // 更新CSS变量来控制滑块
-      switchElement.style.setProperty("--slider-width", `${optionWidth}px`);
-      switchElement.style.setProperty("--slider-x", `${sliderTranslateX}px`);
-    }
-
-    // 为每个选项添加点击事件
-    switchOptions.forEach((option, index) => {
-      option.addEventListener("click", () => {
-        const newValue = options[index].value;
-        switchElement.setAttribute("data-value", newValue);
-        updateSliderPosition();
-
-        if (onChange) {
-          onChange(newValue, options[index]);
-        }
-      });
-    });
-
-    // 初始化位置
-    updateSliderPosition();
-
-    // 窗口大小变化时重新计算
-    window.addEventListener("resize", updateSliderPosition);
-
-    return { updateSliderPosition };
-  }
-
   // 初始化URL清理选择器
   function initializeUrlCleaningSelect() {
-    const cleaningOptions = [
-      { value: "off", key: "cleaningDisabled" },
-      { value: "smart", key: "smartCleaningEnabled" },
-      { value: "aggressive", key: "aggressiveCleaningEnabled" },
-    ];
+    const cleaningOptions = getUrlCleaningOptions();
 
     return initializeThreeWaySwitch(
       elements.removeParamsToggle,
@@ -773,6 +641,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 设置防抖状态
     copyOperationStates.generateShortUrl = true;
 
+    // 记录开始时间用于追踪
+    const startTime = Date.now();
+
     // 显示加载状态
     const originalText = elements.shortUrlBtn.querySelector("span").textContent;
     const loadingText = getLocalMessage("generating") || "Generating...";
@@ -846,7 +717,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         service: selectedService,
       });
 
-      if (response.success) {
+      // 添加调试日志
+      console.log("Short URL response:", response);
+
+      // 改进响应验证：有短链且无错误就视为成功
+      if (response.success || (response.shortUrl && !response.error)) {
+        // 确保成功标记正确
+        response.success = true;
         // 将新生成的短链保存到缓存
         await shortUrlCache.set(
           currentUrl,

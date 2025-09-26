@@ -14,6 +14,7 @@ import {
 import { trackInstall, trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
 import notificationHelper from "../shared/notification-helper.js";
+import shortUrlCache from "../shared/short-url-cache.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -37,76 +38,6 @@ function debounce(key, fn, delay = 500) {
 
   debounceMap.set(key, timeoutId);
 }
-
-// 持久化短链缓存管理（与popup.js中的实现保持一致）
-class PersistentShortUrlCache {
-  constructor() {
-    this.storageKey = "arclet_shorturl_cache";
-    this.maxSize = 100; // 最大缓存数量
-    this.ttl = 24 * 60 * 60 * 1000; // 24小时过期
-  }
-
-  getKey(url, service, cleaningMode) {
-    const processedUrl = processUrl(url, cleaningMode);
-    return `${service}:${processedUrl}`;
-  }
-
-  async get(url, service, cleaningMode) {
-    try {
-      const key = this.getKey(url, service, cleaningMode);
-      const result = await chrome.storage.local.get([this.storageKey]);
-      const cache = result[this.storageKey] || {};
-      const item = cache[key];
-
-      if (item && Date.now() - item.timestamp < this.ttl) {
-        console.log("使用持久化缓存 (background):", item.shortUrl);
-        return item.shortUrl;
-      }
-
-      // 清理过期项
-      if (item) {
-        delete cache[key];
-        await chrome.storage.local.set({ [this.storageKey]: cache });
-      }
-
-      return null;
-    } catch (error) {
-      console.error("缓存读取失败:", error);
-      return null;
-    }
-  }
-
-  async set(url, service, cleaningMode, shortUrl) {
-    try {
-      const key = this.getKey(url, service, cleaningMode);
-      const result = await chrome.storage.local.get([this.storageKey]);
-      let cache = result[this.storageKey] || {};
-
-      // LRU清理
-      const keys = Object.keys(cache);
-      if (keys.length >= this.maxSize) {
-        // 删除最旧的项
-        const oldestKey = keys.reduce((oldest, current) =>
-          cache[current].timestamp < cache[oldest].timestamp ? current : oldest,
-        );
-        delete cache[oldestKey];
-      }
-
-      cache[key] = {
-        shortUrl,
-        timestamp: Date.now(),
-      };
-
-      await chrome.storage.local.set({ [this.storageKey]: cache });
-      console.log("短链已持久化缓存 (background):", shortUrl);
-    } catch (error) {
-      console.error("缓存保存失败:", error);
-    }
-  }
-}
-
-// 创建持久化短链缓存实例
-const shortUrlCache = new PersistentShortUrlCache();
 
 // 创建右键菜单和处理扩展安装
 chrome.runtime.onInstalled.addListener(async (details) => {
@@ -167,7 +98,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true; // 表示会异步发送响应
   } else if (message.action === "createShortUrl") {
     handleCreateShortUrl(message.url, message.service)
-      .then((shortUrl) => sendResponse({ success: true, shortUrl }))
+      .then((shortUrl) => {
+        // 验证返回的短链有效性
+        if (shortUrl && typeof shortUrl === "string" && shortUrl.trim()) {
+          console.log("Short URL created successfully:", shortUrl);
+          sendResponse({ success: true, shortUrl: shortUrl.trim() });
+        } else {
+          console.error("Invalid short URL returned:", shortUrl);
+          sendResponse({
+            success: false,
+            error: "Invalid short URL generated",
+          });
+        }
+      })
       .catch((error) => {
         console.error("Short URL creation failed:", error);
         sendResponse({ success: false, error: error.message });
