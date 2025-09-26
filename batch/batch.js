@@ -14,6 +14,7 @@ import {
 
 import { trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
+import toast from "../shared/toast.js";
 
 // 持久化短链缓存管理
 class PersistentShortUrlCache {
@@ -113,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     previewText: document.getElementById("previewText"),
     previewCancelBtn: document.getElementById("previewCancelBtn"),
     previewCopyBtn: document.getElementById("previewCopyBtn"),
-    notification: document.getElementById("notification"),
     urlCleaningSwitch: document.getElementById("urlCleaningSwitch"),
     removeDuplicates: document.getElementById("removeDuplicates"),
   };
@@ -1032,7 +1032,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 如果是短链格式且有多个URL，显示进度通知
     if (format === "shortUrl" && selectedTabsList.length > 1) {
-      showNotification(
+      toast.info(
         getLocalMessage("generatingShortUrls") || "正在生成短链，请稍候...",
       );
 
@@ -1048,7 +1048,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const progressMsg =
           getLocalMessage("shortUrlProgress") ||
           `正在生成短链... (${completedCount}/${selectedTabsList.length})`;
-        showNotification(
+        toast.info(
           progressMsg
             .replace("{current}", completedCount)
             .replace("{total}", selectedTabsList.length),
@@ -1100,47 +1100,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     if (success) {
-      showNotification(
+      toast.success(
         getLocalMessage("batchCopySuccess") ||
           `批量复制成功: ${selectedTabsList.length} 个URL`,
       );
     } else {
-      showNotification(getLocalMessage("copyFailed") || "复制失败");
+      toast.error(getLocalMessage("copyFailed") || "复制失败");
     }
-  }
-
-  // 显示通知
-  function showNotification(message, type = "success") {
-    const notification = elements.notification;
-    notification.querySelector(".notification-text").textContent = message;
-
-    // 根据类型添加相应的样式类
-    notification.classList.remove("success", "error", "warning", "info");
-    notification.classList.add(type, "show");
-
-    setTimeout(() => {
-      notification.classList.remove("show");
-    }, 3000);
-  }
-
-  // 显示成功通知
-  function showSuccessNotification(message) {
-    showNotification(message, "success");
-  }
-
-  // 显示错误通知
-  function showErrorNotification(message) {
-    showNotification(message, "error");
-  }
-
-  // 显示警告通知
-  function showWarningNotification(message) {
-    showNotification(message, "warning");
-  }
-
-  // 显示信息通知
-  function showInfoNotification(message) {
-    showNotification(message, "info");
   }
 
   // 设置折叠功能

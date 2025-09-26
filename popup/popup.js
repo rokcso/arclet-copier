@@ -10,6 +10,7 @@ import {
 
 import { trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
+import toast from "../shared/toast.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
@@ -248,7 +249,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     shortUrlBtn: document.getElementById("shortUrlBtn"),
     qrBtn: document.getElementById("qrBtn"),
     batchBtn: document.getElementById("batchBtn"),
-    status: document.getElementById("status"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
     version: document.getElementById("version"),
@@ -372,7 +372,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       (value, option) => {
         // 显示通知
         if (option.key) {
-          showArcNotification(getLocalMessage(option.key));
+          toast.success(getLocalMessage(option.key));
         }
         saveSettings();
         updatePageDisplay();
@@ -453,7 +453,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Handle silent copy format change
   async function handleSilentCopyFormatChange() {
     await saveSettings();
-    showArcNotification(getLocalMessage("silentCopyFormatChanged"));
+    toast.success(getLocalMessage("silentCopyFormatChanged"));
   }
 
   // 获取页面标题
@@ -569,42 +569,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     console.log("Popup execCommand copy successful");
-  }
-
-  // 显示Arc风格的状态通知
-  function showArcNotification(message, type = "success") {
-    const textElement = elements.status.querySelector(".notification-text");
-    if (textElement) {
-      textElement.textContent = message;
-    }
-
-    // 根据类型添加相应的样式类
-    elements.status.classList.remove("success", "error", "warning", "info");
-    elements.status.classList.add(type, "show");
-
-    setTimeout(() => {
-      elements.status.classList.remove("show");
-    }, 2000);
-  }
-
-  // 显示成功通知
-  function showArcSuccess(message) {
-    showArcNotification(message, "success");
-  }
-
-  // 显示错误通知
-  function showArcError(message) {
-    showArcNotification(message, "error");
-  }
-
-  // 显示警告通知
-  function showArcWarning(message) {
-    showArcNotification(message, "warning");
-  }
-
-  // 显示信息通知
-  function showArcInfo(message) {
-    showArcNotification(message, "info");
   }
 
   // 复制URL到剪贴板
@@ -743,7 +707,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.warn("Failed to track markdown copy event:", error);
       });
 
-      showArcNotification(getLocalMessage("markdownCopied"));
+      toast.success(getLocalMessage("markdownCopied"));
     } catch (error) {
       console.error("Markdown复制失败:", error);
       let fallbackSuccess = false;
@@ -753,7 +717,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const markdownLink = createMarkdownLink(currentUrl, currentTitle);
         fallbackCopy(markdownLink);
         fallbackSuccess = true;
-        showArcNotification(getLocalMessage("markdownCopied"));
+        toast.success(getLocalMessage("markdownCopied"));
       } catch (fallbackError) {
         console.error("Markdown降级复制也失败:", fallbackError);
       }
@@ -793,13 +757,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (!currentUrl) {
-      showArcNotification(getLocalMessage("noUrl") || "No URL available");
+      toast.warning(getLocalMessage("noUrl") || "No URL available");
       return;
     }
 
     // 验证URL是否适合生成短链
     if (!isValidWebUrl(currentUrl)) {
-      showArcNotification(
+      toast.warning(
         getLocalMessage("invalidUrlForShortening") ||
           "This URL cannot be shortened",
       );
@@ -867,7 +831,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 显示成功通知
         const serviceName =
           SHORT_URL_SERVICES[selectedService]?.name || selectedService;
-        showArcNotification(
+        toast.success(
           getLocalMessage("shortUrlGenerated") ||
             `Short URL generated and copied! (${serviceName})`,
         );
@@ -925,7 +889,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 显示成功通知
         const serviceName =
           SHORT_URL_SERVICES[selectedService]?.name || selectedService;
-        showArcNotification(
+        toast.success(
           getLocalMessage("shortUrlGenerated") ||
             `Short URL generated and copied! (${serviceName})`,
         );
@@ -934,7 +898,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     } catch (error) {
       console.error("生成短链失败:", error);
-      showArcNotification(
+      toast.error(
         getLocalMessage("shortUrlFailed") || "Failed to generate short URL",
       );
     } finally {
@@ -951,8 +915,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 显示复制成功状态
   async function showStatus() {
-    // 显示Arc风格通知
-    showArcNotification(getLocalMessage("urlCopied"));
+    // 显示toast通知
+    toast.success(getLocalMessage("urlCopied"));
   }
 
   // 复制二维码图片到剪贴板
@@ -1004,7 +968,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // 关闭弹窗后显示成功通知
             setTimeout(() => {
-              showArcNotification(
+              toast.success(
                 getLocalMessage("qrCodeCopied") || "二维码图片已复制",
               );
             }, 200);
@@ -1031,7 +995,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.warn("Failed to track QR code copy error:", trackError);
           });
 
-          showArcNotification(
+          toast.error(
             getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败",
           );
         } finally {
@@ -1043,9 +1007,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }, "image/png");
     } catch (error) {
       console.error("处理二维码图片失败:", error);
-      showArcNotification(
-        getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败",
-      );
+      toast.error(getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败");
       // 重置状态
       setTimeout(() => {
         copyOperationStates.copyQRCode = false;

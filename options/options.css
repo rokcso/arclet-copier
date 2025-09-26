@@ -530,51 +530,6 @@ select.setting-control:hover {
     box-shadow: 0 0 0 2px var(--glow-light);
 }
 
-/* 通知样式 */
-.notification {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) scale(0.3);
-    transform-origin: center top;
-    background: var(--toast-bg, #86efac);
-    color: var(--toast-text, #166534);
-    padding: 12px 16px;
-    border-radius: 16px;
-    font-size: 14px;
-    font-weight: 600;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 12px var(--toast-shadow, rgba(134, 239, 172, 0.4));
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 200px;
-    max-width: 400px;
-    width: fit-content;
-    text-align: center;
-    line-height: 1.4;
-    word-wrap: break-word;
-    hyphens: auto;
-    border: 1.5px solid var(--toast-border, #22c55e);
-    box-sizing: border-box;
-}
-
-.notification.show {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-}
-
-.notification-text {
-    display: block;
-    width: 100%;
-    text-align: center;
-    line-height: 1.4;
-    word-wrap: break-word;
-    white-space: normal;
-}
-
 /* 主题色定义 */
 [data-color="blue"] {
     --arc-primary: #3b82f6;
@@ -936,15 +891,15 @@ select.setting-control:hover {
     }
 }
 
-.container > *:not(.notification) {
+.container > * {
     animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
 }
 
-.container > *:nth-child(1):not(.notification) {
+.container > *:nth-child(1) {
     animation-delay: 0.1s;
 }
 
-.container > *:nth-child(2):not(.notification) {
+.container > *:nth-child(2) {
     animation-delay: 0.2s;
 }
 

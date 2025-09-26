@@ -10,6 +10,7 @@ import {
 } from "../shared/constants.js";
 
 import settingsManager from "../shared/settings-manager.js";
+import toast from "../shared/toast.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Locale data
@@ -48,7 +49,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     languageSelect: document.getElementById("languageSelect"),
     appearanceSwitch: document.getElementById("appearanceSwitch"),
     colorPicker: document.getElementById("colorPicker"),
-    notification: document.getElementById("notification"),
     ratingBtn: document.getElementById("ratingBtn"),
     feedbackBtn: document.getElementById("feedbackBtn"),
 
@@ -122,25 +122,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Update page title
     document.title =
       getLocalMessage("optionsTitle") || "Arclet Copier - Settings";
-  }
-
-  // Show notification
-  function showNotification(message, type = "success") {
-    if (!elements.notification) return;
-
-    const notificationText =
-      elements.notification.querySelector(".notification-text");
-    if (notificationText) {
-      notificationText.textContent = message;
-    }
-
-    // Apply notification type styles
-    elements.notification.className = "notification show";
-
-    // Auto hide after 3 seconds
-    setTimeout(() => {
-      elements.notification.classList.remove("show");
-    }, 3000);
   }
 
   // 通用三段滑块初始化函数
@@ -250,7 +231,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         await saveSettings();
 
         // 显示通知
-        showNotification(
+        toast.success(
           getLocalMessage("themeColorChanged") ||
             "Theme color changed successfully!",
         );
@@ -272,7 +253,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       async (value) => {
         applyTheme(value);
         await saveSettings();
-        showNotification(
+        toast.success(
           getLocalMessage("appearanceChanged") ||
             "Appearance changed successfully!",
         );
@@ -293,7 +274,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       notificationOptions,
       async (value) => {
         await saveSettings();
-        showNotification(
+        toast.success(
           getLocalMessage("notificationTypeChanged") ||
             "Notification type changed successfully!",
         );
@@ -397,7 +378,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Short URL service select
     elements.shortUrlServiceSelect.addEventListener("change", async () => {
       await saveSettings();
-      showNotification(
+      toast.success(
         getLocalMessage("shortUrlServiceChanged") ||
           "Short URL service changed successfully!",
       );
@@ -411,7 +392,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       await saveSettings();
       await initializeI18n(newLanguage);
 
-      showNotification(
+      toast.success(
         getLocalMessage("languageChangeNotification") ||
           "Language changed successfully!",
       );
@@ -443,7 +424,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderTemplateList();
     } catch (error) {
       console.error("Failed to load templates:", error);
-      showNotification("Failed to load templates", "error");
+      toast.error("Failed to load templates");
     }
   }
 
@@ -563,15 +544,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       // 通知其他页面模板已删除
       await TemplateChangeNotifier.notify("deleted", template.id);
 
-      showNotification(getLocalMessage("templateDeleted") || "模板已删除");
+      toast.success(getLocalMessage("templateDeleted") || "模板已删除");
 
       await loadTemplates();
     } catch (error) {
       console.error("Failed to delete template:", error);
-      showNotification(
-        getLocalMessage("templateDeleteFailed") || "删除模板失败",
-        "error",
-      );
+      toast.error(getLocalMessage("templateDeleteFailed") || "删除模板失败");
     }
   }
 
@@ -636,7 +614,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         await TemplateChangeNotifier.notify("created", newTemplateId);
       }
 
-      showNotification(
+      toast.success(
         currentEditingTemplate
           ? getLocalMessage("templateUpdated") || "模板已更新"
           : getLocalMessage("templateCreated") || "模板已创建",
@@ -646,9 +624,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       await loadTemplates();
     } catch (error) {
       console.error("Failed to save template:", error);
-      showValidationError(
-        getLocalMessage("templateSaveFailed") || "保存模板失败",
-      );
+      toast.error(getLocalMessage("templateSaveFailed") || "保存模板失败");
     }
   }
 

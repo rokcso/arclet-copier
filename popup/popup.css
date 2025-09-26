@@ -280,104 +280,7 @@ body {
     color: var(--arc-primary);
 }
 
-.status-notification {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) scale(0.3);
-    transform-origin: center top;
-    background: var(--toast-bg, #86efac);
-    color: var(--toast-text, #166534);
-    padding: 12px 16px;
-    border-radius: 16px;
-    font-size: 14px;
-    font-weight: 600;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 12px var(--toast-shadow, rgba(134, 239, 172, 0.4));
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 200px;
-    max-width: 323px;
-    width: fit-content;
-    text-align: center;
-    line-height: 1.4;
-    word-wrap: break-word;
-    hyphens: auto;
-    border: 1.5px solid var(--toast-border, #22c55e);
-    box-sizing: border-box;
-}
 
-.status-notification.show {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-}
-
-/* 成功通知样式（默认） */
-.status-notification.success {
-    background: var(--toast-bg, #86efac);
-    color: var(--toast-text, #166534);
-    border-color: var(--toast-border, #22c55e);
-    box-shadow: 0 4px 12px var(--toast-shadow, rgba(134, 239, 172, 0.4));
-}
-
-/* 错误通知样式 */
-.status-notification.error {
-    background: #fef2f2;
-    color: #991b1b;
-    border-color: #ef4444;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-}
-
-/* 警告通知样式 */
-.status-notification.warning {
-    background: #fefce8;
-    color: #92400e;
-    border-color: #f59e0b;
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-}
-
-/* 信息通知样式 */
-.status-notification.info {
-    background: #eff6ff;
-    color: #1e40af;
-    border-color: #3b82f6;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-/* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
-    .status-notification.error {
-        background: #7f1d1d;
-        color: #fee2e2;
-        border-color: #f87171;
-        box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
-    }
-
-    .status-notification.warning {
-        background: #78350f;
-        color: #fef3c7;
-        border-color: #fbbf24;
-        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
-    }
-
-    .status-notification.info {
-        background: #1e3a8a;
-        color: #dbeafe;
-        border-color: #60a5fa;
-        box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
-    }
-}
-
-.notification-text {
-    display: block;
-    width: 100%;
-    text-align: center;
-    line-height: 1.4;
-    word-wrap: break-word;
-    white-space: normal;
 }
 
 .settings {
@@ -698,20 +601,20 @@ body {
     }
 }
 
-.container > *:not(.status-notification) {
+.container > * {
     animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
 }
 
-.container > *:nth-child(1):not(.status-notification) {
+.container > *:nth-child(1) {
     animation-delay: 0.05s;
 }
-.container > *:nth-child(2):not(.status-notification) {
+.container > *:nth-child(2) {
     animation-delay: 0.1s;
 }
-.container > *:nth-child(3):not(.status-notification) {
+.container > *:nth-child(3) {
     animation-delay: 0.15s;
 }
-.container > *:nth-child(4):not(.status-notification) {
+.container > *:nth-child(4) {
     animation-delay: 0.2s;
 }
 
