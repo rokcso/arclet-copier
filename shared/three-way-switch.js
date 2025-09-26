@@ -1,6 +1,7 @@
 /**
- * 通用三段式开关组件
+ * 三段式开关组件
  * 统一管理三段式开关逻辑，避免重复实现
+ * 配合 shared/toggle.css 使用
  */
 
 /**
@@ -18,9 +19,7 @@ export function initializeThreeWaySwitch(switchElement, options, onChange) {
   // 计算滑块的自适应位置和宽度
   function updateSliderPosition() {
     const currentValue = switchElement.getAttribute("data-value");
-    const currentIndex = options.findIndex(
-      (opt) => opt.value === currentValue,
-    );
+    const currentIndex = options.findIndex((opt) => opt.value === currentValue);
 
     if (currentIndex === -1) return;
 
@@ -32,7 +31,7 @@ export function initializeThreeWaySwitch(switchElement, options, onChange) {
       switchOptions[currentIndex].classList.add("active");
     }
 
-    // 修复滑块位置计算 - 解决超出容器问题
+    // 自适应滑块位置和宽度计算
     const optionElement = switchOptions[currentIndex];
     const optionWidth = optionElement.offsetWidth;
     const optionLeft = optionElement.offsetLeft;
@@ -41,10 +40,10 @@ export function initializeThreeWaySwitch(switchElement, options, onChange) {
     const containerStyle = getComputedStyle(switchElement);
     const containerPadding = parseFloat(containerStyle.paddingLeft);
 
-    // 关键修复：translateX需要减去容器padding，因为滑块已经有left: 2px的基础定位
+    // 计算滑块位置：相对于容器内部的偏移
     const sliderTranslateX = optionLeft - containerPadding;
 
-    // 更新CSS变量来控制滑块
+    // 更新CSS变量来控制滑块的宽度和位置
     switchElement.style.setProperty("--slider-width", `${optionWidth}px`);
     switchElement.style.setProperty("--slider-x", `${sliderTranslateX}px`);
   }
@@ -72,9 +71,44 @@ export function initializeThreeWaySwitch(switchElement, options, onChange) {
   // 返回控制方法和清理函数
   return {
     updateSliderPosition,
-    destroy: () => {
+
+    /**
+     * 获取当前值
+     * @returns {string}
+     */
+    getValue() {
+      return switchElement.getAttribute("data-value");
+    },
+
+    /**
+     * 设置值
+     * @param {string} value - 新值
+     * @param {boolean} triggerChange - 是否触发change事件
+     */
+    setValue(value, triggerChange = false) {
+      switchElement.setAttribute("data-value", value);
+      updateSliderPosition();
+
+      if (triggerChange && onChange) {
+        const option = options.find((opt) => opt.value === value);
+        onChange(value, option);
+      }
+    },
+
+    /**
+     * 获取原始DOM元素
+     * @returns {HTMLElement}
+     */
+    getElement() {
+      return switchElement;
+    },
+
+    /**
+     * 销毁开关，移除事件监听器
+     */
+    destroy() {
       window.removeEventListener("resize", resizeHandler);
-    }
+    },
   };
 }
 

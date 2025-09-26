@@ -1,0 +1,202 @@
+/*
+ * 统一的Toggle组件样式文件
+ * 包含二元开关和三段式开关的所有样式
+ * 使用项目主题色变量，支持 light/dark/system 主题
+ */
+
+/* ============= 二元开关 (Binary Toggle) ============= */
+
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-label {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    background: var(--arc-surface);
+    border: 1.5px solid var(--arc-border);
+    border-radius: 13px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+    overflow: hidden;
+}
+
+.toggle-label:hover {
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px var(--glow-light);
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
+    border-radius: 10px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background: linear-gradient(
+        135deg,
+        var(--arc-primary) 0%,
+        var(--arc-primary-hover) 50%,
+        var(--arc-primary) 100%
+    );
+    border-color: var(--arc-primary);
+    box-shadow:
+        0 0 20px var(--glow-light),
+        0 2px 8px var(--glow-medium),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-slider {
+    transform: translateX(22px);
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%);
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.2),
+        0 1px 3px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* ============= 三段式开关 (Three-way Switch) - 按图片样式设计 ============= */
+
+.three-way-switch {
+    position: relative;
+    display: flex;
+    background: #e5e7eb;
+    border-radius: 12px;
+    padding: 4px;
+    border: none;
+    overflow: hidden;
+    transition: all 0.25s ease;
+}
+
+.three-way-switch .switch-option {
+    flex: 0 0 auto;
+    padding: 8px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    z-index: 2;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    border-radius: 8px;
+    user-select: none;
+    min-width: fit-content;
+    white-space: nowrap;
+}
+
+.three-way-switch .switch-option.active {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.three-way-switch .switch-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    background: var(--arc-primary);
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    z-index: 1;
+    width: var(--slider-width, 33.33%);
+    transform: translateX(var(--slider-x, 0px));
+}
+
+/* ============= 暗色主题样式覆盖 ============= */
+
+/* 暗色主题下二元开关的slider颜色调整 */
+[data-theme="dark"] .toggle-slider {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.4),
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .toggle-checkbox:checked + .toggle-label .toggle-slider {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.5),
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* 暗色主题下三段式开关样式 */
+[data-theme="dark"] .three-way-switch {
+    background: #374151;
+}
+
+[data-theme="dark"] .three-way-switch .switch-option {
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .three-way-switch .switch-option.active {
+    color: #f9fafb;
+}
+
+[data-theme="dark"] .three-way-switch .switch-slider {
+    background: var(--arc-primary);
+}
+
+/* ============= 系统主题支持 (System Theme) ============= */
+
+@media (prefers-color-scheme: dark) {
+    /* 系统暗色主题下的slider颜色调整 */
+    :root:not([data-theme]) .toggle-slider {
+        background: linear-gradient(
+            135deg,
+            #f1f5f9 0%,
+            #e2e8f0 50%,
+            #f1f5f9 100%
+        );
+        box-shadow:
+            0 2px 8px rgba(0, 0, 0, 0.4),
+            0 1px 3px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    :root:not([data-theme])
+        .toggle-checkbox:checked
+        + .toggle-label
+        .toggle-slider {
+        background: linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f8fafc 50%,
+            #ffffff 100%
+        );
+        box-shadow:
+            0 2px 12px rgba(0, 0, 0, 0.5),
+            0 1px 3px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    /* 系统暗色主题下三段式开关样式 */
+    :root:not([data-theme]) .three-way-switch {
+        background: #374151;
+    }
+
+    :root:not([data-theme]) .three-way-switch .switch-option {
+        color: #9ca3af;
+    }
+
+    :root:not([data-theme]) .three-way-switch .switch-option.active {
+        color: #f9fafb;
+    }
+
+    :root:not([data-theme]) .three-way-switch .switch-slider {
+        background: var(--arc-primary);
+    }
+}

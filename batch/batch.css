@@ -418,130 +418,9 @@ body {
 }
 
 /* Form controls */
-.toggle-checkbox,
 .radio-option input[type="radio"],
 .format-option input[type="radio"] {
     display: none;
-}
-
-.toggle-label {
-    position: relative;
-    width: 52px;
-    height: 28px;
-    background: var(--arc-surface);
-    border: 1.5px solid var(--arc-border);
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block;
-    overflow: hidden;
-}
-
-.toggle-label:hover {
-    border-color: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
-}
-
-.toggle-slider {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 22px;
-    height: 22px;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
-    border-radius: 11px;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.15),
-        0 1px 3px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-.toggle-checkbox:checked + .toggle-label {
-    background: linear-gradient(
-        135deg,
-        var(--arc-primary) 0%,
-        var(--arc-primary-hover) 50%,
-        var(--arc-primary) 100%
-    );
-    border-color: var(--arc-primary);
-    box-shadow:
-        0 0 20px var(--glow-light),
-        0 2px 8px var(--glow-medium),
-        0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.toggle-checkbox:checked + .toggle-label .toggle-slider {
-    transform: translateX(24px);
-    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%);
-    box-shadow:
-        0 2px 12px rgba(0, 0, 0, 0.2),
-        0 1px 3px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
-
-/* Three-way switch */
-.three-way-switch {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    height: 32px;
-    background: var(--arc-surface);
-    border: 1.5px solid var(--arc-border);
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 2px;
-    min-width: fit-content;
-    --slider-width: 44px;
-    --slider-x: 0px;
-}
-
-.three-way-switch .switch-option {
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--arc-text-muted);
-    transition: color 0.3s ease;
-    z-index: 2;
-    position: relative;
-    border-radius: 13px;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    padding: 0 12px;
-    min-width: 40px;
-    cursor: pointer;
-}
-
-.three-way-switch .switch-option.active {
-    color: white;
-    font-weight: 600;
-}
-
-.three-way-switch .switch-slider {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: var(--slider-width);
-    height: 26px;
-    background: linear-gradient(
-        135deg,
-        var(--arc-primary) 0%,
-        var(--arc-primary-hover) 50%,
-        var(--arc-primary) 100%
-    );
-    border-radius: 13px;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow:
-        0 0 20px var(--glow-light),
-        0 2px 8px var(--glow-medium),
-        0 1px 3px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    z-index: 1;
-    transform: translateX(var(--slider-x));
 }
 
 /* Unified checkbox component */
@@ -1264,31 +1143,6 @@ body {
 }
 
 /* Dark theme specific overrides */
-[data-theme="dark"] .toggle-label {
-    background: var(--arc-surface);
-    border-color: var(--arc-border);
-}
-
-[data-theme="dark"] .toggle-slider {
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
-}
-
-[data-theme="dark"] .toggle-checkbox:checked + .toggle-label .toggle-slider {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
-}
-
-[data-theme="dark"] .three-way-switch {
-    background: var(--arc-surface);
-    border-color: var(--arc-border);
-}
-
-[data-theme="dark"] .three-way-switch .switch-option {
-    color: var(--arc-text-muted);
-}
-
-[data-theme="dark"] .three-way-switch .switch-option.active {
-    color: white;
-}
 
 [data-theme="dark"] .tab-item::before,
 [data-theme="dark"] .tab-item:hover::before {
@@ -1367,44 +1221,6 @@ body {
     }
 
     /* System dark mode specific component styles */
-    :root:not([data-theme]) .toggle-label {
-        background: var(--arc-surface);
-        border-color: var(--arc-border);
-    }
-
-    :root:not([data-theme]) .toggle-slider {
-        background: linear-gradient(
-            135deg,
-            #f1f5f9 0%,
-            #e2e8f0 50%,
-            #f1f5f9 100%
-        );
-    }
-
-    :root:not([data-theme])
-        .toggle-checkbox:checked
-        + .toggle-label
-        .toggle-slider {
-        background: linear-gradient(
-            135deg,
-            #ffffff 0%,
-            #f8fafc 50%,
-            #ffffff 100%
-        );
-    }
-
-    :root:not([data-theme]) .three-way-switch {
-        background: var(--arc-surface);
-        border-color: var(--arc-border);
-    }
-
-    :root:not([data-theme]) .three-way-switch .switch-option {
-        color: var(--arc-text-muted);
-    }
-
-    :root:not([data-theme]) .three-way-switch .switch-option.active {
-        color: white;
-    }
 
     :root:not([data-theme]) .control-btn {
         background: var(--arc-surface);

@@ -15,6 +15,7 @@ import {
   initializeThreeWaySwitch,
   getUrlCleaningOptions,
 } from "../shared/three-way-switch.js";
+import { initializeBinaryToggle } from "../shared/binary-toggle.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Locale data

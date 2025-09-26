@@ -16,6 +16,7 @@ import { trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
 import toast from "../shared/toast.js";
 import shortUrlCache from "../shared/short-url-cache.js";
+import { initializeBinaryToggle } from "../shared/binary-toggle.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 状态管理
