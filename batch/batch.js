@@ -14,7 +14,6 @@ import {
 
 import { trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
-import notificationHelper from "../shared/notification-helper.js";
 
 // 持久化短链缓存管理
 class PersistentShortUrlCache {
@@ -1102,12 +1101,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (success) {
       showNotification(
-        getLocalMessage("copySuccess") ||
-          `已复制 ${selectedTabsList.length} 个URL`,
-      );
-
-      // 显示通知
-      await notificationHelper.success(
         getLocalMessage("batchCopySuccess") ||
           `批量复制成功: ${selectedTabsList.length} 个URL`,
       );
@@ -1117,14 +1110,37 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 显示通知
-  function showNotification(message) {
+  function showNotification(message, type = "success") {
     const notification = elements.notification;
     notification.querySelector(".notification-text").textContent = message;
-    notification.classList.add("show");
+
+    // 根据类型添加相应的样式类
+    notification.classList.remove("success", "error", "warning", "info");
+    notification.classList.add(type, "show");
 
     setTimeout(() => {
       notification.classList.remove("show");
     }, 3000);
+  }
+
+  // 显示成功通知
+  function showSuccessNotification(message) {
+    showNotification(message, "success");
+  }
+
+  // 显示错误通知
+  function showErrorNotification(message) {
+    showNotification(message, "error");
+  }
+
+  // 显示警告通知
+  function showWarningNotification(message) {
+    showNotification(message, "warning");
+  }
+
+  // 显示信息通知
+  function showInfoNotification(message) {
+    showNotification(message, "info");
   }
 
   // 设置折叠功能
