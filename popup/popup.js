@@ -10,7 +10,6 @@ import {
 
 import { trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
-import notificationHelper from "../shared/notification-helper.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
@@ -573,16 +572,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 显示Arc风格的状态通知
-  function showArcNotification(message) {
+  function showArcNotification(message, type = "success") {
     const textElement = elements.status.querySelector(".notification-text");
     if (textElement) {
       textElement.textContent = message;
     }
-    elements.status.classList.add("show");
+
+    // 根据类型添加相应的样式类
+    elements.status.classList.remove("success", "error", "warning", "info");
+    elements.status.classList.add(type, "show");
 
     setTimeout(() => {
       elements.status.classList.remove("show");
     }, 2000);
+  }
+
+  // 显示成功通知
+  function showArcSuccess(message) {
+    showArcNotification(message, "success");
+  }
+
+  // 显示错误通知
+  function showArcError(message) {
+    showArcNotification(message, "error");
+  }
+
+  // 显示警告通知
+  function showArcWarning(message) {
+    showArcNotification(message, "warning");
+  }
+
+  // 显示信息通知
+  function showArcInfo(message) {
+    showArcNotification(message, "info");
   }
 
   // 复制URL到剪贴板
@@ -907,12 +929,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           getLocalMessage("shortUrlGenerated") ||
             `Short URL generated and copied! (${serviceName})`,
         );
-
-        // 显示通知
-        await notificationHelper.success(
-          getLocalMessage("shortUrlGenerated") ||
-            `Short URL generated: ${response.shortUrl}`,
-        );
       } else {
         throw new Error(response.error || "Failed to generate short URL");
       }
@@ -937,9 +953,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function showStatus() {
     // 显示Arc风格通知
     showArcNotification(getLocalMessage("urlCopied"));
-
-    // 显示通知
-    await notificationHelper.success(getLocalMessage("urlCopied"));
   }
 
   // 复制二维码图片到剪贴板

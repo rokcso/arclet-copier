@@ -2,7 +2,6 @@
 // 根据用户设置显示对应类型的通知
 
 import settingsManager from "./settings-manager.js";
-import pageNotifications from "./page-notifications.js";
 
 class NotificationHelper {
   constructor() {
@@ -81,14 +80,13 @@ class NotificationHelper {
     try {
       // 检查是否在扩展页面内
       if (this.isExtensionPage()) {
-        // 在扩展页面内直接显示
-        pageNotifications.show({
+        // 在扩展页面内直接显示通知
+        return await this.showExtensionPageNotification({
           title,
           message,
           type,
           icon,
         });
-        return true;
       } else {
         // 在service worker或其他非页面环境，通过content script显示页面通知
         return await this.showPageNotificationViaContentScript({
@@ -210,6 +208,187 @@ class NotificationHelper {
       window.location.protocol === "chrome-extension:" ||
       window.location.protocol === "moz-extension:"
     );
+  }
+
+  // 在扩展页面内显示通知
+  async showExtensionPageNotification({ title, message, type, icon }) {
+    try {
+      // 创建或获取通知容器
+      let notificationContainer = document.getElementById(
+        "arclet-extension-notification-container",
+      );
+      if (!notificationContainer) {
+        notificationContainer = document.createElement("div");
+        notificationContainer.id = "arclet-extension-notification-container";
+        notificationContainer.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 10000;
+          pointer-events: none;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        `;
+        document.body.appendChild(notificationContainer);
+      }
+
+      // 创建通知元素
+      const notification = document.createElement("div");
+      const notificationId = "notification-" + Date.now();
+      notification.id = notificationId;
+      notification.className = `arclet-extension-notification ${type || "info"}`;
+
+      // 设置通知样式
+      notification.style.cssText = `
+        background: ${this.getNotificationBackgroundColor(type)};
+        color: ${this.getNotificationTextColor(type)};
+        border: 1px solid ${this.getNotificationBorderColor(type)};
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        min-width: 280px;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        pointer-events: auto;
+        position: relative;
+        overflow: hidden;
+        transform: translateX(100%);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 14px;
+        line-height: 1.4;
+      `;
+
+      // 创建通知内容
+      const headerHtml = `
+        <div style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 4px;
+          font-weight: 600;
+          font-size: 14px;
+        ">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            ${icon ? `<span>${icon}</span>` : this.getTypeIcon(type)}
+            ${title || this.extensionName}
+          </div>
+          <button class="arclet-extension-notification-close" style="
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+          " aria-label="Close">×</button>
+        </div>
+      `;
+
+      const messageHtml = message
+        ? `<div style="
+        font-size: 13px;
+        line-height: 1.4;
+        color: #666;
+      ">${message}</div>`
+        : "";
+
+      notification.innerHTML = headerHtml + messageHtml;
+
+      // 添加到容器
+      notificationContainer.appendChild(notification);
+
+      // 显示动画
+      requestAnimationFrame(() => {
+        notification.style.transform = "translateX(0)";
+        notification.style.opacity = "1";
+      });
+
+      // 添加关闭事件
+      const closeBtn = notification.querySelector(
+        ".arclet-extension-notification-close",
+      );
+      closeBtn?.addEventListener("click", () => {
+        this.hideExtensionPageNotification(notificationId);
+      });
+
+      // 自动关闭 (3秒)
+      setTimeout(() => {
+        this.hideExtensionPageNotification(notificationId);
+      }, 3000);
+
+      return true;
+    } catch (error) {
+      console.error("Failed to show extension page notification:", error);
+      return false;
+    }
+  }
+
+  // 隐藏扩展页面通知
+  hideExtensionPageNotification(notificationId) {
+    const notification = document.getElementById(notificationId);
+    if (notification) {
+      // 隐藏动画
+      notification.style.transform = "translateX(100%)";
+      notification.style.opacity = "0";
+
+      // 移除元素
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }
+  }
+
+  // 获取通知背景色
+  getNotificationBackgroundColor(type) {
+    const colors = {
+      success: "#f8fff8",
+      error: "#fff8f8",
+      warning: "#fffbf0",
+      info: "#f0f8ff",
+    };
+    return colors[type] || colors.info;
+  }
+
+  // 获取通知文字颜色
+  getNotificationTextColor(type) {
+    const colors = {
+      success: "#2E7D32",
+      error: "#C62828",
+      warning: "#E65100",
+      info: "#1565C0",
+    };
+    return colors[type] || colors.info;
+  }
+
+  // 获取通知边框颜色
+  getNotificationBorderColor(type) {
+    const colors = {
+      success: "#4CAF50",
+      error: "#f44336",
+      warning: "#FF9800",
+      info: "#2196F3",
+    };
+    return colors[type] || colors.info;
+  }
+
+  // 获取类型图标
+  getTypeIcon(type) {
+    const icons = {
+      success: "✓",
+      error: "✕",
+      warning: "⚠",
+      info: "ℹ",
+    };
+    return icons[type] || "";
   }
 
   // 便捷方法
