@@ -1,7 +1,7 @@
-// Aggressive Page Notifications - 强制DOM注入系统
-// 不依赖DOM就绪状态，立即创建和显示通知
+// Smart Page Notifications - 智能通知系统
+// 根据页面环境智能选择通知策略
 
-class AggressivePageNotifications {
+class SmartPageNotifications {
   constructor() {
     this.container = null;
     this.shadowRoot = null;
@@ -10,32 +10,164 @@ class AggressivePageNotifications {
     this.defaultDuration = 3000;
     this.themeColor = "green";
     this.appearance = "system";
+    this.isSupported = false;
 
-    // 立即执行初始化，不等待任何事件
-    this.initializeImmediately();
-    this.loadThemeSettings();
+    // 智能初始化：先检测环境，再决定是否初始化
+    this.checkEnvironmentAndInitialize();
   }
 
-  initializeImmediately() {
+  // 智能环境检测和初始化
+  checkEnvironmentAndInitialize() {
+    console.log("Smart notification system - checking page environment");
+
+    if (this.isPageNotificationSupported()) {
+      console.log("Page notifications supported, initializing DOM injection");
+      this.isSupported = true;
+      this.initializePageNotifications();
+      this.loadThemeSettings();
+    } else {
+      console.log(
+        "Page notifications not supported, will fallback to Chrome notifications",
+      );
+      this.isSupported = false;
+      // 不初始化DOM相关功能，但保持消息监听
+    }
+  }
+
+  // 页面通知支持检测
+  isPageNotificationSupported() {
     try {
-      // 1. 强制创建容器（多重回退策略）
-      this.container = this.forceCreateContainer();
+      // 检测1：基本DOM API是否可用
+      if (!document || !document.createElement) {
+        console.log("Basic DOM APIs not available");
+        return false;
+      }
+
+      // 检测2：是否为XML页面
+      if (this.isXMLPage()) {
+        console.log("XML page detected, not suitable for DOM injection");
+        return false;
+      }
+
+      // 检测3：是否为受限页面
+      if (this.isRestrictedPage()) {
+        console.log("Restricted page detected");
+        return false;
+      }
+
+      // 检测4：基本DOM结构是否可用
+      if (!this.hasBasicDOMStructure()) {
+        console.log("Basic DOM structure not available");
+        return false;
+      }
+
+      console.log("All checks passed, page notifications supported");
+      return true;
+    } catch (error) {
+      console.error("Environment check failed:", error);
+      return false;
+    }
+  }
+
+  // 检测是否为XML页面
+  isXMLPage() {
+    try {
+      // 方法1：检查document.body是否为null（XML页面特征）
+      if (document.body === null && document.documentElement) {
+        // 进一步检查：是否有XML特征
+        const rootElement = document.documentElement;
+        const tagName = rootElement.tagName.toLowerCase();
+
+        // 常见XML根元素
+        if (
+          ["xml", "rss", "feed", "urlset", "sitemapindex"].includes(tagName)
+        ) {
+          return true;
+        }
+
+        // 检查MIME类型
+        if (document.contentType && document.contentType.includes("xml")) {
+          return true;
+        }
+      }
+
+      // 方法2：检查URL是否以.xml结尾
+      if (
+        location.pathname &&
+        location.pathname.toLowerCase().endsWith(".xml")
+      ) {
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("XML detection failed:", error);
+      return false;
+    }
+  }
+
+  // 检测是否为受限页面
+  isRestrictedPage() {
+    try {
+      const url = location.href;
+      const restrictedProtocols = [
+        "chrome://",
+        "chrome-extension://",
+        "moz-extension://",
+        "edge://",
+        "about:",
+        "file://",
+        "ftp://",
+      ];
+
+      return restrictedProtocols.some((protocol) => url.startsWith(protocol));
+    } catch (error) {
+      console.error("Restricted page detection failed:", error);
+      return true; // 安全起见，检测失败视为受限
+    }
+  }
+
+  // 检测基本DOM结构
+  hasBasicDOMStructure() {
+    try {
+      // 尝试创建元素并检查基本属性
+      const testElement = document.createElement("div");
+      if (!testElement || !testElement.style) {
+        return false;
+      }
+
+      // 检查是否至少有一个可用的插入点
+      return !!(document.body || document.documentElement || document.head);
+    } catch (error) {
+      console.error("DOM structure check failed:", error);
+      return false;
+    }
+  }
+
+  // 简化的页面通知初始化
+  initializePageNotifications() {
+    try {
+      // 1. 创建容器（简化策略）
+      this.container = this.createContainer();
 
       // 2. 建立Shadow DOM隔离
       this.shadowRoot = this.container.attachShadow({ mode: "closed" });
 
-      // 3. 立即设置Shadow DOM内容
+      // 3. 设置Shadow DOM内容
       this.setupShadowContent();
 
-      console.log("Aggressive page notifications initialized immediately");
+      console.log("Smart page notifications initialized successfully");
     } catch (error) {
-      console.error("Failed to initialize aggressive notifications:", error);
+      console.error("Failed to initialize page notifications:", error);
+      // 初始化失败时标记为不支持
+      this.isSupported = false;
     }
   }
 
-  forceCreateContainer() {
+  // 简化的容器创建 - 只使用最常见和可靠的方法
+  createContainer() {
     const container = document.createElement("div");
-    container.id = "arclet-aggressive-notifications";
+    container.id = "arclet-smart-notifications";
     container.style.cssText = `
       position: fixed !important;
       top: 20px !important;
@@ -45,94 +177,18 @@ class AggressivePageNotifications {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif !important;
     `;
 
-    // 多重插入策略 - 逐个尝试直到成功
-    const insertStrategies = [
-      () => {
-        if (document.body) {
-          document.body.appendChild(container);
-          return true;
-        }
-        return false;
-      },
-      () => {
-        if (document.documentElement) {
-          document.documentElement.appendChild(container);
-          return true;
-        }
-        return false;
-      },
-      () => {
-        if (document.head) {
-          document.head.appendChild(container);
-          return true;
-        }
-        return false;
-      },
-      () => {
-        // 最后的回退：创建临时DOM宿主
-        return this.createTemporaryHost(container);
-      },
-    ];
-
-    for (let i = 0; i < insertStrategies.length; i++) {
-      try {
-        if (insertStrategies[i]()) {
-          console.log(`Container inserted using strategy ${i + 1}`);
-          return container;
-        }
-      } catch (error) {
-        console.log(`Strategy ${i + 1} failed:`, error.message);
-      }
-    }
-
-    throw new Error("All insertion strategies failed");
-  }
-
-  createTemporaryHost(container) {
-    try {
-      // 创建最小化的临时DOM结构
-      if (!document.documentElement) {
-        document.appendChild(document.createElement("html"));
-      }
-
-      if (!document.head) {
-        document.documentElement.appendChild(document.createElement("head"));
-      }
-
-      document.head.appendChild(container);
-
-      // 设置监听器，当body可用时迁移
-      this.setupMigrationListener(container);
-
-      return true;
-    } catch (error) {
-      console.error("Failed to create temporary host:", error);
-      return false;
-    }
-  }
-
-  setupMigrationListener(container) {
-    // 轻量级检查，当body可用时迁移到更合适的位置
-    const checkForBetterParent = () => {
-      if (document.body && !document.body.contains(container)) {
-        try {
-          document.body.appendChild(container);
-          console.log("Container migrated to document.body");
-        } catch (error) {
-          console.log("Migration failed, staying in current position");
-        }
-      }
-    };
-
-    // 使用轻量级检查而不是MutationObserver
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", checkForBetterParent, {
-        once: true,
-      });
+    // 简化策略：优先使用body，回退到documentElement
+    if (document.body) {
+      document.body.appendChild(container);
+      console.log("Container inserted into document.body");
+    } else if (document.documentElement) {
+      document.documentElement.appendChild(container);
+      console.log("Container inserted into document.documentElement");
     } else {
-      // DOM已经加载完成，立即检查
-      setTimeout(checkForBetterParent, 0);
+      throw new Error("No suitable parent element found for container");
     }
+
+    return container;
   }
 
   setupShadowContent() {
@@ -430,32 +486,42 @@ class AggressivePageNotifications {
   }
 }
 
-// 立即创建全局通知管理器，不等待任何事件
-const aggressiveNotifications = new AggressivePageNotifications();
+// 创建智能通知管理器
+const smartNotifications = new SmartPageNotifications();
 
-// 消息监听器 - 简化版，立即响应
+// 消息监听器 - 智能响应
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log("Aggressive content script received message:", request);
+  console.log("Smart content script received message:", request);
 
-  // 立即响应PING，确认ready状态
+  // 响应PING，确认ready状态
   if (request.type === "PING") {
     sendResponse({ success: true, ready: true });
     return true;
   }
 
-  // 立即显示通知，不做任何检查
+  // 智能显示通知：支持页面通知时显示，否则返回失败让上层回退
   if (request.type === "SHOW_PAGE_NOTIFICATION") {
     try {
       const { message } = request;
 
-      const notificationId = aggressiveNotifications.show({
+      const notificationId = smartNotifications.show({
         message: message || "",
       });
 
-      console.log("Aggressive page notification shown immediately");
-      sendResponse({ success: true, notificationId });
+      if (notificationId) {
+        console.log("Smart page notification shown successfully");
+        sendResponse({ success: true, notificationId });
+      } else {
+        console.log(
+          "Page notification not supported, signaling fallback needed",
+        );
+        sendResponse({
+          success: false,
+          error: "Page notifications not supported",
+        });
+      }
     } catch (error) {
-      console.error("Failed to show aggressive page notification:", error);
+      console.error("Failed to show smart page notification:", error);
       sendResponse({ success: false, error: error.message });
     }
   } else {
@@ -466,11 +532,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // 防止重复初始化
-if (!window.arcletAggressiveNotificationsInitialized) {
-  window.arcletAggressiveNotificationsInitialized = true;
-  window.arcletAggressiveNotifications = aggressiveNotifications;
+if (!window.arcletSmartNotificationsInitialized) {
+  window.arcletSmartNotificationsInitialized = true;
+  window.arcletSmartNotifications = smartNotifications;
   console.log(
-    "Arclet aggressive page notifications initialized on:",
+    "Arclet smart notification system initialized on:",
     window.location.href,
   );
 }

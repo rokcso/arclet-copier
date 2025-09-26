@@ -105,7 +105,7 @@ class NotificationHelper {
     }
   }
 
-  // 通过 content script 显示页面通知 - 激进版本，立即发送
+  // 通过 content script 显示页面通知 - 智能版本，快速回退
   async showPageNotificationViaContentScript(options) {
     try {
       // 获取当前活跃标签页
@@ -144,10 +144,10 @@ class NotificationHelper {
     }
   }
 
-  // 立即发送消息 - 激进版本，不等待，不重试
+  // 智能消息发送 - 快速尝试，立即回退
   async sendMessageImmediately(tabId, message, fallbackOptions) {
     try {
-      // 立即发送消息，短超时时间
+      // 发送消息给content script
       const response = await Promise.race([
         new Promise((resolve, reject) => {
           chrome.tabs.sendMessage(tabId, message, (response) => {
@@ -160,22 +160,24 @@ class NotificationHelper {
         }),
         new Promise(
           (_, reject) =>
-            setTimeout(() => reject(new Error("Message timeout")), 500), // 极短超时
+            setTimeout(() => reject(new Error("Message timeout")), 800), // 稍长超时给content script更多时间
         ),
       ]);
 
       if (response && response.success) {
-        console.log("Aggressive page notification sent immediately");
+        console.log("Smart page notification sent successfully");
         return true;
       } else {
+        // Content script明确表示不支持页面通知，立即回退
         console.log(
-          "Content script responded but failed, falling back to Chrome notification",
+          "Page notifications not supported on this page, using Chrome notification",
         );
         return await this.showChromeNotification(fallbackOptions);
       }
     } catch (error) {
+      // 通信失败，立即回退
       console.log(
-        `Immediate message send failed: ${error.message}, falling back to Chrome notification`,
+        `Message send failed: ${error.message}, using Chrome notification`,
       );
       return await this.showChromeNotification(fallbackOptions);
     }
