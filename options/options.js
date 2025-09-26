@@ -9,6 +9,8 @@ import {
   TemplateChangeNotifier,
 } from "../shared/constants.js";
 
+import settingsManager from "../shared/settings-manager.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Locale data
   let currentLocale = "zh_CN";
@@ -280,8 +282,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 初始化主题
   async function initializeTheme() {
-    const result = await chrome.storage.sync.get(["appearance"]);
-    const savedTheme = result.appearance || "system";
+    const savedTheme = await settingsManager.getSetting("appearance");
 
     // 设置滑块初始值
     if (elements.appearanceSwitch) {
@@ -305,7 +306,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 加载设置
   async function loadSettings() {
-    const result = await chrome.storage.sync.get([
+    const settings = await settingsManager.getSettings([
       "shortUrlService",
       "appearance",
       "language",
@@ -314,50 +315,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     ]);
 
     // Load short URL service setting
-    elements.shortUrlServiceSelect.value = result.shortUrlService || "isgd";
+    elements.shortUrlServiceSelect.value = settings.shortUrlService;
 
     // Load appearance setting
-    const savedAppearance = result.appearance || "system";
+    const savedAppearance = settings.appearance;
     if (elements.appearanceSwitch) {
       elements.appearanceSwitch.setAttribute("data-value", savedAppearance);
     }
 
-    // Load language setting, default to browser language or zh_CN
-    const browserLang = chrome.i18n.getUILanguage();
-    let defaultLang = "en"; // default fallback
-    if (browserLang.startsWith("zh")) {
-      // 更精确的繁简中文检测
-      if (
-        browserLang === "zh-TW" ||
-        browserLang === "zh-HK" ||
-        browserLang === "zh-MO"
-      ) {
-        defaultLang = "zh_TW";
-      } else {
-        defaultLang = "zh_CN";
-      }
-    } else if (browserLang.startsWith("es")) {
-      defaultLang = "es";
-    } else if (browserLang.startsWith("ja")) {
-      defaultLang = "ja";
-    } else if (browserLang.startsWith("de")) {
-      defaultLang = "de";
-    } else if (browserLang.startsWith("fr")) {
-      defaultLang = "fr";
-    } else if (browserLang.startsWith("pt")) {
-      defaultLang = "pt";
-    } else if (browserLang.startsWith("ru")) {
-      defaultLang = "ru";
-    } else if (browserLang.startsWith("ko")) {
-      defaultLang = "ko";
-    }
-    const savedLanguage = result.language || defaultLang;
-    elements.languageSelect.value = savedLanguage;
-    currentLocale = savedLanguage;
+    // Load language setting
+    elements.languageSelect.value = settings.language;
+    currentLocale = settings.language;
 
-    // Load theme color setting, default to green
-    const savedThemeColor = result.themeColor || "green";
-    applyThemeColor(savedThemeColor);
+    // Load theme color setting
+    applyThemeColor(settings.themeColor);
 
     // Update color picker UI
     if (elements.colorPicker) {
@@ -366,14 +337,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       colorOptions.forEach((option) => {
         option.classList.toggle(
           "active",
-          option.getAttribute("data-color") === savedThemeColor,
+          option.getAttribute("data-color") === settings.themeColor,
         );
       });
     }
 
-    // Load Chrome notifications setting, default to true
-    const chromeNotificationsEnabled = result.chromeNotifications !== false;
-    elements.notificationCheckbox.checked = chromeNotificationsEnabled;
+    // Load Chrome notifications setting
+    elements.notificationCheckbox.checked = settings.chromeNotifications;
   }
 
   // 保存设置
@@ -387,7 +357,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const currentThemeColor =
       selectedColorOption?.getAttribute("data-color") || "green";
 
-    await chrome.storage.sync.set({
+    await settingsManager.updateSettings({
       shortUrlService: elements.shortUrlServiceSelect.value,
       appearance: appearanceSwitch.getAttribute("data-value"),
       language: elements.languageSelect.value,

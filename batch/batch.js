@@ -13,6 +13,7 @@ import {
 } from "../shared/constants.js";
 
 import { trackCopy } from "../shared/analytics.js";
+import settingsManager from "../shared/settings-manager.js";
 
 // 持久化短链缓存管理
 class PersistentShortUrlCache {
@@ -171,22 +172,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 初始化国际化
   async function initializeI18n() {
-    const result = await chrome.storage.sync.get(["language"]);
-    const browserLang = chrome.i18n.getUILanguage();
-    let defaultLang = "en";
-    if (browserLang.startsWith("zh")) {
-      // 更精确的繁简中文检测
-      if (
-        browserLang === "zh-TW" ||
-        browserLang === "zh-HK" ||
-        browserLang === "zh-MO"
-      ) {
-        defaultLang = "zh_TW";
-      } else {
-        defaultLang = "zh_CN";
-      }
-    }
-    currentLocale = result.language || defaultLang;
+    currentLocale = await settingsManager.getSetting("language");
 
     localeMessages = await loadLocaleMessages(currentLocale);
 
@@ -297,7 +283,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 加载设置
   async function loadSettings() {
-    const result = await chrome.storage.sync.get([
+    const settings = await settingsManager.getSettings([
       "appearance",
       "themeColor",
       "batchUrlCleaning",
@@ -307,9 +293,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     ]);
 
     currentSettings = {
-      urlCleaning: result.batchUrlCleaning || "off",
-      appearance: result.appearance || "system",
-      themeColor: result.themeColor || "green",
+      urlCleaning: settings.batchUrlCleaning || "off",
+      appearance: settings.appearance,
+      themeColor: settings.themeColor,
     };
 
     // 应用主题
@@ -328,14 +314,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const webPagesOnly = document.getElementById("webPagesOnly");
 
     if (silentCopyFormat) {
-      silentCopyFormat.value = result.batchSilentCopyFormat || "url";
+      silentCopyFormat.value = settings.batchSilentCopyFormat || "url";
     }
     if (webPagesOnly) {
-      webPagesOnly.checked = result.batchWebPagesOnly !== false;
+      webPagesOnly.checked = settings.batchWebPagesOnly !== false;
     }
     if (elements.removeDuplicates) {
       elements.removeDuplicates.checked =
-        result.batchRemoveDuplicates !== false;
+        settings.batchRemoveDuplicates !== false;
     }
   }
 
@@ -344,7 +330,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const silentCopyFormat = document.getElementById("silentCopyFormat");
     const webPagesOnly = document.getElementById("webPagesOnly");
 
-    await chrome.storage.sync.set({
+    await settingsManager.updateSettings({
       batchUrlCleaning: currentSettings.urlCleaning,
       batchSilentCopyFormat: silentCopyFormat ? silentCopyFormat.value : "url",
       batchWebPagesOnly: webPagesOnly ? webPagesOnly.checked : true,
@@ -824,10 +810,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             // 如果模板包含shortUrl字段，生成短链
             if (template.template.includes("{{shortUrl}}")) {
               try {
-                const result = await chrome.storage.sync.get([
-                  "shortUrlService",
-                ]);
-                const selectedService = result.shortUrlService || "isgd";
+                const selectedService =
+                  await settingsManager.getSetting("shortUrlService");
                 const url = processUrl(tab.url, cleaningMode);
 
                 // 检查缓存
@@ -903,8 +887,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       case "shortUrl":
         // 获取短链服务设置
-        const result = await chrome.storage.sync.get(["shortUrlService"]);
-        const selectedService = result.shortUrlService || "isgd";
+        const selectedService =
+          await settingsManager.getSetting("shortUrlService");
 
         // 批量生成短链，使用限流器
         const shortUrls = await Promise.all(
@@ -1122,8 +1106,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
       // 检查是否显示 Chrome 通知
-      const settings = await chrome.storage.sync.get(["chromeNotifications"]);
-      if (settings.chromeNotifications !== false) {
+      const chromeNotifications = await settingsManager.getSetting(
+        "chromeNotifications",
+      );
+      if (chromeNotifications) {
         chrome.notifications.create({
           type: "basic",
           iconUrl: chrome.runtime.getURL("assets/icons/icon128.png"),
