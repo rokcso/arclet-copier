@@ -261,7 +261,7 @@
     "message": "Type de notification changé"
   },
   "notificationTypeDesc": {
-    "message": "Choisissez comment les notifications sont affichées lors de la fin des opérations"
+    "message": "Choisissez comment les notifications sont affichées lors de la fin des opérations. Les notifications de page basculeront automatiquement vers les notifications du navigateur sur des pages spéciales très rares."
   },
   "languageDesc": {
     "message": "Choisir la langue d'affichage de l'interface"

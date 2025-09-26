@@ -261,7 +261,7 @@
     "message": "通知方式已更改"
   },
   "notificationTypeDesc": {
-    "message": "選擇操作完成後的通知顯示方式"
+    "message": "選擇操作完成後的通知顯示方式。頁面通知在極少數特殊頁面會自動切換為瀏覽器通知。"
   },
   "languageDesc": {
     "message": "選擇介面顯示語言"

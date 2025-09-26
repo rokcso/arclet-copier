@@ -261,7 +261,7 @@
     "message": "Benachrichtigungstyp geändert"
   },
   "notificationTypeDesc": {
-    "message": "Wählen Sie aus, wie Benachrichtigungen bei Vorgangsabschluss angezeigt werden"
+    "message": "Wählen Sie aus, wie Benachrichtigungen bei Vorgangsabschluss angezeigt werden. Seitenbenachrichtigungen wechseln automatisch zu Browser-Benachrichtigungen auf sehr seltenen besonderen Seiten."
   },
   "languageDesc": {
     "message": "Sprache der Benutzeroberfläche wählen"

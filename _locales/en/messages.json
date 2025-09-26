@@ -261,7 +261,7 @@
     "message": "Notification type changed"
   },
   "notificationTypeDesc": {
-    "message": "Choose how notifications are displayed when operations complete"
+    "message": "Choose how notifications are displayed when operations complete. Page notifications will automatically switch to browser notifications on very rare special pages."
   },
   "languageDesc": {
     "message": "Choose the interface display language"

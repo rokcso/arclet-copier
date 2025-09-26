@@ -261,7 +261,7 @@
     "message": "Tipo de notificação alterado"
   },
   "notificationTypeDesc": {
-    "message": "Escolha como as notificações são exibidas quando as operações são concluídas"
+    "message": "Escolha como as notificações são exibidas quando as operações são concluídas. Notificações de página alternarão automaticamente para notificações do navegador em páginas especiais muito raras."
   },
   "languageDesc": {
     "message": "Escolha o idioma de exibição da interface"

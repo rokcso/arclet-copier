@@ -255,7 +255,7 @@
     "message": "选择生成短链时使用的服务"
   },
   "notificationTypeDesc": {
-    "message": "选择操作完成后的通知显示方式"
+    "message": "选择操作完成后的通知显示方式。页面通知在极少数特殊页面会自动切换为浏览器通知。"
   },
   "languageDesc": {
     "message": "选择界面显示语言"
