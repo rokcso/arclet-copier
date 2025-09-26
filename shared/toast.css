@@ -1,195 +1,208 @@
-/* Toast通知样式 - 适配现有主题系统 */
+/* Toast通知样式 - Arc风格设计 */
 
 .toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10000;
-  pointer-events: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    z-index: 10000;
+    pointer-events: none;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    transform: translateX(-50%);
 }
 
 .toast {
-  background: var(--background-primary, #ffffff);
-  border: 1px solid var(--border-color, #e5e7eb);
-  border-radius: 8px;
-  padding: 0;
-  margin-bottom: 8px;
-  min-width: 280px;
-  max-width: 400px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  pointer-events: auto;
-  transform: translateX(100%);
-  opacity: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--toast-bg, #86efac);
+    border: 1.5px solid var(--toast-border, #22c55e);
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    min-width: 200px;
+    max-width: 400px;
+    width: fit-content;
+    box-shadow: 0 4px 12px var(--toast-shadow, rgba(134, 239, 172, 0.4));
+    pointer-events: auto;
+    transform: scale(0.3);
+    transform-origin: center top;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.4;
+    word-wrap: break-word;
+    hyphens: auto;
+    box-sizing: border-box;
 }
 
 .toast.show {
-  transform: translateX(0);
-  opacity: 1;
+    transform: scale(1);
+    opacity: 1;
 }
 
 .toast.hiding {
-  transform: translateX(100%);
-  opacity: 0;
+    transform: scale(0.3);
+    opacity: 0;
 }
 
+/* Arc风格的简洁内容区域 */
 .toast-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 16px;
+    display: block;
+    width: 100%;
 }
 
 .toast-icon {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: 2px;
+    display: none; /* Arc风格不显示图标 */
 }
 
 .toast-text {
-  flex: 1;
-  min-width: 0;
+    display: block;
+    width: 100%;
 }
 
 .toast-title {
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 4px;
-  color: var(--text-primary, #111827);
+    display: none; /* Arc风格不需要标题 */
 }
 
 .toast-message {
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--text-secondary, #6b7280);
-  word-wrap: break-word;
+    display: block;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--toast-text, #166534);
+    text-align: center;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 .toast-close {
-  flex-shrink: 0;
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: var(--text-tertiary, #9ca3af);
-  padding: 0;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
-  margin-top: 2px;
+    display: none; /* Arc风格自动关闭，无需关闭按钮 */
 }
 
-.toast-close:hover {
-  background: var(--background-secondary, #f9fafb);
-  color: var(--text-primary, #111827);
-}
-
-/* Toast类型样式 */
+/* Arc风格Toast类型样式 - 整体背景色和边框 */
 .toast-success {
-  border-left: 4px solid #10b981;
-}
-
-.toast-success .toast-icon {
-  color: #10b981;
+    background: var(--toast-bg, #86efac);
+    color: var(--toast-text, #166534);
+    border-color: var(--toast-border, #22c55e);
+    box-shadow: 0 4px 12px var(--toast-shadow, rgba(134, 239, 172, 0.4));
 }
 
 .toast-error {
-  border-left: 4px solid #ef4444;
-}
-
-.toast-error .toast-icon {
-  color: #ef4444;
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #ef4444;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .toast-warning {
-  border-left: 4px solid #f59e0b;
-}
-
-.toast-warning .toast-icon {
-  color: #f59e0b;
+    background: #fefce8;
+    color: #92400e;
+    border-color: #f59e0b;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
 .toast-info {
-  border-left: 4px solid #3b82f6;
+    background: #eff6ff;
+    color: #1e40af;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-.toast-info .toast-icon {
-  color: #3b82f6;
+.toast-error .toast-message {
+    color: #991b1b;
 }
 
-/* 深色主题适配 */
-[data-theme="dark"] .toast {
-  background: var(--background-primary, #1f2937);
-  border-color: var(--border-color, #374151);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+.toast-warning .toast-message {
+    color: #92400e;
 }
 
-[data-theme="dark"] .toast-title {
-  color: var(--text-primary, #f9fafb);
+.toast-info .toast-message {
+    color: #1e40af;
 }
 
-[data-theme="dark"] .toast-message {
-  color: var(--text-secondary, #d1d5db);
+/* 深色主题适配 - Arc风格 */
+[data-theme="dark"] .toast-error {
+    background: #7f1d1d;
+    color: #fee2e2;
+    border-color: #f87171;
+    box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
 }
 
-[data-theme="dark"] .toast-close {
-  color: var(--text-tertiary, #9ca3af);
+[data-theme="dark"] .toast-error .toast-message {
+    color: #fee2e2;
 }
 
-[data-theme="dark"] .toast-close:hover {
-  background: var(--background-secondary, #374151);
-  color: var(--text-primary, #f9fafb);
+[data-theme="dark"] .toast-warning {
+    background: #78350f;
+    color: #fef3c7;
+    border-color: #fbbf24;
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
 }
 
-/* 响应式设计 - 小屏幕优化 */
+[data-theme="dark"] .toast-warning .toast-message {
+    color: #fef3c7;
+}
+
+[data-theme="dark"] .toast-info {
+    background: #1e3a8a;
+    color: #dbeafe;
+    border-color: #60a5fa;
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+}
+
+[data-theme="dark"] .toast-info .toast-message {
+    color: #dbeafe;
+}
+
+/* 响应式设计 - Arc风格保持居中 */
 @media (max-width: 480px) {
-  .toast-container {
-    left: 10px;
-    right: 10px;
-    top: 10px;
-  }
+    .toast-container {
+        left: 10px;
+        right: 10px;
+        transform: none; /* 小屏幕下不居中 */
+    }
 
-  .toast {
-    min-width: auto;
-    max-width: none;
-  }
-
-  .toast.show {
-    transform: translateY(0);
-  }
-
-  .toast {
-    transform: translateY(-100%);
-  }
-
-  .toast.hiding {
-    transform: translateY(-100%);
-  }
+    .toast {
+        min-width: auto;
+        max-width: none;
+        margin: 0 auto; /* 确保toast本身居中 */
+    }
 }
 
-/* 主题色适配 - 使用现有的data-color属性 */
-[data-color="blue"] .toast-success .toast-icon { color: #0ea5e9; }
-[data-color="blue"] .toast-success { border-left-color: #0ea5e9; }
+/* 主题色适配 - Arc风格的整体色彩变化 */
+[data-color="blue"] .toast-success {
+    --toast-bg: #bfdbfe;
+    --toast-text: #1e40af;
+    --toast-border: #3b82f6;
+    --toast-shadow: rgba(59, 130, 246, 0.4);
+}
 
-[data-color="purple"] .toast-success .toast-icon { color: #8b5cf6; }
-[data-color="purple"] .toast-success { border-left-color: #8b5cf6; }
+[data-color="purple"] .toast-success {
+    --toast-bg: #ddd6fe;
+    --toast-text: #6b21a8;
+    --toast-border: #8b5cf6;
+    --toast-shadow: rgba(139, 92, 246, 0.4);
+}
 
-[data-color="pink"] .toast-success .toast-icon { color: #ec4899; }
-[data-color="pink"] .toast-success { border-left-color: #ec4899; }
+[data-color="pink"] .toast-success {
+    --toast-bg: #fce7f3;
+    --toast-text: #be185d;
+    --toast-border: #ec4899;
+    --toast-shadow: rgba(236, 72, 153, 0.4);
+}
 
-[data-color="orange"] .toast-success .toast-icon { color: #f97316; }
-[data-color="orange"] .toast-success { border-left-color: #f97316; }
+[data-color="orange"] .toast-success {
+    --toast-bg: #fed7aa;
+    --toast-text: #c2410c;
+    --toast-border: #f97316;
+    --toast-shadow: rgba(249, 115, 22, 0.4);
+}
 
-[data-color="red"] .toast-success .toast-icon { color: #ef4444; }
-[data-color="red"] .toast-success { border-left-color: #ef4444; }
+[data-color="red"] .toast-success {
+    --toast-bg: #fecaca;
+    --toast-text: #dc2626;
+    --toast-border: #ef4444;
+    --toast-shadow: rgba(239, 68, 68, 0.4);
+}

@@ -9,21 +9,17 @@ class ToastManager {
   // 确保容器存在
   ensureContainer() {
     if (!this.container) {
-      this.container = document.createElement('div');
-      this.container.id = 'arclet-toast-container';
-      this.container.className = 'toast-container';
+      this.container = document.createElement("div");
+      this.container.id = "arclet-toast-container";
+      this.container.className = "toast-container";
       document.body.appendChild(this.container);
     }
     return this.container;
   }
 
   // 显示toast
-  show(message, type = 'info', options = {}) {
-    const {
-      duration = 3000,
-      title = null,
-      closable = true
-    } = options;
+  show(message, type = "info", options = {}) {
+    const { duration = 3000, title = null, closable = true } = options;
 
     // 限制toast数量
     if (this.toastCount >= this.maxToasts) {
@@ -38,7 +34,7 @@ class ToastManager {
 
     // 入场动画
     requestAnimationFrame(() => {
-      toast.classList.add('show');
+      toast.classList.add("show");
     });
 
     // 自动关闭
@@ -53,41 +49,22 @@ class ToastManager {
 
   // 创建toast元素
   createToast(message, type, title, closable, duration) {
-    const toast = document.createElement('div');
-    const id = 'toast-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    const toast = document.createElement("div");
+    const id =
+      "toast-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
     toast.id = id;
     toast.className = `toast toast-${type}`;
 
-    const icon = this.getTypeIcon(type);
+    // Arc风格不需要这些变量
 
-    let titleHtml = '';
-    if (title) {
-      titleHtml = `<div class="toast-title">${this.escapeHtml(title)}</div>`;
-    }
-
-    let closeButtonHtml = '';
-    if (closable) {
-      closeButtonHtml = `<button class="toast-close" aria-label="Close">×</button>`;
-    }
-
+    // Arc风格只显示简单的消息内容，不需要图标、标题和关闭按钮
     toast.innerHTML = `
       <div class="toast-content">
-        <div class="toast-icon">${icon}</div>
         <div class="toast-text">
-          ${titleHtml}
           <div class="toast-message">${this.escapeHtml(message)}</div>
         </div>
-        ${closeButtonHtml}
       </div>
     `;
-
-    // 绑定关闭事件
-    if (closable) {
-      const closeBtn = toast.querySelector('.toast-close');
-      closeBtn.addEventListener('click', () => {
-        this.closeToast(toast);
-      });
-    }
 
     return toast;
   }
@@ -96,7 +73,7 @@ class ToastManager {
   closeToast(toast) {
     if (!toast || !toast.parentNode) return;
 
-    toast.classList.add('hiding');
+    toast.classList.add("hiding");
 
     setTimeout(() => {
       if (toast.parentNode) {
@@ -117,7 +94,7 @@ class ToastManager {
   removeOldestToast() {
     if (!this.container) return;
 
-    const oldestToast = this.container.querySelector('.toast');
+    const oldestToast = this.container.querySelector(".toast");
     if (oldestToast) {
       this.closeToast(oldestToast);
     }
@@ -127,43 +104,37 @@ class ToastManager {
   clear() {
     if (!this.container) return;
 
-    const toasts = this.container.querySelectorAll('.toast');
-    toasts.forEach(toast => this.closeToast(toast));
+    const toasts = this.container.querySelectorAll(".toast");
+    toasts.forEach((toast) => this.closeToast(toast));
   }
 
-  // 获取类型图标
+  // Arc风格不需要图标，保留此函数以保持兼容性
   getTypeIcon(type) {
-    const icons = {
-      success: '✓',
-      error: '✕',
-      warning: '⚠',
-      info: 'ℹ'
-    };
-    return icons[type] || icons.info;
+    return "";
   }
 
   // HTML转义
   escapeHtml(text) {
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
   }
 
   // 便捷方法
   success(message, options) {
-    return this.show(message, 'success', options);
+    return this.show(message, "success", options);
   }
 
   error(message, options) {
-    return this.show(message, 'error', options);
+    return this.show(message, "error", options);
   }
 
   warning(message, options) {
-    return this.show(message, 'warning', options);
+    return this.show(message, "warning", options);
   }
 
   info(message, options) {
-    return this.show(message, 'info', options);
+    return this.show(message, "info", options);
   }
 }
 
