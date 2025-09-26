@@ -642,6 +642,24 @@ select.setting-control:hover {
     background: #334155;
 }
 
+[data-theme="dark"] .feedback-btn {
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
+}
+
+[data-theme="dark"] .feedback-btn:hover {
+    background: #334155;
+}
+
+[data-theme="dark"] .rating-btn {
+    background: var(--arc-surface);
+    border-color: var(--arc-border);
+}
+
+[data-theme="dark"] .rating-btn:hover {
+    background: #334155;
+}
+
 /* 深色模式下的主题色 */
 [data-theme="dark"][data-color="blue"] {
     --arc-primary: #60a5fa;
@@ -829,6 +847,24 @@ select.setting-control:hover {
     }
 
     :root:not([data-theme]) .about-link:hover {
+        background: #334155;
+    }
+
+    :root:not([data-theme]) .feedback-btn {
+        background: var(--arc-surface);
+        border-color: var(--arc-border);
+    }
+
+    :root:not([data-theme]) .feedback-btn:hover {
+        background: #334155;
+    }
+
+    :root:not([data-theme]) .rating-btn {
+        background: var(--arc-surface);
+        border-color: var(--arc-border);
+    }
+
+    :root:not([data-theme]) .rating-btn:hover {
         background: #334155;
     }
 }
