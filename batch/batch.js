@@ -577,7 +577,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       : "";
 
     div.innerHTML = `
-      <input type="checkbox" class="tab-checkbox" ${isSelected ? "checked" : ""}>
       <img class="tab-favicon" src="${tab.favIconUrl || chrome.runtime.getURL("assets/icons/icon16.png")}"
            onerror="this.src='${chrome.runtime.getURL("assets/icons/icon16.png")}'">
       <div class="tab-info">
@@ -591,13 +590,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 事件监听
     div.addEventListener("click", (e) => {
-      if (e.target.type === "checkbox") return;
       if (e.target.classList.contains("watermark-text")) return;
-      toggleTabSelection(tab.id);
-    });
-
-    const checkbox = div.querySelector(".tab-checkbox");
-    checkbox.addEventListener("change", () => {
       toggleTabSelection(tab.id);
     });
 
@@ -630,10 +623,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const element = document.querySelector(`[data-tab-id="${tabId}"]`);
     if (!element) return;
 
-    const checkbox = element.querySelector(".tab-checkbox");
     const isSelected = selectedTabs.has(tabId);
-
-    checkbox.checked = isSelected;
     element.classList.toggle("selected", isSelected);
   }
 
