@@ -9,6 +9,7 @@ import {
 } from "../shared/constants.js";
 
 import { trackCopy } from "../shared/analytics.js";
+import settingsManager from "../shared/settings-manager.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Constants
@@ -420,74 +421,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 加载设置
+  // 加载设置 - 使用统一的设置管理器
   async function loadSettings() {
-    const result = await chrome.storage.sync.get([
-      "removeParams",
-      "urlCleaning",
-      "silentCopyFormat",
-      "appearance",
-      "language",
-      "themeColor",
-    ]);
+    const settings = await settingsManager.getAllSettings();
 
-    // 处理向后兼容：将旧的boolean设置转换为新的字符串设置
-    const cleaningMode = result.urlCleaning || "off";
-
+    // 设置UI控件值
     const cleaningSelect = elements.removeParamsToggle;
-    cleaningSelect.setAttribute("data-value", cleaningMode);
+    cleaningSelect.setAttribute("data-value", settings.urlCleaning);
 
-    // 不在这里设置 silentCopyFormat.value，而是返回它
-    const silentCopyFormat = result.silentCopyFormat || "url";
+    // 应用主题和语言设置
+    applyTheme(settings.appearance);
+    applyThemeColor(settings.themeColor);
+    currentLocale = settings.language;
 
-    // Load appearance setting for theme application
-    const savedAppearance = result.appearance || "system";
-    applyTheme(savedAppearance);
-
-    // Load language setting, default to browser language or zh_CN
-    const browserLang = chrome.i18n.getUILanguage();
-    let defaultLang = "en"; // default fallback
-    if (browserLang.startsWith("zh")) {
-      // 更精确的繁简中文检测
-      if (
-        browserLang === "zh-TW" ||
-        browserLang === "zh-HK" ||
-        browserLang === "zh-MO"
-      ) {
-        defaultLang = "zh_TW";
-      } else {
-        defaultLang = "zh_CN";
-      }
-    } else if (browserLang.startsWith("es")) {
-      defaultLang = "es";
-    } else if (browserLang.startsWith("ja")) {
-      defaultLang = "ja";
-    } else if (browserLang.startsWith("de")) {
-      defaultLang = "de";
-    } else if (browserLang.startsWith("fr")) {
-      defaultLang = "fr";
-    } else if (browserLang.startsWith("pt")) {
-      defaultLang = "pt";
-    } else if (browserLang.startsWith("ru")) {
-      defaultLang = "ru";
-    } else if (browserLang.startsWith("ko")) {
-      defaultLang = "ko";
-    }
-    const savedLanguage = result.language || defaultLang;
-    currentLocale = savedLanguage;
-
-    // Load theme color setting, default to green
-    const savedThemeColor = result.themeColor || "green";
-    applyThemeColor(savedThemeColor);
-
-    return { silentCopyFormat };
+    return {
+      silentCopyFormat: settings.silentCopyFormat,
+      allSettings: settings,
+    };
   }
 
-  // 保存设置
+  // 保存设置 - 使用统一的设置管理器
   async function saveSettings() {
     const cleaningSelect = elements.removeParamsToggle;
 
-    await chrome.storage.sync.set({
+    await settingsManager.updateSettings({
       urlCleaning: cleaningSelect.getAttribute("data-value"),
       silentCopyFormat: elements.silentCopyFormat.value,
     });
@@ -515,8 +472,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 获取当前页面URL
-  async function getCurrentUrl() {
+  // 获取当前页面URL和标题
+  async function getCurrentUrlData() {
     try {
       const [tab] = await chrome.tabs.query({
         active: true,
@@ -524,20 +481,28 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (tab && tab.url) {
-        currentUrl = tab.url;
-
-        // 获取页面标题
+        let title = "";
         if (tab.id) {
-          currentTitle = await getPageTitle(tab.id, tab.url);
+          title = await getPageTitle(tab.id, tab.url);
         }
 
-        updatePageDisplay();
+        return {
+          success: true,
+          url: tab.url,
+          title: title,
+        };
       } else {
-        handleError(getLocalMessage("noUrl"));
+        return {
+          success: false,
+          error: getLocalMessage("noUrl"),
+        };
       }
     } catch (error) {
       console.error("获取 URL 失败:", error);
-      handleError(getLocalMessage("getUrlFailed"));
+      return {
+        success: false,
+        error: getLocalMessage("getUrlFailed"),
+      };
     }
   }
 
@@ -1218,23 +1183,68 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // 初始化
+  // 优化后的并行初始化流程
+  console.time("Popup initialization");
+
+  // 同步操作 - 不需要等待
   loadVersion(); // Load version from manifest
   const urlCleaningSwitch = initializeUrlCleaningSelect();
   initializeQRModal(); // Initialize QR modal
   setupTemplateChangeListener(); // 设置模板变更监听器
 
-  // 先加载设置获取保存的值，然后加载模板并恢复选择
-  const settings = await loadSettings();
-  await loadCustomTemplates(settings.silentCopyFormat); // 加载自定义模板并恢复保存的值
-  await initializeTheme(); // Initialize theme after loading settings
-  await initializeI18n(); // Load UI with saved language
-  await getCurrentUrl();
+  try {
+    // 并行执行所有异步初始化操作
+    const [settingsResult, urlResult] = await Promise.all([
+      // 设置相关的并行操作
+      (async () => {
+        const settings = await loadSettings();
 
-  // 在DOM和本地化完成后重新计算滑块位置
-  setTimeout(() => {
-    if (urlCleaningSwitch && urlCleaningSwitch.updateSliderPosition) {
-      urlCleaningSwitch.updateSliderPosition();
+        // 在获取到设置后，并行执行依赖设置的操作
+        const [templateResult, i18nResult] = await Promise.all([
+          loadCustomTemplates(settings.silentCopyFormat),
+          initializeI18n(settings.allSettings.language),
+        ]);
+
+        return { settings, templateResult, i18nResult };
+      })(),
+
+      // 获取当前URL数据（独立操作，可以并行）
+      getCurrentUrlData(),
+    ]);
+
+    // 所有数据加载完成后，统一更新UI
+    if (urlResult.success) {
+      currentUrl = urlResult.url;
+      currentTitle = urlResult.title;
+      updatePageDisplay();
+    } else {
+      handleError(urlResult.error);
     }
-  }, 100);
+
+    console.timeEnd("Popup initialization");
+
+    // 在所有初始化完成后，重新计算滑块位置
+    requestAnimationFrame(() => {
+      if (urlCleaningSwitch && urlCleaningSwitch.updateSliderPosition) {
+        urlCleaningSwitch.updateSliderPosition();
+      }
+    });
+  } catch (error) {
+    console.error("Popup initialization failed:", error);
+    console.timeEnd("Popup initialization");
+
+    // 即使出错也要确保基本功能可用
+    try {
+      const urlResult = await getCurrentUrlData();
+      if (urlResult.success) {
+        currentUrl = urlResult.url;
+        currentTitle = urlResult.title;
+        updatePageDisplay();
+      } else {
+        handleError(urlResult.error);
+      }
+    } catch (urlError) {
+      handleError("Failed to initialize popup");
+    }
+  }
 });

@@ -12,6 +12,7 @@ import {
 
 // 导入分析模块
 import { trackInstall, trackCopy } from "../shared/analytics.js";
+import settingsManager from "../shared/settings-manager.js";
 
 // Constants
 const EXTENSION_NAME = chrome.i18n.getMessage("extName");
@@ -108,7 +109,7 @@ const shortUrlCache = new PersistentShortUrlCache();
 
 // 创建右键菜单和处理扩展安装
 chrome.runtime.onInstalled.addListener(async (details) => {
-  // 创建右键菜单
+  // 创建右键菜单 - 同步操作，优先执行
   chrome.contextMenus.create({
     id: "copy-current-url",
     title: chrome.i18n.getMessage("copyCurrentUrl") || "复制当前 URL",
@@ -124,16 +125,17 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     ],
   });
 
-  // 处理扩展安装统计（包含安装和更新）
-  try {
-    if (details.reason === "install") {
-      await trackInstall("install");
-    } else if (details.reason === "update") {
-      await trackInstall("update");
-    }
-  } catch (error) {
-    console.warn("Failed to track extension installation:", error);
-    // 不阻止扩展正常运行
+  // 处理扩展安装统计 - 异步执行，不阻塞初始化
+  if (details.reason === "install" || details.reason === "update") {
+    // 使用 setTimeout 确保不阻塞扩展启动
+    setTimeout(async () => {
+      try {
+        await trackInstall(details.reason);
+      } catch (error) {
+        console.warn("Failed to track extension installation:", error);
+        // 不阻止扩展正常运行
+      }
+    }, 0);
   }
 });
 
@@ -188,23 +190,15 @@ async function getCurrentTab() {
   return tab;
 }
 
-// 获取用户设置
+// 获取用户设置 - 使用统一的设置管理器
 async function getUserSettings() {
-  const settings = await chrome.storage.sync.get([
-    "removeParams",
-    "urlCleaning",
-    "silentCopyFormat",
-    "chromeNotifications",
-    "shortUrlService",
-  ]);
-
-  const cleaningMode = settings.urlCleaning || "off";
+  const settings = await settingsManager.getAllSettings();
 
   return {
-    urlCleaning: cleaningMode,
-    silentCopyFormat: settings.silentCopyFormat || "url",
-    chromeNotifications: settings.chromeNotifications !== false,
-    shortUrlService: settings.shortUrlService || "isgd",
+    urlCleaning: settings.urlCleaning,
+    silentCopyFormat: settings.silentCopyFormat,
+    chromeNotifications: settings.chromeNotifications,
+    shortUrlService: settings.shortUrlService,
   };
 }
 
