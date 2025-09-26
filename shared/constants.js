@@ -123,7 +123,7 @@ export const PARAM_CATEGORIES = {
 };
 
 // 判断参数是否应该保留的共享函数
-export function shouldKeepParameter(paramName, cleaningMode) {
+function shouldKeepParameter(paramName, cleaningMode) {
   const lowerParam = paramName.toLowerCase();
 
   // 功能性参数总是保留

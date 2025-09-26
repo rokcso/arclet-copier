@@ -427,17 +427,3 @@ class NotificationHelper {
 const notificationHelper = new NotificationHelper();
 
 export default notificationHelper;
-
-// 便捷方法导出
-export const showNotification = (options) => notificationHelper.show(options);
-export const showSuccessNotification = (message, title) =>
-  notificationHelper.success(message, title);
-export const showErrorNotification = (message, title) =>
-  notificationHelper.error(message, title);
-export const showWarningNotification = (message, title) =>
-  notificationHelper.warning(message, title);
-export const showInfoNotification = (message, title) =>
-  notificationHelper.info(message, title);
-export const showCopySuccess = (format, count) =>
-  notificationHelper.copySuccess(format, count);
-export const showCopyError = (error) => notificationHelper.copyError(error);

@@ -16,14 +16,10 @@ import settingsManager from "../shared/settings-manager.js";
 import notificationHelper from "../shared/notification-helper.js";
 import shortUrlCache from "../shared/short-url-cache.js";
 
-// Constants
-const EXTENSION_NAME = chrome.i18n.getMessage("extName");
-
 // 防抖工具和状态管理
 const debounceMap = new Map();
 const copyOperationStates = {
   copyUrl: false,
-  contextMenuCopy: false,
 };
 
 function debounce(key, fn, delay = 500) {

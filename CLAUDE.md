@@ -17,7 +17,7 @@ npm run package
 # The build output will be in scripts/dist/arclet-copier-v{version}/
 ```
 
-**No test suite is currently implemented.** The project relies on manual testing as documented in TESTING.md.
+**No test suite is currently implemented.** The project relies on manual testing.
 
 ## Architecture Overview
 
@@ -29,7 +29,15 @@ The codebase uses a functional module architecture where each directory represen
 - `offscreen/` - Clipboard operations using Offscreen Documents API
 - `options/` - Advanced settings page with template management
 - `batch/` - Bulk tab copying functionality
-- `shared/` - Common utilities, constants, and the template engine
+- `content/` - Content script for enhanced page interaction
+- `shared/` - Common utilities, constants, and shared modules including:
+  - `constants.js` - Central utility library and template engine
+  - `settings-manager.js` - Settings persistence and management
+  - `toast.js` - Arc-style toast notification system
+  - `short-url-cache.js` - Short URL caching with TTL and LRU eviction
+  - `three-way-switch.js` - Custom three-way toggle component
+  - `notification-helper.js` - Chrome notification wrapper
+  - `analytics.js` - Usage analytics (Umami integration)
 
 ### Key Architectural Patterns
 
@@ -100,7 +108,7 @@ Key permissions in manifest.json:
 ## Development Notes
 
 ### Testing
-Manual testing procedures are documented in `TESTING.md` with 100+ test cases covering all features.
+Manual testing procedures are available with comprehensive test case coverage.
 
 ### Debugging
 - Background script logs appear in extension service worker console

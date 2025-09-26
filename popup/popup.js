@@ -19,9 +19,6 @@ import {
 } from "../shared/three-way-switch.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Constants
-  const EXTENSION_NAME = chrome.i18n.getMessage("extName");
-
   // 防抖工具
   const debounceMap = new Map();
 

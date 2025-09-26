@@ -280,9 +280,6 @@ body {
     color: var(--arc-primary);
 }
 
-
-}
-
 .settings {
     border-top: 1px solid var(--arc-border);
     padding-top: 12px;
