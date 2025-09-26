@@ -197,6 +197,15 @@
   "notificationsDisabled": {
     "message": "已停用 Chrome 通知"
   },
+  "notificationOff": {
+    "message": "關閉"
+  },
+  "notificationBrowser": {
+    "message": "瀏覽器"
+  },
+  "notificationPage": {
+    "message": "頁面"
+  },
   "generateShortUrl": {
     "message": "生成短鏈"
   },
@@ -244,6 +253,15 @@
   },
   "chromeNotificationsDesc": {
     "message": "啟用後將顯示操作完成通知"
+  },
+  "notificationType": {
+    "message": "通知方式"
+  },
+  "notificationTypeChanged": {
+    "message": "通知方式已更改"
+  },
+  "notificationTypeDesc": {
+    "message": "選擇操作完成後的通知顯示方式"
   },
   "languageDesc": {
     "message": "選擇介面顯示語言"

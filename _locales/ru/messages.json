@@ -197,6 +197,15 @@
   "notificationsDisabled": {
     "message": "Уведомления Chrome отключены"
   },
+  "notificationOff": {
+    "message": "Выкл"
+  },
+  "notificationBrowser": {
+    "message": "Браузер"
+  },
+  "notificationPage": {
+    "message": "Страница"
+  },
   "generateShortUrl": {
     "message": "Создать Короткий URL"
   },
@@ -244,6 +253,15 @@
   },
   "chromeNotificationsDesc": {
     "message": "Показывать уведомления при завершении операций"
+  },
+  "notificationType": {
+    "message": "Тип Уведомления"
+  },
+  "notificationTypeChanged": {
+    "message": "Тип уведомления изменён"
+  },
+  "notificationTypeDesc": {
+    "message": "Выберите способ отображения уведомлений при завершении операций"
   },
   "languageDesc": {
     "message": "Выберите язык отображения интерфейса"

@@ -197,6 +197,15 @@
   "notificationsDisabled": {
     "message": "Chrome通知を無効にしました"
   },
+  "notificationOff": {
+    "message": "オフ"
+  },
+  "notificationBrowser": {
+    "message": "ブラウザ"
+  },
+  "notificationPage": {
+    "message": "ページ"
+  },
   "generateShortUrl": {
     "message": "短縮URLを生成"
   },
@@ -244,6 +253,15 @@
   },
   "chromeNotificationsDesc": {
     "message": "操作完了時に通知を表示"
+  },
+  "notificationType": {
+    "message": "通知タイプ"
+  },
+  "notificationTypeChanged": {
+    "message": "通知タイプが変更されました"
+  },
+  "notificationTypeDesc": {
+    "message": "操作完了時の通知表示方法を選択"
   },
   "languageDesc": {
     "message": "インターフェース表示言語を選択"

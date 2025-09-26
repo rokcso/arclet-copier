@@ -197,6 +197,15 @@
   "notificationsDisabled": {
     "message": "Chrome-Benachrichtigungen deaktiviert"
   },
+  "notificationOff": {
+    "message": "Aus"
+  },
+  "notificationBrowser": {
+    "message": "Browser"
+  },
+  "notificationPage": {
+    "message": "Seite"
+  },
   "generateShortUrl": {
     "message": "Kurz-URL generieren"
   },
@@ -244,6 +253,15 @@
   },
   "chromeNotificationsDesc": {
     "message": "Benachrichtigungen anzeigen, wenn Vorgänge abgeschlossen sind"
+  },
+  "notificationType": {
+    "message": "Benachrichtigungstyp"
+  },
+  "notificationTypeChanged": {
+    "message": "Benachrichtigungstyp geändert"
+  },
+  "notificationTypeDesc": {
+    "message": "Wählen Sie aus, wie Benachrichtigungen bei Vorgangsabschluss angezeigt werden"
   },
   "languageDesc": {
     "message": "Sprache der Benutzeroberfläche wählen"

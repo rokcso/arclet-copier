@@ -200,8 +200,8 @@
   "notificationOff": {
     "message": "关闭"
   },
-  "notificationChrome": {
-    "message": "Chrome"
+  "notificationBrowser": {
+    "message": "浏览器"
   },
   "notificationPage": {
     "message": "页面"

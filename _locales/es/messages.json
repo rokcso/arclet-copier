@@ -197,6 +197,15 @@
   "notificationsDisabled": {
     "message": "Notificaciones de Chrome deshabilitadas"
   },
+  "notificationOff": {
+    "message": "Desactivado"
+  },
+  "notificationBrowser": {
+    "message": "Navegador"
+  },
+  "notificationPage": {
+    "message": "Página"
+  },
   "generateShortUrl": {
     "message": "Generar URL Corta"
   },
@@ -244,6 +253,15 @@
   },
   "chromeNotificationsDesc": {
     "message": "Mostrar notificaciones cuando se completen las operaciones"
+  },
+  "notificationType": {
+    "message": "Tipo de Notificación"
+  },
+  "notificationTypeChanged": {
+    "message": "Tipo de notificación cambiado"
+  },
+  "notificationTypeDesc": {
+    "message": "Elija cómo se muestran las notificaciones cuando se completan las operaciones"
   },
   "languageDesc": {
     "message": "Elige el idioma de la interfaz"

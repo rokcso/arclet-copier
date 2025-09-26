@@ -197,6 +197,15 @@
   "notificationsDisabled": {
     "message": "Chrome notifications disabled"
   },
+  "notificationOff": {
+    "message": "Off"
+  },
+  "notificationBrowser": {
+    "message": "Browser"
+  },
+  "notificationPage": {
+    "message": "Page"
+  },
   "generateShortUrl": {
     "message": "Generate Short URL"
   },
@@ -244,6 +253,15 @@
   },
   "chromeNotificationsDesc": {
     "message": "Show notifications when operations are completed"
+  },
+  "notificationType": {
+    "message": "Notification Type"
+  },
+  "notificationTypeChanged": {
+    "message": "Notification type changed"
+  },
+  "notificationTypeDesc": {
+    "message": "Choose how notifications are displayed when operations complete"
   },
   "languageDesc": {
     "message": "Choose the interface display language"
