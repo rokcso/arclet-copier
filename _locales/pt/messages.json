@@ -14,9 +14,7 @@
   "currentPage": {
     "message": "Página Atual"
   },
-  "gettingTitle": {
-    "message": "Obtendo título da página..."
-  },
+
   "noPageTitle": {
     "message": "Página Sem Título"
   },
@@ -83,9 +81,7 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-  "gettingUrl": {
-    "message": "Obtendo URL..."
-  },
+
   "urlCopied": {
     "message": "URL copiada para a área de transferência"
   },
@@ -98,9 +94,7 @@
   "noUrl": {
     "message": "Não é possível obter a URL"
   },
-  "getUrlFailed": {
-    "message": "Falha ao obter a URL"
-  },
+
   "copyFailed": {
     "message": "Falha na cópia, tente novamente"
   },
@@ -110,9 +104,7 @@
   "restrictedPage": {
     "message": "A página atual é uma página do sistema, clique no ícone da extensão para usar a função de cópia"
   },
-  "markdownLinkCopied": {
-    "message": "Link Markdown copiado para a área de transferência"
-  },
+
   "copied": {
     "message": "Copiado"
   },
@@ -179,9 +171,7 @@
   "qrCodeCopyFailed": {
     "message": "Falha ao copiar a imagem do código QR"
   },
-  "copyCurrentUrl": {
-    "message": "Copiar URL Atual"
-  },
+
   "themeColor": {
     "message": "Cor do Tema"
   },
@@ -371,9 +361,7 @@
   "selected": {
     "message": "Selecionado"
   },
-  "loadingTabs": {
-    "message": "Carregando abas..."
-  },
+
   "noTabsFound": {
     "message": "Nenhuma aba encontrada que corresponda aos critérios"
   },
@@ -395,9 +383,7 @@
   "copy": {
     "message": "Copiar"
   },
-  "copySuccess": {
-    "message": "Cópia bem-sucedida"
-  },
+
   "batchCopySuccess": {
     "message": "Cópia em lote bem-sucedida"
   },
@@ -428,12 +414,7 @@
   "outputSettings": {
     "message": "Configurações de Exportação"
   },
-  "currentWindowShort": {
-    "message": "Atual"
-  },
-  "allWindowsShort": {
-    "message": "Todas"
-  },
+
   "windowTabsCount": {
     "message": "$count$ itens/abas",
     "placeholders": {
@@ -455,9 +436,7 @@
   "loading": {
     "message": "Carregando..."
   },
-  "generatingShortUrls": {
-    "message": "Gerando URLs curtas, aguarde..."
-  },
+
   "shortUrlProgress": {
     "message": "Gerando URLs curtas... ({current}/{total})"
   },

@@ -14,9 +14,7 @@
   "currentPage": {
     "message": "Page Actuelle"
   },
-  "gettingTitle": {
-    "message": "Récupération du titre de la page..."
-  },
+
   "noPageTitle": {
     "message": "Page Sans Titre"
   },
@@ -83,9 +81,7 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-  "gettingUrl": {
-    "message": "Récupération de l'URL..."
-  },
+
   "urlCopied": {
     "message": "URL copiée dans le presse-papiers"
   },
@@ -98,9 +94,7 @@
   "noUrl": {
     "message": "Impossible de récupérer l'URL"
   },
-  "getUrlFailed": {
-    "message": "Échec de la récupération de l'URL"
-  },
+
   "copyFailed": {
     "message": "Échec de la copie, veuillez réessayer"
   },
@@ -110,9 +104,7 @@
   "restrictedPage": {
     "message": "La page actuelle est une page système, veuillez cliquer sur l'icône de l'extension pour utiliser la fonction de copie"
   },
-  "markdownLinkCopied": {
-    "message": "Lien Markdown copié dans le presse-papiers"
-  },
+
   "copied": {
     "message": "Copié"
   },
@@ -179,9 +171,7 @@
   "qrCodeCopyFailed": {
     "message": "Échec de la copie de l'image du code QR"
   },
-  "copyCurrentUrl": {
-    "message": "Copier l'URL Actuelle"
-  },
+
   "themeColor": {
     "message": "Couleur du Thème"
   },
@@ -371,9 +361,7 @@
   "selected": {
     "message": "Sélectionné"
   },
-  "loadingTabs": {
-    "message": "Chargement des onglets..."
-  },
+
   "noTabsFound": {
     "message": "Aucun onglet trouvé correspondant aux critères"
   },
@@ -395,9 +383,7 @@
   "copy": {
     "message": "Copier"
   },
-  "copySuccess": {
-    "message": "Copie réussie"
-  },
+
   "batchCopySuccess": {
     "message": "Copie par lot réussie"
   },
@@ -428,12 +414,7 @@
   "outputSettings": {
     "message": "Paramètres d'Exportation"
   },
-  "currentWindowShort": {
-    "message": "Actuelle"
-  },
-  "allWindowsShort": {
-    "message": "Toutes"
-  },
+
   "windowTabsCount": {
     "message": "$count$ éléments/onglets",
     "placeholders": {
@@ -455,9 +436,7 @@
   "loading": {
     "message": "Chargement..."
   },
-  "generatingShortUrls": {
-    "message": "Génération d'URLs courtes, veuillez patienter..."
-  },
+
   "shortUrlProgress": {
     "message": "Génération d'URLs courtes... ({current}/{total})"
   },

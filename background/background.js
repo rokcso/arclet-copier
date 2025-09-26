@@ -40,7 +40,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   // 创建右键菜单 - 同步操作，优先执行
   chrome.contextMenus.create({
     id: "copy-current-url",
-    title: chrome.i18n.getMessage("copyCurrentUrl") || "复制当前 URL",
+    title: chrome.i18n.getMessage("copyUrl") || "复制 URL",
     contexts: [
       "page",
       "frame",
@@ -300,7 +300,7 @@ async function handleCopyUrl() {
       // 获取页面标题并创建 markdown 链接
       const title = await getPageTitle(tab.id, tab.url);
       contentToCopy = createMarkdownLink(tab.url, title, settings.urlCleaning);
-      successMessage = getMessage("markdownLinkCopied");
+      successMessage = getMessage("markdownCopied");
     } else if (settings.silentCopyFormat === "shortUrl") {
       copyFormat = "shortUrl";
       // 验证URL是否适合生成短链

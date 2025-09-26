@@ -879,7 +879,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 如果是短链格式且有多个URL，显示进度
     if (format === "shortUrl" && selectedTabsList.length > 1) {
       elements.previewText.textContent =
-        getLocalMessage("generatingShortUrls") || "正在生成短链，请稍候...";
+        getLocalMessage("loading") || "加载中...";
 
       // 添加进度显示
       const progressText = document.createElement("div");
@@ -964,9 +964,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 如果是短链格式且有多个URL，显示进度通知
     if (format === "shortUrl" && selectedTabsList.length > 1) {
-      toast.info(
-        getLocalMessage("generatingShortUrls") || "正在生成短链，请稍候...",
-      );
+      toast.info(getLocalMessage("loading") || "加载中...");
 
       // 监听短链生成进度
       const originalThrottledRequest = globalShortUrlThrottle.throttledRequest;

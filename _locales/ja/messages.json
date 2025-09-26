@@ -14,9 +14,7 @@
   "currentPage": {
     "message": "現在のページ"
   },
-  "gettingTitle": {
-    "message": "ページタイトルを取得中..."
-  },
+
   "noPageTitle": {
     "message": "無題のページ"
   },
@@ -83,9 +81,7 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-  "gettingUrl": {
-    "message": "URLを取得中..."
-  },
+
   "urlCopied": {
     "message": "URLをクリップボードにコピーしました"
   },
@@ -98,9 +94,7 @@
   "noUrl": {
     "message": "URLを取得できません"
   },
-  "getUrlFailed": {
-    "message": "URL取得に失敗しました"
-  },
+
   "copyFailed": {
     "message": "コピーに失敗しました。再試行してください"
   },
@@ -110,9 +104,7 @@
   "restrictedPage": {
     "message": "現在のページはシステムページです。拡張機能のアイコンをクリックしてコピー機能をご利用ください"
   },
-  "markdownLinkCopied": {
-    "message": "Markdownリンクをクリップボードにコピーしました"
-  },
+
   "copied": {
     "message": "コピーしました"
   },
@@ -179,9 +171,7 @@
   "qrCodeCopyFailed": {
     "message": "QRコード画像のコピーに失敗しました"
   },
-  "copyCurrentUrl": {
-    "message": "現在のURLをコピー"
-  },
+
   "themeColor": {
     "message": "テーマカラー"
   },
@@ -371,9 +361,7 @@
   "selected": {
     "message": "選択済み"
   },
-  "loadingTabs": {
-    "message": "タブを読み込み中..."
-  },
+
   "noTabsFound": {
     "message": "条件に一致するタブが見つかりません"
   },
@@ -395,9 +383,7 @@
   "copy": {
     "message": "コピー"
   },
-  "copySuccess": {
-    "message": "コピー成功"
-  },
+
   "batchCopySuccess": {
     "message": "一括コピー成功"
   },
@@ -428,12 +414,7 @@
   "outputSettings": {
     "message": "出力設定"
   },
-  "currentWindowShort": {
-    "message": "現在"
-  },
-  "allWindowsShort": {
-    "message": "すべて"
-  },
+
   "windowTabsCount": {
     "message": "$count$個",
     "placeholders": {
@@ -455,9 +436,7 @@
   "loading": {
     "message": "読み込み中..."
   },
-  "generatingShortUrls": {
-    "message": "短縮URLを生成しています、お待ちください..."
-  },
+
   "shortUrlProgress": {
     "message": "短縮URLを生成中... ({current}/{total})"
   },

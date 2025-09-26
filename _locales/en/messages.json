@@ -14,9 +14,7 @@
   "currentPage": {
     "message": "Current Page"
   },
-  "gettingTitle": {
-    "message": "Getting page title..."
-  },
+
   "noPageTitle": {
     "message": "Untitled Page"
   },
@@ -83,9 +81,7 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-  "gettingUrl": {
-    "message": "Getting URL..."
-  },
+
   "urlCopied": {
     "message": "URL copied to clipboard"
   },
@@ -98,9 +94,7 @@
   "noUrl": {
     "message": "Unable to get URL"
   },
-  "getUrlFailed": {
-    "message": "Failed to get URL"
-  },
+
   "copyFailed": {
     "message": "Copy failed, please try again"
   },
@@ -110,9 +104,7 @@
   "restrictedPage": {
     "message": "Current page is a system page, please click the extension icon to use copy function"
   },
-  "markdownLinkCopied": {
-    "message": "Markdown link copied to clipboard"
-  },
+
   "copied": {
     "message": "Copied"
   },
@@ -179,9 +171,7 @@
   "qrCodeCopyFailed": {
     "message": "Failed to copy QR code image"
   },
-  "copyCurrentUrl": {
-    "message": "Copy Current URL"
-  },
+
   "themeColor": {
     "message": "Theme Color"
   },
@@ -371,9 +361,7 @@
   "selected": {
     "message": "Selected"
   },
-  "loadingTabs": {
-    "message": "Loading tab list..."
-  },
+
   "noTabsFound": {
     "message": "No tabs match the current filters"
   },
@@ -395,9 +383,7 @@
   "copy": {
     "message": "Copy"
   },
-  "copySuccess": {
-    "message": "Copy successful"
-  },
+
   "batchCopySuccess": {
     "message": "Batch copy completed"
   },
@@ -428,12 +414,7 @@
   "outputSettings": {
     "message": "Export Settings"
   },
-  "currentWindowShort": {
-    "message": "Current"
-  },
-  "allWindowsShort": {
-    "message": "All"
-  },
+
   "windowTabsCount": {
     "message": "$count$ tabs",
     "placeholders": {
@@ -455,9 +436,7 @@
   "loading": {
     "message": "Loading..."
   },
-  "generatingShortUrls": {
-    "message": "Generating short URLs, please wait..."
-  },
+
   "shortUrlProgress": {
     "message": "Generating short URLs... ({current}/{total})"
   },

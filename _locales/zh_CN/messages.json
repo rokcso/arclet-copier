@@ -14,9 +14,6 @@
   "currentPage": {
     "message": "当前页面"
   },
-  "gettingTitle": {
-    "message": "获取页面标题中..."
-  },
   "noPageTitle": {
     "message": "无标题页面"
   },
@@ -83,47 +80,39 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-  "gettingUrl": {
-    "message": "获取 URL 中..."
-  },
+
   "urlCopied": {
-    "message": "URL 已复制到剪贴板"
+    "message": "URL 已复制"
   },
   "markdownCopied": {
-    "message": "Markdown 链接已复制到剪贴板"
+    "message": "Markdown 链接已复制"
   },
   "shortUrlCopied": {
-    "message": "短链已复制到剪贴板"
+    "message": "短链已复制"
   },
   "noUrl": {
     "message": "无法获取 URL"
   },
-  "getUrlFailed": {
-    "message": "获取 URL 失败"
-  },
   "copyFailed": {
-    "message": "复制失败，请重试"
+    "message": "复制失败"
   },
   "noTab": {
     "message": "无法获取当前标签页"
   },
   "restrictedPage": {
-    "message": "当前页面为系统页面，请点击扩展图标使用复制功能"
-  },
-  "markdownLinkCopied": {
-    "message": "Markdown 链接已复制到剪贴板"
+    "message": "系统页面无法直接复制，请使用扩展图标"
   },
   "copied": {
     "message": "已复制"
   },
   "languageChangeNotification": {
-    "message": "语言切换成功"
+    "message": "语言已切换"
   },
   "removeParamsEnabled": {
-    "message": "已开启 URL 参数过滤"
+    "message": "URL 参数过滤已启用"
   },
   "removeParamsDisabled": {
-    "message": "已关闭 URL 参数过滤"
+    "message": "URL 参数过滤已禁用"
   },
   "silentCopyFormatChanged": {
     "message": "静默复制格式已更改"
@@ -147,7 +136,7 @@
     "message": "黑暗"
   },
   "appearanceChanged": {
-    "message": "外观切换成功"
+    "message": "外观已切换"
   },
   "urlCleaning": {
     "message": "URL 清理"
@@ -162,40 +151,37 @@
     "message": "所有"
   },
   "cleaningDisabled": {
-    "message": "已关闭 URL 清理"
+    "message": "URL 清理已禁用"
   },
   "smartCleaningEnabled": {
-    "message": "已启用智能清理 - 移除跟踪参数"
+    "message": "智能清理已启用"
   },
   "aggressiveCleaningEnabled": {
-    "message": "已启用激进清理 - 移除所有参数"
+    "message": "激进清理已启用"
   },
   "copyQRCode": {
     "message": "复制二维码图片"
   },
   "qrCodeCopied": {
-    "message": "二维码图片已复制到剪贴板"
+    "message": "二维码已复制"
   },
   "qrCodeCopyFailed": {
-    "message": "二维码图片复制失败"
-  },
-  "copyCurrentUrl": {
-    "message": "复制当前 URL"
+    "message": "二维码复制失败"
   },
   "themeColor": {
     "message": "主题色"
   },
   "themeColorChanged": {
-    "message": "主题色切换成功"
+    "message": "主题色已切换"
   },
   "notificationType": {
     "message": "通知方式"
   },
   "notificationsEnabled": {
-    "message": "已启用 Chrome 通知"
+    "message": "Chrome 通知已启用"
   },
   "notificationsDisabled": {
-    "message": "已禁用 Chrome 通知"
+    "message": "Chrome 通知已禁用"
   },
   "notificationOff": {
     "message": "关闭"
@@ -228,13 +214,13 @@
     "message": "生成中..."
   },
   "shortUrlGenerated": {
-    "message": "短链已生成并复制到剪贴板"
+    "message": "短链已生成并复制"
   },
   "shortUrlFailed": {
-    "message": "短链生成失败，请重试"
+    "message": "短链生成失败"
   },
   "invalidUrlForShortening": {
-    "message": "当前URL不支持短链生成（仅支持http/https网页链接）"
+    "message": "仅支持 HTTP/HTTPS 网页链接生成短链"
   },
   "moreSettings": {
     "message": "更多设置"
@@ -363,9 +349,7 @@
   "selected": {
     "message": "已选择"
   },
-  "loadingTabs": {
-    "message": "正在加载标签页列表..."
-  },
+
   "noTabsFound": {
     "message": "未找到符合条件的标签页"
   },
@@ -386,9 +370,6 @@
   },
   "copy": {
     "message": "复制"
-  },
-  "copySuccess": {
-    "message": "复制成功"
   },
   "batchCopySuccess": {
     "message": "批量复制完成"
@@ -420,12 +401,7 @@
   "outputSettings": {
     "message": "导出设置"
   },
-  "currentWindowShort": {
-    "message": "当前"
-  },
-  "allWindowsShort": {
-    "message": "全部"
-  },
+
   "windowTabsCount": {
     "message": "$count$个",
     "placeholders": {
@@ -446,9 +422,6 @@
   },
   "loading": {
     "message": "加载中..."
-  },
-  "generatingShortUrls": {
-    "message": "正在生成短链，请稍候..."
   },
   "shortUrlProgress": {
     "message": "正在生成短链... ({current}/{total})"

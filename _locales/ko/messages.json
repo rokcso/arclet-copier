@@ -14,9 +14,7 @@
   "currentPage": {
     "message": "현재 페이지"
   },
-  "gettingTitle": {
-    "message": "페이지 제목 가져오는 중..."
-  },
+
   "noPageTitle": {
     "message": "제목 없는 페이지"
   },
@@ -83,9 +81,7 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-  "gettingUrl": {
-    "message": "URL 가져오는 중..."
-  },
+
   "urlCopied": {
     "message": "URL이 클립보드에 복사되었습니다"
   },
@@ -98,9 +94,7 @@
   "noUrl": {
     "message": "URL을 가져올 수 없습니다"
   },
-  "getUrlFailed": {
-    "message": "URL 가져오기 실패"
-  },
+
   "copyFailed": {
     "message": "복사 실패, 다시 시도해 주세요"
   },
@@ -110,9 +104,7 @@
   "restrictedPage": {
     "message": "현재 페이지는 시스템 페이지입니다. 확장 프로그램 아이콘을 클릭하여 복사 기능을 사용해 주세요"
   },
-  "markdownLinkCopied": {
-    "message": "마크다운 링크가 클립보드에 복사되었습니다"
-  },
+
   "copied": {
     "message": "복사됨"
   },
@@ -179,9 +171,7 @@
   "qrCodeCopyFailed": {
     "message": "QR 코드 이미지 복사 실패"
   },
-  "copyCurrentUrl": {
-    "message": "현재 URL 복사"
-  },
+
   "themeColor": {
     "message": "테마 색상"
   },
@@ -369,9 +359,7 @@
   "selected": {
     "message": "선택됨"
   },
-  "loadingTabs": {
-    "message": "탭 로딩 중..."
-  },
+
   "noTabsFound": {
     "message": "조건에 맞는 탭을 찾을 수 없습니다"
   },
@@ -393,9 +381,7 @@
   "copy": {
     "message": "복사"
   },
-  "copySuccess": {
-    "message": "복사 성공"
-  },
+
   "batchCopySuccess": {
     "message": "일괄 복사 성공"
   },
@@ -426,12 +412,7 @@
   "outputSettings": {
     "message": "내보내기 설정"
   },
-  "currentWindowShort": {
-    "message": "현재"
-  },
-  "allWindowsShort": {
-    "message": "모든"
-  },
+
   "windowTabsCount": {
     "message": "$count$개 항목/탭",
     "placeholders": {
@@ -453,9 +434,7 @@
   "loading": {
     "message": "로딩 중..."
   },
-  "generatingShortUrls": {
-    "message": "단축 URL을 생성하고 있습니다. 잠시만 기다려 주세요..."
-  },
+
   "shortUrlProgress": {
     "message": "단축 URL 생성 중... ({current}/{total})"
   },

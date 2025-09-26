@@ -14,9 +14,7 @@
   "currentPage": {
     "message": "當前頁面"
   },
-  "gettingTitle": {
-    "message": "獲取頁面標題中..."
-  },
+
   "noPageTitle": {
     "message": "無標題頁面"
   },
@@ -83,9 +81,7 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-  "gettingUrl": {
-    "message": "獲取 URL 中..."
-  },
+
   "urlCopied": {
     "message": "URL 已複製到剪貼板"
   },
@@ -98,9 +94,7 @@
   "noUrl": {
     "message": "無法獲取 URL"
   },
-  "getUrlFailed": {
-    "message": "獲取 URL 失敗"
-  },
+
   "copyFailed": {
     "message": "複製失敗，請重試"
   },
@@ -110,9 +104,7 @@
   "restrictedPage": {
     "message": "當前頁面為系統頁面，請點選擴充功能圖示使用複製功能"
   },
-  "markdownLinkCopied": {
-    "message": "Markdown 連結已複製到剪貼板"
-  },
+
   "copied": {
     "message": "已複製"
   },
@@ -179,9 +171,7 @@
   "qrCodeCopyFailed": {
     "message": "二維碼圖片複製失敗"
   },
-  "copyCurrentUrl": {
-    "message": "複製當前 URL"
-  },
+
   "themeColor": {
     "message": "主題色"
   },
@@ -368,9 +358,7 @@
   "selected": {
     "message": "已選擇"
   },
-  "loadingTabs": {
-    "message": "正在載入分頁清單..."
-  },
+
   "noTabsFound": {
     "message": "未找到符合條件的分頁"
   },
@@ -392,9 +380,7 @@
   "copy": {
     "message": "複製"
   },
-  "copySuccess": {
-    "message": "複製成功"
-  },
+
   "batchCopySuccess": {
     "message": "批量複製完成"
   },
@@ -425,12 +411,7 @@
   "outputSettings": {
     "message": "匯出設定"
   },
-  "currentWindowShort": {
-    "message": "當前"
-  },
-  "allWindowsShort": {
-    "message": "全部"
-  },
+
   "windowTabsCount": {
     "message": "$count$個",
     "placeholders": {
@@ -452,9 +433,7 @@
   "loading": {
     "message": "載入中..."
   },
-  "generatingShortUrls": {
-    "message": "正在生成短鏈，請稍候..."
-  },
+
   "shortUrlProgress": {
     "message": "正在生成短鏈... ({current}/{total})"
   },

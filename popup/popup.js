@@ -366,7 +366,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("获取 URL 失败:", error);
       return {
         success: false,
-        error: getLocalMessage("getUrlFailed"),
+        error: getLocalMessage("noUrl"),
       };
     }
   }
