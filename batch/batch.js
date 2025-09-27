@@ -720,6 +720,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         const template = await findTemplateById(templateId);
 
+        // 如果模板不存在（被删除），使用fallback处理
+        if (!template) {
+          console.warn(`Template ${templateId} not found, using fallback`);
+          return tabs
+            .map((tab) => processUrl(tab.url, cleaningMode))
+            .join("\n");
+        }
+
         // 处理多个tab，每个tab一行
         const results = await Promise.all(
           tabs.map(async (tab) => {

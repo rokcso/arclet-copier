@@ -744,20 +744,22 @@ export async function loadTemplatesIntoSelect(selectElement, options = {}) {
 export async function findTemplateById(templateId) {
   try {
     if (!templateId) {
-      throw new Error("Template ID is required");
+      console.warn("Template ID is required");
+      return null;
     }
 
     const customTemplates = await getAllTemplates();
     const template = customTemplates.find((t) => t.id === templateId);
 
     if (!template) {
-      throw new Error(`Template not found: ${templateId}`);
+      console.warn(`Template not found: ${templateId}`);
+      return null;
     }
 
     return template;
   } catch (error) {
     console.error("Failed to find template:", error);
-    throw error; // 重新抛出，让调用者处理
+    return null;
   }
 }
 
@@ -769,6 +771,21 @@ export async function processTemplateWithFallback(
 ) {
   try {
     const template = await findTemplateById(templateId);
+
+    // 如果模板不存在（被删除），使用fallback
+    if (!template) {
+      console.warn(`Template ${templateId} not found, using fallback`);
+      const fallback =
+        fallbackContent ||
+        (context.url ? processUrl(context.url, context.urlCleaning) : "");
+
+      return {
+        success: false,
+        content: fallback,
+        error: `Template not found: ${templateId}`,
+        templateName: null,
+      };
+    }
 
     // 如果模板包含shortUrl字段，确保上下文中有shortUrl
     if (template.template.includes("{{shortUrl}}") && !context.shortUrl) {
