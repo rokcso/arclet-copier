@@ -318,84 +318,93 @@
 
                         <div class="template-modal-body">
                             <div class="template-form-container">
-                                <!-- Template Name -->
+                                <!-- Template Icon and Name Row -->
                                 <div class="template-form-group">
-                                    <label
-                                        for="templateName"
-                                        data-i18n="templateName"
-                                        >Template Name</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="templateName"
-                                        placeholder="Enter template name..."
-                                        data-i18n-placeholder="templateNamePlaceholder"
-                                    />
-                                </div>
-
-                                <!-- Template Icon -->
-                                <div class="template-form-group">
-                                    <label
-                                        for="templateIcon"
-                                        data-i18n="templateIcon"
-                                        >Template Icon</label
-                                    >
-                                    <div class="template-icon-selector-wrapper">
-                                        <div class="template-icon-selector">
+                                    <div class="template-icon-name-row">
+                                        <!-- Template Icon -->
+                                        <div class="template-icon-container">
+                                            <label
+                                                for="templateIcon"
+                                                data-i18n="templateIcon"
+                                                >Template Icon</label
+                                            >
                                             <div
-                                                class="icon-option active"
-                                                data-icon="📝"
+                                                class="template-icon-selector-wrapper"
                                             >
-                                                📝
+                                                <div
+                                                    class="template-icon-selector"
+                                                >
+                                                    <div
+                                                        class="icon-option active"
+                                                        data-icon="📝"
+                                                    >
+                                                        📝
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    class="emoji-picker-trigger"
+                                                    id="emojiPickerTrigger"
+                                                >
+                                                    <svg
+                                                        width="16"
+                                                        height="16"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="10"
+                                                        />
+                                                        <path
+                                                            d="M8 14s1.5 2 4 2 4-2 4-2"
+                                                        />
+                                                        <line
+                                                            x1="9"
+                                                            y1="9"
+                                                            x2="9.01"
+                                                            y2="9"
+                                                        />
+                                                        <line
+                                                            x1="15"
+                                                            y1="9"
+                                                            x2="15.01"
+                                                            y2="9"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                                <div
+                                                    class="emoji-picker"
+                                                    id="emojiPicker"
+                                                >
+                                                    <!-- Content will be dynamically generated -->
+                                                </div>
                                             </div>
+                                            <input
+                                                type="hidden"
+                                                id="templateIcon"
+                                                value="📝"
+                                            />
                                         </div>
-                                        <button
-                                            type="button"
-                                            class="emoji-picker-trigger"
-                                            id="emojiPickerTrigger"
-                                        >
-                                            <svg
-                                                width="16"
-                                                height="16"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2"
+
+                                        <!-- Template Name -->
+                                        <div class="template-name-container">
+                                            <label
+                                                for="templateName"
+                                                data-i18n="templateName"
+                                                >Template Name</label
                                             >
-                                                <circle
-                                                    cx="12"
-                                                    cy="12"
-                                                    r="10"
-                                                />
-                                                <path
-                                                    d="M8 14s1.5 2 4 2 4-2 4-2"
-                                                />
-                                                <line
-                                                    x1="9"
-                                                    y1="9"
-                                                    x2="9.01"
-                                                    y2="9"
-                                                />
-                                                <line
-                                                    x1="15"
-                                                    y1="9"
-                                                    x2="15.01"
-                                                    y2="9"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <div
-                                            class="emoji-picker"
-                                            id="emojiPicker"
-                                        >
-                                            <!-- Content will be dynamically generated -->
+                                            <input
+                                                type="text"
+                                                id="templateName"
+                                                placeholder="Enter template name..."
+                                                data-i18n-placeholder="templateNamePlaceholder"
+                                            />
                                         </div>
                                     </div>
-                                    <input
-                                        type="hidden"
-                                        id="templateIcon"
-                                        value="📝"
-                                    />
                                 </div>
 
                                 <!-- Template Content -->

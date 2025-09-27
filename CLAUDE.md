@@ -17,7 +17,7 @@ npm run package
 # The build output will be in scripts/dist/arclet-copier-v{version}/
 ```
 
-**No test suite is currently implemented.** The project relies on manual testing.
+**No test suite is currently implemented.** The project relies on manual testing procedures documented in TESTING.md.
 
 ## Architecture Overview
 
@@ -36,8 +36,11 @@ The codebase uses a functional module architecture where each directory represen
   - `toast.js` - Arc-style toast notification system
   - `short-url-cache.js` - Short URL caching with TTL and LRU eviction
   - `three-way-switch.js` - Custom three-way toggle component
+  - `binary-toggle.js` - Two-state toggle component
+  - `toggles.js` - General toggle utilities
   - `notification-helper.js` - Chrome notification wrapper
   - `analytics.js` - Usage analytics (Umami integration)
+  - `umami-core.js` - Umami analytics core functionality
 
 ### Key Architectural Patterns
 
@@ -104,6 +107,12 @@ Key permissions in manifest.json:
 - `clipboardWrite` - Direct clipboard access
 - `contextMenus` - Right-click menu
 - `notifications` - Success feedback
+- `scripting` - Content script injection
+
+Host permissions for external services:
+- `https://is.gd/*` - is.gd URL shortening service
+- `https://tinyurl.com/*` - TinyURL shortening service  
+- `https://umami.lunarye.com/*` - Analytics tracking
 
 ## Development Notes
 

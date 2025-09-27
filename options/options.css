@@ -969,6 +969,32 @@ select.setting-control:hover {
     box-shadow: 0 0 0 3px var(--glow-light);
 }
 
+/* Template Icon and Name Row Layout */
+.template-icon-name-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.template-icon-container {
+    flex-shrink: 0;
+    min-width: 200px;
+}
+
+.template-name-container {
+    flex: 1;
+}
+
+.template-icon-container label,
+.template-name-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--arc-text-primary);
+    letter-spacing: -0.01em;
+}
+
 /* 图标选择器样式 */
 .template-icon-selector-wrapper {
     position: relative;
@@ -1003,9 +1029,13 @@ select.setting-control:hover {
 }
 
 .template-icon-selector .icon-option.active {
-    border-color: var(--arc-primary);
-    background: var(--glow-light);
-    box-shadow: 0 0 0 2px var(--glow-light);
+    background: #f1f5f9;
+}
+
+[data-theme="dark"] .template-icon-selector .icon-option.active {
+    border-color: #94a3b8;
+    background: #334155;
+    box-shadow: 0 0 0 2px #475569;
 }
 
 /* Emoji 选择器触发按钮 */
@@ -1373,14 +1403,14 @@ select.setting-control:hover {
 }
 
 .btn-primary {
-    background: #f97316;
+    background: var(--arc-primary);
     color: white;
-    border-color: #f97316;
+    border-color: var(--arc-primary);
 }
 
 .btn-primary:hover {
-    background: #ea580c;
-    border-color: #ea580c;
+    background: var(--arc-primary-hover);
+    border-color: var(--arc-primary-hover);
     transform: translateY(-1px);
 }
 
@@ -1404,6 +1434,16 @@ select.setting-control:hover {
 
     .template-form-container {
         padding: 20px;
+    }
+
+    /* Stack icon and name vertically on mobile */
+    .template-icon-name-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .template-icon-container {
+        min-width: unset;
     }
 }
 
