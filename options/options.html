@@ -294,17 +294,17 @@
                         <div class="template-modal-header">
                             <h3
                                 id="templateModalTitle"
-                                data-i18n="editTemplate"
+                                data-i18n="createTemplate"
                             >
-                                编辑模板
+                                Create Template
                             </h3>
                             <button
                                 class="template-modal-close"
                                 id="templateModalClose"
                             >
                                 <svg
-                                    width="16"
-                                    height="16"
+                                    width="20"
+                                    height="20"
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     stroke="currentColor"
@@ -317,358 +317,224 @@
                         </div>
 
                         <div class="template-modal-body">
-                            <!-- 基本信息 -->
-                            <div class="template-form-group">
-                                <label
-                                    for="templateName"
-                                    data-i18n="templateName"
-                                    >模板名称</label
-                                >
-                                <input
-                                    type="text"
-                                    id="templateName"
-                                    data-i18n-placeholder="templateNamePlaceholder"
-                                />
-                            </div>
-
-                            <div class="template-form-group">
-                                <label
-                                    for="templateIcon"
-                                    data-i18n="templateIcon"
-                                    >图标</label
-                                >
-                                <div class="template-icon-picker">
+                            <div class="template-form-container">
+                                <!-- Template Name -->
+                                <div class="template-form-group">
+                                    <label
+                                        for="templateName"
+                                        data-i18n="templateName"
+                                        >Template Name</label
+                                    >
                                     <input
                                         type="text"
+                                        id="templateName"
+                                        placeholder="Enter template name..."
+                                        data-i18n-placeholder="templateNamePlaceholder"
+                                    />
+                                </div>
+
+                                <!-- Template Icon -->
+                                <div class="template-form-group">
+                                    <label
+                                        for="templateIcon"
+                                        data-i18n="templateIcon"
+                                        >Template Icon</label
+                                    >
+                                    <div class="template-icon-selector">
+                                        <div
+                                            class="icon-option active"
+                                            data-icon="📝"
+                                        >
+                                            📝
+                                        </div>
+                                        <div class="icon-option" data-icon="⏱️">
+                                            ⏱️
+                                        </div>
+                                    </div>
+                                    <input
+                                        type="hidden"
                                         id="templateIcon"
                                         value="📝"
-                                        maxlength="2"
-                                        readonly
                                     />
-                                    <button
-                                        type="button"
-                                        class="emoji-picker-trigger"
-                                        id="emojiPickerTrigger"
-                                    >
-                                        <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                        >
-                                            <circle cx="12" cy="12" r="10" />
-                                            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-                                            <line
-                                                x1="9"
-                                                y1="9"
-                                                x2="9.01"
-                                                y2="9"
-                                            />
-                                            <line
-                                                x1="15"
-                                                y1="9"
-                                                x2="15.01"
-                                                y2="9"
-                                            />
-                                        </svg>
-                                    </button>
-                                    <div class="emoji-picker" id="emojiPicker">
-                                        <!-- Content will be dynamically generated by JavaScript -->
-                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- 模板内容 -->
-                            <div class="template-form-group">
-                                <label
-                                    for="templateContent"
-                                    data-i18n="templateContent"
-                                    >模板内容</label
-                                >
-                                <div class="template-editor">
+                                <!-- Template Content -->
+                                <div class="template-form-group">
+                                    <label
+                                        for="templateContent"
+                                        data-i18n="templateContent"
+                                        >Template Content</label
+                                    >
                                     <textarea
                                         id="templateContent"
+                                        placeholder="Enter template content, use {{url}}, {{title}} and other variables..."
                                         data-i18n-placeholder="templateContentPlaceholder"
-                                        rows="4"
                                     ></textarea>
-                                    <div class="template-editor-toolbar">
-                                        <span
-                                            class="toolbar-label"
-                                            data-i18n="insertField"
-                                            >插入字段:</span
+                                </div>
+
+                                <!-- Insert Variable -->
+                                <div class="template-variables">
+                                    <span
+                                        class="variables-label"
+                                        data-i18n="insertVariable"
+                                        >Insert Variable</span
+                                    >
+                                    <div class="variable-buttons">
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="url"
                                         >
-                                        <div class="field-buttons">
+                                            {{url}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="title"
+                                        >
+                                            {{title}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="hostname"
+                                        >
+                                            {{hostname}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="date"
+                                        >
+                                            {{date}}
+                                        </button>
+                                        <div class="dropdown">
                                             <button
                                                 type="button"
-                                                class="field-btn"
-                                                data-field="url"
-                                            >
-                                                {{url}}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn"
-                                                data-field="title"
-                                            >
-                                                {{title}}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn"
-                                                data-field="hostname"
-                                            >
-                                                {{hostname}}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn"
-                                                data-field="date"
-                                            >
-                                                {{date}}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn more-fields-btn"
+                                                class="variable-btn dropdown-btn"
                                                 id="moreFieldsBtn"
                                             >
-                                                <span data-i18n="moreFieldsBtn"
-                                                    >更多字段</span
+                                                <span data-i18n="moreVariables"
+                                                    >More Variables</span
                                                 >
-                                                ▼
+                                                <svg
+                                                    width="16"
+                                                    height="16"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                >
+                                                    <polyline
+                                                        points="6,9 12,15 18,9"
+                                                    ></polyline>
+                                                </svg>
                                             </button>
+                                            <div
+                                                class="dropdown-content"
+                                                id="moreFieldsPanel"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    data-field="originalUrl"
+                                                >
+                                                    {{originalUrl}}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    data-field="domain"
+                                                >
+                                                    {{domain}}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    data-field="shortUrl"
+                                                >
+                                                    {{shortUrl}}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    data-field="time"
+                                                >
+                                                    {{time}}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    data-field="datetime"
+                                                >
+                                                    {{datetime}}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    data-field="timestamp"
+                                                >
+                                                    {{timestamp}}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    data-field="iso"
+                                                >
+                                                    {{iso}}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- 更多字段面板 -->
-                                <div
-                                    class="more-fields-panel"
-                                    id="moreFieldsPanel"
-                                >
-                                    <div class="field-category">
-                                        <h4 data-i18n="basicFields">
-                                            基础字段
-                                        </h4>
-                                        <div class="field-grid">
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="url"
-                                            >
-                                                <span class="field-name"
-                                                    >{{url}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescUrl"
-                                                    >当前页面URL</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="originalUrl"
-                                            >
-                                                <span class="field-name"
-                                                    >{{originalUrl}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescOriginalUrl"
-                                                    >原始URL</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="title"
-                                            >
-                                                <span class="field-name"
-                                                    >{{title}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescTitle"
-                                                    >页面标题</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="hostname"
-                                            >
-                                                <span class="field-name"
-                                                    >{{hostname}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescHostname"
-                                                    >域名</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="domain"
-                                            >
-                                                <span class="field-name"
-                                                    >{{domain}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescDomain"
-                                                    >完整域名</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="shortUrl"
-                                            >
-                                                <span class="field-name"
-                                                    >{{shortUrl}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescShortUrl"
-                                                    >短链接</span
-                                                >
-                                            </button>
-                                        </div>
+                                <!-- Live Preview -->
+                                <div class="template-form-group">
+                                    <div class="preview-header">
+                                        <label data-i18n="livePreview"
+                                            >Live Preview</label
+                                        >
+                                        <button
+                                            type="button"
+                                            class="refresh-btn"
+                                            id="previewRefreshBtn"
+                                            data-i18n="refreshPreview"
+                                        >
+                                            Refresh Preview
+                                        </button>
                                     </div>
-
-                                    <div class="field-category">
-                                        <h4 data-i18n="timeFields">时间字段</h4>
-                                        <div class="field-grid">
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="date"
-                                            >
-                                                <span class="field-name"
-                                                    >{{date}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescDate"
-                                                    >当前日期</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="time"
-                                            >
-                                                <span class="field-name"
-                                                    >{{time}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescTime"
-                                                    >当前时间</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="datetime"
-                                            >
-                                                <span class="field-name"
-                                                    >{{datetime}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescDatetime"
-                                                    >日期时间</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="timestamp"
-                                            >
-                                                <span class="field-name"
-                                                    >{{timestamp}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescTimestamp"
-                                                    >时间戳</span
-                                                >
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="field-btn detailed"
-                                                data-field="iso"
-                                            >
-                                                <span class="field-name"
-                                                    >{{iso}}</span
-                                                >
-                                                <span
-                                                    class="field-desc"
-                                                    data-i18n="fieldDescIso"
-                                                    >ISO时间</span
-                                                >
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 预览 -->
-                            <div class="template-form-group">
-                                <div class="template-preview-header">
-                                    <label data-i18n="templatePreview"
-                                        >预览</label
+                                    <div
+                                        class="preview-content"
+                                        id="templatePreview"
                                     >
-                                    <button
-                                        type="button"
-                                        class="preview-refresh-btn"
-                                        id="previewRefreshBtn"
-                                        data-i18n="refreshPreview"
-                                    >
-                                        刷新预览
-                                    </button>
-                                </div>
-                                <div
-                                    class="template-preview"
-                                    id="templatePreview"
-                                >
-                                    <div class="preview-content">
                                         <span
                                             class="preview-placeholder"
                                             data-i18n="previewPlaceholder"
-                                            >输入模板内容以查看预览</span
                                         >
+                                            Enter template content to see live
+                                            preview
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- 验证信息 -->
-                            <div
-                                class="template-validation"
-                                id="templateValidation"
-                            ></div>
                         </div>
 
                         <div class="template-modal-footer">
                             <button
                                 type="button"
-                                class="template-btn template-btn-secondary"
+                                class="btn btn-secondary"
                                 id="templateCancelBtn"
                                 data-i18n="cancel"
                             >
-                                取消
+                                Cancel
                             </button>
                             <button
                                 type="button"
-                                class="template-btn template-btn-primary"
+                                class="btn btn-primary"
                                 id="templateSaveBtn"
                                 data-i18n="saveTemplate"
                             >
-                                保存
+                                Save Template
                             </button>
                         </div>
                     </div>

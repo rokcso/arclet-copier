@@ -45,35 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     return chrome.i18n.getMessage(key, substitutions) || key;
   }
 
-  // DOM elements
-  const elements = {
-    version: document.getElementById("version"),
-    aboutVersion: document.getElementById("aboutVersion"),
-    shortUrlServiceSelect: document.getElementById("shortUrlServiceSelect"),
-    notificationSwitch: document.getElementById("notificationSwitch"),
-    languageSelect: document.getElementById("languageSelect"),
-    appearanceSwitch: document.getElementById("appearanceSwitch"),
-    colorPicker: document.getElementById("colorPicker"),
-    ratingBtn: document.getElementById("ratingBtn"),
-    feedbackBtn: document.getElementById("feedbackBtn"),
-
-    // Template management elements
-    templateList: document.getElementById("templateList"),
-    addTemplateBtn: document.getElementById("addTemplateBtn"),
-    templateModal: document.getElementById("templateModal"),
-    templateModalTitle: document.getElementById("templateModalTitle"),
-    templateModalClose: document.getElementById("templateModalClose"),
-    templateName: document.getElementById("templateName"),
-    templateIcon: document.getElementById("templateIcon"),
-    templateContent: document.getElementById("templateContent"),
-    templatePreview: document.getElementById("templatePreview"),
-    templateValidation: document.getElementById("templateValidation"),
-    templateSaveBtn: document.getElementById("templateSaveBtn"),
-    templateCancelBtn: document.getElementById("templateCancelBtn"),
-    previewRefreshBtn: document.getElementById("previewRefreshBtn"),
-    moreFieldsBtn: document.getElementById("moreFieldsBtn"),
-    moreFieldsPanel: document.getElementById("moreFieldsPanel"),
-  };
+  // DOM elements - will be initialized after DOM is loaded
+  let elements = {};
 
   // Template management state
   let currentEditingTemplate = null;
@@ -431,6 +404,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function showTemplateModal(template = null) {
+    // Check if required elements exist
+    if (
+      !elements.templateModal ||
+      !elements.templateModalTitle ||
+      !elements.templateName
+    ) {
+      return;
+    }
+
     currentEditingTemplate = template;
 
     if (template) {
@@ -438,28 +420,70 @@ document.addEventListener("DOMContentLoaded", async () => {
         getLocalMessage("editTemplate") || "编辑模板";
 
       elements.templateName.value = template.name;
-      elements.templateIcon.value = template.icon;
-      elements.templateContent.value = template.template;
+      if (elements.templateIcon) {
+        elements.templateIcon.value = template.icon;
+      }
+      if (elements.templateContent) {
+        elements.templateContent.value = template.template;
+      }
+
+      // Update icon selector UI
+      updateIconSelector(template.icon);
     } else {
       elements.templateModalTitle.textContent =
         getLocalMessage("createTemplate") || "创建模板";
       elements.templateName.value = "";
-      elements.templateIcon.value = "📝";
-      elements.templateContent.value = "";
+      if (elements.templateIcon) {
+        elements.templateIcon.value = "📝";
+      }
+      if (elements.templateContent) {
+        elements.templateContent.value = "";
+      }
+
+      // Update icon selector UI to default
+      updateIconSelector("📝");
     }
 
     updateTemplatePreview();
     validateTemplate();
     elements.templateModal.classList.add("show");
     document.body.classList.add("modal-open"); // 阻止背景滚动
-    elements.templateName.focus();
+
+    // Focus on name input if it exists
+    if (elements.templateName) {
+      elements.templateName.focus();
+    }
+  }
+
+  function updateIconSelector(iconValue) {
+    const selector = document.querySelector(".template-icon-selector");
+    if (selector) {
+      // Remove active from all options
+      selector
+        .querySelectorAll(".icon-option")
+        .forEach((opt) => opt.classList.remove("active"));
+
+      // Find and activate the matching option
+      const matchingOption = selector.querySelector(
+        `[data-icon="${iconValue}"]`,
+      );
+      if (matchingOption) {
+        matchingOption.classList.add("active");
+      } else {
+        // If no matching option found, activate the first one and update the hidden input
+        const firstOption = selector.querySelector(".icon-option");
+        if (firstOption) {
+          firstOption.classList.add("active");
+          elements.templateIcon.value = firstOption.dataset.icon;
+        }
+      }
+    }
   }
 
   function hideTemplateModal() {
     elements.templateModal.classList.remove("show");
     document.body.classList.remove("modal-open"); // 恢复背景滚动
     currentEditingTemplate = null;
-    clearValidation();
   }
 
   function editTemplate(template) {
@@ -502,14 +526,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const content = elements.templateContent.value.trim();
 
     if (!name) {
-      showValidationError(
-        getLocalMessage("templateNameRequired") || "请输入模板名称",
-      );
+      toast.error(getLocalMessage("templateNameRequired") || "请输入模板名称");
       return;
     }
 
     if (!content) {
-      showValidationError(
+      toast.error(
         getLocalMessage("templateContentRequired") || "请输入模板内容",
       );
       return;
@@ -517,7 +539,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const validation = templateEngine.validateTemplate(content);
     if (!validation.valid) {
-      showValidationError(validation.errors.join(", "));
+      toast.error(validation.errors.join(", "));
       return;
     }
 
@@ -572,9 +594,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function updateTemplatePreview() {
+    if (!elements.templateContent || !elements.templatePreview) {
+      return;
+    }
+
     const content = elements.templateContent.value.trim();
-    const previewContent =
-      elements.templatePreview.querySelector(".preview-content");
+    const previewContent = elements.templatePreview; // templatePreview IS the preview-content element
 
     if (!content) {
       previewContent.innerHTML = `<span class="preview-placeholder">${getLocalMessage("previewPlaceholder") || "输入模板内容以查看预览"}</span>`;
@@ -602,38 +627,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function validateTemplate() {
     const content = elements.templateContent.value.trim();
+    const nameValid = elements.templateName.value.trim().length > 0;
 
     if (!content) {
-      clearValidation();
+      // Update save button state
+      elements.templateSaveBtn.disabled = !nameValid;
       return;
     }
 
     const validation = templateEngine.validateTemplate(content);
 
-    if (validation.valid) {
-      showValidationSuccess(getLocalMessage("templateValid") || "模板格式正确");
-    } else {
-      showValidationError(validation.errors.join(", "));
-    }
-
     // Update save button state
-    const nameValid = elements.templateName.value.trim().length > 0;
     elements.templateSaveBtn.disabled = !(validation.valid && nameValid);
-  }
 
-  function showValidationError(message) {
-    elements.templateValidation.className = "template-validation error";
-    elements.templateValidation.textContent = message;
-  }
-
-  function showValidationSuccess(message) {
-    elements.templateValidation.className = "template-validation success";
-    elements.templateValidation.textContent = message;
-  }
-
-  function clearValidation() {
-    elements.templateValidation.className = "template-validation";
-    elements.templateValidation.textContent = "";
+    // You could show validation messages via toast instead of a dedicated element
+    if (!validation.valid && content) {
+      console.warn("Template validation errors:", validation.errors);
+    }
   }
 
   function insertField(fieldName) {
@@ -657,23 +667,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   function toggleMoreFields() {
     const panel = elements.moreFieldsPanel;
     const btn = elements.moreFieldsBtn;
+    const dropdown = btn.closest(".dropdown");
 
-    if (panel.classList.contains("show")) {
-      panel.classList.remove("show");
-      btn.textContent = getLocalMessage("moreFieldsBtn") + " ▼";
+    if (dropdown.classList.contains("open")) {
+      dropdown.classList.remove("open");
     } else {
-      panel.classList.add("show");
-      btn.textContent = getLocalMessage("moreFieldsBtn") + " ▲";
+      dropdown.classList.add("open");
     }
   }
 
   function initializeTemplateManagement() {
-    if (!elements.templateList) return;
+    if (!elements.templateList) {
+      console.warn("templateList element not found");
+      return;
+    }
 
     // Add template button
-    elements.addTemplateBtn?.addEventListener("click", () => {
-      showTemplateModal();
-    });
+    if (elements.addTemplateBtn) {
+      elements.addTemplateBtn.addEventListener("click", () => {
+        showTemplateModal();
+      });
+    }
 
     // Modal close events
     elements.templateModalClose?.addEventListener("click", hideTemplateModal);
@@ -706,327 +720,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     // More fields toggle
     elements.moreFieldsBtn?.addEventListener("click", toggleMoreFields);
 
-    // Smart emoji picker functionality
-    const emojiPickerTrigger = document.getElementById("emojiPickerTrigger");
-    const emojiPicker = document.getElementById("emojiPicker");
+    // Variable button clicks
+    document.addEventListener("click", (e) => {
+      if (
+        e.target.classList.contains("variable-btn") &&
+        e.target.dataset.field
+      ) {
+        insertField(e.target.dataset.field);
+      }
+      if (
+        e.target.classList.contains("dropdown-item") &&
+        e.target.dataset.field
+      ) {
+        insertField(e.target.dataset.field);
+        // Close dropdown after selection
+        const dropdown = e.target.closest(".dropdown");
+        if (dropdown) dropdown.classList.remove("open");
+      }
+    });
 
-    // Curated emoji sets for different categories (local data, no external dependencies)
-    const emojiData = {
-      common: [
-        "📝",
-        "📄",
-        "💻",
-        "📚",
-        "📋",
-        "🔗",
-        "🏷️",
-        "⭐",
-        "📌",
-        "🔖",
-        "📂",
-        "📁",
-        "🗂️",
-        "📊",
-        "📈",
-        "📉",
-        "🔧",
-        "⚙️",
-        "🔨",
-      ],
-      smileys: [
-        "😀",
-        "😃",
-        "😄",
-        "😁",
-        "😊",
-        "😉",
-        "🤗",
-        "🤔",
-        "😎",
-        "🥳",
-        "😍",
-        "🤩",
-        "😘",
-        "😋",
-        "😜",
-        "🤪",
-      ],
-      hearts: [
-        "❤️",
-        "💙",
-        "💚",
-        "💛",
-        "🧡",
-        "💜",
-        "🖤",
-        "🤍",
-        "💯",
-        "💥",
-        "💫",
-        "✨",
-      ],
-      nature: [
-        "🌱",
-        "🌿",
-        "🍀",
-        "🌳",
-        "🌲",
-        "🌺",
-        "🌸",
-        "🌼",
-        "🌻",
-        "🌹",
-        "🌷",
-        "💐",
-        "🌍",
-        "🌎",
-        "🌏",
-        "🌙",
-        "⭐",
-        "🌟",
-      ],
-      activities: [
-        "⚽",
-        "🏀",
-        "🎾",
-        "🎯",
-        "🎮",
-        "🎨",
-        "🎭",
-        "🎵",
-        "🎶",
-        "🎤",
-        "🎧",
-        "🏆",
-        "🎪",
-      ],
-      food: [
-        "🍎",
-        "🍊",
-        "🍋",
-        "🍌",
-        "🍉",
-        "🍇",
-        "🍓",
-        "🍅",
-        "🥕",
-        "🌽",
-        "🍞",
-        "🧀",
-        "🍕",
-        "🍔",
-        "☕",
-        "🍵",
-      ],
-      travel: [
-        "✈️",
-        "🚗",
-        "🚕",
-        "🚌",
-        "🚎",
-        "🏎️",
-        "🚓",
-        "🚑",
-        "🚒",
-        "🚐",
-        "🛻",
-        "🚛",
-        "🚚",
-        "🚨",
-        "🚔",
-      ],
-    };
-
-    // Initialize emoji picker with dynamic content generation
-    function initializeEmojiPicker() {
-      if (!emojiPicker) return;
-
-      // Generate emoji picker HTML dynamically
-      const categoriesHTML = Object.keys(emojiData)
-        .map((category) => {
-          const firstEmoji = emojiData[category][0];
-          const isActive = category === "common" ? "active" : "";
-          return `<button type="button" class="emoji-category-btn ${isActive}" data-category="${category}">${firstEmoji}</button>`;
-        })
-        .join("");
-
-      // Helper function to get display names for categories
-      const getCategoryDisplayName = (category) => {
-        const keyMap = {
-          common: "emojiCategoryCommon",
-          smileys: "emojiCategorySmileys",
-          hearts: "emojiCategorySmileys", // Map hearts to smileys category
-          nature: "emojiCategoryAnimals", // Map nature to animals category
-          activities: "emojiCategoryActivities",
-          food: "emojiCategoryFood",
-          travel: "emojiCategoryTravel",
-        };
-        const i18nKey = keyMap[category];
-        return i18nKey ? getLocalMessage(i18nKey) || category : category;
-      };
-
-      const gridsHTML = Object.entries(emojiData)
-        .map(([category, emojis]) => {
-          const emojiElements = emojis
-            .map(
-              (emoji) =>
-                `<span class="emoji-option" data-emoji="${emoji}">${emoji}</span>`,
-            )
-            .join("");
-          return `
-            <div class="emoji-category-section" data-category="${category}" id="emoji-category-${category}">
-              <div class="emoji-category-title">${getCategoryDisplayName(category)}</div>
-              <div class="emoji-grid">${emojiElements}</div>
-            </div>
-          `;
-        })
-        .join("");
-
-      emojiPicker.innerHTML = `
-        <div class="emoji-picker-header">
-          <div class="emoji-categories">
-            ${categoriesHTML}
-          </div>
-        </div>
-        <div class="emoji-picker-content">
-          ${gridsHTML}
-        </div>
-      `;
-
-      // Add event listeners after content is generated
-      setupEmojiPickerEvents();
-
-      // Set up scroll listener to update active category
-      setupScrollListener();
-    }
-
-    function setupEmojiPickerEvents() {
-      // Toggle emoji picker
-      emojiPickerTrigger?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        emojiPicker.classList.toggle("show");
-      });
-
-      // Close emoji picker when clicking outside
-      document.addEventListener("click", (e) => {
-        if (
-          !emojiPicker.contains(e.target) &&
-          !emojiPickerTrigger.contains(e.target)
-        ) {
-          emojiPicker.classList.remove("show");
-        }
-      });
-
-      // Use event delegation for dynamically generated content
-      emojiPicker.addEventListener("click", (e) => {
-        // Handle category button clicks
-        if (e.target.classList.contains("emoji-category-btn")) {
-          const category = e.target.dataset.category;
-          console.log("Category clicked:", category); // Debug log
-
-          // Update active category button
-          emojiPicker
-            .querySelectorAll(".emoji-category-btn")
-            .forEach((b) => b.classList.remove("active"));
+    // Icon selector functionality
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("icon-option")) {
+        // Update active state
+        const selector = e.target.closest(".template-icon-selector");
+        if (selector) {
+          selector
+            .querySelectorAll(".icon-option")
+            .forEach((opt) => opt.classList.remove("active"));
           e.target.classList.add("active");
 
-          // Scroll to the corresponding category section
-          const targetSection = emojiPicker.querySelector(
-            `#emoji-category-${category}`,
-          );
-          const pickerContent = emojiPicker.querySelector(
-            ".emoji-picker-content",
-          );
-
-          if (targetSection && pickerContent) {
-            const sectionTop =
-              targetSection.offsetTop - pickerContent.offsetTop;
-
-            console.log(
-              `Scrolling to category ${category}, position: ${sectionTop}`,
-            ); // Debug log
-
-            // Smooth scroll to the target section
-            pickerContent.scrollTo({
-              top: sectionTop,
-              behavior: "smooth",
-            });
+          // Update hidden input value
+          const iconInput = document.getElementById("templateIcon");
+          if (iconInput) {
+            iconInput.value = e.target.dataset.icon;
           }
         }
+      }
+    });
 
-        // Handle emoji selection
-        if (e.target.classList.contains("emoji-option")) {
-          const emoji = e.target.dataset.emoji;
-          console.log("Emoji selected:", emoji); // Debug log
-          if (elements.templateIcon) {
-            elements.templateIcon.value = emoji;
-          }
-          emojiPicker.classList.remove("show");
-        }
-      });
-    }
-
-    // Set up scroll listener to auto-update active category
-    function setupScrollListener() {
-      const pickerContent = emojiPicker?.querySelector(".emoji-picker-content");
-      if (!pickerContent) return;
-
-      let scrollTimeout;
-      pickerContent.addEventListener("scroll", () => {
-        // Debounce scroll events
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          updateActiveCategoryOnScroll();
-        }, 100);
-      });
-    }
-
-    function updateActiveCategoryOnScroll() {
-      const pickerContent = emojiPicker.querySelector(".emoji-picker-content");
-      const categoryBtns = emojiPicker.querySelectorAll(".emoji-category-btn");
-      const sections = emojiPicker.querySelectorAll(".emoji-category-section");
-
-      if (!pickerContent || !sections.length) return;
-
-      const scrollTop = pickerContent.scrollTop;
-      const containerTop = pickerContent.offsetTop;
-
-      // Find the section that's currently most visible
-      let activeCategory = null;
-      let minDistance = Infinity;
-
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop - containerTop;
-        const distance = Math.abs(scrollTop - sectionTop);
-
-        if (distance < minDistance) {
-          minDistance = distance;
-          activeCategory = section.dataset.category;
-        }
-      });
-
-      // Update active category button
-      if (activeCategory) {
-        categoryBtns.forEach((btn) => {
-          btn.classList.toggle(
-            "active",
-            btn.dataset.category === activeCategory,
-          );
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown.open").forEach((dropdown) => {
+          dropdown.classList.remove("open");
         });
       }
-    }
-
-    // Initialize the emoji picker
-    initializeEmojiPicker();
-
-    // Field insertion buttons
-    const fieldButtons = document.querySelectorAll(".field-btn[data-field]");
-    fieldButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const field = btn.dataset.field;
-        insertField(field);
-      });
     });
+
+    // Load templates on initialization
+    loadTemplates();
 
     // Keyboard shortcuts
     elements.templateContent?.addEventListener("keydown", (e) => {
@@ -1044,6 +787,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 初始化所有组件
   async function initialize() {
+    // Initialize DOM elements
+    elements = {
+      version: document.getElementById("version"),
+      aboutVersion: document.getElementById("aboutVersion"),
+      shortUrlServiceSelect: document.getElementById("shortUrlServiceSelect"),
+      notificationSwitch: document.getElementById("notificationSwitch"),
+      languageSelect: document.getElementById("languageSelect"),
+      appearanceSwitch: document.getElementById("appearanceSwitch"),
+      colorPicker: document.getElementById("colorPicker"),
+      ratingBtn: document.getElementById("ratingBtn"),
+      feedbackBtn: document.getElementById("feedbackBtn"),
+
+      // Template management elements
+      templateList: document.getElementById("templateList"),
+      addTemplateBtn: document.getElementById("addTemplateBtn"),
+      templateModal: document.getElementById("templateModal"),
+      templateModalTitle: document.getElementById("templateModalTitle"),
+      templateModalClose: document.getElementById("templateModalClose"),
+      templateName: document.getElementById("templateName"),
+      templateIcon: document.getElementById("templateIcon"),
+      templateContent: document.getElementById("templateContent"),
+      templatePreview: document.getElementById("templatePreview"),
+      templateSaveBtn: document.getElementById("templateSaveBtn"),
+      templateCancelBtn: document.getElementById("templateCancelBtn"),
+      previewRefreshBtn: document.getElementById("previewRefreshBtn"),
+      moreFieldsBtn: document.getElementById("moreFieldsBtn"),
+      moreFieldsPanel: document.getElementById("moreFieldsPanel"),
+    };
+
     // Load version
     loadVersion();
 
