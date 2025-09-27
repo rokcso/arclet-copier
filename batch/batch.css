@@ -123,14 +123,14 @@ body {
 /* Common button styles */
 .btn,
 .action-btn,
-.control-btn,
-.header-btn,
-.support-btn {
+.utility-btn,
+.ui-control-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 8px 16px;
+    height: 36px;
+    padding: 0 16px;
     border: 1px solid var(--arc-border);
     border-radius: var(--arc-radius-sm);
     background: var(--arc-background);
@@ -144,13 +144,13 @@ body {
     overflow: hidden;
     box-shadow: var(--arc-shadow-sm);
     font-family: inherit;
+    white-space: nowrap;
 }
 
 .btn:hover,
 .action-btn:hover,
-.control-btn:hover,
-.header-btn:hover,
-.support-btn:hover {
+.utility-btn:hover,
+.ui-control-btn:hover {
     background: var(--arc-secondary);
     border-color: var(--arc-primary);
     color: var(--arc-text-primary);
@@ -159,7 +159,8 @@ body {
 
 .btn.primary,
 .action-btn.primary,
-.control-btn.primary {
+.utility-btn.primary,
+.ui-control-btn.primary {
     background: var(--arc-primary);
     color: white;
     border-color: var(--arc-primary);
@@ -168,7 +169,8 @@ body {
 
 .btn.primary:hover,
 .action-btn.primary:hover,
-.control-btn.primary:hover {
+.utility-btn.primary:hover,
+.ui-control-btn.primary:hover {
     background: var(--arc-primary-hover);
     box-shadow: 0 4px 8px var(--glow-medium);
     transform: translateY(-1px);
@@ -176,23 +178,28 @@ body {
 
 .btn:disabled,
 .action-btn:disabled,
-.control-btn:disabled {
+.utility-btn:disabled,
+.ui-control-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
     box-shadow: var(--arc-shadow-sm) !important;
 }
 
-.btn.compact,
-.action-btn.compact {
-    padding: 6px 10px;
-    font-size: 13px;
+/* Specific button type styles */
+.action-btn {
+    font-weight: 600;
 }
 
-.support-btn {
-    padding: 6px 12px;
+.utility-btn {
+    padding: 0 12px;
     font-size: 13px;
     font-weight: 400;
+}
+
+.ui-control-btn {
+    padding: 0 12px;
+    font-size: 13px;
 }
 
 .btn-icon {
@@ -200,7 +207,13 @@ body {
     height: 16px;
 }
 
-.btn.compact .btn-icon {
+.utility-btn.compact {
+    height: 32px;
+    font-size: 12px;
+    padding: 0 10px;
+}
+
+.utility-btn.compact .btn-icon {
     width: 14px;
     height: 14px;
 }
@@ -783,16 +796,20 @@ body {
     line-height: 1;
 }
 
-/* Support button specific styles */
-.support-btn svg {
+/* Button icon styles */
+.utility-btn svg {
     width: 16px;
     height: 16px;
     opacity: 0.8;
-    margin-right: 6px;
 }
 
-.support-btn svg.animate {
+.utility-btn svg.animate {
     animation: spin-360 0.6s cubic-bezier(0.4, 0, 0.2, 1) 1;
+}
+
+.ui-control-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* Stats */
@@ -1031,21 +1048,17 @@ body {
     color: var(--arc-text-primary);
 }
 
-.modal-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
+.ui-control-btn:is(.modal-close, #previewModalClose) {
+    width: 36px;
+    height: 36px;
+    padding: 0;
     border: none;
     background: none;
     color: var(--arc-text-secondary);
-    cursor: pointer;
     border-radius: 6px;
-    transition: all 0.2s ease;
 }
 
-.modal-close:hover {
+.ui-control-btn:is(.modal-close, #previewModalClose):hover {
     background: var(--arc-secondary);
     color: var(--arc-text-primary);
 }
@@ -1124,7 +1137,7 @@ body {
     }
 }
 
-.control-btn svg.animate {
+.action-btn svg.animate {
     animation: spin-360 1s cubic-bezier(0.4, 0, 0.2, 1) 1;
 }
 
@@ -1149,18 +1162,24 @@ body {
     display: none;
 }
 
-[data-theme="dark"] .control-btn {
+[data-theme="dark"] .action-btn,
+[data-theme="dark"] .utility-btn,
+[data-theme="dark"] .ui-control-btn {
     background: var(--arc-surface);
     border-color: var(--arc-border);
     color: var(--arc-text-primary);
 }
 
-[data-theme="dark"] .control-btn:hover {
+[data-theme="dark"] .action-btn:hover,
+[data-theme="dark"] .utility-btn:hover,
+[data-theme="dark"] .ui-control-btn:hover {
     background: var(--arc-secondary);
     color: var(--arc-primary);
 }
 
-[data-theme="dark"] .control-btn::before {
+[data-theme="dark"] .action-btn::before,
+[data-theme="dark"] .utility-btn::before,
+[data-theme="dark"] .ui-control-btn::before {
     display: none;
 }
 
@@ -1222,18 +1241,24 @@ body {
 
     /* System dark mode specific component styles */
 
-    :root:not([data-theme]) .control-btn {
+    :root:not([data-theme]) .action-btn,
+    :root:not([data-theme]) .utility-btn,
+    :root:not([data-theme]) .ui-control-btn {
         background: var(--arc-surface);
         border-color: var(--arc-border);
         color: var(--arc-text-primary);
     }
 
-    :root:not([data-theme]) .control-btn:hover {
+    :root:not([data-theme]) .action-btn:hover,
+    :root:not([data-theme]) .utility-btn:hover,
+    :root:not([data-theme]) .ui-control-btn:hover {
         background: var(--arc-secondary);
         color: var(--arc-primary);
     }
 
-    :root:not([data-theme]) .control-btn::before,
+    :root:not([data-theme]) .action-btn::before,
+    :root:not([data-theme]) .utility-btn::before,
+    :root:not([data-theme]) .ui-control-btn::before,
     :root:not([data-theme]) .tab-item::before,
     :root:not([data-theme]) .tab-item:hover::before {
         display: none;
@@ -1298,12 +1323,13 @@ body {
         font-size: 13px;
     }
 
-    .action-btn.compact {
-        padding: 5px 8px;
+    .utility-btn.compact {
+        height: 28px;
+        padding: 0 8px;
         font-size: 12px;
     }
 
-    .action-btn.compact .btn-icon {
+    .utility-btn.compact .btn-icon {
         width: 12px;
         height: 12px;
     }
