@@ -591,12 +591,8 @@ export class TemplateEngine {
         fields.push(fieldName);
       }
 
-      // 检查是否有未闭合的大括号
-      const openBraces = (template.match(/\{\{/g) || []).length;
-      const closeBraces = (template.match(/\}\}/g) || []).length;
-      if (openBraces !== closeBraces) {
-        errors.push("Unmatched braces in template");
-      }
+      // 不再检查大括号匹配 - 用户可以在模板中使用 {{ 作为普通文本
+      // 只有完整的 {{variable}} 格式才会被识别为变量
 
       return {
         valid: errors.length === 0,

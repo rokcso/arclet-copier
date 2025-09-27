@@ -634,7 +634,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!content) {
       // Update save button state
       elements.templateSaveBtn.disabled = !nameValid;
-      return;
+      return { valid: true, errors: [], fields: [] };
     }
 
     const validation = templateEngine.validateTemplate(content);
@@ -642,10 +642,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Update save button state
     elements.templateSaveBtn.disabled = !(validation.valid && nameValid);
 
-    // You could show validation messages via toast instead of a dedicated element
-    if (!validation.valid && content) {
-      console.warn("Template validation errors:", validation.errors);
+    // Never log errors during input - only show errors when user tries to save
+    return validation;
+  }
+
+  // Validate and show errors only when saving
+  function validateTemplateForSave() {
+    const content = elements.templateContent.value.trim();
+    const nameValid = elements.templateName.value.trim().length > 0;
+
+    if (!nameValid) {
+      toast.error(
+        i18n.getMessage("templateNameRequired") || "Template name is required",
+      );
+      return false;
     }
+
+    if (!content) {
+      toast.error(
+        i18n.getMessage("templateContentRequired") ||
+          "Template content is required",
+      );
+      return false;
+    }
+
+    const validation = templateEngine.validateTemplate(content);
+    if (!validation.valid) {
+      toast.error(validation.errors.join(", "));
+      return false;
+    }
+
+    return true;
   }
 
   function insertField(fieldName) {
