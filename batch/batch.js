@@ -552,8 +552,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       : "";
 
     div.innerHTML = `
-      <img class="tab-favicon" src="${tab.favIconUrl || chrome.runtime.getURL("assets/icons/icon16.png")}"
-           onerror="this.src='${chrome.runtime.getURL("assets/icons/icon16.png")}'">
+      <img class="tab-favicon" src="${tab.favIconUrl || chrome.runtime.getURL("assets/icons/icon16.png")}">
       <div class="tab-info">
         <div class="tab-title">
           ${escapeHtml(tab.title || getLocalMessage("untitled"))}
@@ -562,6 +561,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div class="tab-url">${escapeHtml(processedUrl)}</div>
       </div>
     `;
+
+    // 添加favicon错误处理
+    const favicon = div.querySelector(".tab-favicon");
+    favicon.addEventListener("error", function () {
+      this.src = chrome.runtime.getURL("assets/icons/icon16.png");
+    });
 
     // 事件监听
     div.addEventListener("click", (e) => {
