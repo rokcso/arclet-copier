@@ -142,7 +142,7 @@ body {
     text-decoration: none;
     position: relative;
     overflow: hidden;
-    box-shadow: var(--arc-shadow-sm);
+
     font-family: inherit;
     white-space: nowrap;
 }
@@ -154,7 +154,6 @@ body {
     background: var(--arc-secondary);
     border-color: var(--arc-primary);
     color: var(--arc-text-primary);
-    box-shadow: 0 0 0 2px var(--glow-light);
 }
 
 .btn.primary,
@@ -164,7 +163,6 @@ body {
     background: var(--arc-primary);
     color: white;
     border-color: var(--arc-primary);
-    box-shadow: 0 2px 4px var(--glow-light);
 }
 
 .btn.primary:hover,
@@ -172,7 +170,6 @@ body {
 .utility-btn.primary:hover,
 .ui-control-btn.primary:hover {
     background: var(--arc-primary-hover);
-    box-shadow: 0 4px 8px var(--glow-medium);
     transform: translateY(-1px);
 }
 
@@ -183,7 +180,6 @@ body {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
-    box-shadow: var(--arc-shadow-sm) !important;
 }
 
 /* Specific button type styles */
@@ -603,7 +599,6 @@ body {
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 100px;
-    box-shadow: var(--arc-shadow-sm);
 }
 
 .format-select:focus,

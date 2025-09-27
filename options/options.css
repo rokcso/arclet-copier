@@ -1022,12 +1022,6 @@ select.setting-control:hover {
     background: var(--arc-background);
 }
 
-.template-icon-selector .icon-option:hover {
-    border-color: var(--arc-primary);
-    background: var(--glow-light);
-    transform: scale(1.05);
-}
-
 .template-icon-selector .icon-option.active {
     background: #f1f5f9;
 }
