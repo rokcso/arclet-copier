@@ -368,6 +368,9 @@
   "cancel": {
     "message": "取消"
   },
+  "saveTemplate": {
+    "message": "保存模板"
+  },
   "copy": {
     "message": "复制"
   },

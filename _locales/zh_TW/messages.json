@@ -377,6 +377,9 @@
   "cancel": {
     "message": "取消"
   },
+  "saveTemplate": {
+    "message": "儲存範本"
+  },
   "copy": {
     "message": "複製"
   },

@@ -653,14 +653,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!nameValid) {
       toast.error(
-        i18n.getMessage("templateNameRequired") || "Template name is required",
+        getLocalMessage("templateNameRequired") || "Template name is required",
       );
       return false;
     }
 
     if (!content) {
       toast.error(
-        i18n.getMessage("templateContentRequired") ||
+        getLocalMessage("templateContentRequired") ||
           "Template content is required",
       );
       return false;
