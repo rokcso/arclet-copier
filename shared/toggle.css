@@ -104,7 +104,7 @@
 /* 暗色主题下二元开关样式 */
 [data-theme="dark"] .toggle-label {
     background: #2d2d2d;
-    border: 1px dotted #4a4a4a;
+    border: 1px solid #4a4a4a;
 }
 
 [data-theme="dark"] .toggle-label:hover {
@@ -127,7 +127,7 @@
 /* 暗色主题下三段式开关样式 */
 [data-theme="dark"] .three-way-switch {
     background: #2d2d2d;
-    border: 1px dotted #4a4a4a;
+    border: 1px solid #4a4a4a;
 }
 
 [data-theme="dark"] .three-way-switch .switch-option {
@@ -148,7 +148,7 @@
     /* 系统暗色主题下二元开关样式 */
     :root:not([data-theme]) .toggle-label {
         background: #2d2d2d;
-        border: 1px dotted #4a4a4a;
+        border: 1px solid #4a4a4a;
     }
 
     :root:not([data-theme]) .toggle-label:hover {
@@ -174,7 +174,7 @@
     /* 系统暗色主题下三段式开关样式 */
     :root:not([data-theme]) .three-way-switch {
         background: #2d2d2d;
-        border: 1px dotted #4a4a4a;
+        border: 1px solid #4a4a4a;
     }
 
     :root:not([data-theme]) .three-way-switch .switch-option {

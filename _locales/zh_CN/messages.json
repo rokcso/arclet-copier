@@ -537,11 +537,11 @@
   "emojiCategorySmileys": {
     "message": "表情"
   },
-  "emojiCategoryHearts": {
-    "message": "爱心"
+  "emojiCategoryPeople": {
+    "message": "人物"
   },
-  "emojiCategoryNature": {
-    "message": "自然"
+  "emojiCategoryAnimals": {
+    "message": "动物"
   },
   "emojiCategoryActivities": {
     "message": "活动"

@@ -837,7 +837,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "🙃",
         "😌",
       ],
-      hearts: [
+      people: [
         "❤️",
         "💙",
         "💚",
@@ -859,7 +859,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "💘",
         "💝",
       ],
-      nature: [
+      animals: [
         "🌱",
         "🌿",
         "🍀",
@@ -938,15 +938,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         .join("");
 
       const getCategoryDisplayName = (category) => {
-        const names = {
-          common: "常用",
-          smileys: "表情",
-          hearts: "爱心",
-          nature: "自然",
-          activities: "活动",
-          food: "食物",
+        const keyMap = {
+          common: "emojiCategoryCommon",
+          smileys: "emojiCategorySmileys",
+          people: "emojiCategoryPeople",
+          animals: "emojiCategoryAnimals",
+          activities: "emojiCategoryActivities",
+          food: "emojiCategoryFood",
         };
-        return names[category] || category;
+        const i18nKey = keyMap[category];
+        return i18nKey ? getLocalMessage(i18nKey) || category : category;
       };
 
       const gridsHTML = Object.entries(emojiData)

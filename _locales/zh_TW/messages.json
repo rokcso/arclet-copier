@@ -548,11 +548,11 @@
   "emojiCategorySmileys": {
     "message": "表情"
   },
-  "emojiCategoryHearts": {
-    "message": "愛心"
+  "emojiCategoryPeople": {
+    "message": "人物"
   },
-  "emojiCategoryNature": {
-    "message": "自然"
+  "emojiCategoryAnimals": {
+    "message": "動物"
   },
   "emojiCategoryActivities": {
     "message": "活動"
