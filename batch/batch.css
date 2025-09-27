@@ -607,7 +607,6 @@ body {
 .scope-select:hover {
     outline: none;
     border-color: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 /* Display section */
