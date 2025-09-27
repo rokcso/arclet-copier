@@ -527,10 +527,7 @@ export class TemplateEngine {
             // 确保返回字符串类型
             return result != null ? String(result) : "";
           } else {
-            console.warn(
-              `TemplateEngine: Unknown field '${trimmedFieldName}' in template`,
-            );
-            return match; // 未知字段保持原样
+            return match; // 未知字段保持原样，不输出警告
           }
         } catch (error) {
           console.error(
@@ -582,13 +579,10 @@ export class TemplateEngine {
           continue;
         }
 
-        // 检查字段是否存在
-        if (!this.fieldProcessors.has(fieldName)) {
-          errors.push(`Unknown field: ${fieldName}`);
-          continue;
+        // 只记录已知的字段，未知字段将作为普通文本处理
+        if (this.fieldProcessors.has(fieldName)) {
+          fields.push(fieldName);
         }
-
-        fields.push(fieldName);
       }
 
       // 不再检查大括号匹配 - 用户可以在模板中使用 {{ 作为普通文本
