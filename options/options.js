@@ -470,11 +470,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (matchingOption) {
         matchingOption.classList.add("active");
       } else {
-        // If no matching option found, activate the first one and update the hidden input
+        // If no matching option found, create a temporary option or update the first one
         const firstOption = selector.querySelector(".icon-option");
         if (firstOption) {
+          // Update the first option to show the selected emoji
+          firstOption.textContent = iconValue;
+          firstOption.dataset.icon = iconValue;
           firstOption.classList.add("active");
-          elements.templateIcon.value = firstOption.dataset.icon;
         }
       }
     }
@@ -768,6 +770,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
+    // Initialize emoji picker
+    initializeEmojiPicker();
+
     // Load templates on initialization
     loadTemplates();
 
@@ -783,6 +788,308 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
     });
+  }
+
+  // Initialize emoji picker functionality
+  function initializeEmojiPicker() {
+    const emojiPickerTrigger = document.getElementById("emojiPickerTrigger");
+    const emojiPicker = document.getElementById("emojiPicker");
+
+    if (!emojiPickerTrigger || !emojiPicker) return;
+
+    // Curated emoji sets for different categories
+    const emojiData = {
+      common: [
+        "📝",
+        "📄",
+        "💻",
+        "📚",
+        "📋",
+        "🔗",
+        "🏷️",
+        "⭐",
+        "📌",
+        "🔖",
+        "📂",
+        "📁",
+        "🗂️",
+        "📊",
+        "📈",
+        "📉",
+        "🔧",
+        "⚙️",
+        "🔨",
+        "💡",
+      ],
+      smileys: [
+        "😀",
+        "😃",
+        "😄",
+        "😁",
+        "😊",
+        "😉",
+        "🤗",
+        "🤔",
+        "😎",
+        "🥳",
+        "😍",
+        "🤩",
+        "😘",
+        "😋",
+        "😜",
+        "🤪",
+        "😇",
+        "🙂",
+        "🙃",
+        "😌",
+      ],
+      hearts: [
+        "❤️",
+        "💙",
+        "💚",
+        "💛",
+        "🧡",
+        "💜",
+        "🖤",
+        "🤍",
+        "💯",
+        "💥",
+        "💫",
+        "✨",
+        "⭐",
+        "🌟",
+        "💖",
+        "💕",
+        "💗",
+        "💓",
+        "💘",
+        "💝",
+      ],
+      nature: [
+        "🌱",
+        "🌿",
+        "🍀",
+        "🌳",
+        "🌲",
+        "🌺",
+        "🌸",
+        "🌼",
+        "🌻",
+        "🌹",
+        "🌷",
+        "💐",
+        "🌍",
+        "🌎",
+        "🌏",
+        "🌙",
+        "☀️",
+        "🌤️",
+        "⛅",
+        "🌈",
+      ],
+      activities: [
+        "⚽",
+        "🏀",
+        "🎾",
+        "🎯",
+        "🎮",
+        "🎨",
+        "🎭",
+        "🎵",
+        "🎶",
+        "🎤",
+        "🎧",
+        "🏆",
+        "🎪",
+        "🎬",
+        "📸",
+        "🎹",
+        "🎸",
+        "🥁",
+        "🎺",
+        "🎻",
+      ],
+      food: [
+        "🍎",
+        "🍊",
+        "🍋",
+        "🍌",
+        "🍉",
+        "🍇",
+        "🍓",
+        "🍅",
+        "🥕",
+        "🌽",
+        "🍞",
+        "🧀",
+        "🍕",
+        "🍔",
+        "☕",
+        "🍵",
+        "🍰",
+        "🎂",
+        "🍪",
+        "🍫",
+      ],
+    };
+
+    // Generate emoji picker HTML
+    function generateEmojiPickerHTML() {
+      const categoriesHTML = Object.keys(emojiData)
+        .map((category, index) => {
+          const firstEmoji = emojiData[category][0];
+          const isActive = index === 0 ? "active" : "";
+          return `<button type="button" class="emoji-category-btn ${isActive}" data-category="${category}">${firstEmoji}</button>`;
+        })
+        .join("");
+
+      const getCategoryDisplayName = (category) => {
+        const names = {
+          common: "常用",
+          smileys: "表情",
+          hearts: "爱心",
+          nature: "自然",
+          activities: "活动",
+          food: "食物",
+        };
+        return names[category] || category;
+      };
+
+      const gridsHTML = Object.entries(emojiData)
+        .map(([category, emojis]) => {
+          const emojiElements = emojis
+            .map(
+              (emoji) =>
+                `<span class="emoji-option" data-emoji="${emoji}">${emoji}</span>`,
+            )
+            .join("");
+          return `
+            <div class="emoji-category-section" data-category="${category}" id="emoji-category-${category}">
+              <div class="emoji-category-title">${getCategoryDisplayName(category)}</div>
+              <div class="emoji-grid">${emojiElements}</div>
+            </div>
+          `;
+        })
+        .join("");
+
+      return `
+        <div class="emoji-picker-header">
+          <div class="emoji-categories">
+            ${categoriesHTML}
+          </div>
+        </div>
+        <div class="emoji-picker-content">
+          ${gridsHTML}
+        </div>
+      `;
+    }
+
+    // Initialize picker content
+    emojiPicker.innerHTML = generateEmojiPickerHTML();
+
+    // Toggle emoji picker
+    emojiPickerTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      emojiPicker.classList.toggle("show");
+    });
+
+    // Close emoji picker when clicking outside
+    document.addEventListener("click", (e) => {
+      if (
+        !emojiPicker.contains(e.target) &&
+        !emojiPickerTrigger.contains(e.target)
+      ) {
+        emojiPicker.classList.remove("show");
+      }
+    });
+
+    // Handle emoji picker interactions
+    emojiPicker.addEventListener("click", (e) => {
+      // Handle category button clicks
+      if (e.target.classList.contains("emoji-category-btn")) {
+        const category = e.target.dataset.category;
+
+        // Update active category button
+        emojiPicker
+          .querySelectorAll(".emoji-category-btn")
+          .forEach((b) => b.classList.remove("active"));
+        e.target.classList.add("active");
+
+        // Scroll to the corresponding category section
+        const targetSection = emojiPicker.querySelector(
+          `#emoji-category-${category}`,
+        );
+        const pickerContent = emojiPicker.querySelector(
+          ".emoji-picker-content",
+        );
+
+        if (targetSection && pickerContent) {
+          const sectionTop = targetSection.offsetTop - pickerContent.offsetTop;
+          pickerContent.scrollTo({
+            top: sectionTop,
+            behavior: "smooth",
+          });
+        }
+      }
+
+      // Handle emoji selection
+      if (e.target.classList.contains("emoji-option")) {
+        const emoji = e.target.dataset.emoji;
+
+        // Update hidden input
+        if (elements.templateIcon) {
+          elements.templateIcon.value = emoji;
+        }
+
+        // Update icon selector UI
+        updateIconSelector(emoji);
+
+        // Close picker
+        emojiPicker.classList.remove("show");
+      }
+    });
+
+    // Auto-update active category on scroll
+    const pickerContent = emojiPicker.querySelector(".emoji-picker-content");
+    if (pickerContent) {
+      let scrollTimeout;
+      pickerContent.addEventListener("scroll", () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          const categoryBtns = emojiPicker.querySelectorAll(
+            ".emoji-category-btn",
+          );
+          const sections = emojiPicker.querySelectorAll(
+            ".emoji-category-section",
+          );
+
+          if (!sections.length) return;
+
+          const scrollTop = pickerContent.scrollTop;
+          let activeCategory = null;
+          let minDistance = Infinity;
+
+          sections.forEach((section) => {
+            const sectionTop = section.offsetTop - pickerContent.offsetTop;
+            const distance = Math.abs(scrollTop - sectionTop);
+
+            if (distance < minDistance) {
+              minDistance = distance;
+              activeCategory = section.dataset.category;
+            }
+          });
+
+          if (activeCategory) {
+            categoryBtns.forEach((btn) => {
+              btn.classList.toggle(
+                "active",
+                btn.dataset.category === activeCategory,
+              );
+            });
+          }
+        }, 100);
+      });
+    }
   }
 
   // 初始化所有组件

@@ -809,7 +809,8 @@ select.setting-control:hover {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 16px;
+    width: 100%;
+    padding: 12px 16px;
     border: 2px dashed var(--arc-border);
     border-radius: var(--arc-radius);
     background: transparent;
@@ -818,7 +819,7 @@ select.setting-control:hover {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    min-height: 80px;
+    min-height: 48px;
 }
 
 .template-add-btn:hover {
@@ -969,6 +970,13 @@ select.setting-control:hover {
 }
 
 /* 图标选择器样式 */
+.template-icon-selector-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .template-icon-selector {
     display: flex;
     gap: 12px;
@@ -998,6 +1006,142 @@ select.setting-control:hover {
     border-color: var(--arc-primary);
     background: var(--glow-light);
     box-shadow: 0 0 0 2px var(--glow-light);
+}
+
+/* Emoji 选择器触发按钮 */
+.emoji-picker-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--arc-border);
+    border-radius: 12px;
+    background: var(--arc-background);
+    color: var(--arc-text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-direction: column;
+}
+
+.emoji-picker-trigger:hover {
+    border-color: var(--arc-primary);
+    background: var(--glow-light);
+    color: var(--arc-primary);
+    transform: scale(1.05);
+}
+
+/* Emoji 选择器弹出面板 */
+.emoji-picker {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    width: 320px;
+    max-height: 400px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 8px;
+}
+
+.emoji-picker.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.emoji-picker-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--arc-border);
+    background: var(--arc-surface);
+    border-radius: 12px 12px 0 0;
+}
+
+.emoji-categories {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+.emoji-category-btn {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: var(--arc-text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.emoji-category-btn:hover {
+    background: var(--arc-background);
+}
+
+.emoji-category-btn.active {
+    background: var(--arc-primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.emoji-picker-content {
+    padding: 16px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.emoji-category-section {
+    margin-bottom: 16px;
+}
+
+.emoji-category-section:last-child {
+    margin-bottom: 0;
+}
+
+.emoji-category-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--arc-text-secondary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+}
+
+.emoji-option {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-size: 18px;
+}
+
+.emoji-option:hover {
+    background: var(--arc-surface);
+    transform: scale(1.2);
 }
 
 /* 变量插入区域样式 */
