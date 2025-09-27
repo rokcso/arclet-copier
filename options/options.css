@@ -956,7 +956,7 @@ select.setting-control:hover {
 
 .template-form-group textarea {
     resize: vertical;
-    min-height: 120px;
+    min-height: 80px;
     font-family: inherit;
     line-height: 1.5;
 }
@@ -1327,13 +1327,15 @@ select.setting-control:hover {
     border: 1px solid var(--arc-border);
     border-radius: 12px;
     padding: 16px;
-    min-height: 120px;
+    min-height: 60px;
     font-family: inherit;
     font-size: 14px;
     line-height: 1.5;
     color: var(--arc-text-primary);
     white-space: pre-wrap;
     word-break: break-word;
+    /* 自适应高度 */
+    height: auto;
 }
 
 [data-theme="dark"] .preview-content {
@@ -1342,12 +1344,12 @@ select.setting-control:hover {
 
 .preview-placeholder {
     color: var(--arc-text-muted);
-    font-style: italic;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 88px;
+    text-align: left;
+    display: block;
+    /* 移除 flex 布局和居中对齐，改为左上角对齐 */
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
 }
 
 .template-validation {
