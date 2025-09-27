@@ -693,18 +693,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     validateTemplate();
   }
 
-  function toggleMoreFields() {
-    const panel = elements.moreFieldsPanel;
-    const btn = elements.moreFieldsBtn;
-    const dropdown = btn.closest(".dropdown");
-
-    if (dropdown.classList.contains("open")) {
-      dropdown.classList.remove("open");
-    } else {
-      dropdown.classList.add("open");
-    }
-  }
-
   function initializeTemplateManagement() {
     if (!elements.templateList) {
       console.warn("templateList element not found");
@@ -746,9 +734,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       updateTemplatePreview,
     );
 
-    // More fields toggle
-    elements.moreFieldsBtn?.addEventListener("click", toggleMoreFields);
-
     // Variable button clicks
     document.addEventListener("click", (e) => {
       if (
@@ -756,15 +741,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         e.target.dataset.field
       ) {
         insertField(e.target.dataset.field);
-      }
-      if (
-        e.target.classList.contains("dropdown-item") &&
-        e.target.dataset.field
-      ) {
-        insertField(e.target.dataset.field);
-        // Close dropdown after selection
-        const dropdown = e.target.closest(".dropdown");
-        if (dropdown) dropdown.classList.remove("open");
       }
     });
 
@@ -785,15 +761,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             iconInput.value = e.target.dataset.icon;
           }
         }
-      }
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".dropdown")) {
-        document.querySelectorAll(".dropdown.open").forEach((dropdown) => {
-          dropdown.classList.remove("open");
-        });
       }
     });
 
@@ -1146,8 +1113,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       templateSaveBtn: document.getElementById("templateSaveBtn"),
       templateCancelBtn: document.getElementById("templateCancelBtn"),
       previewRefreshBtn: document.getElementById("previewRefreshBtn"),
-      moreFieldsBtn: document.getElementById("moreFieldsBtn"),
-      moreFieldsPanel: document.getElementById("moreFieldsPanel"),
     };
 
     // Load version

@@ -468,6 +468,13 @@
                                         <button
                                             type="button"
                                             class="variable-btn"
+                                            data-field="originalUrl"
+                                        >
+                                            {{originalUrl}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
                                             data-field="title"
                                         >
                                             {{title}}
@@ -482,87 +489,52 @@
                                         <button
                                             type="button"
                                             class="variable-btn"
+                                            data-field="domain"
+                                        >
+                                            {{domain}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="shortUrl"
+                                        >
+                                            {{shortUrl}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
                                             data-field="date"
                                         >
                                             {{date}}
                                         </button>
-                                        <div class="dropdown">
-                                            <button
-                                                type="button"
-                                                class="variable-btn dropdown-btn"
-                                                id="moreFieldsBtn"
-                                            >
-                                                <span data-i18n="moreVariables"
-                                                    >More Variables</span
-                                                >
-                                                <svg
-                                                    width="16"
-                                                    height="16"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                >
-                                                    <polyline
-                                                        points="6,9 12,15 18,9"
-                                                    ></polyline>
-                                                </svg>
-                                            </button>
-                                            <div
-                                                class="dropdown-content"
-                                                id="moreFieldsPanel"
-                                            >
-                                                <button
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    data-field="originalUrl"
-                                                >
-                                                    {{originalUrl}}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    data-field="domain"
-                                                >
-                                                    {{domain}}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    data-field="shortUrl"
-                                                >
-                                                    {{shortUrl}}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    data-field="time"
-                                                >
-                                                    {{time}}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    data-field="datetime"
-                                                >
-                                                    {{datetime}}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    data-field="timestamp"
-                                                >
-                                                    {{timestamp}}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    data-field="iso"
-                                                >
-                                                    {{iso}}
-                                                </button>
-                                            </div>
-                                        </div>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="time"
+                                        >
+                                            {{time}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="datetime"
+                                        >
+                                            {{datetime}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="timestamp"
+                                        >
+                                            {{timestamp}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="iso"
+                                        >
+                                            {{iso}}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
