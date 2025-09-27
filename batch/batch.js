@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 加载自定义模板到复制格式选择器
-  async function loadCustomTemplates() {
+  async function loadCustomTemplates(preserveValue = null) {
     const silentCopyFormat = document.getElementById("silentCopyFormat");
     await loadTemplatesIntoSelect(silentCopyFormat, {
       includeIcons: true,
@@ -134,6 +134,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Failed to load custom templates in batch:", error);
       },
     });
+
+    // 如果指定了要保持的值，则在加载完成后设置
+    if (preserveValue) {
+      setTimeout(() => {
+        // 检查该值是否在选项中存在
+        const optionExists = Array.from(silentCopyFormat.options).some(
+          (option) => option.value === preserveValue,
+        );
+
+        if (optionExists) {
+          silentCopyFormat.value = preserveValue;
+        } else {
+          // 静默处理模板不存在的情况，设置为默认值
+          silentCopyFormat.value = "url";
+          // 保存回退值
+          saveBatchSettings();
+        }
+      }, 0);
+    }
   }
 
   // 监听模板变更消息
@@ -144,62 +163,15 @@ document.addEventListener("DOMContentLoaded", async () => {
           `Batch received template change notification: ${message.changeType}`,
         );
 
-        // 保存当前选中的值
-        const currentValue = document.getElementById("silentCopyFormat").value;
+        // 从设置中获取当前的批量复制格式值，而不是选择器的值
+        settingsManager.getAllSettings().then((currentSettings) => {
+          const currentValue = currentSettings.batchSilentCopyFormat || "url";
 
-        // 重新加载模板到选择器
-        loadCustomTemplates()
-          .then(() => {
-            // 使用多重延迟和检查确保修复生效
-            setTimeout(() => {
-              const selectElement = document.getElementById("silentCopyFormat");
-
-              // 检查当前值是否在选项中
-              const optionExists = Array.from(selectElement.options).some(
-                (option) => option.value === currentValue,
-              );
-
-              if (optionExists) {
-                // 如果选项存在，设置值
-                selectElement.value = currentValue;
-              } else {
-                // 如果选项不存在，静默回退到默认格式
-
-                // 方法1：直接设置 selectedIndex
-                const urlOption = Array.from(selectElement.options).findIndex(
-                  (option) => option.value === "url",
-                );
-                if (urlOption !== -1) {
-                  selectElement.selectedIndex = urlOption;
-                }
-
-                // 方法2：设置 value (双保险)
-                selectElement.value = "url";
-
-                // 方法3：手动触发变更事件
-                selectElement.dispatchEvent(
-                  new Event("change", { bubbles: true }),
-                );
-
-                // 保存设置
-                saveBatchSettings();
-
-                // 最后检查：如果仍然没有选中任何选项，强制选中第一个
-                setTimeout(() => {
-                  if (selectElement.selectedIndex === -1) {
-                    selectElement.selectedIndex = 0;
-                    selectElement.dispatchEvent(
-                      new Event("change", { bubbles: true }),
-                    );
-                    saveBatchSettings();
-                  }
-                }, 5);
-              }
-            }, 50); // 增加延迟确保DOM完全更新
-          })
-          .catch((error) => {
+          // 重新加载模板到选择器，传递正确的设置值
+          loadCustomTemplates(currentValue).catch((error) => {
             console.error("Failed to reload templates after change:", error);
           });
+        });
 
         sendResponse({ received: true });
       }
@@ -256,6 +228,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       elements.removeDuplicates.checked =
         settings.batchRemoveDuplicates !== false;
     }
+
+    return settings;
   }
 
   // 保存批量页面设置
@@ -1199,8 +1173,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   await initializeI18n();
   loadVersion();
   setupTemplateChangeListener(); // 设置模板变更监听器
-  await loadCustomTemplates(); // 加载自定义模板
-  await loadSettings();
+
+  // 先加载设置，获取设置对象
+  const settings = await loadSettings();
+
+  // 加载自定义模板，并使用当前的批量复制格式设置
+  await loadCustomTemplates(settings.batchSilentCopyFormat);
+
   initializeUrlCleaningSwitch();
   initializeSettingsCollapse(); // 添加设置折叠功能
   await refreshTabs();
