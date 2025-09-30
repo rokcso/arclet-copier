@@ -5,15 +5,26 @@ const path = require("path");
 const rootDir = path.join(__dirname, "..");
 
 // 获取版本号
-const manifest = JSON.parse(
-  fs.readFileSync(path.join(rootDir, "manifest.json"), "utf8"),
-);
-const version = manifest.version;
+let version;
+try {
+  const manifest = JSON.parse(
+    fs.readFileSync(path.join(rootDir, "manifest.json"), "utf8"),
+  );
+  version = manifest.version;
+} catch (error) {
+  console.error("❌ 无法读取或解析 manifest.json:", error.message);
+  process.exit(1);
+}
 
 // 创建 dist 目录
 const distDir = path.join(__dirname, "dist");
-if (!fs.existsSync(distDir)) {
-  fs.mkdirSync(distDir);
+try {
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir);
+  }
+} catch (error) {
+  console.error("❌ 无法创建 dist 目录:", error.message);
+  process.exit(1);
 }
 
 // 定义需要打包的文件和目录
@@ -34,28 +45,38 @@ console.log(`🏗️  开始构建 Arclet Copier v${version}...`);
 
 // 创建构建目录
 const buildDir = path.join(distDir, `arclet-copier-v${version}`);
-if (fs.existsSync(buildDir)) {
-  fs.rmSync(buildDir, { recursive: true, force: true });
+try {
+  if (fs.existsSync(buildDir)) {
+    fs.rmSync(buildDir, { recursive: true, force: true });
+  }
+  fs.mkdirSync(buildDir, { recursive: true });
+} catch (error) {
+  console.error("❌ 无法创建构建目录:", error.message);
+  process.exit(1);
 }
-fs.mkdirSync(buildDir, { recursive: true });
 
 // 复制文件
 filesToInclude.forEach((file) => {
   const srcPath = path.join(rootDir, file);
   const destPath = path.join(buildDir, file);
 
-  if (fs.existsSync(srcPath)) {
-    if (fs.statSync(srcPath).isDirectory()) {
-      // 复制目录
-      fs.cpSync(srcPath, destPath, { recursive: true });
-      console.log(`✓ 复制目录: ${file}`);
+  try {
+    if (fs.existsSync(srcPath)) {
+      if (fs.statSync(srcPath).isDirectory()) {
+        // 复制目录
+        fs.cpSync(srcPath, destPath, { recursive: true });
+        console.log(`✓ 复制目录: ${file}`);
+      } else {
+        // 复制文件
+        fs.copyFileSync(srcPath, destPath);
+        console.log(`✓ 复制文件: ${file}`);
+      }
     } else {
-      // 复制文件
-      fs.copyFileSync(srcPath, destPath);
-      console.log(`✓ 复制文件: ${file}`);
+      console.log(`⚠ 文件不存在: ${file}`);
     }
-  } else {
-    console.log(`⚠ 文件不存在: ${file}`);
+  } catch (error) {
+    console.error(`❌ 复制文件/目录失败 ${file}:`, error.message);
+    process.exit(1);
   }
 });
 
