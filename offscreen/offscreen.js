@@ -6,6 +6,12 @@ console.log("Offscreen script loaded");
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log("Offscreen received message:", message);
 
+  // 健康检查 PING
+  if (message.action === "ping") {
+    sendResponse({ success: true, ready: true });
+    return true;
+  }
+
   if (message.action === "copy") {
     console.log("处理复制请求:", message.text);
     handleClipboardWrite(message.text)
@@ -21,6 +27,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   console.log("Unknown action:", message.action);
+  sendResponse({ success: false, error: "Unknown action" });
+  return true;
 });
 
 async function handleClipboardWrite(data) {

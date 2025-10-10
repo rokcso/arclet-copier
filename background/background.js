@@ -451,25 +451,96 @@ async function copyToClipboard(text) {
   }
 }
 
-// 确保 offscreen document 存在
+// 并发创建锁
+let offscreenCreationPromise = null;
+
+// 健康检查 offscreen document
+async function checkOffscreenHealth() {
+  try {
+    const response = await Promise.race([
+      new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ action: "ping" }, (response) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+          } else {
+            resolve(response);
+          }
+        });
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Health check timeout")), 1000),
+      ),
+    ]);
+
+    return response?.success === true && response?.ready === true;
+  } catch (error) {
+    console.warn("Offscreen health check failed:", error.message);
+    return false;
+  }
+}
+
+// 确保 offscreen document 存在且可用
 async function ensureOffscreenDocument() {
+  // 如果已有创建操作在进行，等待它完成
+  if (offscreenCreationPromise) {
+    console.log("Offscreen creation already in progress, waiting...");
+    return offscreenCreationPromise;
+  }
+
   try {
     // 检查是否已存在 offscreen document
     const existingContexts = await chrome.runtime.getContexts({
       contextTypes: ["OFFSCREEN_DOCUMENT"],
     });
 
-    if (existingContexts.length === 0) {
-      // 创建 offscreen document
-      await chrome.offscreen.createDocument({
-        url: chrome.runtime.getURL("offscreen/offscreen.html"),
-        reasons: ["CLIPBOARD"],
-        justification: "复制文本到剪贴板",
-      });
-      console.log("Offscreen document created");
+    if (existingContexts.length > 0) {
+      // 存在，但需要验证其可用性
+      const isHealthy = await checkOffscreenHealth();
+
+      if (isHealthy) {
+        console.log("Offscreen document exists and is healthy");
+        return;
+      }
+
+      // 不健康，需要重建
+      console.warn("Offscreen document exists but is unhealthy, recreating...");
+
+      try {
+        await chrome.offscreen.closeDocument();
+        console.log("Closed unhealthy offscreen document");
+      } catch (closeError) {
+        console.warn("Failed to close offscreen document:", closeError);
+        // 继续尝试创建新的
+      }
     }
+
+    // 创建新的 offscreen document（带锁保护）
+    offscreenCreationPromise = (async () => {
+      try {
+        await chrome.offscreen.createDocument({
+          url: chrome.runtime.getURL("offscreen/offscreen.html"),
+          reasons: ["CLIPBOARD"],
+          justification: "复制文本到剪贴板",
+        });
+        console.log("Offscreen document created successfully");
+
+        // 验证新创建的 document 是否可用
+        const isHealthy = await checkOffscreenHealth();
+        if (!isHealthy) {
+          throw new Error("Newly created offscreen document is not responding");
+        }
+
+        return true;
+      } finally {
+        // 清除锁
+        offscreenCreationPromise = null;
+      }
+    })();
+
+    await offscreenCreationPromise;
   } catch (error) {
-    console.error("Failed to create offscreen document:", error);
+    console.error("Failed to ensure offscreen document:", error);
+    offscreenCreationPromise = null; // 确保失败时也清除锁
     throw error;
   }
 }
