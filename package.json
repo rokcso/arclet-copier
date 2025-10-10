@@ -4,9 +4,7 @@
   "description": "快速复制当前页面的 URL，支持参数过滤功能",
   "scripts": {
     "dev": "node scripts/esbuild.config.js --watch",
-    "build": "node scripts/esbuild.config.js",
-    "build:old": "node scripts/build.js",
-    "package": "node scripts/esbuild.config.js"
+    "build": "node scripts/esbuild.config.js"
   },
   "keywords": [
     "chrome-extension",

@@ -15,7 +15,7 @@ const version = manifest.version;
 // 构建输出目录
 const outdir = isDev
   ? path.join(__dirname, "..", "dist-dev")
-  : path.join(__dirname, "dist", `arclet-copier-v${version}`);
+  : path.join(__dirname, "..", "dist", `arclet-copier-v${version}`);
 
 console.log(`🚀 Building Arclet Copier v${version}...`);
 console.log(`📦 Mode: ${isDev ? "Development" : "Production"}`);
@@ -273,6 +273,11 @@ const buildOptions = {
             console.log('2. Enable "Developer mode" (top right)');
             console.log('3. Click "Load unpacked extension"');
             console.log(`4. Select directory: ${outdir}`);
+            console.log("\n📦 Create ZIP for distribution:");
+            console.log(`   cd ${path.dirname(outdir)}`);
+            console.log(
+              `   zip -r arclet-copier-v${version}.zip ${path.basename(outdir)}`,
+            );
           } else {
             console.log("\n🔄 Watching for changes...");
           }

@@ -32,7 +32,7 @@ npm install
 npm run build
 ```
 
-**输出目录**: `scripts/dist/arclet-copier-v{version}/`
+**输出目录**: `dist/arclet-copier-v{version}/`
 
 **特性**:
 - ✅ 代码压缩和混淆
@@ -77,13 +77,6 @@ npm run dev
 2. 在 Chrome 中加载 `dist-dev/` 目录
 3. 修改代码后自动重新构建
 4. 手动刷新扩展（Chrome 扩展页面点击刷新图标）
-
-#### 3️⃣ 旧构建方式（备用）
-```bash
-npm run build:old
-```
-
-保留了原有的简单文件复制构建方式，用于对比或应急使用。
 
 ---
 
@@ -203,7 +196,7 @@ npm run build
 ```bash
 # 1. 在 Chrome 中加载扩展
 # chrome://extensions/ -> 加载已解压的扩展程序
-# 选择: scripts/dist/arclet-copier-v{version}/
+# 选择: dist/
 
 # 2. 测试所有功能
 # - 复制 URL
@@ -216,8 +209,10 @@ npm run build
 
 ### 3. 打包发布
 ```bash
-cd scripts/dist/
-zip -r arclet-copier-v1.6.3.zip arclet-copier-v1.6.3/
+# 创建发布包
+zip -r arclet-copier-v1.6.3.zip dist/
+
+# 或使用构建后提示的命令
 ```
 
 ### 4. 发布到 Chrome Web Store
@@ -289,17 +284,17 @@ splitting: true,  // 启用代码分割
 
 ### Q4: 为什么构建后体积反而变大了？
 
-**A**: 
+**A**:
 - 开发模式（`npm run dev`）不压缩代码，体积会更大
 - 生产模式（`npm run build`）才会压缩
 - 如果生产构建也变大，检查是否引入了新的大型依赖
 
 ### Q5: 如何查看构建产物的依赖关系？
 
-**A**: 
+**A**:
 ```bash
 # 生产构建后查看 meta.json
-cat scripts/dist/arclet-copier-v{version}/meta.json
+cat dist/meta.json
 
 # 或使用在线分析工具
 # https://esbuild.github.io/analyze/

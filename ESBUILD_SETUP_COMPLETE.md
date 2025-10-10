@@ -28,6 +28,7 @@ npm run build
 - ✅ Tree Shaking（移除未使用代码）
 - ✅ 构建分析报告
 - ✅ 输出详细统计
+- 📁 输出到 `dist/arclet-copier-v{version}/`
 
 ### 2. 开发模式（全新）
 ```bash
@@ -37,12 +38,7 @@ npm run dev
 - ✅ Source Map 支持（便于调试）
 - ✅ 快速构建（无压缩）
 - ✅ 实时反馈
-
-### 3. 旧构建方式（保留）
-```bash
-npm run build:old
-```
-- 保留原有构建方式作为备用
+- 📁 输出到 `dist-dev/`
 
 ---
 
@@ -80,7 +76,7 @@ npm run build
 # - 访问 chrome://extensions/
 # - 开启"开发者模式"
 # - 点击"加载已解压的扩展程序"
-# - 选择: scripts/dist/arclet-copier-v1.6.3/
+# - 选择: dist/arclet-copier-v1.6.3/
 ```
 
 ### 日常开发
@@ -102,6 +98,7 @@ npm run dev
 ### 之前（文件复制）
 ```
 构建输出:
+scripts/dist/arclet-copier-v1.6.3/
 ├── background/background.js    (未压缩)
 ├── popup/popup.js             (未压缩)
 ├── options/options.js         (未压缩)
@@ -114,12 +111,16 @@ npm run dev
 ### 现在（esbuild）
 ```
 生产构建输出:
+dist/arclet-copier-v1.6.3/
 ├── background/background.js    29.13 KB (已压缩)
 ├── popup/popup.js              30.78 KB (已压缩)
 ├── options/options.js          29.24 KB (已压缩)
 ├── batch/batch.js              32.71 KB (已压缩)
 ├── content/content.js          11.08 KB (已压缩)
 ├── offscreen/offscreen.js       0.95 KB (已压缩)
+├── assets/                     (资源文件)
+├── _locales/                   (多语言)
+├── manifest.json               (清单文件)
 └── meta.json                    9.00 KB (构建分析)
 
 Total JS: 133.89 KB (-70%)
@@ -213,12 +214,9 @@ Chrome 扩展不支持热更新（HMR），修改代码后需要：
 1. 等待自动构建完成
 2. 手动在 `chrome://extensions/` 页面刷新扩展
 
-### 2. 构建输出目录不同
-- **生产构建**: `scripts/dist/arclet-copier-v{version}/`
-- **开发构建**: `dist-dev/`
-
-### 3. 保留了旧构建方式
-`npm run build:old` 仍然可用，作为应急备用。
+### 2. 构建输出目录
+- **生产构建**: `dist/arclet-copier-v{version}/`
+- **开发构建**: `dist-dev/`（含 Source Map）
 
 ---
 
