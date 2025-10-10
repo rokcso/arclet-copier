@@ -688,9 +688,6 @@
   "confirm": {
     "message": "確認"
   },
-  "cancel": {
-    "message": "キャンセル"
-  },
   "editParamTitle": {
     "message": "パラメータを編集"
   },

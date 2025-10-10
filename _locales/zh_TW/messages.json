@@ -671,9 +671,6 @@
   "confirm": {
     "message": "確定"
   },
-  "cancel": {
-    "message": "取消"
-  },
   "editParamTitle": {
     "message": "編輯參數"
   },

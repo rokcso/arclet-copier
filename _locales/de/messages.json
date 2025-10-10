@@ -688,9 +688,6 @@
   "confirm": {
     "message": "Bestätigen"
   },
-  "cancel": {
-    "message": "Abbrechen"
-  },
   "editParamTitle": {
     "message": "Parameter Bearbeiten"
   },
