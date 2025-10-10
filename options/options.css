@@ -856,6 +856,13 @@ select.setting-control:hover {
     color: var(--arc-primary);
 }
 
+.template-add-btn svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+}
+
 .template-add-section {
     margin-top: 0;
 }
