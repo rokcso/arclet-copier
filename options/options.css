@@ -1689,15 +1689,9 @@ select.setting-control:hover {
 }
 
 .param-reset-btn-inline:hover {
-    background: #fef2f2;
-    border-color: #fca5a5;
-    color: #dc2626;
-}
-
-[data-theme="dark"] .param-reset-btn-inline:hover {
-    background: rgba(220, 38, 38, 0.1);
-    border-color: #dc2626;
-    color: #fca5a5;
+    border-color: var(--arc-primary);
+    color: var(--arc-primary);
+    background: var(--glow-light);
 }
 
 .param-reset-btn-inline svg {
