@@ -1,10 +1,9 @@
-// Toast通知管理器 - Arc风格，防重复显示
+// Toast通知管理器 - Arc风格，单例模式
 class ToastManager {
   constructor() {
     this.container = null;
-    this.toastCount = 0;
-    this.maxToasts = 5; // 最多同时显示5个toast
-    this.activeToasts = new Map(); // 存储当前活跃的toast，防重复
+    this.currentToast = null; // 当前唯一的toast实例
+    this.timeoutId = null; // 自动关闭定时器
   }
 
   // 确保容器存在
@@ -18,68 +17,71 @@ class ToastManager {
     return this.container;
   }
 
-  // 显示toast - Arc风格防重复
+  // 显示toast - 单例模式，始终只显示一个toast
   show(message, type = "info", options = {}) {
     const {
-      duration = 2000, // 改为2秒自动消失
+      duration = 2000, // 2秒自动消失
       title = null,
       closable = false, // Arc风格默认不显示关闭按钮
     } = options;
 
-    // 创建消息的唯一标识符
-    const messageKey = `${type}:${message}`;
-
-    // 如果相同消息的toast已存在，延长其显示时间而不是创建新的
-    if (this.activeToasts.has(messageKey)) {
-      const existingToast = this.activeToasts.get(messageKey);
-
-      // 清除现有的自动关闭定时器
-      if (existingToast.timeoutId) {
-        clearTimeout(existingToast.timeoutId);
-      }
-
-      // 重新设置自动关闭定时器
-      if (duration > 0) {
-        existingToast.timeoutId = setTimeout(() => {
-          this.closeToast(existingToast.element);
-        }, duration);
-      }
-
-      return existingToast.element.id;
-    }
-
-    // 限制toast数量
-    if (this.toastCount >= this.maxToasts) {
-      this.removeOldestToast();
+    // 清除现有的自动关闭定时器
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
     }
 
     const container = this.ensureContainer();
-    const toast = this.createToast(message, type, title, closable, duration);
 
-    container.appendChild(toast);
-    this.toastCount++;
+    // 如果已有toast，更新其内容和样式
+    if (this.currentToast && this.currentToast.parentNode) {
+      this.updateToast(this.currentToast, message, type);
+    } else {
+      // 创建新的toast
+      this.currentToast = this.createToast(
+        message,
+        type,
+        title,
+        closable,
+        duration,
+      );
+      container.appendChild(this.currentToast);
 
-    // 记录活跃的toast
-    const toastInfo = {
-      element: toast,
-      timeoutId: null,
-      messageKey: messageKey,
-    };
-    this.activeToasts.set(messageKey, toastInfo);
-
-    // 入场动画
-    requestAnimationFrame(() => {
-      toast.classList.add("show");
-    });
+      // 入场动画
+      requestAnimationFrame(() => {
+        this.currentToast.classList.add("show");
+      });
+    }
 
     // 自动关闭
     if (duration > 0) {
-      toastInfo.timeoutId = setTimeout(() => {
-        this.closeToast(toast);
+      this.timeoutId = setTimeout(() => {
+        this.closeToast(this.currentToast);
       }, duration);
     }
 
-    return toast.id;
+    return this.currentToast.id;
+  }
+
+  // 更新现有toast的内容和样式
+  updateToast(toast, message, type) {
+    // 移除所有类型样式
+    toast.className = toast.className.replace(/toast-\w+/g, "").trim();
+
+    // 添加新的类型样式
+    toast.classList.add(`toast-${type}`);
+
+    // 更新消息内容
+    const messageElement = toast.querySelector(".toast-message");
+    if (messageElement) {
+      messageElement.textContent = message;
+    }
+
+    // 重新触发动画效果
+    toast.classList.remove("show");
+    requestAnimationFrame(() => {
+      toast.classList.add("show");
+    });
   }
 
   // 创建toast元素
@@ -108,17 +110,10 @@ class ToastManager {
   closeToast(toast) {
     if (!toast || !toast.parentNode) return;
 
-    // 查找并清理对应的活跃toast记录
-    for (const [messageKey, toastInfo] of this.activeToasts.entries()) {
-      if (toastInfo.element === toast) {
-        // 清除定时器
-        if (toastInfo.timeoutId) {
-          clearTimeout(toastInfo.timeoutId);
-        }
-        // 从活跃toast记录中移除
-        this.activeToasts.delete(messageKey);
-        break;
-      }
+    // 清除定时器
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
     }
 
     toast.classList.add("hiding");
@@ -126,44 +121,33 @@ class ToastManager {
     setTimeout(() => {
       if (toast.parentNode) {
         toast.parentNode.removeChild(toast);
-        this.toastCount--;
+
+        // 清空当前toast引用
+        if (this.currentToast === toast) {
+          this.currentToast = null;
+        }
 
         // 如果没有toast了，移除容器
-        if (this.toastCount <= 0 && this.container) {
+        if (!this.currentToast && this.container) {
           this.container.remove();
           this.container = null;
-          this.toastCount = 0;
         }
       }
     }, 300); // 与CSS动画时间匹配
   }
 
-  // 移除最旧的toast
-  removeOldestToast() {
-    if (!this.container) return;
-
-    const oldestToast = this.container.querySelector(".toast");
-    if (oldestToast) {
-      this.closeToast(oldestToast);
-    }
-  }
-
   // 清空所有toast
   clear() {
-    if (!this.container) return;
-
-    // 清除所有定时器
-    for (const toastInfo of this.activeToasts.values()) {
-      if (toastInfo.timeoutId) {
-        clearTimeout(toastInfo.timeoutId);
-      }
+    // 清除定时器
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
     }
 
-    // 清空活跃toast记录
-    this.activeToasts.clear();
-
-    const toasts = this.container.querySelectorAll(".toast");
-    toasts.forEach((toast) => this.closeToast(toast));
+    // 关闭当前toast
+    if (this.currentToast && this.currentToast.parentNode) {
+      this.closeToast(this.currentToast);
+    }
   }
 
   // Arc风格不需要图标，保留此函数以保持兼容性
