@@ -1132,13 +1132,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         <button class="param-remove" data-param="${param}" data-category="${category}" title="${getLocalMessage("removeParam") || "删除"}">×</button>
       `;
 
-      // Add double-click event for editing
+      // Add click event for editing
       const paramNameSpan = tag.querySelector(".param-name");
-      paramNameSpan.addEventListener("dblclick", () => {
+      paramNameSpan.addEventListener("click", () => {
         showEditParamModal(category, param);
       });
       paramNameSpan.style.cursor = "pointer";
-      paramNameSpan.title = getLocalMessage("editParamHint") || "双击编辑";
+      paramNameSpan.title = getLocalMessage("editParamHint") || "单击编辑";
 
       // Add remove event listener
       const removeBtn = tag.querySelector(".param-remove");

@@ -707,7 +707,7 @@
     "message": "パラメータを編集"
   },
   "editParamHint": {
-    "message": "ダブルクリックで編集"
+    "message": "クリックして編集"
   },
   "paramUpdated": {
     "message": "パラメータが更新されました"

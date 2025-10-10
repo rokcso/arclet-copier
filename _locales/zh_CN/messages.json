@@ -679,7 +679,7 @@
     "message": "编辑参数"
   },
   "editParamHint": {
-    "message": "双击编辑"
+    "message": "单击编辑"
   },
   "paramUpdated": {
     "message": "参数已更新"

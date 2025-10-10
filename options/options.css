@@ -1586,6 +1586,10 @@ select.setting-control:hover {
     color: var(--arc-text-primary);
     transition: all 0.2s ease;
     animation: paramTagFadeIn 0.3s ease;
+    user-select: none; /* 防止双击选中文本 */
+    -webkit-user-select: none; /* Safari 兼容 */
+    -moz-user-select: none; /* Firefox 兼容 */
+    -ms-user-select: none; /* IE/Edge 兼容 */
 }
 
 @keyframes paramTagFadeIn {
@@ -1608,6 +1612,10 @@ select.setting-control:hover {
     font-family: "Monaco", "Menlo", "Consolas", monospace;
     font-size: 12px;
     font-weight: 500;
+    user-select: none; /* 防止双击选中文本 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .param-tag .param-remove {

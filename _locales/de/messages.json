@@ -707,7 +707,7 @@
     "message": "Parameter Bearbeiten"
   },
   "editParamHint": {
-    "message": "Doppelklick zum Bearbeiten"
+    "message": "Klick zum Bearbeiten"
   },
   "paramUpdated": {
     "message": "Parameter aktualisiert"
