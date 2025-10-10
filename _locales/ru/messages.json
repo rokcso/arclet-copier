@@ -615,5 +615,77 @@
   },
   "deleteTemplate": {
     "message": "Удалить"
+  },
+  "urlParamConfig": {
+    "message": "Настройка Параметров URL"
+  },
+  "trackingParams": {
+    "message": "Параметры Отслеживания"
+  },
+  "trackingParamsDesc": {
+    "message": "В режиме умной очистки эти параметры будут удалены"
+  },
+  "functionalParams": {
+    "message": "Функциональные Параметры"
+  },
+  "functionalParamsDesc": {
+    "message": "В режиме умной очистки эти параметры будут сохранены"
+  },
+  "addParam": {
+    "message": "Добавить Параметр"
+  },
+  "addParamTitle": {
+    "message": "Добавить Параметр"
+  },
+  "paramNameLabel": {
+    "message": "Название Параметра"
+  },
+  "paramNamePlaceholder": {
+    "message": "например: utm_source"
+  },
+  "paramNameHint": {
+    "message": "Разрешены только буквы, цифры и подчёркивания"
+  },
+  "removeParam": {
+    "message": "Удалить"
+  },
+  "resetParamRules": {
+    "message": "Восстановить Настройки По Умолчанию"
+  },
+  "resetParamRulesConfirm": {
+    "message": "Вы уверены, что хотите восстановить настройки параметров по умолчанию? Ваши пользовательские настройки будут потеряны."
+  },
+  "paramAdded": {
+    "message": "Параметр добавлен"
+  },
+  "paramRemoved": {
+    "message": "Параметр удалён"
+  },
+  "paramRulesReset": {
+    "message": "Настройки восстановлены по умолчанию"
+  },
+  "paramExists": {
+    "message": "Параметр уже существует"
+  },
+  "paramNameEmpty": {
+    "message": "Название параметра не может быть пустым"
+  },
+  "paramNameInvalid": {
+    "message": "Название параметра может содержать только буквы, цифры и подчёркивания"
+  },
+  "paramAddFailed": {
+    "message": "Ошибка добавления параметра"
+  },
+  "paramRemoveFailed": {
+    "message": "Ошибка удаления параметра"
+  },
+  "paramRulesResetFailed": {
+    "message": "Ошибка восстановления настроек"
+  },
+  "loadParamRulesFailed": {
+    "message": "Ошибка загрузки настроек параметров"
+  },
+  "confirm": {
+    "message": "Подтвердить"
   }
 }

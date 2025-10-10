@@ -615,5 +615,80 @@
   },
   "deleteTemplate": {
     "message": "Eliminar"
+  },
+  "urlParamConfig": {
+    "message": "Configuración de Parámetros URL"
+  },
+  "trackingParams": {
+    "message": "Parámetros de Seguimiento"
+  },
+  "trackingParamsDesc": {
+    "message": "Estos parámetros se eliminarán en modo de limpieza inteligente"
+  },
+  "functionalParams": {
+    "message": "Parámetros Funcionales"
+  },
+  "functionalParamsDesc": {
+    "message": "Estos parámetros se conservarán en modo de limpieza inteligente"
+  },
+  "addParam": {
+    "message": "Agregar Parámetro"
+  },
+  "addParamTitle": {
+    "message": "Agregar Parámetro"
+  },
+  "paramNameLabel": {
+    "message": "Nombre del Parámetro"
+  },
+  "paramNamePlaceholder": {
+    "message": "ej.: utm_source"
+  },
+  "paramNameHint": {
+    "message": "Solo se permiten letras, números y guiones bajos"
+  },
+  "removeParam": {
+    "message": "Eliminar"
+  },
+  "resetParamRules": {
+    "message": "Restablecer Valores Predeterminados"
+  },
+  "resetParamRulesConfirm": {
+    "message": "¿Está seguro de que desea restablecer la configuración predeterminada? Esto eliminará todas las reglas de parámetros personalizados."
+  },
+  "paramAdded": {
+    "message": "Parámetro agregado"
+  },
+  "paramRemoved": {
+    "message": "Parámetro eliminado"
+  },
+  "paramRulesReset": {
+    "message": "Restablecido a configuración predeterminada"
+  },
+  "paramExists": {
+    "message": "El parámetro ya existe"
+  },
+  "paramNameEmpty": {
+    "message": "El nombre del parámetro no puede estar vacío"
+  },
+  "paramNameInvalid": {
+    "message": "El nombre del parámetro solo puede contener letras, números y guiones bajos"
+  },
+  "paramAddFailed": {
+    "message": "Error al agregar parámetro"
+  },
+  "paramRemoveFailed": {
+    "message": "Error al eliminar parámetro"
+  },
+  "paramRulesResetFailed": {
+    "message": "Error al restablecer configuración"
+  },
+  "loadParamRulesFailed": {
+    "message": "Error al cargar configuración de parámetros"
+  },
+  "confirm": {
+    "message": "Confirmar"
+  },
+  "cancel": {
+    "message": "Cancelar"
   }
 }

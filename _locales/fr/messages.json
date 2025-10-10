@@ -615,5 +615,80 @@
   },
   "deleteTemplate": {
     "message": "Supprimer"
+  },
+  "urlParamConfig": {
+    "message": "Configuration des Paramètres URL"
+  },
+  "trackingParams": {
+    "message": "Paramètres de Suivi"
+  },
+  "trackingParamsDesc": {
+    "message": "Ces paramètres seront supprimés en mode de nettoyage intelligent"
+  },
+  "functionalParams": {
+    "message": "Paramètres Fonctionnels"
+  },
+  "functionalParamsDesc": {
+    "message": "Ces paramètres seront conservés en mode de nettoyage intelligent"
+  },
+  "addParam": {
+    "message": "Ajouter un Paramètre"
+  },
+  "addParamTitle": {
+    "message": "Ajouter un Paramètre"
+  },
+  "paramNameLabel": {
+    "message": "Nom du Paramètre"
+  },
+  "paramNamePlaceholder": {
+    "message": "ex.: utm_source"
+  },
+  "paramNameHint": {
+    "message": "Seuls les lettres, chiffres et traits de soulignement sont autorisés"
+  },
+  "removeParam": {
+    "message": "Supprimer"
+  },
+  "resetParamRules": {
+    "message": "Réinitialiser par Défaut"
+  },
+  "resetParamRulesConfirm": {
+    "message": "Êtes-vous sûr de vouloir réinitialiser à la configuration par défaut ? Cela effacera toutes les règles de paramètres personnalisées."
+  },
+  "paramAdded": {
+    "message": "Paramètre ajouté"
+  },
+  "paramRemoved": {
+    "message": "Paramètre supprimé"
+  },
+  "paramRulesReset": {
+    "message": "Réinitialisé à la configuration par défaut"
+  },
+  "paramExists": {
+    "message": "Le paramètre existe déjà"
+  },
+  "paramNameEmpty": {
+    "message": "Le nom du paramètre ne peut pas être vide"
+  },
+  "paramNameInvalid": {
+    "message": "Le nom du paramètre ne peut contenir que des lettres, des chiffres et des traits de soulignement"
+  },
+  "paramAddFailed": {
+    "message": "Échec de l'ajout du paramètre"
+  },
+  "paramRemoveFailed": {
+    "message": "Échec de la suppression du paramètre"
+  },
+  "paramRulesResetFailed": {
+    "message": "Échec de la réinitialisation de la configuration"
+  },
+  "loadParamRulesFailed": {
+    "message": "Échec du chargement de la configuration des paramètres"
+  },
+  "confirm": {
+    "message": "Confirmer"
+  },
+  "cancel": {
+    "message": "Annuler"
   }
 }

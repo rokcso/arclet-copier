@@ -615,5 +615,77 @@
   },
   "deleteTemplate": {
     "message": "Excluir"
+  },
+  "urlParamConfig": {
+    "message": "Configuração de Parâmetros de URL"
+  },
+  "trackingParams": {
+    "message": "Parâmetros de Rastreamento"
+  },
+  "trackingParamsDesc": {
+    "message": "No modo de limpeza inteligente, esses parâmetros serão removidos"
+  },
+  "functionalParams": {
+    "message": "Parâmetros Funcionais"
+  },
+  "functionalParamsDesc": {
+    "message": "No modo de limpeza inteligente, esses parâmetros serão preservados"
+  },
+  "addParam": {
+    "message": "Adicionar Parâmetro"
+  },
+  "addParamTitle": {
+    "message": "Adicionar Parâmetro"
+  },
+  "paramNameLabel": {
+    "message": "Nome do Parâmetro"
+  },
+  "paramNamePlaceholder": {
+    "message": "ex.: utm_source"
+  },
+  "paramNameHint": {
+    "message": "Apenas letras, números e sublinhados são permitidos"
+  },
+  "removeParam": {
+    "message": "Remover"
+  },
+  "resetParamRules": {
+    "message": "Restaurar Configuração Padrão"
+  },
+  "resetParamRulesConfirm": {
+    "message": "Tem certeza de que deseja restaurar a configuração padrão de parâmetros? Suas configurações personalizadas serão perdidas."
+  },
+  "paramAdded": {
+    "message": "Parâmetro adicionado"
+  },
+  "paramRemoved": {
+    "message": "Parâmetro removido"
+  },
+  "paramRulesReset": {
+    "message": "Configuração restaurada para o padrão"
+  },
+  "paramExists": {
+    "message": "Parâmetro já existe"
+  },
+  "paramNameEmpty": {
+    "message": "O nome do parâmetro não pode estar vazio"
+  },
+  "paramNameInvalid": {
+    "message": "O nome do parâmetro só pode conter letras, números e sublinhados"
+  },
+  "paramAddFailed": {
+    "message": "Falha ao adicionar parâmetro"
+  },
+  "paramRemoveFailed": {
+    "message": "Falha ao remover parâmetro"
+  },
+  "paramRulesResetFailed": {
+    "message": "Falha ao restaurar configuração"
+  },
+  "loadParamRulesFailed": {
+    "message": "Falha ao carregar configuração de parâmetros"
+  },
+  "confirm": {
+    "message": "Confirmar"
   }
 }

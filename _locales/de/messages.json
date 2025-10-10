@@ -615,5 +615,80 @@
   },
   "deleteTemplate": {
     "message": "Löschen"
+  },
+  "urlParamConfig": {
+    "message": "URL-Parameter-Konfiguration"
+  },
+  "trackingParams": {
+    "message": "Tracking-Parameter"
+  },
+  "trackingParamsDesc": {
+    "message": "Diese Parameter werden im intelligenten Bereinigungsmodus entfernt"
+  },
+  "functionalParams": {
+    "message": "Funktionale Parameter"
+  },
+  "functionalParamsDesc": {
+    "message": "Diese Parameter werden im intelligenten Bereinigungsmodus beibehalten"
+  },
+  "addParam": {
+    "message": "Parameter hinzufügen"
+  },
+  "addParamTitle": {
+    "message": "Parameter hinzufügen"
+  },
+  "paramNameLabel": {
+    "message": "Parametername"
+  },
+  "paramNamePlaceholder": {
+    "message": "z.B.: utm_source"
+  },
+  "paramNameHint": {
+    "message": "Nur Buchstaben, Zahlen und Unterstriche erlaubt"
+  },
+  "removeParam": {
+    "message": "Entfernen"
+  },
+  "resetParamRules": {
+    "message": "Auf Standard zurücksetzen"
+  },
+  "resetParamRulesConfirm": {
+    "message": "Sind Sie sicher, dass Sie auf die Standardkonfiguration zurücksetzen möchten? Dadurch werden alle benutzerdefinierten Parameterregeln gelöscht."
+  },
+  "paramAdded": {
+    "message": "Parameter hinzugefügt"
+  },
+  "paramRemoved": {
+    "message": "Parameter entfernt"
+  },
+  "paramRulesReset": {
+    "message": "Auf Standardkonfiguration zurückgesetzt"
+  },
+  "paramExists": {
+    "message": "Parameter existiert bereits"
+  },
+  "paramNameEmpty": {
+    "message": "Parametername darf nicht leer sein"
+  },
+  "paramNameInvalid": {
+    "message": "Parametername darf nur Buchstaben, Zahlen und Unterstriche enthalten"
+  },
+  "paramAddFailed": {
+    "message": "Fehler beim Hinzufügen des Parameters"
+  },
+  "paramRemoveFailed": {
+    "message": "Fehler beim Entfernen des Parameters"
+  },
+  "paramRulesResetFailed": {
+    "message": "Fehler beim Zurücksetzen der Konfiguration"
+  },
+  "loadParamRulesFailed": {
+    "message": "Fehler beim Laden der Parameterkonfiguration"
+  },
+  "confirm": {
+    "message": "Bestätigen"
+  },
+  "cancel": {
+    "message": "Abbrechen"
   }
 }

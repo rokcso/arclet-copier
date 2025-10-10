@@ -615,5 +615,80 @@
   },
   "deleteTemplate": {
     "message": "削除"
+  },
+  "urlParamConfig": {
+    "message": "URLパラメータ設定"
+  },
+  "trackingParams": {
+    "message": "トラッキングパラメータ"
+  },
+  "trackingParamsDesc": {
+    "message": "スマートクリーニングモードで、これらのパラメータは削除されます"
+  },
+  "functionalParams": {
+    "message": "機能パラメータ"
+  },
+  "functionalParamsDesc": {
+    "message": "スマートクリーニングモードで、これらのパラメータは保持されます"
+  },
+  "addParam": {
+    "message": "パラメータを追加"
+  },
+  "addParamTitle": {
+    "message": "パラメータを追加"
+  },
+  "paramNameLabel": {
+    "message": "パラメータ名"
+  },
+  "paramNamePlaceholder": {
+    "message": "例：utm_source"
+  },
+  "paramNameHint": {
+    "message": "英字、数字、アンダースコアのみ使用できます"
+  },
+  "removeParam": {
+    "message": "削除"
+  },
+  "resetParamRules": {
+    "message": "デフォルトに戻す"
+  },
+  "resetParamRulesConfirm": {
+    "message": "デフォルト設定に戻しますか？これにより、すべてのカスタムパラメータルールがクリアされます。"
+  },
+  "paramAdded": {
+    "message": "パラメータを追加しました"
+  },
+  "paramRemoved": {
+    "message": "パラメータを削除しました"
+  },
+  "paramRulesReset": {
+    "message": "デフォルト設定に戻しました"
+  },
+  "paramExists": {
+    "message": "パラメータは既に存在します"
+  },
+  "paramNameEmpty": {
+    "message": "パラメータ名を入力してください"
+  },
+  "paramNameInvalid": {
+    "message": "パラメータ名には英字、数字、アンダースコアのみ使用できます"
+  },
+  "paramAddFailed": {
+    "message": "パラメータの追加に失敗しました"
+  },
+  "paramRemoveFailed": {
+    "message": "パラメータの削除に失敗しました"
+  },
+  "paramRulesResetFailed": {
+    "message": "設定のリセットに失敗しました"
+  },
+  "loadParamRulesFailed": {
+    "message": "パラメータ設定の読み込みに失敗しました"
+  },
+  "confirm": {
+    "message": "確認"
+  },
+  "cancel": {
+    "message": "キャンセル"
   }
 }

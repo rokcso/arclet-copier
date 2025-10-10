@@ -598,5 +598,80 @@
   },
   "deleteTemplate": {
     "message": "刪除"
+  },
+  "urlParamConfig": {
+    "message": "URL 參數配置"
+  },
+  "trackingParams": {
+    "message": "追蹤參數"
+  },
+  "trackingParamsDesc": {
+    "message": "智慧清理模式下，這些參數會被移除"
+  },
+  "functionalParams": {
+    "message": "功能參數"
+  },
+  "functionalParamsDesc": {
+    "message": "智慧清理模式下，這些參數會被保留"
+  },
+  "addParam": {
+    "message": "新增參數"
+  },
+  "addParamTitle": {
+    "message": "新增參數"
+  },
+  "paramNameLabel": {
+    "message": "參數名稱"
+  },
+  "paramNamePlaceholder": {
+    "message": "例如：utm_source"
+  },
+  "paramNameHint": {
+    "message": "只能包含字母、數字、底線"
+  },
+  "removeParam": {
+    "message": "刪除"
+  },
+  "resetParamRules": {
+    "message": "恢復預設配置"
+  },
+  "resetParamRulesConfirm": {
+    "message": "確定要恢復預設配置嗎？這將清除所有自訂參數規則。"
+  },
+  "paramAdded": {
+    "message": "參數已新增"
+  },
+  "paramRemoved": {
+    "message": "參數已刪除"
+  },
+  "paramRulesReset": {
+    "message": "已恢復預設配置"
+  },
+  "paramExists": {
+    "message": "參數已存在"
+  },
+  "paramNameEmpty": {
+    "message": "參數名稱不能為空"
+  },
+  "paramNameInvalid": {
+    "message": "參數名稱只能包含字母、數字、底線"
+  },
+  "paramAddFailed": {
+    "message": "新增參數失敗"
+  },
+  "paramRemoveFailed": {
+    "message": "刪除參數失敗"
+  },
+  "paramRulesResetFailed": {
+    "message": "恢復預設配置失敗"
+  },
+  "loadParamRulesFailed": {
+    "message": "載入參數配置失敗"
+  },
+  "confirm": {
+    "message": "確定"
+  },
+  "cancel": {
+    "message": "取消"
   }
 }

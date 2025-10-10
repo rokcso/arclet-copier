@@ -616,5 +616,77 @@
   },
   "deleteTemplate": {
     "message": "삭제"
+  },
+  "urlParamConfig": {
+    "message": "URL 파라미터 설정"
+  },
+  "trackingParams": {
+    "message": "추적 파라미터"
+  },
+  "trackingParamsDesc": {
+    "message": "스마트 정리 모드에서 이 파라미터들이 제거됩니다"
+  },
+  "functionalParams": {
+    "message": "기능 파라미터"
+  },
+  "functionalParamsDesc": {
+    "message": "스마트 정리 모드에서 이 파라미터들이 보존됩니다"
+  },
+  "addParam": {
+    "message": "파라미터 추가"
+  },
+  "addParamTitle": {
+    "message": "파라미터 추가"
+  },
+  "paramNameLabel": {
+    "message": "파라미터 이름"
+  },
+  "paramNamePlaceholder": {
+    "message": "예: utm_source"
+  },
+  "paramNameHint": {
+    "message": "문자, 숫자, 밑줄만 허용됩니다"
+  },
+  "removeParam": {
+    "message": "제거"
+  },
+  "resetParamRules": {
+    "message": "기본 설정 복원"
+  },
+  "resetParamRulesConfirm": {
+    "message": "파라미터 설정을 기본값으로 복원하시겠습니까? 사용자 정의 설정이 손실됩니다."
+  },
+  "paramAdded": {
+    "message": "파라미터가 추가되었습니다"
+  },
+  "paramRemoved": {
+    "message": "파라미터가 제거되었습니다"
+  },
+  "paramRulesReset": {
+    "message": "설정이 기본값으로 복원되었습니다"
+  },
+  "paramExists": {
+    "message": "파라미터가 이미 존재합니다"
+  },
+  "paramNameEmpty": {
+    "message": "파라미터 이름은 비워둘 수 없습니다"
+  },
+  "paramNameInvalid": {
+    "message": "파라미터 이름은 문자, 숫자, 밑줄만 포함할 수 있습니다"
+  },
+  "paramAddFailed": {
+    "message": "파라미터 추가에 실패했습니다"
+  },
+  "paramRemoveFailed": {
+    "message": "파라미터 제거에 실패했습니다"
+  },
+  "paramRulesResetFailed": {
+    "message": "설정 복원에 실패했습니다"
+  },
+  "loadParamRulesFailed": {
+    "message": "파라미터 설정 로드에 실패했습니다"
+  },
+  "confirm": {
+    "message": "확인"
   }
 }
