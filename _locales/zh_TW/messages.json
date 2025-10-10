@@ -14,7 +14,6 @@
   "currentPage": {
     "message": "當前頁面"
   },
-
   "noPageTitle": {
     "message": "無標題頁面"
   },
@@ -81,7 +80,6 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-
   "urlCopied": {
     "message": "URL 已複製到剪貼板"
   },
@@ -94,7 +92,6 @@
   "noUrl": {
     "message": "無法獲取 URL"
   },
-
   "copyFailed": {
     "message": "複製失敗，請重試"
   },
@@ -104,7 +101,6 @@
   "restrictedPage": {
     "message": "當前頁面為系統頁面，請點選擴充功能圖示使用複製功能"
   },
-
   "copied": {
     "message": "已複製"
   },
@@ -171,7 +167,6 @@
   "qrCodeCopyFailed": {
     "message": "二維碼圖片複製失敗"
   },
-
   "themeColor": {
     "message": "主題色"
   },
@@ -268,15 +263,6 @@
   "developer": {
     "message": "開發者"
   },
-  "officialWebsite": {
-    "message": "官方網站"
-  },
-  "githubRepo": {
-    "message": "GitHub 儲存庫"
-  },
-  "developerTwitter": {
-    "message": "開發者 X"
-  },
   "supportSection": {
     "message": "支援我們"
   },
@@ -358,7 +344,6 @@
   "selected": {
     "message": "已選擇"
   },
-
   "noTabsFound": {
     "message": "未找到符合條件的分頁"
   },
@@ -383,7 +368,6 @@
   "copy": {
     "message": "複製"
   },
-
   "batchCopySuccess": {
     "message": "批量複製完成"
   },
@@ -414,7 +398,6 @@
   "outputSettings": {
     "message": "匯出設定"
   },
-
   "windowTabsCount": {
     "message": "$count$個",
     "placeholders": {
@@ -436,7 +419,6 @@
   "loading": {
     "message": "載入中..."
   },
-
   "shortUrlProgress": {
     "message": "正在生成短鏈... ({current}/{total})"
   },

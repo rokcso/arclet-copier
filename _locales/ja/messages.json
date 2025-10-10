@@ -14,7 +14,6 @@
   "currentPage": {
     "message": "現在のページ"
   },
-
   "noPageTitle": {
     "message": "無題のページ"
   },
@@ -81,7 +80,6 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-
   "urlCopied": {
     "message": "URLをクリップボードにコピーしました"
   },
@@ -94,7 +92,6 @@
   "noUrl": {
     "message": "URLを取得できません"
   },
-
   "copyFailed": {
     "message": "コピーに失敗しました。再試行してください"
   },
@@ -104,7 +101,6 @@
   "restrictedPage": {
     "message": "現在のページはシステムページです。拡張機能のアイコンをクリックしてコピー機能をご利用ください"
   },
-
   "copied": {
     "message": "コピーしました"
   },
@@ -171,7 +167,6 @@
   "qrCodeCopyFailed": {
     "message": "QRコード画像のコピーに失敗しました"
   },
-
   "themeColor": {
     "message": "テーマカラー"
   },
@@ -268,15 +263,6 @@
   "developer": {
     "message": "開発者"
   },
-  "officialWebsite": {
-    "message": "公式ウェブサイト"
-  },
-  "githubRepo": {
-    "message": "GitHubリポジトリ"
-  },
-  "developerTwitter": {
-    "message": "開発者X"
-  },
   "supportSection": {
     "message": "サポートする"
   },
@@ -361,7 +347,6 @@
   "selected": {
     "message": "選択済み"
   },
-
   "noTabsFound": {
     "message": "条件に一致するタブが見つかりません"
   },
@@ -383,7 +368,6 @@
   "copy": {
     "message": "コピー"
   },
-
   "batchCopySuccess": {
     "message": "一括コピー成功"
   },
@@ -414,7 +398,6 @@
   "outputSettings": {
     "message": "出力設定"
   },
-
   "windowTabsCount": {
     "message": "$count$個",
     "placeholders": {
@@ -436,7 +419,6 @@
   "loading": {
     "message": "読み込み中..."
   },
-
   "shortUrlProgress": {
     "message": "短縮URLを生成中... ({current}/{total})"
   },
@@ -515,7 +497,6 @@
   "confirmDeleteTemplate": {
     "message": "テンプレート\"{name}\"を削除してもよろしいですか？この操作は元に戻せません。"
   },
-
   "customTemplates": {
     "message": "カスタムテンプレート"
   },
@@ -537,7 +518,6 @@
   "moreFieldsBtn": {
     "message": "その他の変数"
   },
-
   "templateNamePlaceholder": {
     "message": "テンプレート名を入力..."
   },

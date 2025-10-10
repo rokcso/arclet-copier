@@ -14,7 +14,6 @@
   "currentPage": {
     "message": "현재 페이지"
   },
-
   "noPageTitle": {
     "message": "제목 없는 페이지"
   },
@@ -81,7 +80,6 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-
   "urlCopied": {
     "message": "URL이 클립보드에 복사되었습니다"
   },
@@ -94,7 +92,6 @@
   "noUrl": {
     "message": "URL을 가져올 수 없습니다"
   },
-
   "copyFailed": {
     "message": "복사 실패, 다시 시도해 주세요"
   },
@@ -104,7 +101,6 @@
   "restrictedPage": {
     "message": "현재 페이지는 시스템 페이지입니다. 확장 프로그램 아이콘을 클릭하여 복사 기능을 사용해 주세요"
   },
-
   "copied": {
     "message": "복사됨"
   },
@@ -171,7 +167,6 @@
   "qrCodeCopyFailed": {
     "message": "QR 코드 이미지 복사 실패"
   },
-
   "themeColor": {
     "message": "테마 색상"
   },
@@ -268,15 +263,6 @@
   "developer": {
     "message": "개발자"
   },
-  "officialWebsite": {
-    "message": "공식 웹사이트"
-  },
-  "githubRepo": {
-    "message": "GitHub 저장소"
-  },
-  "developerTwitter": {
-    "message": "개발자 X"
-  },
   "supportSection": {
     "message": "지원하기"
   },
@@ -313,7 +299,6 @@
   "filters": {
     "message": "필터"
   },
-
   "currentWindow": {
     "message": "현재 창"
   },
@@ -359,7 +344,6 @@
   "selected": {
     "message": "선택됨"
   },
-
   "noTabsFound": {
     "message": "조건에 맞는 탭을 찾을 수 없습니다"
   },
@@ -381,7 +365,6 @@
   "copy": {
     "message": "복사"
   },
-
   "batchCopySuccess": {
     "message": "일괄 복사 성공"
   },
@@ -412,7 +395,6 @@
   "outputSettings": {
     "message": "내보내기 설정"
   },
-
   "windowTabsCount": {
     "message": "$count$개 항목/탭",
     "placeholders": {
@@ -434,7 +416,6 @@
   "loading": {
     "message": "로딩 중..."
   },
-
   "shortUrlProgress": {
     "message": "단축 URL 생성 중... ({current}/{total})"
   },
@@ -516,7 +497,6 @@
   "confirmDeleteTemplate": {
     "message": "템플릿 \"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
   },
-
   "customTemplates": {
     "message": "사용자 정의 템플릿"
   },
@@ -538,7 +518,6 @@
   "moreFieldsBtn": {
     "message": "더 많은 변수"
   },
-
   "templateNamePlaceholder": {
     "message": "템플릿 이름을 입력하세요..."
   },

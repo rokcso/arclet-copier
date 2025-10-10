@@ -14,7 +14,6 @@
   "currentPage": {
     "message": "Aktuelle Seite"
   },
-
   "noPageTitle": {
     "message": "Seite ohne Titel"
   },
@@ -81,7 +80,6 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-
   "urlCopied": {
     "message": "URL in die Zwischenablage kopiert"
   },
@@ -94,7 +92,6 @@
   "noUrl": {
     "message": "URL kann nicht abgerufen werden"
   },
-
   "copyFailed": {
     "message": "Kopieren fehlgeschlagen, bitte erneut versuchen"
   },
@@ -104,7 +101,6 @@
   "restrictedPage": {
     "message": "Die aktuelle Seite ist eine Systemseite. Bitte klicken Sie auf das Erweiterungssymbol, um die Kopierfunktion zu verwenden"
   },
-
   "copied": {
     "message": "Kopiert"
   },
@@ -171,7 +167,6 @@
   "qrCodeCopyFailed": {
     "message": "Kopieren des QR-Code-Bildes fehlgeschlagen"
   },
-
   "themeColor": {
     "message": "Design-Farbe"
   },
@@ -268,15 +263,6 @@
   "developer": {
     "message": "Entwickler"
   },
-  "officialWebsite": {
-    "message": "Offizielle Website"
-  },
-  "githubRepo": {
-    "message": "GitHub-Repository"
-  },
-  "developerTwitter": {
-    "message": "Entwickler X"
-  },
   "supportSection": {
     "message": "Unterstützen Sie uns"
   },
@@ -361,7 +347,6 @@
   "selected": {
     "message": "Ausgewählt"
   },
-
   "noTabsFound": {
     "message": "Keine Tabs gefunden, die den Kriterien entsprechen"
   },
@@ -383,7 +368,6 @@
   "copy": {
     "message": "Kopieren"
   },
-
   "batchCopySuccess": {
     "message": "Stapel-Kopieren erfolgreich"
   },
@@ -414,7 +398,6 @@
   "outputSettings": {
     "message": "Export-Einstellungen"
   },
-
   "windowTabsCount": {
     "message": "$count$ Tabs",
     "placeholders": {
@@ -436,7 +419,6 @@
   "loading": {
     "message": "Laden..."
   },
-
   "shortUrlProgress": {
     "message": "Kurz-URLs werden generiert... ({current}/{total})"
   },
@@ -515,7 +497,6 @@
   "confirmDeleteTemplate": {
     "message": "Sind Sie sicher, dass Sie die Vorlage \"{name}\" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
   },
-
   "customTemplates": {
     "message": "Benutzerdefinierte Vorlagen"
   },
@@ -537,7 +518,6 @@
   "moreFieldsBtn": {
     "message": "Weitere Variablen"
   },
-
   "templateNamePlaceholder": {
     "message": "Vorlagennamen eingeben..."
   },

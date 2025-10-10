@@ -14,7 +14,6 @@
   "currentPage": {
     "message": "Página Actual"
   },
-
   "noPageTitle": {
     "message": "Página Sin Título"
   },
@@ -81,7 +80,6 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-
   "urlCopied": {
     "message": "URL copiada al portapapeles"
   },
@@ -94,7 +92,6 @@
   "noUrl": {
     "message": "No se puede obtener la URL"
   },
-
   "copyFailed": {
     "message": "Error al copiar, inténtalo de nuevo"
   },
@@ -104,7 +101,6 @@
   "restrictedPage": {
     "message": "La página actual es una página del sistema, haz clic en el icono de la extensión para usar la función de copia"
   },
-
   "copied": {
     "message": "Copiado"
   },
@@ -171,7 +167,6 @@
   "qrCodeCopyFailed": {
     "message": "Error al copiar la imagen del código QR"
   },
-
   "themeColor": {
     "message": "Color del Tema"
   },
@@ -268,15 +263,6 @@
   "developer": {
     "message": "Desarrollador"
   },
-  "officialWebsite": {
-    "message": "Sitio Web Oficial"
-  },
-  "githubRepo": {
-    "message": "Repositorio GitHub"
-  },
-  "developerTwitter": {
-    "message": "X del Desarrollador"
-  },
   "supportSection": {
     "message": "Apóyanos"
   },
@@ -361,7 +347,6 @@
   "selected": {
     "message": "Seleccionado"
   },
-
   "noTabsFound": {
     "message": "No se encontraron pestañas que coincidan con los criterios"
   },
@@ -383,7 +368,6 @@
   "copy": {
     "message": "Copiar"
   },
-
   "batchCopySuccess": {
     "message": "Copia por lotes exitosa"
   },
@@ -414,7 +398,6 @@
   "outputSettings": {
     "message": "Configuración de Exportación"
   },
-
   "windowTabsCount": {
     "message": "$count$ elementos/pestañas",
     "placeholders": {
@@ -436,7 +419,6 @@
   "loading": {
     "message": "Cargando..."
   },
-
   "shortUrlProgress": {
     "message": "Generando URLs cortas... ({current}/{total})"
   },
@@ -515,7 +497,6 @@
   "confirmDeleteTemplate": {
     "message": "¿Estás seguro de que quieres eliminar la plantilla \"{name}\"? Esta acción no se puede deshacer."
   },
-
   "customTemplates": {
     "message": "Plantillas Personalizadas"
   },
@@ -537,7 +518,6 @@
   "moreFieldsBtn": {
     "message": "Más Variables"
   },
-
   "templateNamePlaceholder": {
     "message": "Ingresa el nombre de la plantilla..."
   },

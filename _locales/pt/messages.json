@@ -14,7 +14,6 @@
   "currentPage": {
     "message": "Página Atual"
   },
-
   "noPageTitle": {
     "message": "Página Sem Título"
   },
@@ -81,7 +80,6 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-
   "urlCopied": {
     "message": "URL copiada para a área de transferência"
   },
@@ -94,7 +92,6 @@
   "noUrl": {
     "message": "Não é possível obter a URL"
   },
-
   "copyFailed": {
     "message": "Falha na cópia, tente novamente"
   },
@@ -104,7 +101,6 @@
   "restrictedPage": {
     "message": "A página atual é uma página do sistema, clique no ícone da extensão para usar a função de cópia"
   },
-
   "copied": {
     "message": "Copiado"
   },
@@ -171,7 +167,6 @@
   "qrCodeCopyFailed": {
     "message": "Falha ao copiar a imagem do código QR"
   },
-
   "themeColor": {
     "message": "Cor do Tema"
   },
@@ -268,15 +263,6 @@
   "developer": {
     "message": "Desenvolvedor"
   },
-  "officialWebsite": {
-    "message": "Site Oficial"
-  },
-  "githubRepo": {
-    "message": "Repositório GitHub"
-  },
-  "developerTwitter": {
-    "message": "X do Desenvolvedor"
-  },
   "supportSection": {
     "message": "Apoie-nos"
   },
@@ -361,7 +347,6 @@
   "selected": {
     "message": "Selecionado"
   },
-
   "noTabsFound": {
     "message": "Nenhuma aba encontrada que corresponda aos critérios"
   },
@@ -383,7 +368,6 @@
   "copy": {
     "message": "Copiar"
   },
-
   "batchCopySuccess": {
     "message": "Cópia em lote bem-sucedida"
   },
@@ -414,7 +398,6 @@
   "outputSettings": {
     "message": "Configurações de Exportação"
   },
-
   "windowTabsCount": {
     "message": "$count$ itens/abas",
     "placeholders": {
@@ -436,7 +419,6 @@
   "loading": {
     "message": "Carregando..."
   },
-
   "shortUrlProgress": {
     "message": "Gerando URLs curtas... ({current}/{total})"
   },
@@ -515,7 +497,6 @@
   "confirmDeleteTemplate": {
     "message": "Tem certeza de que deseja excluir o modelo \"{name}\"? Esta ação não pode ser desfeita."
   },
-
   "customTemplates": {
     "message": "Modelos Personalizados"
   },
@@ -537,7 +518,6 @@
   "moreFieldsBtn": {
     "message": "Mais Variáveis"
   },
-
   "templateNamePlaceholder": {
     "message": "Digite o nome do modelo..."
   },

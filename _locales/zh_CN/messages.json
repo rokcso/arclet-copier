@@ -258,15 +258,6 @@
   "developer": {
     "message": "开发者"
   },
-  "officialWebsite": {
-    "message": "官方网站"
-  },
-  "githubRepo": {
-    "message": "GitHub 仓库"
-  },
-  "developerTwitter": {
-    "message": "开发者 X"
-  },
   "supportSection": {
     "message": "支持我们"
   },

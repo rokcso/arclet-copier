@@ -14,7 +14,6 @@
   "currentPage": {
     "message": "Page Actuelle"
   },
-
   "noPageTitle": {
     "message": "Page Sans Titre"
   },
@@ -81,7 +80,6 @@
   "languageKo": {
     "message": "🇰🇷 한국어"
   },
-
   "urlCopied": {
     "message": "URL copiée dans le presse-papiers"
   },
@@ -94,7 +92,6 @@
   "noUrl": {
     "message": "Impossible de récupérer l'URL"
   },
-
   "copyFailed": {
     "message": "Échec de la copie, veuillez réessayer"
   },
@@ -104,7 +101,6 @@
   "restrictedPage": {
     "message": "La page actuelle est une page système, veuillez cliquer sur l'icône de l'extension pour utiliser la fonction de copie"
   },
-
   "copied": {
     "message": "Copié"
   },
@@ -171,7 +167,6 @@
   "qrCodeCopyFailed": {
     "message": "Échec de la copie de l'image du code QR"
   },
-
   "themeColor": {
     "message": "Couleur du Thème"
   },
@@ -268,15 +263,6 @@
   "developer": {
     "message": "Développeur"
   },
-  "officialWebsite": {
-    "message": "Site Web Officiel"
-  },
-  "githubRepo": {
-    "message": "Dépôt GitHub"
-  },
-  "developerTwitter": {
-    "message": "X du Développeur"
-  },
   "supportSection": {
     "message": "Soutenez-nous"
   },
@@ -361,7 +347,6 @@
   "selected": {
     "message": "Sélectionné"
   },
-
   "noTabsFound": {
     "message": "Aucun onglet trouvé correspondant aux critères"
   },
@@ -383,7 +368,6 @@
   "copy": {
     "message": "Copier"
   },
-
   "batchCopySuccess": {
     "message": "Copie par lot réussie"
   },
@@ -414,7 +398,6 @@
   "outputSettings": {
     "message": "Paramètres d'Exportation"
   },
-
   "windowTabsCount": {
     "message": "$count$ éléments/onglets",
     "placeholders": {
@@ -436,7 +419,6 @@
   "loading": {
     "message": "Chargement..."
   },
-
   "shortUrlProgress": {
     "message": "Génération d'URLs courtes... ({current}/{total})"
   },
@@ -515,7 +497,6 @@
   "confirmDeleteTemplate": {
     "message": "Êtes-vous sûr de vouloir supprimer le modèle \"{name}\" ? Cette action ne peut pas être annulée."
   },
-
   "customTemplates": {
     "message": "Modèles Personnalisés"
   },
@@ -537,7 +518,6 @@
   "moreFieldsBtn": {
     "message": "Plus de Variables"
   },
-
   "templateNamePlaceholder": {
     "message": "Entrez le nom du modèle..."
   },
