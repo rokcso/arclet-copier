@@ -26,9 +26,11 @@ npm-debug.log
 
 # 构建输出
 dist/
+dist-dev/
 build/
 *.zip
 *.crx
+meta.json
 
 # 临时文件
 tmp/
