@@ -649,6 +649,21 @@
   "removeParam": {
     "message": "Удалить"
   },
+  "resetToDefault": {
+    "message": "Сбросить на значения по умолчанию"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "Вы уверены, что хотите сбросить параметры отслеживания на значения по умолчанию?"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "Вы уверены, что хотите сбросить функциональные параметры на значения по умолчанию?"
+  },
+  "trackingParamsReset": {
+    "message": "Параметры отслеживания сброшены на значения по умолчанию"
+  },
+  "functionalParamsReset": {
+    "message": "Функциональные параметры сброшены на значения по умолчанию"
+  },
   "resetParamRules": {
     "message": "Восстановить Настройки По Умолчанию"
   },

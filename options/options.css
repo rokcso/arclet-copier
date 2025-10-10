@@ -1632,6 +1632,14 @@ select.setting-control:hover {
     color: #dc2626;
 }
 
+/* 参数组操作区域 */
+.param-group-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
 /* 添加参数按钮 */
 .param-add-btn {
     display: inline-flex;
@@ -1656,6 +1664,38 @@ select.setting-control:hover {
 }
 
 .param-add-btn svg {
+    flex-shrink: 0;
+}
+
+/* 内联恢复默认按钮 */
+.param-reset-btn-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+    border-radius: var(--arc-radius-sm);
+    color: var(--arc-text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.param-reset-btn-inline:hover {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #dc2626;
+}
+
+[data-theme="dark"] .param-reset-btn-inline:hover {
+    background: rgba(220, 38, 38, 0.1);
+    border-color: #dc2626;
+    color: #fca5a5;
+}
+
+.param-reset-btn-inline svg {
     flex-shrink: 0;
 }
 
@@ -1903,5 +1943,16 @@ select.setting-control:hover {
     .param-tag {
         font-size: 12px;
         padding: 5px 8px 5px 10px;
+    }
+
+    .param-group-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .param-add-btn,
+    .param-reset-btn-inline {
+        width: 100%;
+        justify-content: center;
     }
 }

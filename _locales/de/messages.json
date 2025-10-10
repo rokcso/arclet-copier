@@ -649,6 +649,21 @@
   "removeParam": {
     "message": "Entfernen"
   },
+  "resetToDefault": {
+    "message": "Auf Standard zurücksetzen"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "Sind Sie sicher, dass Sie die Tracking-Parameter auf die Standardwerte zurücksetzen möchten?"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "Sind Sie sicher, dass Sie die funktionalen Parameter auf die Standardwerte zurücksetzen möchten?"
+  },
+  "trackingParamsReset": {
+    "message": "Tracking-Parameter auf Standardwerte zurückgesetzt"
+  },
+  "functionalParamsReset": {
+    "message": "Funktionale Parameter auf Standardwerte zurückgesetzt"
+  },
   "resetParamRules": {
     "message": "Auf Standard zurücksetzen"
   },

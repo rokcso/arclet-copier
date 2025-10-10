@@ -1331,25 +1331,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Reset to defaults
-  async function resetToDefaults() {
+  // Reset tracking parameters to defaults
+  async function resetTrackingParams() {
     const confirmed = confirm(
-      getLocalMessage("resetParamRulesConfirm") ||
-        "确定要恢复默认配置吗？这将清除所有自定义参数规则。",
+      getLocalMessage("resetTrackingParamsConfirm") ||
+        "确定要恢复跟踪参数的默认配置吗？",
     );
 
     if (!confirmed) return;
 
     try {
+      const currentRules = await getCustomParamRules();
       const success = await saveCustomParamRules({
         tracking: [...DEFAULT_PARAM_RULES.tracking],
-        functional: [...DEFAULT_PARAM_RULES.functional],
+        functional: currentRules.functional, // Keep functional params unchanged
       });
 
       if (success) {
         await loadParamRules();
         toast.show(
-          getLocalMessage("paramRulesReset") || "已恢复默认配置",
+          getLocalMessage("trackingParamsReset") || "跟踪参数已恢复默认",
           "success",
         );
       } else {
@@ -1359,7 +1360,50 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
       }
     } catch (error) {
-      console.error("[ParamConfig] Failed to reset parameter rules:", error);
+      console.error(
+        "[ParamConfig] Failed to reset tracking parameters:",
+        error,
+      );
+      toast.show(
+        getLocalMessage("paramRulesResetFailed") || "恢复默认配置失败",
+        "error",
+      );
+    }
+  }
+
+  // Reset functional parameters to defaults
+  async function resetFunctionalParams() {
+    const confirmed = confirm(
+      getLocalMessage("resetFunctionalParamsConfirm") ||
+        "确定要恢复功能参数的默认配置吗？",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const currentRules = await getCustomParamRules();
+      const success = await saveCustomParamRules({
+        tracking: currentRules.tracking, // Keep tracking params unchanged
+        functional: [...DEFAULT_PARAM_RULES.functional],
+      });
+
+      if (success) {
+        await loadParamRules();
+        toast.show(
+          getLocalMessage("functionalParamsReset") || "功能参数已恢复默认",
+          "success",
+        );
+      } else {
+        toast.show(
+          getLocalMessage("paramRulesResetFailed") || "恢复默认配置失败",
+          "error",
+        );
+      }
+    } catch (error) {
+      console.error(
+        "[ParamConfig] Failed to reset functional parameters:",
+        error,
+      );
       toast.show(
         getLocalMessage("paramRulesResetFailed") || "恢复默认配置失败",
         "error",
@@ -1379,8 +1423,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       showAddParamModal("functional");
     });
 
-    // Reset button
-    elements.resetParamRulesBtn.addEventListener("click", resetToDefaults);
+    // Reset tracking parameters button
+    elements.resetTrackingParamsBtn.addEventListener(
+      "click",
+      resetTrackingParams,
+    );
+
+    // Reset functional parameters button
+    elements.resetFunctionalParamsBtn.addEventListener(
+      "click",
+      resetFunctionalParams,
+    );
 
     // Modal close button
     elements.paramInputClose.addEventListener("click", hideAddParamModal);
@@ -1466,7 +1519,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       functionalParamsList: document.getElementById("functionalParamsList"),
       addTrackingParamBtn: document.getElementById("addTrackingParamBtn"),
       addFunctionalParamBtn: document.getElementById("addFunctionalParamBtn"),
-      resetParamRulesBtn: document.getElementById("resetParamRulesBtn"),
+      resetTrackingParamsBtn: document.getElementById("resetTrackingParamsBtn"),
+      resetFunctionalParamsBtn: document.getElementById(
+        "resetFunctionalParamsBtn",
+      ),
       paramInputModal: document.getElementById("paramInputModal"),
       paramNameInput: document.getElementById("paramNameInput"),
       paramInputClose: document.getElementById("paramInputClose"),

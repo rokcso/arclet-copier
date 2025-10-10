@@ -621,6 +621,21 @@
   "removeParam": {
     "message": "删除"
   },
+  "resetToDefault": {
+    "message": "恢复默认"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "确定要恢复跟踪参数的默认配置吗？"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "确定要恢复功能参数的默认配置吗？"
+  },
+  "trackingParamsReset": {
+    "message": "跟踪参数已恢复默认"
+  },
+  "functionalParamsReset": {
+    "message": "功能参数已恢复默认"
+  },
   "resetParamRules": {
     "message": "恢复默认配置"
   },

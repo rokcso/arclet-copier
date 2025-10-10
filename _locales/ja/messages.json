@@ -649,6 +649,21 @@
   "removeParam": {
     "message": "削除"
   },
+  "resetToDefault": {
+    "message": "デフォルトにリセット"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "トラッキングパラメータをデフォルトにリセットしてもよろしいですか？"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "機能パラメータをデフォルトにリセットしてもよろしいですか？"
+  },
+  "trackingParamsReset": {
+    "message": "トラッキングパラメータをデフォルトにリセットしました"
+  },
+  "functionalParamsReset": {
+    "message": "機能パラメータをデフォルトにリセットしました"
+  },
   "resetParamRules": {
     "message": "デフォルトに戻す"
   },

@@ -650,6 +650,21 @@
   "removeParam": {
     "message": "제거"
   },
+  "resetToDefault": {
+    "message": "기본값으로 재설정"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "추적 파라미터를 기본값으로 재설정하시겠습니까?"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "기능 파라미터를 기본값으로 재설정하시겠습니까?"
+  },
+  "trackingParamsReset": {
+    "message": "추적 파라미터가 기본값으로 재설정되었습니다"
+  },
+  "functionalParamsReset": {
+    "message": "기능 파라미터가 기본값으로 재설정되었습니다"
+  },
   "resetParamRules": {
     "message": "기본 설정 복원"
   },

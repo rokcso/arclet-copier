@@ -649,6 +649,21 @@
   "removeParam": {
     "message": "Remover"
   },
+  "resetToDefault": {
+    "message": "Restaurar para Padrão"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "Tem certeza de que deseja restaurar os parâmetros de rastreamento para os valores padrão?"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "Tem certeza de que deseja restaurar os parâmetros funcionais para os valores padrão?"
+  },
+  "trackingParamsReset": {
+    "message": "Parâmetros de rastreamento restaurados para valores padrão"
+  },
+  "functionalParamsReset": {
+    "message": "Parâmetros funcionais restaurados para valores padrão"
+  },
   "resetParamRules": {
     "message": "Restaurar Configuração Padrão"
   },

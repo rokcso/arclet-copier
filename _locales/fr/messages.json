@@ -649,6 +649,21 @@
   "removeParam": {
     "message": "Supprimer"
   },
+  "resetToDefault": {
+    "message": "Réinitialiser par défaut"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "Êtes-vous sûr de vouloir réinitialiser les paramètres de suivi aux valeurs par défaut ?"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "Êtes-vous sûr de vouloir réinitialiser les paramètres fonctionnels aux valeurs par défaut ?"
+  },
+  "trackingParamsReset": {
+    "message": "Paramètres de suivi réinitialisés aux valeurs par défaut"
+  },
+  "functionalParamsReset": {
+    "message": "Paramètres fonctionnels réinitialisés aux valeurs par défaut"
+  },
   "resetParamRules": {
     "message": "Réinitialiser par Défaut"
   },

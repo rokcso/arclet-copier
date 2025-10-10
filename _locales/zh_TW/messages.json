@@ -632,6 +632,21 @@
   "removeParam": {
     "message": "刪除"
   },
+  "resetToDefault": {
+    "message": "重設為預設值"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "確定要將追蹤參數重設為預設值嗎？"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "確定要將功能參數重設為預設值嗎？"
+  },
+  "trackingParamsReset": {
+    "message": "追蹤參數已重設為預設值"
+  },
+  "functionalParamsReset": {
+    "message": "功能參數已重設為預設值"
+  },
   "resetParamRules": {
     "message": "恢復預設配置"
   },

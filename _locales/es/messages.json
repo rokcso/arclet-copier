@@ -649,6 +649,21 @@
   "removeParam": {
     "message": "Eliminar"
   },
+  "resetToDefault": {
+    "message": "Restablecer a Predeterminado"
+  },
+  "resetTrackingParamsConfirm": {
+    "message": "¿Está seguro de que desea restablecer los parámetros de seguimiento a los valores predeterminados?"
+  },
+  "resetFunctionalParamsConfirm": {
+    "message": "¿Está seguro de que desea restablecer los parámetros funcionales a los valores predeterminados?"
+  },
+  "trackingParamsReset": {
+    "message": "Parámetros de seguimiento restablecidos a valores predeterminados"
+  },
+  "functionalParamsReset": {
+    "message": "Parámetros funcionales restablecidos a valores predeterminados"
+  },
   "resetParamRules": {
     "message": "Restablecer Valores Predeterminados"
   },
