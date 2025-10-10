@@ -103,7 +103,7 @@ class NotificationHelper {
     }
   }
 
-  // 通过 content script 显示页面通知 - 智能版本，快速回退
+  // 通过 content script 显示页面通知 - 增强版本，带就绪检测和重试
   async showPageNotificationViaContentScript(options) {
     try {
       // 获取当前活跃标签页
@@ -118,7 +118,7 @@ class NotificationHelper {
 
       const tab = tabs[0];
 
-      // 只检查URL限制，跳过其他所有检查
+      // 检查URL限制
       if (this.isRestrictedUrl(tab.url)) {
         console.log(
           `Cannot send message to restricted URL: ${tab.url}, falling back to Chrome notification`,
@@ -126,8 +126,17 @@ class NotificationHelper {
         return await this.showChromeNotification(options);
       }
 
-      // 立即发送消息，不等待任何状态检查
-      return await this.sendMessageImmediately(
+      // 检查 content script 是否就绪（带重试）
+      const isReady = await this.ensureContentScriptReady(tab.id);
+      if (!isReady) {
+        console.log(
+          `Content script not ready on tab ${tab.id}, falling back to Chrome notification`,
+        );
+        return await this.showChromeNotification(options);
+      }
+
+      // 发送通知消息
+      return await this.sendNotificationMessage(
         tab.id,
         {
           type: "SHOW_PAGE_NOTIFICATION",
@@ -142,10 +151,54 @@ class NotificationHelper {
     }
   }
 
-  // 智能消息发送 - 快速尝试，立即回退
-  async sendMessageImmediately(tabId, message, fallbackOptions) {
+  // 确保 content script 就绪 - 带重试机制
+  async ensureContentScriptReady(tabId, maxRetries = 3, retryDelay = 100) {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const response = await Promise.race([
+          new Promise((resolve, reject) => {
+            chrome.tabs.sendMessage(tabId, { type: "PING" }, (response) => {
+              if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+              } else {
+                resolve(response);
+              }
+            });
+          }),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("PING timeout")), 500),
+          ),
+        ]);
+
+        if (response && response.ready === true) {
+          console.log(
+            `Content script ready on tab ${tabId} (attempt ${attempt + 1})`,
+          );
+          return true;
+        }
+      } catch (error) {
+        console.log(
+          `Content script PING failed on tab ${tabId} (attempt ${attempt + 1}): ${error.message}`,
+        );
+
+        // 如果不是最后一次尝试，等待后重试
+        if (attempt < maxRetries - 1) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, retryDelay * (attempt + 1)),
+          ); // 指数退避
+        }
+      }
+    }
+
+    console.log(
+      `Content script not ready on tab ${tabId} after ${maxRetries} attempts`,
+    );
+    return false;
+  }
+
+  // 发送通知消息 - 带超时保护
+  async sendNotificationMessage(tabId, message, fallbackOptions) {
     try {
-      // 发送消息给content script
       const response = await Promise.race([
         new Promise((resolve, reject) => {
           chrome.tabs.sendMessage(tabId, message, (response) => {
@@ -156,26 +209,25 @@ class NotificationHelper {
             }
           });
         }),
-        new Promise(
-          (_, reject) =>
-            setTimeout(() => reject(new Error("Message timeout")), 800), // 稍长超时给content script更多时间
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Message timeout")), 1000),
         ),
       ]);
 
       if (response && response.success) {
-        console.log("Smart page notification sent successfully");
+        console.log("Page notification sent successfully");
         return true;
       } else {
-        // Content script明确表示不支持页面通知，立即回退
+        // Content script明确表示不支持页面通知，回退
         console.log(
           "Page notifications not supported on this page, using Chrome notification",
         );
         return await this.showChromeNotification(fallbackOptions);
       }
     } catch (error) {
-      // 通信失败，立即回退
+      // 通信失败，回退
       console.log(
-        `Message send failed: ${error.message}, using Chrome notification`,
+        `Notification message send failed: ${error.message}, using Chrome notification`,
       );
       return await this.showChromeNotification(fallbackOptions);
     }

@@ -17,7 +17,7 @@ npm run package
 # The build output will be in scripts/dist/arclet-copier-v{version}/
 ```
 
-**No test suite is currently implemented.** The project relies on manual testing procedures documented in TESTING.md.
+**No test suite is currently implemented.** The project relies on manual testing procedures documented in TESTING.md (if it exists).
 
 ## Architecture Overview
 
@@ -70,7 +70,7 @@ The codebase uses a functional module architecture where each directory represen
 - `urlCleaning`: "off"|"smart"|"aggressive" 
 - `silentCopyFormat`: "url"|"markdown"|"shortUrl"|"custom:{templateId}"
 - `shortUrlService`: "isgd"|"tinyurl"
-- `chromeNotifications`: boolean
+- `notificationType`: "off"|"chrome"|"page"
 - Theme and language settings
 
 ### Template System
@@ -117,7 +117,7 @@ Host permissions for external services:
 ## Development Notes
 
 ### Testing
-Manual testing procedures are available with comprehensive test case coverage.
+Manual testing procedures are available with comprehensive test case coverage in TESTING.md (if present).
 
 ### Debugging
 - Background script logs appear in extension service worker console
