@@ -687,5 +687,17 @@
   },
   "confirm": {
     "message": "Confirmar"
+  },
+  "editParamTitle": {
+    "message": "Editar Parâmetro"
+  },
+  "editParamHint": {
+    "message": "Clique duplo para editar"
+  },
+  "paramUpdated": {
+    "message": "Parâmetro atualizado"
+  },
+  "paramUpdateFailed": {
+    "message": "Falha ao atualizar parâmetro"
   }
 }

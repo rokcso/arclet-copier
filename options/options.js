@@ -1095,6 +1095,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ============================================
 
   let currentParamCategory = null; // 'tracking' or 'functional'
+  let currentEditingParam = null; // The parameter being edited (null for add mode)
+  let isEditMode = false; // Whether modal is in edit mode
 
   // Load parameter rules
   async function loadParamRules() {
@@ -1130,6 +1132,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         <button class="param-remove" data-param="${param}" data-category="${category}" title="${getLocalMessage("removeParam") || "删除"}">×</button>
       `;
 
+      // Add double-click event for editing
+      const paramNameSpan = tag.querySelector(".param-name");
+      paramNameSpan.addEventListener("dblclick", () => {
+        showEditParamModal(category, param);
+      });
+      paramNameSpan.style.cursor = "pointer";
+      paramNameSpan.title = getLocalMessage("editParamHint") || "双击编辑";
+
       // Add remove event listener
       const removeBtn = tag.querySelector(".param-remove");
       removeBtn.addEventListener("click", () => {
@@ -1143,16 +1153,47 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Show add parameter modal
   function showAddParamModal(category) {
     currentParamCategory = category;
+    currentEditingParam = null;
+    isEditMode = false;
+
+    // Update modal title
+    const modalTitle = document.getElementById("paramModalTitle");
+    if (modalTitle) {
+      modalTitle.textContent = getLocalMessage("addParamTitle") || "添加参数";
+    }
+
     elements.paramNameInput.value = "";
     elements.paramNameInput.classList.remove("error");
     elements.paramInputModal.style.display = "flex";
     elements.paramNameInput.focus();
   }
 
+  // Show edit parameter modal
+  function showEditParamModal(category, param) {
+    currentParamCategory = category;
+    currentEditingParam = param;
+    isEditMode = true;
+
+    // Update modal title
+    const modalTitle = document.getElementById("paramModalTitle");
+    if (modalTitle) {
+      modalTitle.textContent = getLocalMessage("editParamTitle") || "编辑参数";
+    }
+
+    elements.paramNameInput.value = param;
+    elements.paramNameInput.classList.remove("error");
+    elements.paramInputModal.style.display = "flex";
+    elements.paramNameInput.focus();
+    // Select all text for easy replacement
+    elements.paramNameInput.select();
+  }
+
   // Hide add parameter modal
   function hideAddParamModal() {
     elements.paramInputModal.style.display = "none";
     currentParamCategory = null;
+    currentEditingParam = null;
+    isEditMode = false;
   }
 
   // Validate parameter name
@@ -1178,7 +1219,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return { valid: true };
   }
 
-  // Add parameter
+  // Add or edit parameter (unified function)
   async function addParam(category, paramName) {
     try {
       const validation = validateParamName(paramName);
@@ -1191,31 +1232,75 @@ document.addEventListener("DOMContentLoaded", async () => {
       const lowerParamName = paramName.toLowerCase().trim();
       const rules = await getCustomParamRules();
 
-      // Check if parameter already exists in the same category
-      if (rules[category].includes(lowerParamName)) {
-        toast.show(getLocalMessage("paramExists") || "参数已存在", "error");
-        elements.paramNameInput.classList.add("error");
-        return false;
+      // Edit mode: update existing parameter
+      if (isEditMode && currentEditingParam) {
+        const lowerCurrentParam = currentEditingParam.toLowerCase();
+
+        // If name hasn't changed, just close modal
+        if (lowerParamName === lowerCurrentParam) {
+          hideAddParamModal();
+          return true;
+        }
+
+        // Check if new name already exists
+        if (rules[category].includes(lowerParamName)) {
+          toast.show(getLocalMessage("paramExists") || "参数已存在", "error");
+          elements.paramNameInput.classList.add("error");
+          return false;
+        }
+
+        // Remove old parameter and add new one
+        const index = rules[category].indexOf(lowerCurrentParam);
+        if (index > -1) {
+          rules[category].splice(index, 1);
+        }
+        rules[category].push(lowerParamName);
+
+        const success = await saveCustomParamRules(rules);
+        if (success) {
+          await loadParamRules();
+          hideAddParamModal();
+          toast.show(
+            getLocalMessage("paramUpdated") || "参数已更新",
+            "success",
+          );
+          return true;
+        } else {
+          toast.show(
+            getLocalMessage("paramUpdateFailed") || "更新参数失败",
+            "error",
+          );
+          return false;
+        }
       }
+      // Add mode: add new parameter
+      else {
+        // Check if parameter already exists in the same category
+        if (rules[category].includes(lowerParamName)) {
+          toast.show(getLocalMessage("paramExists") || "参数已存在", "error");
+          elements.paramNameInput.classList.add("error");
+          return false;
+        }
 
-      // Add parameter
-      rules[category].push(lowerParamName);
-      const success = await saveCustomParamRules(rules);
+        // Add parameter
+        rules[category].push(lowerParamName);
+        const success = await saveCustomParamRules(rules);
 
-      if (success) {
-        await loadParamRules();
-        hideAddParamModal();
-        toast.show(getLocalMessage("paramAdded") || "参数已添加", "success");
-        return true;
-      } else {
-        toast.show(
-          getLocalMessage("paramAddFailed") || "添加参数失败",
-          "error",
-        );
-        return false;
+        if (success) {
+          await loadParamRules();
+          hideAddParamModal();
+          toast.show(getLocalMessage("paramAdded") || "参数已添加", "success");
+          return true;
+        } else {
+          toast.show(
+            getLocalMessage("paramAddFailed") || "添加参数失败",
+            "error",
+          );
+          return false;
+        }
       }
     } catch (error) {
-      console.error("[ParamConfig] Failed to add parameter:", error);
+      console.error("[ParamConfig] Failed to add/edit parameter:", error);
       toast.show(getLocalMessage("paramAddFailed") || "添加参数失败", "error");
       return false;
     }

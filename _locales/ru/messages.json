@@ -687,5 +687,17 @@
   },
   "confirm": {
     "message": "Подтвердить"
+  },
+  "editParamTitle": {
+    "message": "Редактировать Параметр"
+  },
+  "editParamHint": {
+    "message": "Двойной щелчок для редактирования"
+  },
+  "paramUpdated": {
+    "message": "Параметр обновлён"
+  },
+  "paramUpdateFailed": {
+    "message": "Ошибка обновления параметра"
   }
 }

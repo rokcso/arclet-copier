@@ -690,5 +690,17 @@
   },
   "cancel": {
     "message": "キャンセル"
+  },
+  "editParamTitle": {
+    "message": "パラメータを編集"
+  },
+  "editParamHint": {
+    "message": "ダブルクリックで編集"
+  },
+  "paramUpdated": {
+    "message": "パラメータが更新されました"
+  },
+  "paramUpdateFailed": {
+    "message": "パラメータの更新に失敗しました"
   }
 }

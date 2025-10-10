@@ -688,5 +688,17 @@
   },
   "confirm": {
     "message": "확인"
+  },
+  "editParamTitle": {
+    "message": "파라미터 편집"
+  },
+  "editParamHint": {
+    "message": "더블클릭하여 편집"
+  },
+  "paramUpdated": {
+    "message": "파라미터가 업데이트되었습니다"
+  },
+  "paramUpdateFailed": {
+    "message": "파라미터 업데이트에 실패했습니다"
   }
 }

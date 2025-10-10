@@ -673,5 +673,17 @@
   },
   "cancel": {
     "message": "取消"
+  },
+  "editParamTitle": {
+    "message": "編輯參數"
+  },
+  "editParamHint": {
+    "message": "雙擊編輯"
+  },
+  "paramUpdated": {
+    "message": "參數已更新"
+  },
+  "paramUpdateFailed": {
+    "message": "更新參數失敗"
   }
 }

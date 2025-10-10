@@ -690,5 +690,17 @@
   },
   "cancel": {
     "message": "Cancelar"
+  },
+  "editParamTitle": {
+    "message": "Editar Parámetro"
+  },
+  "editParamHint": {
+    "message": "Doble clic para editar"
+  },
+  "paramUpdated": {
+    "message": "Parámetro actualizado"
+  },
+  "paramUpdateFailed": {
+    "message": "Error al actualizar parámetro"
   }
 }
