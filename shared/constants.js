@@ -819,9 +819,9 @@ export async function validateAndFixSelector(
       return true;
     }
 
-    // 选项不存在，需要回退到默认值
-    console.warn(
-      `Template "${currentValue}" not found, falling back to default`,
+    // 选项不存在，需要回退到默认值（静默处理，因为已有兜底）
+    console.log(
+      `[Template] Value "${currentValue}" not available, using default format`,
     );
 
     // 查找 "url" 选项
@@ -840,9 +840,9 @@ export async function validateAndFixSelector(
       if (saveFunction && settingKey) {
         try {
           await saveFunction({ [settingKey]: "url" });
-          console.log(`Saved fallback value for ${settingKey}: url`);
+          console.log(`[Template] Fallback saved: ${settingKey} = url`);
         } catch (saveError) {
-          console.warn("Failed to save fallback setting:", saveError);
+          console.log("[Template] Failed to save fallback setting:", saveError);
         }
       }
 
@@ -857,9 +857,11 @@ export async function validateAndFixSelector(
       if (saveFunction && settingKey) {
         try {
           await saveFunction({ [settingKey]: selectElement.value });
-          console.log(`Saved fallback to first option: ${selectElement.value}`);
+          console.log(
+            `[Template] Fallback to first option: ${selectElement.value}`,
+          );
         } catch (saveError) {
-          console.warn("Failed to save fallback setting:", saveError);
+          console.log("[Template] Failed to save fallback setting:", saveError);
         }
       }
 
@@ -867,7 +869,7 @@ export async function validateAndFixSelector(
     }
 
     // 极端情况：没有任何选项
-    console.error("No options available in selector");
+    console.log("[Template] No options available in selector");
     return false;
   } catch (error) {
     console.error("Error in validateAndFixSelector:", error);
