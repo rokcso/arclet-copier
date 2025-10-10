@@ -615,5 +615,80 @@
   },
   "deleteTemplate": {
     "message": "Delete"
+  },
+  "urlParamConfig": {
+    "message": "URL Parameter Configuration"
+  },
+  "trackingParams": {
+    "message": "Tracking Parameters"
+  },
+  "trackingParamsDesc": {
+    "message": "These parameters will be removed in smart cleaning mode"
+  },
+  "functionalParams": {
+    "message": "Functional Parameters"
+  },
+  "functionalParamsDesc": {
+    "message": "These parameters will be preserved in smart cleaning mode"
+  },
+  "addParam": {
+    "message": "Add Parameter"
+  },
+  "addParamTitle": {
+    "message": "Add Parameter"
+  },
+  "paramNameLabel": {
+    "message": "Parameter Name"
+  },
+  "paramNamePlaceholder": {
+    "message": "e.g.: utm_source"
+  },
+  "paramNameHint": {
+    "message": "Only letters, numbers, and underscores allowed"
+  },
+  "removeParam": {
+    "message": "Remove"
+  },
+  "resetParamRules": {
+    "message": "Reset to Defaults"
+  },
+  "resetParamRulesConfirm": {
+    "message": "Are you sure you want to reset to default configuration? This will clear all custom parameter rules."
+  },
+  "paramAdded": {
+    "message": "Parameter added"
+  },
+  "paramRemoved": {
+    "message": "Parameter removed"
+  },
+  "paramRulesReset": {
+    "message": "Reset to default configuration"
+  },
+  "paramExists": {
+    "message": "Parameter already exists"
+  },
+  "paramNameEmpty": {
+    "message": "Parameter name cannot be empty"
+  },
+  "paramNameInvalid": {
+    "message": "Parameter name can only contain letters, numbers, and underscores"
+  },
+  "paramAddFailed": {
+    "message": "Failed to add parameter"
+  },
+  "paramRemoveFailed": {
+    "message": "Failed to remove parameter"
+  },
+  "paramRulesResetFailed": {
+    "message": "Failed to reset configuration"
+  },
+  "loadParamRulesFailed": {
+    "message": "Failed to load parameter configuration"
+  },
+  "confirm": {
+    "message": "Confirm"
+  },
+  "cancel": {
+    "message": "Cancel"
   }
 }

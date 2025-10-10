@@ -1506,3 +1506,402 @@ select.setting-control:hover {
         padding: 10px 16px;
     }
 }
+
+/* ============================================
+   URL 参数配置样式
+   ============================================ */
+
+/* 参数配置组容器 */
+.param-config-group {
+    margin-bottom: 32px;
+}
+
+/* 参数组头部 */
+.param-group-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.param-group-icon {
+    font-size: 24px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.param-group-info h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--arc-text-primary);
+}
+
+.param-group-info p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--arc-text-secondary);
+    line-height: 1.5;
+}
+
+/* 参数标签容器 */
+.param-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+    background: var(--arc-surface);
+    border: 1px solid var(--arc-border);
+    border-radius: var(--arc-radius-sm);
+    min-height: 80px;
+    align-content: flex-start;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.param-tags-container:empty::before {
+    content: attr(data-empty-text);
+    color: var(--arc-text-muted);
+    font-size: 13px;
+    width: 100%;
+    text-align: center;
+    padding: 24px 0;
+}
+
+.param-tags-container:hover {
+    border-color: var(--arc-primary);
+    background: var(--arc-background);
+}
+
+/* 参数标签 */
+.param-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px 6px 12px;
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--arc-text-primary);
+    transition: all 0.2s ease;
+    animation: paramTagFadeIn 0.3s ease;
+}
+
+@keyframes paramTagFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.param-tag:hover {
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px var(--glow-light);
+}
+
+.param-tag .param-name {
+    font-family: "Monaco", "Menlo", "Consolas", monospace;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.param-tag .param-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--arc-text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.param-tag .param-remove:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* 添加参数按钮 */
+.param-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--arc-background);
+    border: 1px dashed var(--arc-border);
+    border-radius: var(--arc-radius-sm);
+    color: var(--arc-text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.param-add-btn:hover {
+    border-color: var(--arc-primary);
+    border-style: solid;
+    color: var(--arc-primary);
+    background: var(--glow-light);
+}
+
+.param-add-btn svg {
+    flex-shrink: 0;
+}
+
+/* 参数操作区域 */
+.param-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 16px;
+    border-top: 1px solid var(--arc-border);
+    margin-top: 24px;
+}
+
+/* 恢复默认按钮 */
+.param-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+    border-radius: var(--arc-radius-sm);
+    color: var(--arc-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.param-reset-btn:hover {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #dc2626;
+}
+
+.param-reset-btn svg {
+    flex-shrink: 0;
+}
+
+/* ============================================
+   参数输入模态框样式
+   ============================================ */
+
+.param-input-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.2s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.param-input-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.param-input-content {
+    position: relative;
+    width: 90%;
+    max-width: 450px;
+    background: var(--arc-background);
+    border-radius: var(--arc-radius);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: modalSlideUp 0.3s ease;
+}
+
+@keyframes modalSlideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 模态框头部 */
+.param-input-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--arc-border);
+}
+
+.param-input-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--arc-text-primary);
+}
+
+.param-input-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: var(--arc-text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.param-input-close:hover {
+    background: var(--arc-surface);
+    color: var(--arc-text-primary);
+}
+
+/* 模态框主体 */
+.param-input-body {
+    padding: 24px;
+}
+
+.param-input-body label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--arc-text-primary);
+}
+
+.param-input-body input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--arc-background);
+    border: 1px solid var(--arc-border);
+    border-radius: var(--arc-radius-sm);
+    font-size: 14px;
+    font-family: "Monaco", "Menlo", "Consolas", monospace;
+    color: var(--arc-text-primary);
+    transition: all 0.2s ease;
+}
+
+.param-input-body input:focus {
+    outline: none;
+    border-color: var(--arc-primary);
+    box-shadow: 0 0 0 3px var(--glow-light);
+}
+
+.param-input-body input.error {
+    border-color: #dc2626;
+}
+
+.param-input-body input.error:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.param-input-hint {
+    margin: 8px 0 0 0;
+    font-size: 12px;
+    color: var(--arc-text-muted);
+}
+
+.param-input-error {
+    margin: 8px 0 0 0;
+    font-size: 12px;
+    color: #dc2626;
+    display: none;
+}
+
+.param-input-error.show {
+    display: block;
+}
+
+/* 模态框底部 */
+.param-input-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid var(--arc-border);
+}
+
+.param-input-footer .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--arc-radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.param-input-footer .btn-secondary {
+    background: var(--arc-surface);
+    color: var(--arc-text-secondary);
+}
+
+.param-input-footer .btn-secondary:hover {
+    background: var(--arc-border);
+}
+
+.param-input-footer .btn-primary {
+    background: var(--arc-primary);
+    color: white;
+}
+
+.param-input-footer .btn-primary:hover {
+    background: var(--arc-primary-hover);
+    box-shadow: 0 0 0 3px var(--glow-light);
+}
+
+.param-input-footer .btn-primary:disabled {
+    background: var(--arc-border);
+    color: var(--arc-text-muted);
+    cursor: not-allowed;
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+    .param-input-content {
+        width: 95%;
+        max-width: none;
+    }
+
+    .param-tags-container {
+        padding: 12px;
+    }
+
+    .param-tag {
+        font-size: 12px;
+        padding: 5px 8px 5px 10px;
+    }
+}

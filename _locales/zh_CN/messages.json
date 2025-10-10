@@ -587,5 +587,80 @@
   },
   "deleteTemplate": {
     "message": "删除"
+  },
+  "urlParamConfig": {
+    "message": "URL 参数配置"
+  },
+  "trackingParams": {
+    "message": "跟踪参数"
+  },
+  "trackingParamsDesc": {
+    "message": "智能清理模式下，这些参数会被移除"
+  },
+  "functionalParams": {
+    "message": "功能参数"
+  },
+  "functionalParamsDesc": {
+    "message": "智能清理模式下，这些参数会被保留"
+  },
+  "addParam": {
+    "message": "添加参数"
+  },
+  "addParamTitle": {
+    "message": "添加参数"
+  },
+  "paramNameLabel": {
+    "message": "参数名称"
+  },
+  "paramNamePlaceholder": {
+    "message": "例如：utm_source"
+  },
+  "paramNameHint": {
+    "message": "只能包含字母、数字、下划线"
+  },
+  "removeParam": {
+    "message": "删除"
+  },
+  "resetParamRules": {
+    "message": "恢复默认配置"
+  },
+  "resetParamRulesConfirm": {
+    "message": "确定要恢复默认配置吗？这将清除所有自定义参数规则。"
+  },
+  "paramAdded": {
+    "message": "参数已添加"
+  },
+  "paramRemoved": {
+    "message": "参数已删除"
+  },
+  "paramRulesReset": {
+    "message": "已恢复默认配置"
+  },
+  "paramExists": {
+    "message": "参数已存在"
+  },
+  "paramNameEmpty": {
+    "message": "参数名不能为空"
+  },
+  "paramNameInvalid": {
+    "message": "参数名只能包含字母、数字、下划线"
+  },
+  "paramAddFailed": {
+    "message": "添加参数失败"
+  },
+  "paramRemoveFailed": {
+    "message": "删除参数失败"
+  },
+  "paramRulesResetFailed": {
+    "message": "恢复默认配置失败"
+  },
+  "loadParamRulesFailed": {
+    "message": "加载参数配置失败"
+  },
+  "confirm": {
+    "message": "确定"
+  },
+  "cancel": {
+    "message": "取消"
   }
 }

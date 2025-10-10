@@ -558,6 +558,170 @@
                 </div>
 
                 <div class="settings-section">
+                    <h2 data-i18n="urlParamConfig">URL 参数配置</h2>
+
+                    <!-- 跟踪参数 -->
+                    <div class="param-config-group">
+                        <div class="param-group-header">
+                            <span class="param-group-icon">🔴</span>
+                            <div class="param-group-info">
+                                <h3 data-i18n="trackingParams">跟踪参数</h3>
+                                <p data-i18n="trackingParamsDesc">
+                                    智能清理模式下，这些参数会被移除
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="param-tags-container"
+                            id="trackingParamsList"
+                        >
+                            <!-- 跟踪参数标签将通过 JavaScript 动态生成 -->
+                        </div>
+                        <button class="param-add-btn" id="addTrackingParamBtn">
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span data-i18n="addParam">添加参数</span>
+                        </button>
+                    </div>
+
+                    <!-- 功能参数 -->
+                    <div class="param-config-group">
+                        <div class="param-group-header">
+                            <span class="param-group-icon">🟢</span>
+                            <div class="param-group-info">
+                                <h3 data-i18n="functionalParams">功能参数</h3>
+                                <p data-i18n="functionalParamsDesc">
+                                    智能清理模式下，这些参数会被保留
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="param-tags-container"
+                            id="functionalParamsList"
+                        >
+                            <!-- 功能参数标签将通过 JavaScript 动态生成 -->
+                        </div>
+                        <button
+                            class="param-add-btn"
+                            id="addFunctionalParamBtn"
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span data-i18n="addParam">添加参数</span>
+                        </button>
+                    </div>
+
+                    <!-- 恢复默认按钮 -->
+                    <div class="param-actions">
+                        <button class="param-reset-btn" id="resetParamRulesBtn">
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"
+                                ></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path
+                                    d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"
+                                ></path>
+                                <path d="M3 21v-5h5"></path>
+                            </svg>
+                            <span data-i18n="resetParamRules"
+                                >恢复默认配置</span
+                            >
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 添加参数输入模态框 -->
+                <div
+                    class="param-input-modal"
+                    id="paramInputModal"
+                    style="display: none"
+                >
+                    <div class="param-input-overlay"></div>
+                    <div class="param-input-content">
+                        <div class="param-input-header">
+                            <h3 data-i18n="addParamTitle">添加参数</h3>
+                            <button
+                                class="param-input-close"
+                                id="paramInputClose"
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="param-input-body">
+                            <label
+                                for="paramNameInput"
+                                data-i18n="paramNameLabel"
+                                >参数名称</label
+                            >
+                            <input
+                                type="text"
+                                id="paramNameInput"
+                                placeholder="例如：utm_source"
+                                data-i18n-placeholder="paramNamePlaceholder"
+                            />
+                            <p
+                                class="param-input-hint"
+                                data-i18n="paramNameHint"
+                            >
+                                只能包含字母、数字、下划线
+                            </p>
+                        </div>
+                        <div class="param-input-footer">
+                            <button
+                                class="btn btn-secondary"
+                                id="paramCancelBtn"
+                                data-i18n="cancel"
+                            >
+                                取消
+                            </button>
+                            <button
+                                class="btn btn-primary"
+                                id="paramConfirmBtn"
+                                data-i18n="confirm"
+                            >
+                                确定
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
                     <h2 data-i18n="supportSection">支持我们</h2>
 
                     <!-- 评价引导组件 -->

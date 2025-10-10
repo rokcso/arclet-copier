@@ -433,7 +433,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 应用过滤器
-  function applyFilters() {
+  async function applyFilters() {
     const webPagesOnly = document.getElementById("webPagesOnly").checked;
     const removeDuplicates = elements.removeDuplicates.checked;
 
@@ -448,8 +448,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const seen = new Set();
       const cleaningMode = currentSettings.urlCleaning;
 
-      filteredTabs = filteredTabs.filter((tab) => {
-        const processedUrl = processUrl(tab.url, cleaningMode);
+      // 使用异步处理
+      const processedUrls = await Promise.all(
+        filteredTabs.map((tab) => processUrl(tab.url, cleaningMode)),
+      );
+
+      filteredTabs = filteredTabs.filter((tab, index) => {
+        const processedUrl = processedUrls[index];
         if (seen.has(processedUrl)) {
           return false;
         }
@@ -463,13 +468,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 检测重复项
-  function detectDuplicates(tabs) {
+  async function detectDuplicates(tabs) {
     const urlCounts = new Map();
     const duplicateUrls = new Set();
 
     // 统计每个处理后的 URL 出现次数
-    tabs.forEach((tab) => {
-      const processedUrl = processUrl(tab.url, currentSettings.urlCleaning);
+    const processedUrls = await Promise.all(
+      tabs.map((tab) => processUrl(tab.url, currentSettings.urlCleaning)),
+    );
+
+    processedUrls.forEach((processedUrl, index) => {
       const count = urlCounts.get(processedUrl) || 0;
       urlCounts.set(processedUrl, count + 1);
 
@@ -482,7 +490,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 渲染标签页列表
-  function renderTabs() {
+  async function renderTabs() {
     // 找到现有的tabsList，如果不存在则创建
     let container = elements.tabsContainer.querySelector(".tabs-list");
     if (!container) {
@@ -508,13 +516,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 检测重复项（只有在未开启去重功能时才检测）
     const duplicateUrls = !elements.removeDuplicates.checked
-      ? detectDuplicates(filteredTabs)
+      ? await detectDuplicates(filteredTabs)
       : new Set();
 
-    filteredTabs.forEach((tab) => {
-      const processedUrl = processUrl(tab.url, currentSettings.urlCleaning);
+    // 预处理所有 URL
+    const processedUrls = await Promise.all(
+      filteredTabs.map((tab) =>
+        processUrl(tab.url, currentSettings.urlCleaning),
+      ),
+    );
+
+    filteredTabs.forEach((tab, index) => {
+      const processedUrl = processedUrls[index];
       const isDuplicate = duplicateUrls.has(processedUrl);
-      const tabElement = createTabElement(tab, isDuplicate);
+      const tabElement = createTabElement(tab, isDuplicate, processedUrl);
       container.appendChild(tabElement);
     });
 
@@ -523,7 +538,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 创建标签页元素
-  function createTabElement(tab, isDuplicate = false) {
+  function createTabElement(tab, isDuplicate = false, processedUrl = null) {
     const div = document.createElement("div");
     div.className = "tab-item";
     div.dataset.tabId = tab.id;
@@ -537,7 +552,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       div.classList.add("duplicate");
     }
 
-    const processedUrl = processUrl(tab.url, currentSettings.urlCleaning);
+    // 使用传入的 processedUrl，避免重复处理
+    const url = processedUrl || tab.url;
 
     const duplicateWatermark = isDuplicate
       ? `<span class="watermark-text" title="${getLocalMessage("duplicateUrl") || "重复的URL"}">${getLocalMessage("duplicate") || "DUPLICATE"}</span>`
@@ -550,7 +566,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           ${escapeHtml(tab.title || getLocalMessage("untitled"))}
           ${duplicateWatermark}
         </div>
-        <div class="tab-url">${escapeHtml(processedUrl)}</div>
+        <div class="tab-url">${escapeHtml(url)}</div>
       </div>
     `;
 
@@ -694,9 +710,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 如果模板不存在（被删除），使用fallback处理
         if (!template) {
           console.warn(`Template ${templateId} not found, using fallback`);
-          return tabs
-            .map((tab) => processUrl(tab.url, cleaningMode))
-            .join("\n");
+          const urls = await Promise.all(
+            tabs.map((tab) => processUrl(tab.url, cleaningMode)),
+          );
+          return urls.join("\n");
         }
 
         // 处理多个tab，每个tab一行
@@ -715,7 +732,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const selectedService =
                   await settingsManager.getSetting("shortUrlService");
                 // 修复: 先清理URL
-                const cleanedUrl = processUrl(tab.url, cleaningMode);
+                const cleanedUrl = await processUrl(tab.url, cleaningMode);
 
                 // 修复: 使用清理后的URL检查缓存
                 const cachedUrl = await shortUrlCache.get(
@@ -751,14 +768,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                   "Error generating short URL for template:",
                   error,
                 );
-                context.shortUrl = processUrl(tab.url, cleaningMode);
+                context.shortUrl = await processUrl(tab.url, cleaningMode);
               }
             }
 
             const result = await processTemplateWithFallback(
               templateId,
               context,
-              processUrl(tab.url, cleaningMode),
+              await processUrl(tab.url, cleaningMode),
             );
 
             return result.content;
@@ -769,23 +786,30 @@ document.addEventListener("DOMContentLoaded", async () => {
       } catch (error) {
         console.error("Error processing custom template:", error);
         // 使用fallback处理
-        return tabs.map((tab) => processUrl(tab.url, cleaningMode)).join("\n");
+        const urls = await Promise.all(
+          tabs.map((tab) => processUrl(tab.url, cleaningMode)),
+        );
+        return urls.join("\n");
       }
     }
 
     switch (format) {
       case "text":
       case "url":
-        return tabs.map((tab) => processUrl(tab.url, cleaningMode)).join("\n");
+        const urls = await Promise.all(
+          tabs.map((tab) => processUrl(tab.url, cleaningMode)),
+        );
+        return urls.join("\n");
 
       case "markdown":
-        return tabs
-          .map((tab) => {
-            const url = processUrl(tab.url, cleaningMode);
+        const markdownLinks = await Promise.all(
+          tabs.map(async (tab) => {
+            const url = await processUrl(tab.url, cleaningMode);
             const title = tab.title || getLocalMessage("untitled");
             return `- [${title}](${url})`;
-          })
-          .join("\n");
+          }),
+        );
+        return markdownLinks.join("\n");
 
       case "shortUrl":
         // 获取短链服务设置
@@ -796,7 +820,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const shortUrls = await Promise.all(
           tabs.map(async (tab) => {
             // 修复: 先清理URL
-            const cleanedUrl = processUrl(tab.url, cleaningMode);
+            const cleanedUrl = await processUrl(tab.url, cleaningMode);
 
             // 修复: 使用清理后的URL检查缓存
             const cachedUrl = await shortUrlCache.get(
@@ -828,7 +852,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         return shortUrls.join("\n");
 
       default:
-        return tabs.map((tab) => processUrl(tab.url, cleaningMode)).join("\n");
+        const defaultUrls = await Promise.all(
+          tabs.map((tab) => processUrl(tab.url, cleaningMode)),
+        );
+        return defaultUrls.join("\n");
     }
   }
 

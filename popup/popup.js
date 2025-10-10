@@ -323,10 +323,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 更新页面信息显示
-  function updatePageDisplay() {
+  async function updatePageDisplay() {
     const cleaningSelect = elements.removeParamsToggle;
     const cleaningMode = cleaningSelect.getAttribute("data-value");
-    const processedUrl = processUrl(currentUrl, cleaningMode);
+    const processedUrl = await processUrl(currentUrl, cleaningMode);
 
     // 更新标题显示
     if (currentTitle && currentTitle.trim()) {
@@ -391,7 +391,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const cleaningSelect = elements.removeParamsToggle;
       const cleaningMode = cleaningSelect.getAttribute("data-value");
-      const processedUrl = processUrl(currentUrl, cleaningMode);
+      const processedUrl = await processUrl(currentUrl, cleaningMode);
 
       // 首先尝试现代clipboard API
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -429,7 +429,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         const cleaningSelect = elements.removeParamsToggle;
         const cleaningMode = cleaningSelect.getAttribute("data-value");
-        const processedUrl = processUrl(currentUrl, cleaningMode);
+        const processedUrl = await processUrl(currentUrl, cleaningMode);
         fallbackCopy(processedUrl);
         fallbackSuccess = true;
         showStatus();
@@ -467,10 +467,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 创建 markdown 链接格式
-  function createMarkdownLink(url, title) {
+  async function createMarkdownLink(url, title) {
     const cleaningSelect = elements.removeParamsToggle;
     const cleaningMode = cleaningSelect.getAttribute("data-value");
-    const processedUrl = processUrl(url, cleaningMode);
+    const processedUrl = await processUrl(url, cleaningMode);
     const linkTitle = title || new URL(url).hostname;
     return `[${linkTitle}](${processedUrl})`;
   }
@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const startTime = Date.now();
 
     try {
-      const markdownLink = createMarkdownLink(currentUrl, currentTitle);
+      const markdownLink = await createMarkdownLink(currentUrl, currentTitle);
 
       // 首先尝试现代clipboard API
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -600,7 +600,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const cleaningMode = cleaningSelect.getAttribute("data-value");
 
       // 修复: 先清理URL
-      const cleanedUrl = processUrl(currentUrl, cleaningMode);
+      const cleanedUrl = await processUrl(currentUrl, cleaningMode);
 
       // 修复: 使用清理后的URL检查缓存
       const cachedShortUrl = await shortUrlCache.get(
@@ -856,10 +856,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 显示二维码模态框
-  function showQRModal() {
+  async function showQRModal() {
     const cleaningSelect = elements.removeParamsToggle;
     const cleaningMode = cleaningSelect.getAttribute("data-value");
-    const processedUrl = processUrl(currentUrl, cleaningMode);
+    const processedUrl = await processUrl(currentUrl, cleaningMode);
 
     generateQRCode(processedUrl);
     elements.qrModal.classList.add("show");

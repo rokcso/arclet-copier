@@ -183,35 +183,152 @@ export const PARAM_CATEGORIES = {
   ],
 };
 
-// 判断参数是否应该保留的共享函数
-function shouldKeepParameter(paramName, cleaningMode) {
-  const lowerParam = paramName.toLowerCase();
+// 自定义参数规则的存储 key
+export const CUSTOM_PARAM_RULES_KEY = "customParamRules";
 
-  // 功能性参数总是保留
-  if (PARAM_CATEGORIES.FUNCTIONAL.includes(lowerParam)) {
-    return true;
-  }
+// 默认参数规则配置
+export const DEFAULT_PARAM_RULES = {
+  tracking: [...PARAM_CATEGORIES.TRACKING],
+  functional: [...PARAM_CATEGORIES.FUNCTIONAL],
+  version: "1.0",
+};
 
-  // 跟踪参数的处理
-  if (PARAM_CATEGORIES.TRACKING.includes(lowerParam)) {
-    return false; // 跟踪参数总是移除
-  }
+/**
+ * 初始化自定义参数规则
+ * 如果用户没有自定义配置，则使用预置的参数列表初始化
+ * @returns {Promise<void>}
+ */
+export async function initializeParamRules() {
+  try {
+    const result = await chrome.storage.sync.get(CUSTOM_PARAM_RULES_KEY);
 
-  // 根据清理模式处理其他参数
-  switch (cleaningMode) {
-    case "off":
-      return true; // 不清理，保留所有参数
-    case "smart":
-      return true; // 智能清理，保留未知参数（安全第一）
-    case "aggressive":
-      return false; // 激进清理，移除所有非功能性参数
-    default:
-      return true;
+    if (!result[CUSTOM_PARAM_RULES_KEY]) {
+      const initialRules = {
+        ...DEFAULT_PARAM_RULES,
+        lastModified: new Date().toISOString(),
+      };
+
+      await chrome.storage.sync.set({
+        [CUSTOM_PARAM_RULES_KEY]: initialRules,
+      });
+
+      console.log("[ParamRules] Initialized with default rules");
+    }
+  } catch (error) {
+    console.error("[ParamRules] Failed to initialize:", error);
   }
 }
 
-// 智能处理URL参数的共享函数
-export function processUrl(url, cleaningMode = "smart") {
+/**
+ * 获取自定义参数规则
+ * @returns {Promise<{tracking: string[], functional: string[]}>}
+ */
+export async function getCustomParamRules() {
+  try {
+    const result = await chrome.storage.sync.get(CUSTOM_PARAM_RULES_KEY);
+
+    if (result[CUSTOM_PARAM_RULES_KEY]) {
+      return {
+        tracking: result[CUSTOM_PARAM_RULES_KEY].tracking || [],
+        functional: result[CUSTOM_PARAM_RULES_KEY].functional || [],
+      };
+    }
+
+    // 如果没有自定义配置，返回默认配置
+    return {
+      tracking: [...PARAM_CATEGORIES.TRACKING],
+      functional: [...PARAM_CATEGORIES.FUNCTIONAL],
+    };
+  } catch (error) {
+    console.error("[ParamRules] Failed to get custom rules:", error);
+    // 出错时返回默认配置
+    return {
+      tracking: [...PARAM_CATEGORIES.TRACKING],
+      functional: [...PARAM_CATEGORIES.FUNCTIONAL],
+    };
+  }
+}
+
+/**
+ * 保存自定义参数规则
+ * @param {{tracking: string[], functional: string[]}} rules - 参数规则
+ * @returns {Promise<boolean>} 保存是否成功
+ */
+export async function saveCustomParamRules(rules) {
+  try {
+    const saveData = {
+      tracking: rules.tracking || [],
+      functional: rules.functional || [],
+      version: "1.0",
+      lastModified: new Date().toISOString(),
+    };
+
+    await chrome.storage.sync.set({
+      [CUSTOM_PARAM_RULES_KEY]: saveData,
+    });
+
+    console.log("[ParamRules] Saved custom rules:", saveData);
+    return true;
+  } catch (error) {
+    console.error("[ParamRules] Failed to save custom rules:", error);
+    return false;
+  }
+}
+
+/**
+ * 判断参数是否应该保留（异步版本，支持自定义规则）
+ * @param {string} paramName - 参数名称
+ * @param {string} cleaningMode - 清理模式 ('off' | 'smart' | 'aggressive')
+ * @returns {Promise<boolean>} 是否保留该参数
+ */
+async function shouldKeepParameter(paramName, cleaningMode) {
+  const lowerParam = paramName.toLowerCase();
+
+  // Off 模式：保留所有参数
+  if (cleaningMode === "off") {
+    return true;
+  }
+
+  // Aggressive 模式：移除所有参数
+  if (cleaningMode === "aggressive") {
+    return false;
+  }
+
+  // Smart 模式：根据用户配置的参数列表判断
+  if (cleaningMode === "smart") {
+    try {
+      const customRules = await getCustomParamRules();
+
+      // 功能性参数保留
+      if (customRules.functional.includes(lowerParam)) {
+        return true;
+      }
+
+      // 跟踪参数移除
+      if (customRules.tracking.includes(lowerParam)) {
+        return false;
+      }
+
+      // 未知参数保留（安全策略）
+      return true;
+    } catch (error) {
+      console.error("[ParamRules] Error in shouldKeepParameter:", error);
+      // 出错时采用安全策略：保留参数
+      return true;
+    }
+  }
+
+  // 默认保留
+  return true;
+}
+
+/**
+ * 智能处理URL参数（异步版本，支持自定义规则）
+ * @param {string} url - 要处理的 URL
+ * @param {string} cleaningMode - 清理模式 ('off' | 'smart' | 'aggressive')
+ * @returns {Promise<string>} 处理后的 URL
+ */
+export async function processUrl(url, cleaningMode = "smart") {
   if (!url || cleaningMode === "off") {
     return url;
   }
@@ -219,18 +336,19 @@ export function processUrl(url, cleaningMode = "smart") {
   try {
     const urlObj = new URL(url);
 
-    // 激进模式：移除所有查询参数（保持向后兼容）
+    // 激进模式：移除所有查询参数
     if (cleaningMode === "aggressive") {
       return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
     }
 
-    // 智能模式：只移除跟踪参数
+    // 智能模式：根据自定义规则移除跟踪参数
     if (cleaningMode === "smart") {
       const params = new URLSearchParams(urlObj.search);
       const newParams = new URLSearchParams();
 
       for (const [key, value] of params.entries()) {
-        if (shouldKeepParameter(key, cleaningMode)) {
+        const shouldKeep = await shouldKeepParameter(key, cleaningMode);
+        if (shouldKeep) {
           newParams.append(key, value);
         }
       }
@@ -241,6 +359,7 @@ export function processUrl(url, cleaningMode = "smart") {
 
     return url;
   } catch (error) {
+    console.error("[ParamRules] Error in processUrl:", error);
     return url;
   }
 }
@@ -490,9 +609,10 @@ export class TemplateEngine {
   }
 
   initializeFieldProcessors() {
-    // 基础字段处理器
-    this.fieldProcessors.set("url", (context) =>
-      processUrl(context.url, context.urlCleaning),
+    // 基础字段处理器（异步）
+    this.fieldProcessors.set(
+      "url",
+      async (context) => await processUrl(context.url, context.urlCleaning),
     );
     this.fieldProcessors.set("originalUrl", (context) => context.url);
     this.fieldProcessors.set("title", (context) => context.title || "");
@@ -578,26 +698,32 @@ export class TemplateEngine {
       // 匹配 {{fieldName}} 模式
       const fieldPattern = /\{\{([^}]+)\}\}/g;
 
-      return template.replace(fieldPattern, (match, fieldName) => {
+      // 首先找到所有需要替换的字段
+      const matches = [...template.matchAll(fieldPattern)];
+      let result = template;
+
+      // 处理每个字段（支持异步）
+      for (const match of matches) {
         try {
-          const trimmedFieldName = fieldName.trim();
-          const processor = this.fieldProcessors.get(trimmedFieldName);
+          const fieldName = match[1].trim();
+          const processor = this.fieldProcessors.get(fieldName);
 
           if (processor) {
-            const result = processor(context);
+            const value = await processor(context);
             // 确保返回字符串类型
-            return result != null ? String(result) : "";
-          } else {
-            return match; // 未知字段保持原样，不输出警告
+            const replacement = value != null ? String(value) : "";
+            result = result.replace(match[0], replacement);
           }
         } catch (error) {
           console.error(
-            `TemplateEngine: Error processing field '${fieldName}':`,
+            `TemplateEngine: Error processing field '${match[1]}':`,
             error,
           );
-          return match; // 出错时返回原始匹配
+          // 出错时保持原样
         }
-      });
+      }
+
+      return result;
     } catch (error) {
       console.error("TemplateEngine: Template processing failed:", error);
       return template; // 降级处理，返回原始模板
@@ -914,7 +1040,7 @@ export async function processTemplateWithFallback(
       console.warn(`Template ${templateId} not found, using fallback`);
       const fallback =
         fallbackContent ||
-        (context.url ? processUrl(context.url, context.urlCleaning) : "");
+        (context.url ? await processUrl(context.url, context.urlCleaning) : "");
 
       return {
         success: false,
@@ -931,7 +1057,7 @@ export async function processTemplateWithFallback(
       );
       // 可以选择生成shortUrl或者使用原URL作为fallback
       context.shortUrl = context.url
-        ? processUrl(context.url, context.urlCleaning)
+        ? await processUrl(context.url, context.urlCleaning)
         : "";
     }
 
@@ -951,7 +1077,7 @@ export async function processTemplateWithFallback(
     // 使用fallback内容
     const fallback =
       fallbackContent ||
-      (context.url ? processUrl(context.url, context.urlCleaning) : "");
+      (context.url ? await processUrl(context.url, context.urlCleaning) : "");
 
     return {
       success: false,

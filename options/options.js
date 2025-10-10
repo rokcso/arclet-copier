@@ -7,6 +7,9 @@ import {
   templateEngine,
   TEMPLATE_FIELDS,
   TemplateChangeNotifier,
+  getCustomParamRules,
+  saveCustomParamRules,
+  DEFAULT_PARAM_RULES,
 } from "../shared/constants.js";
 
 import settingsManager from "../shared/settings-manager.js";
@@ -1087,6 +1090,264 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ============================================
+  // URL Parameter Configuration Functions
+  // ============================================
+
+  let currentParamCategory = null; // 'tracking' or 'functional'
+
+  // Load parameter rules
+  async function loadParamRules() {
+    try {
+      const rules = await getCustomParamRules();
+      renderParamTags("trackingParamsList", rules.tracking, "tracking");
+      renderParamTags("functionalParamsList", rules.functional, "functional");
+      console.log("[ParamConfig] Loaded parameter rules:", rules);
+    } catch (error) {
+      console.error("[ParamConfig] Failed to load parameter rules:", error);
+      toast.show(
+        getLocalMessage("loadParamRulesFailed") || "加载参数配置失败",
+        "error",
+      );
+    }
+  }
+
+  // Render parameter tags
+  function renderParamTags(containerId, params, category) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    // Sort parameters alphabetically
+    const sortedParams = [...params].sort();
+
+    sortedParams.forEach((param) => {
+      const tag = document.createElement("div");
+      tag.className = "param-tag";
+      tag.innerHTML = `
+        <span class="param-name">${param}</span>
+        <button class="param-remove" data-param="${param}" data-category="${category}" title="${getLocalMessage("removeParam") || "删除"}">×</button>
+      `;
+
+      // Add remove event listener
+      const removeBtn = tag.querySelector(".param-remove");
+      removeBtn.addEventListener("click", () => {
+        removeParam(category, param);
+      });
+
+      container.appendChild(tag);
+    });
+  }
+
+  // Show add parameter modal
+  function showAddParamModal(category) {
+    currentParamCategory = category;
+    elements.paramNameInput.value = "";
+    elements.paramNameInput.classList.remove("error");
+    elements.paramInputModal.style.display = "flex";
+    elements.paramNameInput.focus();
+  }
+
+  // Hide add parameter modal
+  function hideAddParamModal() {
+    elements.paramInputModal.style.display = "none";
+    currentParamCategory = null;
+  }
+
+  // Validate parameter name
+  function validateParamName(paramName) {
+    if (!paramName || paramName.trim() === "") {
+      return {
+        valid: false,
+        error: getLocalMessage("paramNameEmpty") || "参数名不能为空",
+      };
+    }
+
+    // Only allow letters, numbers, and underscores
+    const validPattern = /^[a-zA-Z0-9_]+$/;
+    if (!validPattern.test(paramName)) {
+      return {
+        valid: false,
+        error:
+          getLocalMessage("paramNameInvalid") ||
+          "参数名只能包含字母、数字、下划线",
+      };
+    }
+
+    return { valid: true };
+  }
+
+  // Add parameter
+  async function addParam(category, paramName) {
+    try {
+      const validation = validateParamName(paramName);
+      if (!validation.valid) {
+        toast.show(validation.error, "error");
+        elements.paramNameInput.classList.add("error");
+        return false;
+      }
+
+      const lowerParamName = paramName.toLowerCase().trim();
+      const rules = await getCustomParamRules();
+
+      // Check if parameter already exists in the same category
+      if (rules[category].includes(lowerParamName)) {
+        toast.show(getLocalMessage("paramExists") || "参数已存在", "error");
+        elements.paramNameInput.classList.add("error");
+        return false;
+      }
+
+      // Add parameter
+      rules[category].push(lowerParamName);
+      const success = await saveCustomParamRules(rules);
+
+      if (success) {
+        await loadParamRules();
+        hideAddParamModal();
+        toast.show(getLocalMessage("paramAdded") || "参数已添加", "success");
+        return true;
+      } else {
+        toast.show(
+          getLocalMessage("paramAddFailed") || "添加参数失败",
+          "error",
+        );
+        return false;
+      }
+    } catch (error) {
+      console.error("[ParamConfig] Failed to add parameter:", error);
+      toast.show(getLocalMessage("paramAddFailed") || "添加参数失败", "error");
+      return false;
+    }
+  }
+
+  // Remove parameter
+  async function removeParam(category, paramName) {
+    try {
+      const rules = await getCustomParamRules();
+      rules[category] = rules[category].filter((p) => p !== paramName);
+
+      const success = await saveCustomParamRules(rules);
+      if (success) {
+        await loadParamRules();
+        toast.show(getLocalMessage("paramRemoved") || "参数已删除", "success");
+      } else {
+        toast.show(
+          getLocalMessage("paramRemoveFailed") || "删除参数失败",
+          "error",
+        );
+      }
+    } catch (error) {
+      console.error("[ParamConfig] Failed to remove parameter:", error);
+      toast.show(
+        getLocalMessage("paramRemoveFailed") || "删除参数失败",
+        "error",
+      );
+    }
+  }
+
+  // Reset to defaults
+  async function resetToDefaults() {
+    const confirmed = confirm(
+      getLocalMessage("resetParamRulesConfirm") ||
+        "确定要恢复默认配置吗？这将清除所有自定义参数规则。",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const success = await saveCustomParamRules({
+        tracking: [...DEFAULT_PARAM_RULES.tracking],
+        functional: [...DEFAULT_PARAM_RULES.functional],
+      });
+
+      if (success) {
+        await loadParamRules();
+        toast.show(
+          getLocalMessage("paramRulesReset") || "已恢复默认配置",
+          "success",
+        );
+      } else {
+        toast.show(
+          getLocalMessage("paramRulesResetFailed") || "恢复默认配置失败",
+          "error",
+        );
+      }
+    } catch (error) {
+      console.error("[ParamConfig] Failed to reset parameter rules:", error);
+      toast.show(
+        getLocalMessage("paramRulesResetFailed") || "恢复默认配置失败",
+        "error",
+      );
+    }
+  }
+
+  // Initialize parameter configuration
+  function initializeParamConfig() {
+    // Add tracking parameter button
+    elements.addTrackingParamBtn.addEventListener("click", () => {
+      showAddParamModal("tracking");
+    });
+
+    // Add functional parameter button
+    elements.addFunctionalParamBtn.addEventListener("click", () => {
+      showAddParamModal("functional");
+    });
+
+    // Reset button
+    elements.resetParamRulesBtn.addEventListener("click", resetToDefaults);
+
+    // Modal close button
+    elements.paramInputClose.addEventListener("click", hideAddParamModal);
+
+    // Modal cancel button
+    elements.paramCancelBtn.addEventListener("click", hideAddParamModal);
+
+    // Modal confirm button
+    elements.paramConfirmBtn.addEventListener("click", () => {
+      const paramName = elements.paramNameInput.value.trim();
+      if (currentParamCategory && paramName) {
+        addParam(currentParamCategory, paramName);
+      }
+    });
+
+    // Input enter key
+    elements.paramNameInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const paramName = elements.paramNameInput.value.trim();
+        if (currentParamCategory && paramName) {
+          addParam(currentParamCategory, paramName);
+        }
+      }
+    });
+
+    // Input ESC key to close modal
+    elements.paramNameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        hideAddParamModal();
+      }
+    });
+
+    // Click overlay to close modal
+    elements.paramInputModal.addEventListener("click", (e) => {
+      if (
+        e.target === elements.paramInputModal ||
+        e.target.classList.contains("param-input-overlay")
+      ) {
+        hideAddParamModal();
+      }
+    });
+
+    // Remove error state on input
+    elements.paramNameInput.addEventListener("input", () => {
+      elements.paramNameInput.classList.remove("error");
+    });
+  }
+
+  // ============================================
+  // Initialize Function
+  // ============================================
+
   // 初始化所有组件
   async function initialize() {
     // Initialize DOM elements
@@ -1114,6 +1375,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       templateSaveBtn: document.getElementById("templateSaveBtn"),
       templateCancelBtn: document.getElementById("templateCancelBtn"),
       previewRefreshBtn: document.getElementById("previewRefreshBtn"),
+
+      // URL parameter configuration elements
+      trackingParamsList: document.getElementById("trackingParamsList"),
+      functionalParamsList: document.getElementById("functionalParamsList"),
+      addTrackingParamBtn: document.getElementById("addTrackingParamBtn"),
+      addFunctionalParamBtn: document.getElementById("addFunctionalParamBtn"),
+      resetParamRulesBtn: document.getElementById("resetParamRulesBtn"),
+      paramInputModal: document.getElementById("paramInputModal"),
+      paramNameInput: document.getElementById("paramNameInput"),
+      paramInputClose: document.getElementById("paramInputClose"),
+      paramCancelBtn: document.getElementById("paramCancelBtn"),
+      paramConfirmBtn: document.getElementById("paramConfirmBtn"),
     };
 
     // Load version
@@ -1137,6 +1410,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize template management
     initializeTemplateManagement();
     await loadTemplates();
+
+    // Initialize URL parameter configuration
+    initializeParamConfig();
+    await loadParamRules();
   }
 
   // Start initialization

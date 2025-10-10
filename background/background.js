@@ -8,6 +8,7 @@ import {
   getAllTemplates,
   templateEngine,
   processTemplateWithFallback,
+  initializeParamRules,
 } from "../shared/constants.js";
 
 // 导入分析模块
@@ -37,6 +38,9 @@ function debounce(key, fn, delay = 500) {
 
 // 创建右键菜单和处理扩展安装
 chrome.runtime.onInstalled.addListener(async (details) => {
+  // 初始化参数规则（首次使用时设置默认配置）
+  await initializeParamRules();
+
   // 创建右键菜单 - 同步操作，优先执行
   chrome.contextMenus.create({
     id: "copy-current-url",
@@ -159,8 +163,8 @@ async function getPageTitle(tabId, url) {
 }
 
 // 创建 markdown 链接格式
-function createMarkdownLink(url, title, cleaningMode) {
-  const processedUrl = processUrl(url, cleaningMode);
+async function createMarkdownLink(url, title, cleaningMode) {
+  const processedUrl = await processUrl(url, cleaningMode);
   const linkTitle = title || new URL(url).hostname;
   return `[${linkTitle}](${processedUrl})`;
 }
@@ -180,7 +184,7 @@ async function handleCreateShortUrl(longUrl, service) {
     const serviceToUse = service || settings.shortUrlService;
 
     // 修复: 先应用URL清理规则,再检查缓存
-    const cleanedUrl = processUrl(longUrl, settings.urlCleaning);
+    const cleanedUrl = await processUrl(longUrl, settings.urlCleaning);
 
     // 验证清理后的URL
     if (!isValidWebUrl(cleanedUrl)) {
@@ -262,7 +266,10 @@ async function handleCopyUrl() {
               context.shortUrl = shortUrl;
             } catch (error) {
               console.error("Error generating short URL for template:", error);
-              context.shortUrl = processUrl(tab.url, settings.urlCleaning);
+              context.shortUrl = await processUrl(
+                tab.url,
+                settings.urlCleaning,
+              );
             }
           }
         }
@@ -271,7 +278,7 @@ async function handleCopyUrl() {
         const result = await processTemplateWithFallback(
           templateId,
           context,
-          processUrl(tab.url, settings.urlCleaning),
+          await processUrl(tab.url, settings.urlCleaning),
         );
 
         contentToCopy = result.content;
@@ -282,7 +289,7 @@ async function handleCopyUrl() {
       } catch (error) {
         console.error("Error processing custom template:", error);
         // 回退到URL复制
-        contentToCopy = processUrl(tab.url, settings.urlCleaning);
+        contentToCopy = await processUrl(tab.url, settings.urlCleaning);
         successMessage = getMessage("urlCopied");
         copyFormat = "url"; // 修正格式类型
       }
@@ -290,7 +297,11 @@ async function handleCopyUrl() {
       copyFormat = "markdown";
       // 获取页面标题并创建 markdown 链接
       const title = await getPageTitle(tab.id, tab.url);
-      contentToCopy = createMarkdownLink(tab.url, title, settings.urlCleaning);
+      contentToCopy = await createMarkdownLink(
+        tab.url,
+        title,
+        settings.urlCleaning,
+      );
       successMessage = getMessage("markdownCopied");
     } else if (settings.silentCopyFormat === "shortUrl") {
       copyFormat = "shortUrl";
@@ -311,7 +322,7 @@ async function handleCopyUrl() {
     } else {
       copyFormat = "url";
       // 默认复制 URL
-      contentToCopy = processUrl(tab.url, settings.urlCleaning);
+      contentToCopy = await processUrl(tab.url, settings.urlCleaning);
       successMessage = getMessage("urlCopied");
     }
 
