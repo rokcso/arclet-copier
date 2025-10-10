@@ -638,6 +638,12 @@
   "addParamTitle": {
     "message": "파라미터 추가"
   },
+  "addTrackingParamTitle": {
+    "message": "추적 파라미터 추가"
+  },
+  "addFunctionalParamTitle": {
+    "message": "기능 파라미터 추가"
+  },
   "paramNameLabel": {
     "message": "파라미터 이름"
   },

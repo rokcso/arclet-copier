@@ -637,6 +637,12 @@
   "addParamTitle": {
     "message": "Agregar Parámetro"
   },
+  "addTrackingParamTitle": {
+    "message": "Agregar Parámetro de Seguimiento"
+  },
+  "addFunctionalParamTitle": {
+    "message": "Agregar Parámetro Funcional"
+  },
   "paramNameLabel": {
     "message": "Nombre del Parámetro"
   },

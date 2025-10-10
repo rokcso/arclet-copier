@@ -637,6 +637,12 @@
   "addParamTitle": {
     "message": "Добавить Параметр"
   },
+  "addTrackingParamTitle": {
+    "message": "Добавить Параметр Отслеживания"
+  },
+  "addFunctionalParamTitle": {
+    "message": "Добавить Функциональный Параметр"
+  },
   "paramNameLabel": {
     "message": "Название Параметра"
   },

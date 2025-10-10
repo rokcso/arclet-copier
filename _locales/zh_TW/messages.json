@@ -620,6 +620,12 @@
   "addParamTitle": {
     "message": "新增參數"
   },
+  "addTrackingParamTitle": {
+    "message": "新增追蹤參數"
+  },
+  "addFunctionalParamTitle": {
+    "message": "新增功能參數"
+  },
   "paramNameLabel": {
     "message": "參數名稱"
   },

@@ -609,6 +609,12 @@
   "addParamTitle": {
     "message": "添加参数"
   },
+  "addTrackingParamTitle": {
+    "message": "添加跟踪参数"
+  },
+  "addFunctionalParamTitle": {
+    "message": "添加功能参数"
+  },
   "paramNameLabel": {
     "message": "参数名称"
   },

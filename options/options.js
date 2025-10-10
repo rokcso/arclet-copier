@@ -1156,10 +1156,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentEditingParam = null;
     isEditMode = false;
 
-    // Update modal title
+    // Update modal title based on category
     const modalTitle = document.getElementById("paramModalTitle");
     if (modalTitle) {
-      modalTitle.textContent = getLocalMessage("addParamTitle") || "添加参数";
+      if (category === "tracking") {
+        modalTitle.textContent =
+          getLocalMessage("addTrackingParamTitle") || "添加跟踪参数";
+      } else if (category === "functional") {
+        modalTitle.textContent =
+          getLocalMessage("addFunctionalParamTitle") || "添加功能参数";
+      } else {
+        modalTitle.textContent = getLocalMessage("addParamTitle") || "添加参数";
+      }
     }
 
     elements.paramNameInput.value = "";

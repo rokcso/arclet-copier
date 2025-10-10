@@ -637,6 +637,12 @@
   "addParamTitle": {
     "message": "パラメータを追加"
   },
+  "addTrackingParamTitle": {
+    "message": "トラッキングパラメータを追加"
+  },
+  "addFunctionalParamTitle": {
+    "message": "機能パラメータを追加"
+  },
   "paramNameLabel": {
     "message": "パラメータ名"
   },
