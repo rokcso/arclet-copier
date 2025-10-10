@@ -867,23 +867,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       progressText.textContent = `0 / ${selectedTabsList.length}`;
       elements.previewText.appendChild(progressText);
 
-      // 监听短链生成进度
-      const originalThrottledRequest = globalShortUrlThrottle.throttledRequest;
+      // 使用新的进度回调功能
       let completedCount = 0;
 
-      globalShortUrlThrottle.throttledRequest = async function (requestFn) {
-        const result = await originalThrottledRequest.call(this, requestFn);
+      globalShortUrlThrottle.setProgressCallback(() => {
         completedCount++;
         progressText.textContent = `${completedCount} / ${selectedTabsList.length}`;
-        return result;
-      };
+      });
 
-      const content = await formatOutput(selectedTabsList, format);
-
-      // 恢复原始方法
-      globalShortUrlThrottle.throttledRequest = originalThrottledRequest;
-
-      elements.previewText.textContent = content;
+      try {
+        const content = await formatOutput(selectedTabsList, format);
+        elements.previewText.textContent = content;
+      } finally {
+        // 清除进度回调
+        globalShortUrlThrottle.clearProgressCallback();
+      }
     } else {
       const content = await formatOutput(selectedTabsList, format);
       elements.previewText.textContent = content;
@@ -944,12 +942,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (format === "shortUrl" && selectedTabsList.length > 1) {
       toast.info(getLocalMessage("loading") || "加载中...");
 
-      // 监听短链生成进度
-      const originalThrottledRequest = globalShortUrlThrottle.throttledRequest;
+      // 使用新的进度回调功能
       let completedCount = 0;
 
-      globalShortUrlThrottle.throttledRequest = async function (requestFn) {
-        const result = await originalThrottledRequest.call(this, requestFn);
+      globalShortUrlThrottle.setProgressCallback(() => {
         completedCount++;
 
         // 更新进度通知
@@ -961,16 +957,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             .replace("{current}", completedCount)
             .replace("{total}", selectedTabsList.length),
         );
+      });
 
-        return result;
-      };
-
-      const content = await formatOutput(selectedTabsList, format);
-
-      // 恢复原始方法
-      globalShortUrlThrottle.throttledRequest = originalThrottledRequest;
-
-      success = await copyToClipboard(content);
+      try {
+        const content = await formatOutput(selectedTabsList, format);
+        success = await copyToClipboard(content);
+      } finally {
+        // 清除进度回调
+        globalShortUrlThrottle.clearProgressCallback();
+      }
     } else {
       const content = await formatOutput(selectedTabsList, format);
       success = await copyToClipboard(content);

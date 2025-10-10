@@ -1,6 +1,6 @@
 // Shared constants for Arclet Copier
 
-// 短链请求限流器
+// 短链请求限流器 - 修复并发问题
 class ShortUrlThrottle {
   constructor() {
     this.concurrentLimit = 3; // 同时最多3个请求
@@ -8,6 +8,8 @@ class ShortUrlThrottle {
     this.activeRequests = 0;
     this.requestDelay = 200; // 请求间隔200ms
     this.lastRequestTime = 0;
+    this.isProcessing = false; // 防止重复处理队列
+    this.requestTimeLock = Promise.resolve(); // 请求时间锁，确保串行更新
   }
 
   async throttledRequest(requestFn) {
@@ -18,36 +20,95 @@ class ShortUrlThrottle {
   }
 
   async processQueue() {
-    if (
-      this.activeRequests >= this.concurrentLimit ||
-      this.requestQueue.length === 0
-    ) {
+    // 防止并发处理队列
+    if (this.isProcessing) {
       return;
     }
 
-    const { requestFn, resolve, reject } = this.requestQueue.shift();
-    this.activeRequests++;
+    this.isProcessing = true;
 
     try {
-      // 确保请求间隔
-      const now = Date.now();
-      const timeSinceLastRequest = now - this.lastRequestTime;
-      if (timeSinceLastRequest < this.requestDelay) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, this.requestDelay - timeSinceLastRequest),
-        );
+      // 持续处理队列直到达到并发限制或队列为空
+      while (
+        this.activeRequests < this.concurrentLimit &&
+        this.requestQueue.length > 0
+      ) {
+        const { requestFn, resolve, reject } = this.requestQueue.shift();
+        this.activeRequests++;
+
+        // 异步执行请求，不等待完成
+        this.executeRequest(requestFn, resolve, reject);
+      }
+    } finally {
+      this.isProcessing = false;
+    }
+  }
+
+  async executeRequest(requestFn, resolve, reject) {
+    try {
+      // 使用锁确保 lastRequestTime 的串行更新
+      await this.requestTimeLock;
+
+      // 创建新的锁用于下一个请求
+      let releaseLock;
+      this.requestTimeLock = new Promise((r) => (releaseLock = r));
+
+      try {
+        // 确保请求间隔
+        const now = Date.now();
+        const timeSinceLastRequest = now - this.lastRequestTime;
+        if (timeSinceLastRequest < this.requestDelay) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, this.requestDelay - timeSinceLastRequest),
+          );
+        }
+
+        // 更新最后请求时间
+        this.lastRequestTime = Date.now();
+      } finally {
+        // 释放锁
+        releaseLock();
       }
 
-      this.lastRequestTime = Date.now();
+      // 执行实际请求
       const result = await requestFn();
+
+      // 调用进度回调（如果存在）
+      if (this.progressCallback) {
+        try {
+          this.progressCallback();
+        } catch (callbackError) {
+          console.warn("Progress callback error:", callbackError);
+        }
+      }
+
       resolve(result);
     } catch (error) {
       reject(error);
     } finally {
       this.activeRequests--;
-      // 继续处理队列
-      setTimeout(() => this.processQueue(), 10);
+      // 使用微任务继续处理队列，避免 setTimeout 的不确定性
+      queueMicrotask(() => this.processQueue());
     }
+  }
+
+  // 设置进度回调（用于批量操作进度显示）
+  setProgressCallback(callback) {
+    this.progressCallback = callback;
+  }
+
+  // 清除进度回调
+  clearProgressCallback() {
+    this.progressCallback = null;
+  }
+
+  // 获取队列状态（用于调试）
+  getStatus() {
+    return {
+      activeRequests: this.activeRequests,
+      queueLength: this.requestQueue.length,
+      isProcessing: this.isProcessing,
+    };
   }
 }
 
