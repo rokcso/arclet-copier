@@ -309,6 +309,135 @@ if (isDev) {
     .then((ctx) => {
       ctx.watch();
       console.log("✅ Initial build complete!");
+
+      // 监听 HTML 和 CSS 文件变化
+      const chokidar = require("fs").watch || null;
+      if (fs.watch) {
+        const rootDir = path.join(__dirname, "..");
+
+        // 需要监听的文件和目录
+        const watchPaths = [
+          path.join(rootDir, "popup"),
+          path.join(rootDir, "options"),
+          path.join(rootDir, "batch"),
+          path.join(rootDir, "offscreen"),
+          path.join(rootDir, "shared"),
+          path.join(rootDir, "_locales"),
+          path.join(rootDir, "assets"),
+          path.join(rootDir, "manifest.json"),
+        ];
+
+        // 防抖函数
+        let copyTimeout;
+        const debouncedCopy = () => {
+          clearTimeout(copyTimeout);
+          copyTimeout = setTimeout(() => {
+            console.log("\n🔄 Files changed, copying assets...");
+            try {
+              // 复制 HTML 文件
+              copyFile(
+                path.join(rootDir, "popup/popup.html"),
+                path.join(outdir, "popup/popup.html"),
+              );
+              copyFile(
+                path.join(rootDir, "options/options.html"),
+                path.join(outdir, "options/options.html"),
+              );
+              copyFile(
+                path.join(rootDir, "batch/batch.html"),
+                path.join(outdir, "batch/batch.html"),
+              );
+              copyFile(
+                path.join(rootDir, "offscreen/offscreen.html"),
+                path.join(outdir, "offscreen/offscreen.html"),
+              );
+
+              // 复制 CSS 文件
+              copyFile(
+                path.join(rootDir, "popup/popup.css"),
+                path.join(outdir, "popup/popup.css"),
+              );
+              copyFile(
+                path.join(rootDir, "options/options.css"),
+                path.join(outdir, "options/options.css"),
+              );
+              copyFile(
+                path.join(rootDir, "batch/batch.css"),
+                path.join(outdir, "batch/batch.css"),
+              );
+
+              // 复制 shared CSS 文件
+              const sharedCssFiles = fs
+                .readdirSync(path.join(rootDir, "shared"))
+                .filter((file) => file.endsWith(".css"));
+              sharedCssFiles.forEach((file) => {
+                copyFile(
+                  path.join(rootDir, "shared", file),
+                  path.join(outdir, "shared", file),
+                );
+              });
+
+              // 复制第三方库
+              const libDir = path.join(rootDir, "shared/lib");
+              if (fs.existsSync(libDir)) {
+                copyDirectory(libDir, path.join(outdir, "shared/lib"));
+              }
+
+              // 复制资源目录
+              copyDirectory(
+                path.join(rootDir, "assets"),
+                path.join(outdir, "assets"),
+              );
+
+              // 复制多语言文件
+              copyDirectory(
+                path.join(rootDir, "_locales"),
+                path.join(outdir, "_locales"),
+              );
+
+              // 复制 manifest.json
+              const manifestPath = path.join(rootDir, "manifest.json");
+              const manifestContent = JSON.parse(
+                fs.readFileSync(manifestPath, "utf8"),
+              );
+              manifestContent.name = manifestContent.name + " - Dev";
+              fs.writeFileSync(
+                path.join(outdir, "manifest.json"),
+                JSON.stringify(manifestContent, null, 2),
+              );
+
+              console.log("✅ Assets copied successfully!");
+            } catch (error) {
+              console.error("❌ Failed to copy assets:", error);
+            }
+          }, 100);
+        };
+
+        // 监听每个路径
+        watchPaths.forEach((watchPath) => {
+          if (fs.existsSync(watchPath)) {
+            fs.watch(watchPath, { recursive: true }, (eventType, filename) => {
+              if (filename) {
+                // 只监听 HTML、CSS、JSON 和资源文件
+                if (
+                  filename.endsWith(".html") ||
+                  filename.endsWith(".css") ||
+                  filename.endsWith(".json") ||
+                  filename.endsWith(".png") ||
+                  filename.endsWith(".jpg") ||
+                  filename.endsWith(".svg") ||
+                  filename.endsWith(".ico")
+                ) {
+                  console.log(`📝 Changed: ${filename}`);
+                  debouncedCopy();
+                }
+              }
+            });
+          }
+        });
+
+        console.log("👀 Also watching HTML, CSS, and asset files...");
+      }
     })
     .catch((error) => {
       console.error("❌ Watch failed:", error);

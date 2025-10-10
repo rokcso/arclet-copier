@@ -1654,6 +1654,8 @@ select.setting-control:hover {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    line-height: 1.5;
+    box-sizing: border-box;
 }
 
 .param-add-btn:hover {
@@ -1667,7 +1669,7 @@ select.setting-control:hover {
     flex-shrink: 0;
 }
 
-/* 内联恢复默认按钮 - 保持和添加按钮一致的尺寸 */
+/* 内联恢复默认按钮 - 保持和添加按钮完全一致的尺寸 */
 .param-reset-btn-inline {
     display: inline-flex;
     align-items: center;
@@ -1681,7 +1683,9 @@ select.setting-control:hover {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: 36px; /* 与 param-add-btn 保持一致的高度 */
+    /* 确保与 param-add-btn 尺寸完全一致 */
+    line-height: 1.5;
+    box-sizing: border-box;
 }
 
 .param-reset-btn-inline:hover {
@@ -1700,39 +1704,13 @@ select.setting-control:hover {
     flex-shrink: 0;
 }
 
-/* 参数操作区域 */
+/* 参数操作区域（已废弃，保留用于向后兼容） */
 .param-actions {
     display: flex;
     justify-content: flex-end;
     padding-top: 16px;
     border-top: 1px solid var(--arc-border);
     margin-top: 24px;
-}
-
-/* 恢复默认按钮 */
-.param-reset-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background: var(--arc-background);
-    border: 1px solid var(--arc-border);
-    border-radius: var(--arc-radius-sm);
-    color: var(--arc-text-secondary);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.param-reset-btn:hover {
-    background: #fef2f2;
-    border-color: #fca5a5;
-    color: #dc2626;
-}
-
-.param-reset-btn svg {
-    flex-shrink: 0;
 }
 
 /* ============================================
