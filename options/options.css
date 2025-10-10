@@ -683,6 +683,12 @@ select.setting-control:hover {
     }
 }
 
+@keyframes showAfterDelay {
+    to {
+        visibility: visible;
+    }
+}
+
 .container > * {
     animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
 }
@@ -1404,15 +1410,16 @@ select.setting-control:hover {
     animation-delay: 0.5s;
 }
 
-/* Easter Egg Wrapper - 固定在底部，负责淡入动画 */
+/* Easter Egg Wrapper - 固定在底部 */
 .easter-egg-wrapper {
     position: fixed;
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1;
-    /* 添加淡入动画 */
-    animation: fadeInUpCentered 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+    z-index: 0;
+    /* 初始隐藏，延迟后直接显示 */
+    visibility: hidden;
+    animation: showAfterDelay 0s 0.9s forwards;
 }
 
 /* Easter Egg 内容 - 负责文字样式和 hover 效果 */
