@@ -791,6 +791,90 @@ export async function loadTemplatesIntoSelect(selectElement, options = {}) {
   }
 }
 
+// 验证并修正选择器状态 - 统一的模板验证和回退函数
+export async function validateAndFixSelector(
+  selectElement,
+  currentValue,
+  settingKey,
+  saveFunction,
+) {
+  if (!selectElement) {
+    console.warn("validateAndFixSelector: selectElement is null");
+    return false;
+  }
+
+  // 等待 DOM 更新完成
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  try {
+    // 检查当前值是否在选项中存在
+    const optionExists = Array.from(selectElement.options).some(
+      (option) => option.value === currentValue,
+    );
+
+    if (optionExists) {
+      // 如果选项存在，设置值
+      selectElement.value = currentValue;
+      console.log(`Template selector validated: ${currentValue}`);
+      return true;
+    }
+
+    // 选项不存在，需要回退到默认值
+    console.warn(
+      `Template "${currentValue}" not found, falling back to default`,
+    );
+
+    // 查找 "url" 选项
+    const urlOption = Array.from(selectElement.options).find(
+      (option) => option.value === "url",
+    );
+
+    if (urlOption) {
+      // 设置为 url
+      selectElement.value = "url";
+
+      // 触发 change 事件通知 UI
+      selectElement.dispatchEvent(new Event("change", { bubbles: true }));
+
+      // 保存回退值到设置
+      if (saveFunction && settingKey) {
+        try {
+          await saveFunction({ [settingKey]: "url" });
+          console.log(`Saved fallback value for ${settingKey}: url`);
+        } catch (saveError) {
+          console.warn("Failed to save fallback setting:", saveError);
+        }
+      }
+
+      return false; // 返回 false 表示已回退
+    }
+
+    // 如果连 url 选项都没有，设置为第一个选项
+    if (selectElement.options.length > 0) {
+      selectElement.selectedIndex = 0;
+      selectElement.dispatchEvent(new Event("change", { bubbles: true }));
+
+      if (saveFunction && settingKey) {
+        try {
+          await saveFunction({ [settingKey]: selectElement.value });
+          console.log(`Saved fallback to first option: ${selectElement.value}`);
+        } catch (saveError) {
+          console.warn("Failed to save fallback setting:", saveError);
+        }
+      }
+
+      return false;
+    }
+
+    // 极端情况：没有任何选项
+    console.error("No options available in selector");
+    return false;
+  } catch (error) {
+    console.error("Error in validateAndFixSelector:", error);
+    return false;
+  }
+}
+
 // 标准化的模板查找和错误处理
 export async function findTemplateById(templateId) {
   try {

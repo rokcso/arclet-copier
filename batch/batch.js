@@ -10,6 +10,7 @@ import {
   loadTemplatesIntoSelect,
   processTemplateWithFallback,
   findTemplateById,
+  validateAndFixSelector,
 } from "../shared/constants.js";
 
 import { trackCopy } from "../shared/analytics.js";
@@ -135,23 +136,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       },
     });
 
-    // 如果指定了要保持的值，则在加载完成后设置
+    // 如果指定了要保持的值，则验证并修正
     if (preserveValue) {
-      setTimeout(() => {
-        // 检查该值是否在选项中存在
-        const optionExists = Array.from(silentCopyFormat.options).some(
-          (option) => option.value === preserveValue,
-        );
-
-        if (optionExists) {
-          silentCopyFormat.value = preserveValue;
-        } else {
-          // 静默处理模板不存在的情况，设置为默认值
-          silentCopyFormat.value = "url";
-          // 保存回退值
-          saveBatchSettings();
-        }
-      }, 0);
+      await validateAndFixSelector(
+        silentCopyFormat,
+        preserveValue,
+        "batchSilentCopyFormat",
+        settingsManager.updateSettings.bind(settingsManager),
+      );
     }
   }
 
