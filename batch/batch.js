@@ -714,13 +714,13 @@ document.addEventListener("DOMContentLoaded", async () => {
               try {
                 const selectedService =
                   await settingsManager.getSetting("shortUrlService");
-                const url = processUrl(tab.url, cleaningMode);
+                // 修复: 先清理URL
+                const cleanedUrl = processUrl(tab.url, cleaningMode);
 
-                // 检查缓存
+                // 修复: 使用清理后的URL检查缓存
                 const cachedUrl = await shortUrlCache.get(
-                  url,
+                  cleanedUrl,
                   selectedService,
-                  cleaningMode,
                 );
                 if (cachedUrl) {
                   context.shortUrl = cachedUrl;
@@ -730,19 +730,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                     await globalShortUrlThrottle.throttledRequest(async () => {
                       try {
                         const shortUrl = await createShortUrlDirect(
-                          url,
+                          cleanedUrl,
                           selectedService,
                         );
+                        // 修复: 使用清理后的URL保存到缓存
                         await shortUrlCache.set(
-                          url,
+                          cleanedUrl,
                           selectedService,
-                          cleaningMode,
                           shortUrl,
                         );
                         return shortUrl;
                       } catch (error) {
                         console.error("短链生成失败:", error);
-                        return url;
+                        return cleanedUrl;
                       }
                     });
                 }
@@ -795,13 +795,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 批量生成短链，使用限流器
         const shortUrls = await Promise.all(
           tabs.map(async (tab) => {
-            const url = processUrl(tab.url, cleaningMode);
+            // 修复: 先清理URL
+            const cleanedUrl = processUrl(tab.url, cleaningMode);
 
-            // 首先检查缓存
+            // 修复: 使用清理后的URL检查缓存
             const cachedUrl = await shortUrlCache.get(
-              url,
+              cleanedUrl,
               selectedService,
-              cleaningMode,
             );
             if (cachedUrl) {
               return cachedUrl;
@@ -811,21 +811,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             return await globalShortUrlThrottle.throttledRequest(async () => {
               try {
                 const shortUrl = await createShortUrlDirect(
-                  url,
+                  cleanedUrl,
                   selectedService,
                 );
 
-                // 保存到缓存
-                await shortUrlCache.set(
-                  url,
-                  selectedService,
-                  cleaningMode,
-                  shortUrl,
-                );
+                // 修复: 使用清理后的URL保存到缓存
+                await shortUrlCache.set(cleanedUrl, selectedService, shortUrl);
                 return shortUrl;
               } catch (error) {
                 console.error("短链生成失败:", error);
-                return url; // 如果出错则返回原URL
+                return cleanedUrl; // 如果出错则返回清理后的URL
               }
             });
           }),

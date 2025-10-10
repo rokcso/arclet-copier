@@ -6,6 +6,7 @@ class SettingsManager {
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5分钟缓存
     this.lastCacheTime = 0;
+    this.changeListeners = new Set(); // 变更监听器
 
     // 默认设置值
     this.defaults = {
@@ -18,6 +19,55 @@ class SettingsManager {
       shortUrlService: "isgd",
       removeParams: false, // 向后兼容
     };
+
+    // 监听跨上下文的存储变更
+    this.setupStorageListener();
+  }
+
+  /**
+   * 设置存储变更监听器，实现跨上下文同步
+   */
+  setupStorageListener() {
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName !== "sync") return;
+
+      console.log(
+        "[SettingsManager] Storage changed in other context:",
+        changes,
+      );
+
+      // 更新本地缓存
+      let hasChanges = false;
+      for (const [key, { newValue }] of Object.entries(changes)) {
+        if (this.cache.has(key) || this.defaults.hasOwnProperty(key)) {
+          this.cache.set(key, newValue);
+          hasChanges = true;
+        }
+      }
+
+      if (hasChanges) {
+        this.lastCacheTime = Date.now();
+
+        // 通知所有注册的监听器
+        this.changeListeners.forEach((listener) => {
+          try {
+            listener(changes);
+          } catch (error) {
+            console.error("[SettingsManager] Error in change listener:", error);
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * 注册设置变更监听器
+   * @param {Function} listener - 监听器函数，接收 changes 对象
+   * @returns {Function} 取消监听的函数
+   */
+  addChangeListener(listener) {
+    this.changeListeners.add(listener);
+    return () => this.changeListeners.delete(listener);
   }
 
   // 检测默认语言
@@ -111,6 +161,11 @@ class SettingsManager {
   // 批量更新设置
   async updateSettings(updates) {
     try {
+      // 检测URL清理模式是否发生变化
+      const urlCleaningChanged =
+        updates.hasOwnProperty("urlCleaning") &&
+        this.cache.get("urlCleaning") !== updates.urlCleaning;
+
       await chrome.storage.sync.set(updates);
 
       // 更新缓存
@@ -118,6 +173,25 @@ class SettingsManager {
         this.cache.set(key, value);
       });
       this.lastCacheTime = Date.now();
+
+      // 如果URL清理模式发生变化，清空短链缓存
+      if (urlCleaningChanged) {
+        console.log(
+          "[SettingsManager] URL cleaning mode changed, invalidating short URL cache",
+        );
+        try {
+          // 动态导入以避免循环依赖
+          const { default: shortUrlCache } = await import(
+            "./short-url-cache.js"
+          );
+          await shortUrlCache.invalidateOnCleaningModeChange();
+        } catch (cacheError) {
+          console.error(
+            "[SettingsManager] Failed to invalidate short URL cache:",
+            cacheError,
+          );
+        }
+      }
 
       return true;
     } catch (error) {

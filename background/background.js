@@ -179,21 +179,10 @@ async function handleCreateShortUrl(longUrl, service) {
     const settings = await getUserSettings();
     const serviceToUse = service || settings.shortUrlService;
 
-    // 首先检查缓存
-    const cachedShortUrl = await shortUrlCache.get(
-      longUrl,
-      serviceToUse,
-      settings.urlCleaning,
-    );
-    if (cachedShortUrl) {
-      console.log("使用缓存的短链 (background):", cachedShortUrl);
-      return cachedShortUrl;
-    }
-
-    // 应用URL清理规则
+    // 修复: 先应用URL清理规则,再检查缓存
     const cleanedUrl = processUrl(longUrl, settings.urlCleaning);
 
-    // 再次验证清理后的URL
+    // 验证清理后的URL
     if (!isValidWebUrl(cleanedUrl)) {
       throw new Error(
         getMessage("invalidUrlForShortening") ||
@@ -201,21 +190,23 @@ async function handleCreateShortUrl(longUrl, service) {
       );
     }
 
+    // 修复: 使用清理后的URL检查缓存
+    const cachedShortUrl = await shortUrlCache.get(cleanedUrl, serviceToUse);
+    if (cachedShortUrl) {
+      console.log("[Background] 使用缓存的短链:", cachedShortUrl);
+      return cachedShortUrl;
+    }
+
     // 生成短链
     const shortUrl = await createShortUrl(cleanedUrl, serviceToUse);
 
-    // 将新生成的短链保存到缓存
-    await shortUrlCache.set(
-      longUrl,
-      serviceToUse,
-      settings.urlCleaning,
-      shortUrl,
-    );
-    console.log(`Short URL created and cached (background): ${shortUrl}`);
+    // 修复: 使用清理后的URL保存到缓存
+    await shortUrlCache.set(cleanedUrl, serviceToUse, shortUrl);
+    console.log(`[Background] Short URL created and cached: ${shortUrl}`);
 
     return shortUrl;
   } catch (error) {
-    console.error("Failed to create short URL:", error);
+    console.error("[Background] Failed to create short URL:", error);
     throw error;
   }
 }

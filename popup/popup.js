@@ -599,15 +599,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       const cleaningSelect = elements.removeParamsToggle;
       const cleaningMode = cleaningSelect.getAttribute("data-value");
 
-      // 首先检查缓存
+      // 修复: 先清理URL
+      const cleanedUrl = processUrl(currentUrl, cleaningMode);
+
+      // 修复: 使用清理后的URL检查缓存
       const cachedShortUrl = await shortUrlCache.get(
-        currentUrl,
+        cleanedUrl,
         selectedService,
-        cleaningMode,
       );
       if (cachedShortUrl) {
         // 使用缓存的短链
-        console.log("使用缓存的短链:", cachedShortUrl);
+        console.log("[Popup] 使用缓存的短链:", cachedShortUrl);
 
         // 复制短链到剪贴板
         let copySuccess = false;
@@ -664,14 +666,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (response.success || (response.shortUrl && !response.error)) {
         // 确保成功标记正确
         response.success = true;
-        // 将新生成的短链保存到缓存
-        await shortUrlCache.set(
-          currentUrl,
-          selectedService,
-          cleaningMode,
-          response.shortUrl,
-        );
-        console.log("短链已缓存:", response.shortUrl);
+        // 修复: 使用清理后的URL保存到缓存
+        await shortUrlCache.set(cleanedUrl, selectedService, response.shortUrl);
+        console.log("[Popup] 短链已缓存:", response.shortUrl);
 
         // 复制短链到剪贴板
         let copySuccess = false;
