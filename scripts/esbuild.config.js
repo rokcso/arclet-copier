@@ -177,10 +177,20 @@ const buildOptions = {
               path.join(outdir, "_locales"),
             );
 
-            // 复制 manifest.json
-            copyFile(
-              path.join(rootDir, "manifest.json"),
+            // 复制 manifest.json（开发模式添加 - Dev 后缀）
+            const manifestPath = path.join(rootDir, "manifest.json");
+            const manifestContent = JSON.parse(
+              fs.readFileSync(manifestPath, "utf8"),
+            );
+
+            // 开发模式下修改扩展名称
+            if (isDev) {
+              manifestContent.name = manifestContent.name + " - Dev";
+            }
+
+            fs.writeFileSync(
               path.join(outdir, "manifest.json"),
+              JSON.stringify(manifestContent, null, 2),
             );
 
             console.log("✅ Static assets copied successfully!");
