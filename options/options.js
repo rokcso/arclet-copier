@@ -1164,7 +1164,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     elements.paramNameInput.value = "";
     elements.paramNameInput.classList.remove("error");
-    elements.paramInputModal.style.display = "flex";
+    elements.paramInputModal.classList.add("show");
+    document.body.classList.add("modal-open");
     elements.paramNameInput.focus();
   }
 
@@ -1182,7 +1183,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     elements.paramNameInput.value = param;
     elements.paramNameInput.classList.remove("error");
-    elements.paramInputModal.style.display = "flex";
+    elements.paramInputModal.classList.add("show");
+    document.body.classList.add("modal-open");
     elements.paramNameInput.focus();
     // Select all text for easy replacement
     elements.paramNameInput.select();
@@ -1190,7 +1192,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Hide add parameter modal
   function hideAddParamModal() {
-    elements.paramInputModal.style.display = "none";
+    elements.paramInputModal.classList.remove("show");
+    document.body.classList.remove("modal-open");
     currentParamCategory = null;
     currentEditingParam = null;
     isEditMode = false;
@@ -1466,12 +1469,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    // Click overlay to close modal
+    // Click outside modal to close
     elements.paramInputModal.addEventListener("click", (e) => {
-      if (
-        e.target === elements.paramInputModal ||
-        e.target.classList.contains("param-input-overlay")
-      ) {
+      if (e.target === elements.paramInputModal) {
         hideAddParamModal();
       }
     });

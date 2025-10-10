@@ -1667,7 +1667,7 @@ select.setting-control:hover {
     flex-shrink: 0;
 }
 
-/* 内联恢复默认按钮 */
+/* 内联恢复默认按钮 - 保持和添加按钮一致的尺寸 */
 .param-reset-btn-inline {
     display: inline-flex;
     align-items: center;
@@ -1681,6 +1681,7 @@ select.setting-control:hover {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    min-height: 36px; /* 与 param-add-btn 保持一致的高度 */
 }
 
 .param-reset-btn-inline:hover {
@@ -1742,32 +1743,22 @@ select.setting-control:hover {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: modalFadeIn 0.2s ease;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes modalFadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.param-input-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+.param-input-modal.show {
+    opacity: 1;
+    visibility: visible;
 }
 
 .param-input-content {
@@ -1779,18 +1770,12 @@ select.setting-control:hover {
     box-shadow:
         0 20px 25px -5px rgba(0, 0, 0, 0.1),
         0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    animation: modalSlideUp 0.3s ease;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes modalSlideUp {
-    from {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+.param-input-modal.show .param-input-content {
+    transform: scale(1) translateY(0);
 }
 
 /* 模态框头部 */
