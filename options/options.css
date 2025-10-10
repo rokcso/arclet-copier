@@ -1404,12 +1404,19 @@ select.setting-control:hover {
     animation-delay: 0.5s;
 }
 
-/* Easter Egg 样式 - 固定在底部 */
-.easter-egg {
+/* Easter Egg Wrapper - 固定在底部，负责淡入动画 */
+.easter-egg-wrapper {
     position: fixed;
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 1;
+    /* 添加淡入动画 */
+    animation: fadeInUpCentered 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+}
+
+/* Easter Egg 内容 - 负责文字样式和 hover 效果 */
+.easter-egg {
     text-align: center;
     padding: 12px 24px;
     font-family: "Playfair Display", serif;
@@ -1417,21 +1424,17 @@ select.setting-control:hover {
     color: var(--arc-text-muted);
     font-weight: 400;
     letter-spacing: 0.02em;
-    z-index: 1;
     pointer-events: auto;
+    user-select: none;
     transition:
         color 0.3s ease,
         letter-spacing 0.3s ease;
-    user-select: none;
-    /* 添加淡入动画 */
-    animation: fadeInUpCentered 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
-    animation-delay: 0.6s;
 }
 
 .easter-egg:hover {
     color: var(--arc-primary);
     letter-spacing: 0.05em;
-    animation: purr 0.5s ease-in-out infinite;
+    animation: purrInPlace 0.5s ease-in-out infinite;
 }
 
 @keyframes purr {
@@ -1444,6 +1447,19 @@ select.setting-control:hover {
     }
     75% {
         transform: translateX(-50%) translateX(2px) rotate(0.5deg);
+    }
+}
+
+@keyframes purrInPlace {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: translateX(-2px) rotate(-0.5deg);
+    }
+    75% {
+        transform: translateX(2px) rotate(0.5deg);
     }
 }
 
