@@ -10,12 +10,12 @@ class SettingsManager {
 
     // 默认设置值
     this.defaults = {
-      urlCleaning: "off",
+      urlCleaning: "smart",
       silentCopyFormat: "url",
       appearance: "system",
       language: this.detectDefaultLanguage(),
       themeColor: "green",
-      notificationType: "chrome", // 'off', 'chrome', 'page'
+      notificationType: "page", // 'off', 'chrome', 'page'
       shortUrlService: "isgd",
       removeParams: false, // 向后兼容
     };

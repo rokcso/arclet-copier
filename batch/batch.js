@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ]);
 
     currentSettings = {
-      urlCleaning: settings.batchUrlCleaning || "off",
+      urlCleaning: settings.batchUrlCleaning || "smart",
       appearance: settings.appearance,
       themeColor: settings.themeColor,
     };
