@@ -642,35 +642,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return validation;
   }
 
-  // Validate and show errors only when saving
-  function validateTemplateForSave() {
-    const nameValid = elements.templateName.value.trim().length > 0;
-    const contentValue = elements.templateContent.value;
-
-    if (!nameValid) {
-      toast.error(
-        getLocalMessage("templateNameRequired") || "Template name is required",
-      );
-      return false;
-    }
-
-    if (!contentValue) {
-      toast.error(
-        getLocalMessage("templateContentRequired") ||
-          "Template content is required",
-      );
-      return false;
-    }
-
-    const validation = templateEngine.validateTemplate(contentValue);
-    if (!validation.valid) {
-      toast.error(validation.errors.join(", "));
-      return false;
-    }
-
-    return true;
-  }
-
   function insertField(fieldName) {
     const textarea = elements.templateContent;
     const start = textarea.selectionStart;

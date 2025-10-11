@@ -85,7 +85,7 @@ class ToastManager {
   }
 
   // 创建toast元素
-  createToast(message, __, ___, ____, duration) {
+  createToast(message) {
     const toast = document.createElement("div");
     const id =
       "toast-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);

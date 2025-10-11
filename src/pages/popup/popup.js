@@ -16,22 +16,6 @@ import {
 } from "../../shared/three-way-switch.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // 防抖工具
-  const debounceMap = new Map();
-
-  function debounce(key, fn, delay = 300) {
-    if (debounceMap.has(key)) {
-      clearTimeout(debounceMap.get(key));
-    }
-
-    const timeoutId = setTimeout(() => {
-      debounceMap.delete(key);
-      fn();
-    }, delay);
-
-    debounceMap.set(key, timeoutId);
-  }
-
   // 复制操作状态管理
   const copyOperationStates = {
     copyUrl: false,
