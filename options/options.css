@@ -46,6 +46,7 @@ body {
 
 body.modal-open {
     overflow: hidden;
+    padding-right: 15px; /* 补偿滚动条宽度，防止抖动 */
 }
 
 .container {
@@ -246,13 +247,18 @@ select.setting-control:hover {
     color: var(--arc-primary);
     background: var(--arc-background);
     border: 1px solid var(--arc-border);
-    padding: 10px 20px;
+    padding: 8px 20px;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: inherit;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .rating-btn:hover,
@@ -831,7 +837,6 @@ select.setting-control:hover {
 .template-action-btn.edit:hover,
 .template-action-btn.delete:hover {
     background: var(--arc-surface);
-    transform: translateY(-1px);
 }
 
 .template-action-btn.reset:hover {
