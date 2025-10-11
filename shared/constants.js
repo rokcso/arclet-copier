@@ -550,15 +550,15 @@ export const TEMPLATE_FIELDS = {
     category: "basic",
   },
   hostname: {
-    name: "域名",
-    description: "网站域名",
-    example: "example.com",
+    name: "主机名",
+    description: "完整主机名（含子域名）",
+    example: "www.example.com",
     category: "basic",
   },
   domain: {
-    name: "完整域名",
-    description: "包含协议的完整域名",
-    example: "https://example.com",
+    name: "域名",
+    description: "纯域名（不含子域名）",
+    example: "example.com",
     category: "basic",
   },
   shortUrl: {
@@ -633,7 +633,8 @@ export class TemplateEngine {
     this.fieldProcessors.set("hostname", (context) => {
       try {
         if (!context.url) return "";
-        return new URL(context.url).hostname;
+        const url = new URL(context.url);
+        return url.hostname; // 完整主机名，包含子域名，如 www.example.com
       } catch (error) {
         console.warn(
           "TemplateEngine: Invalid URL for hostname field:",
@@ -646,7 +647,19 @@ export class TemplateEngine {
       try {
         if (!context.url) return "";
         const url = new URL(context.url);
-        return `${url.protocol}//${url.host}`;
+        // 提取纯域名（去除子域名）
+        const hostname = url.hostname;
+        const parts = hostname.split(".");
+
+        // 处理特殊情况：localhost, IP地址等
+        if (parts.length <= 2 || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+          return hostname;
+        }
+
+        // 提取主域名（最后两个部分）
+        // 例如：www.example.com -> example.com
+        //      blog.sub.example.com -> example.com
+        return parts.slice(-2).join(".");
       } catch (error) {
         console.warn(
           "TemplateEngine: Invalid URL for domain field:",

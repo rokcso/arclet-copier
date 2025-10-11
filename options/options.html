@@ -450,6 +450,7 @@
                                         >Insert Variable</span
                                     >
                                     <div class="variable-buttons">
+                                        <!-- 核心变量（最常用，80%场景） -->
                                         <button
                                             type="button"
                                             class="variable-btn"
@@ -460,16 +461,25 @@
                                         <button
                                             type="button"
                                             class="variable-btn"
-                                            data-field="originalUrl"
+                                            data-field="title"
                                         >
-                                            {{originalUrl}}
+                                            {{title}}
                                         </button>
                                         <button
                                             type="button"
                                             class="variable-btn"
-                                            data-field="title"
+                                            data-field="shortUrl"
                                         >
-                                            {{title}}
+                                            {{shortUrl}}
+                                        </button>
+
+                                        <!-- URL 变体 -->
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="originalUrl"
+                                        >
+                                            {{originalUrl}}
                                         </button>
                                         <button
                                             type="button"
@@ -485,27 +495,8 @@
                                         >
                                             {{domain}}
                                         </button>
-                                        <button
-                                            type="button"
-                                            class="variable-btn"
-                                            data-field="shortUrl"
-                                        >
-                                            {{shortUrl}}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="variable-btn"
-                                            data-field="author"
-                                        >
-                                            {{author}}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="variable-btn"
-                                            data-field="description"
-                                        >
-                                            {{description}}
-                                        </button>
+
+                                        <!-- 常用时间 -->
                                         <button
                                             type="button"
                                             class="variable-btn"
@@ -527,6 +518,24 @@
                                         >
                                             {{datetime}}
                                         </button>
+
+                                        <!-- 元数据 -->
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="author"
+                                        >
+                                            {{author}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="description"
+                                        >
+                                            {{description}}
+                                        </button>
+
+                                        <!-- 高级时间格式 -->
                                         <button
                                             type="button"
                                             class="variable-btn"
