@@ -305,12 +305,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const segmentOptions =
         elements.urlCleaningSwitch.querySelectorAll(".segment-option");
       segmentOptions.forEach((option, index) => {
-        option.addEventListener("click", () => {
+        option.addEventListener("click", async () => {
           const newValue = option.getAttribute("data-value");
           elements.urlCleaningSwitch.setAttribute("data-value", newValue);
           currentSettings.urlCleaning = newValue;
           updateSliderPosition(elements.urlCleaningSwitch);
-          applyFilters();
+          await updateWindowSelector();
+          await applyFilters();
           saveBatchSettings();
         });
       });
@@ -319,12 +320,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const switchOptions =
         elements.urlCleaningSwitch.querySelectorAll(".switch-option");
       switchOptions.forEach((option, index) => {
-        option.addEventListener("click", () => {
+        option.addEventListener("click", async () => {
           const newValue = options[index].value;
           elements.urlCleaningSwitch.setAttribute("data-value", newValue);
           currentSettings.urlCleaning = newValue;
           updateSliderPosition(elements.urlCleaningSwitch);
-          applyFilters();
+          await updateWindowSelector();
+          await applyFilters();
           saveBatchSettings();
         });
       });
@@ -351,8 +353,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 应用过滤逻辑（与 applyFilters 相同的逻辑，但不更新UI）
+  async function calculateFilteredTabs(tabs) {
+    const webPagesOnly = document.getElementById("webPagesOnly").checked;
+    const removeDuplicates = elements.removeDuplicates.checked;
+
+    let filtered = tabs.filter((tab) => {
+      const urlType = categorizeUrl(tab.url);
+      return webPagesOnly ? urlType === "web" : true;
+    });
+
+    // 去重
+    if (removeDuplicates) {
+      const seen = new Set();
+      const cleaningMode = currentSettings.urlCleaning;
+
+      const processedUrls = await Promise.all(
+        filtered.map((tab) => processUrl(tab.url, cleaningMode)),
+      );
+
+      filtered = filtered.filter((tab, index) => {
+        const processedUrl = processedUrls[index];
+        if (seen.has(processedUrl)) {
+          return false;
+        }
+        seen.add(processedUrl);
+        return true;
+      });
+    }
+
+    return filtered;
+  }
+
   // 更新窗口选择器选项
-  function updateWindowSelector() {
+  async function updateWindowSelector() {
     const select = document.getElementById("windowScopeSelect");
     const currentValue = select.value;
 
@@ -365,8 +399,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       const currentOption = document.createElement("option");
       currentOption.value = "current";
       const currentText = getLocalMessage("currentWindow");
+      // 计算过滤后的数量（使用与 filteredTabs 相同的逻辑）
+      const filtered = await calculateFilteredTabs(currentWindow.tabs);
       const countText = getLocalMessage("windowTabsCount", [
-        currentWindow.tabs.length.toString(),
+        filtered.length.toString(),
       ]);
       currentOption.textContent = `${currentText} (${countText})`;
       select.appendChild(currentOption);
@@ -375,10 +411,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 添加全部窗口选项
     const allOption = document.createElement("option");
     allOption.value = "all";
-    const totalTabs = allWindows.reduce((sum, w) => sum + w.tabs.length, 0);
+    // 收集所有窗口的标签页
+    const allTabsFromWindows = allWindows.reduce(
+      (acc, w) => [...acc, ...w.tabs],
+      [],
+    );
+    // 计算过滤后的总数量（使用与 filteredTabs 相同的逻辑）
+    const filtered = await calculateFilteredTabs(allTabsFromWindows);
     const allText = getLocalMessage("allWindows");
     const totalCountText = getLocalMessage("windowTabsCount", [
-      totalTabs.toString(),
+      filtered.length.toString(),
     ]);
     allOption.textContent = `${allText} (${totalCountText})`;
     select.appendChild(allOption);
@@ -1082,14 +1124,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 获取窗口信息并更新选择器
     await getAllWindows();
-    updateWindowSelector();
+    await updateWindowSelector();
 
     // 获取新的标签页数据
     allTabs = await getAllTabs();
     selectedTabs.clear();
 
     // 应用过滤器并重新渲染（这将复用现有的tabsList）
-    applyFilters();
+    await applyFilters();
     updateCopyButton();
 
     // 隐藏加载状态
@@ -1157,13 +1199,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     .getElementById("windowScopeSelect")
     .addEventListener("change", refreshTabs);
 
-  document.getElementById("webPagesOnly").addEventListener("change", () => {
-    applyFilters();
-    saveBatchSettings();
-  });
+  document
+    .getElementById("webPagesOnly")
+    .addEventListener("change", async () => {
+      await updateWindowSelector();
+      await applyFilters();
+      saveBatchSettings();
+    });
 
-  elements.removeDuplicates.addEventListener("change", () => {
-    applyFilters();
+  elements.removeDuplicates.addEventListener("change", async () => {
+    await updateWindowSelector();
+    await applyFilters();
     saveBatchSettings();
   });
 
