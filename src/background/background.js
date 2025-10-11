@@ -6,7 +6,6 @@ import {
   createShortUrl,
   isValidWebUrl,
   getAllTemplates,
-  templateEngine,
   processTemplateWithFallback,
   initializeParamRules,
 } from "../shared/constants.js";
@@ -72,7 +71,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 });
 
 // 监听右键菜单点击事件
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info) => {
   if (info.menuItemId === "copy-current-url") {
     debounce("contextMenuCopy", () => handleCopyUrl(), 300);
   }
@@ -156,7 +155,7 @@ async function getPageTitle(tabId, url) {
     // 如果获取tab失败，尝试从URL生成标题
     try {
       return new URL(url).hostname || "";
-    } catch (urlError) {
+    } catch {
       return "";
     }
   }

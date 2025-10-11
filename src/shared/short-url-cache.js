@@ -1,5 +1,4 @@
 // Shared persistent short URL cache implementation
-import { processUrl } from "./constants.js";
 
 /**
  * 持久化短链缓存管理器

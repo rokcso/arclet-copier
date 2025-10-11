@@ -1,11 +1,9 @@
 import {
-  getMessage,
   getAllTemplates,
   getCustomTemplates,
   saveCustomTemplates,
   createTemplate,
   templateEngine,
-  TEMPLATE_FIELDS,
   TemplateChangeNotifier,
   getCustomParamRules,
   saveCustomParamRules,
@@ -14,11 +12,7 @@ import {
 
 import settingsManager from "../../shared/settings-manager.js";
 import toast from "../../shared/toast.js";
-import {
-  initializeThreeWaySwitch,
-  getUrlCleaningOptions,
-} from "../../shared/three-way-switch.js";
-import { initializeBinaryToggle } from "../../shared/binary-toggle.js";
+import { initializeThreeWaySwitch } from "../../shared/three-way-switch.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Locale data
@@ -105,14 +99,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       getLocalMessage("optionsTitle") || "Arclet Copier - Settings";
   }
 
-  // 主题相关函数
-  function detectSystemTheme() {
-    return window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  }
-
   function applyTheme(theme) {
     const htmlElement = document.documentElement;
 
@@ -131,7 +117,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 初始化颜色选择器
   function initializeColorPicker() {
-    if (!elements.colorPicker) {return;}
+    if (!elements.colorPicker) {
+      return;
+    }
 
     const colorOptions = elements.colorPicker.querySelectorAll(".color-option");
 
@@ -191,7 +179,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return initializeThreeWaySwitch(
       elements.notificationSwitch,
       notificationOptions,
-      async (value) => {
+      async () => {
         await saveSettings();
         toast.success(
           getLocalMessage("notificationTypeChanged") ||
@@ -348,7 +336,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function renderTemplateList() {
-    if (!elements.templateList) {return;}
+    if (!elements.templateList) {
+      return;
+    }
 
     elements.templateList.innerHTML = "";
 
@@ -654,8 +644,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Validate and show errors only when saving
   function validateTemplateForSave() {
-    const content = elements.templateContent.value.trim();
     const nameValid = elements.templateName.value.trim().length > 0;
+    const contentValue = elements.templateContent.value;
 
     if (!nameValid) {
       toast.error(
@@ -664,7 +654,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return false;
     }
 
-    if (!content) {
+    if (!contentValue) {
       toast.error(
         getLocalMessage("templateContentRequired") ||
           "Template content is required",
@@ -672,7 +662,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return false;
     }
 
-    const validation = templateEngine.validateTemplate(content);
+    const validation = templateEngine.validateTemplate(contentValue);
     if (!validation.valid) {
       toast.error(validation.errors.join(", "));
       return false;
@@ -795,7 +785,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const emojiPickerTrigger = document.getElementById("emojiPickerTrigger");
     const emojiPicker = document.getElementById("emojiPicker");
 
-    if (!emojiPickerTrigger || !emojiPicker) {return;}
+    if (!emojiPickerTrigger || !emojiPicker) {
+      return;
+    }
 
     // Curated emoji sets for different categories
     const emojiData = {
@@ -1064,7 +1056,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             ".emoji-category-section",
           );
 
-          if (!sections.length) {return;}
+          if (!sections.length) {
+            return;
+          }
 
           const scrollTop = pickerContent.scrollTop;
           let activeCategory = null;
@@ -1162,9 +1156,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Smart incremental update for parameter lists
   function smartUpdateParamList(containerId, oldParams, newParams, category) {
     const container = document.getElementById(containerId);
-    if (!container) {return;}
+    if (!container) {
+      return;
+    }
 
-    const oldSet = new Set(oldParams);
+    new Set(oldParams);
     const newSet = new Set(newParams);
     const sortedNewParams = [...newParams].sort();
 
@@ -1186,7 +1182,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Add new parameters in correct order
-    const beforeElement = container.firstChild;
     sortedNewParams.forEach((param, index) => {
       const existingElement = existingElements.get(param);
       if (existingElement) {
@@ -1213,7 +1208,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Legacy render function (for initial load)
   function renderParamTags(containerId, params, category) {
     const container = document.getElementById(containerId);
-    if (!container) {return;}
+    if (!container) {
+      return;
+    }
 
     container.innerHTML = "";
 
@@ -1533,7 +1530,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         "确定要恢复跟踪参数的默认配置吗？",
     );
 
-    if (!confirmed) {return;}
+    if (!confirmed) {
+      return;
+    }
 
     try {
       const currentRules = await getCustomParamRules();
@@ -1589,7 +1588,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         "确定要恢复功能参数的默认配置吗？",
     );
 
-    if (!confirmed) {return;}
+    if (!confirmed) {
+      return;
+    }
 
     try {
       const currentRules = await getCustomParamRules();

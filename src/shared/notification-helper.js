@@ -53,21 +53,17 @@ class NotificationHelper {
       };
 
       return new Promise((resolve) => {
-        chrome.notifications.create(
-          "",
-          notificationOptions,
-          (notificationId) => {
-            if (chrome.runtime.lastError) {
-              console.debug(
-                "Chrome notification error:",
-                chrome.runtime.lastError,
-              );
-              resolve(false);
-            } else {
-              resolve(true);
-            }
-          },
-        );
+        chrome.notifications.create("", notificationOptions, () => {
+          if (chrome.runtime.lastError) {
+            console.debug(
+              "Chrome notification error:",
+              chrome.runtime.lastError,
+            );
+            resolve(false);
+          } else {
+            resolve(true);
+          }
+        });
       });
     } catch (error) {
       console.debug("Failed to show Chrome notification:", error);
@@ -235,7 +231,9 @@ class NotificationHelper {
 
   // 检查是否为受限URL
   isRestrictedUrl(url) {
-    if (!url) {return true;}
+    if (!url) {
+      return true;
+    }
 
     const restrictedProtocols = [
       "chrome://",

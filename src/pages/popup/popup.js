@@ -1,12 +1,9 @@
 import {
   processUrl,
-  getMessage,
   SHORT_URL_SERVICES,
-  isValidWebUrl,
-  getAllTemplates,
-  templateEngine,
   loadTemplatesIntoSelect,
   validateAndFixSelector,
+  isValidWebUrl,
 } from "../../shared/constants.js";
 
 import { trackCopy } from "../../shared/analytics.js";
@@ -16,9 +13,7 @@ import shortUrlCache from "../../shared/short-url-cache.js";
 import {
   initializeThreeWaySwitch,
   getUrlCleaningOptions,
-  setThreeWaySwitchValue,
 } from "../../shared/three-way-switch.js";
-import { initializeBinaryToggle } from "../../shared/binary-toggle.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 防抖工具
@@ -188,14 +183,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   }
 
-  // 主题相关函数
-  function detectSystemTheme() {
-    return window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  }
-
   function applyTheme(theme) {
     const htmlElement = document.documentElement;
 
@@ -210,23 +197,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   function applyThemeColor(color) {
     const htmlElement = document.documentElement;
     htmlElement.setAttribute("data-color", color);
-  }
-
-  async function initializeTheme() {
-    const result = await chrome.storage.sync.get(["appearance"]);
-    const savedTheme = result.appearance || "system";
-
-    applyTheme(savedTheme);
-
-    // 监听系统主题变化
-    if (window.matchMedia) {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      mediaQuery.addEventListener("change", () => {
-        if (savedTheme === "system") {
-          applyTheme("system");
-        }
-      });
-    }
   }
 
   // 加载设置 - 使用统一的设置管理器
@@ -274,7 +244,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // 如果获取tab失败，尝试从URL生成标题
       try {
         return new URL(url).hostname || "";
-      } catch (urlError) {
+      } catch {
         return "";
       }
     }
@@ -340,7 +310,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           "data-fallback",
           getLocalMessage("noPageTitle") || "Untitled Page",
         );
-      } catch (error) {
+      } catch {
         elements.pageTitle.textContent =
           getLocalMessage("noPageTitle") || "Untitled Page";
       }
@@ -930,7 +900,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // 并行执行所有异步初始化操作
-    const [settingsResult, urlResult] = await Promise.all([
+    const [, urlResult] = await Promise.all([
       // 设置相关的并行操作
       (async () => {
         const settings = await loadSettings();
@@ -979,7 +949,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else {
         handleError(urlResult.error);
       }
-    } catch (urlError) {
+    } catch {
       handleError("Failed to initialize popup");
     }
   }

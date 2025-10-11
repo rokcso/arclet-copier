@@ -1,12 +1,8 @@
 import {
   processUrl,
-  isValidWebUrl,
   isRestrictedPage,
-  getMessage,
   createShortUrlDirect,
   globalShortUrlThrottle,
-  getAllTemplates,
-  templateEngine,
   loadTemplatesIntoSelect,
   processTemplateWithFallback,
   findTemplateById,
@@ -17,7 +13,6 @@ import { trackCopy } from "../../shared/analytics.js";
 import settingsManager from "../../shared/settings-manager.js";
 import toast from "../../shared/toast.js";
 import shortUrlCache from "../../shared/short-url-cache.js";
-import { initializeBinaryToggle } from "../../shared/binary-toggle.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 状态管理
@@ -261,7 +256,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const currentValue = switchElement.getAttribute("data-value");
     const currentIndex = options.findIndex((opt) => opt === currentValue);
 
-    if (currentIndex === -1) {return;}
+    if (currentIndex === -1) {
+      return;
+    }
 
     // 新的三段式开关
     if (switchElement.classList.contains("three-segment-switch")) {
@@ -304,7 +301,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (elements.urlCleaningSwitch.classList.contains("three-segment-switch")) {
       const segmentOptions =
         elements.urlCleaningSwitch.querySelectorAll(".segment-option");
-      segmentOptions.forEach((option, index) => {
+      segmentOptions.forEach((option) => {
         option.addEventListener("click", async () => {
           const newValue = option.getAttribute("data-value");
           elements.urlCleaningSwitch.setAttribute("data-value", newValue);
@@ -518,7 +515,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 分类 URL 类型
   function categorizeUrl(url) {
-    if (!url) {return "unknown";}
+    if (!url) {
+      return "unknown";
+    }
 
     if (
       url.startsWith("chrome://") ||
@@ -587,7 +586,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       tabs.map((tab) => processUrl(tab.url, currentSettings.urlCleaning)),
     );
 
-    processedUrls.forEach((processedUrl, index) => {
+    processedUrls.forEach((processedUrl) => {
       const count = urlCounts.get(processedUrl) || 0;
       urlCounts.set(processedUrl, count + 1);
 
@@ -688,7 +687,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 事件监听
     div.addEventListener("click", (e) => {
-      if (e.target.classList.contains("watermark-text")) {return;}
+      if (e.target.classList.contains("watermark-text")) {
+        return;
+      }
       toggleTabSelection(tab.id);
     });
 
@@ -719,7 +720,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 更新标签页元素
   function updateTabElement(tabId) {
     const element = document.querySelector(`[data-tab-id="${tabId}"]`);
-    if (!element) {return;}
+    if (!element) {
+      return;
+    }
 
     const isSelected = selectedTabs.has(tabId);
     element.classList.toggle("selected", isSelected);
@@ -1060,7 +1063,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 执行复制
   async function performCopy() {
     const selectedTabsList = getSelectedTabs();
-    if (selectedTabsList.length === 0) {return;}
+    if (selectedTabsList.length === 0) {
+      return;
+    }
 
     const format = document.getElementById("silentCopyFormat").value;
     let success = false;
@@ -1191,8 +1196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 显示加载状态
     elements.loading.style.display = "flex";
 
-    // 保存当前的DOM结构中的tabsList引用
-    const existingTabsList = elements.tabsContainer.querySelector(".tabs-list");
+    // DOM结构更新前会自动清理，不需要手动保存引用
 
     // 获取窗口信息并更新选择器
     await getAllWindows();

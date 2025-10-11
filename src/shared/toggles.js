@@ -4,17 +4,27 @@
  */
 
 // 导入所有toggle组件
-export {
+import {
   initializeThreeWaySwitch,
   getUrlCleaningOptions,
   setThreeWaySwitchValue,
 } from "./three-way-switch.js";
 
-export {
+import {
   initializeBinaryToggle,
   createBinaryToggleHTML,
   initializeMultipleBinaryToggles,
 } from "./binary-toggle.js";
+
+// 重新导出
+export {
+  initializeThreeWaySwitch,
+  getUrlCleaningOptions,
+  setThreeWaySwitchValue,
+  initializeBinaryToggle,
+  createBinaryToggleHTML,
+  initializeMultipleBinaryToggles,
+};
 
 /**
  * 统一的toggle组件初始化器
@@ -24,9 +34,8 @@ export {
  * @returns {Object|null} 返回对应的控制对象
  */
 export function initializeToggle(element, options = {}) {
-  const el = typeof element === 'string'
-    ? document.querySelector(element)
-    : element;
+  const el =
+    typeof element === "string" ? document.querySelector(element) : element;
 
   if (!el) {
     console.debug(`Toggle element not found: ${element}`);
@@ -34,14 +43,15 @@ export function initializeToggle(element, options = {}) {
   }
 
   // 根据元素类名判断toggle类型
-  if (el.classList.contains('three-way-switch')) {
+  if (el.classList.contains("three-way-switch")) {
     const { threeWayOptions = [], onChange } = options;
     return initializeThreeWaySwitch(el, threeWayOptions, onChange);
-  }
-  else if (el.type === 'checkbox' || el.classList.contains('toggle-checkbox')) {
+  } else if (
+    el.type === "checkbox" ||
+    el.classList.contains("toggle-checkbox")
+  ) {
     return initializeBinaryToggle(el, options);
-  }
-  else {
+  } else {
     console.debug(`Unknown toggle type for element:`, el);
     return null;
   }
@@ -59,16 +69,16 @@ export function initializeAllToggles(config = {}) {
   const {
     binaryToggles = [],
     threeWayToggles = [],
-    globalOptions = {}
+    globalOptions = {},
   } = config;
 
   const toggles = {
     binary: {},
-    threeWay: {}
+    threeWay: {},
   };
 
   // 初始化二元开关
-  binaryToggles.forEach(toggleConfig => {
+  binaryToggles.forEach((toggleConfig) => {
     const { id, ...options } = toggleConfig;
     const mergedOptions = { ...globalOptions, ...options };
 
@@ -79,12 +89,16 @@ export function initializeAllToggles(config = {}) {
   });
 
   // 初始化三段式开关
-  threeWayToggles.forEach(toggleConfig => {
-    const { id, options: threeWayOptions, onChange, ...restOptions } = toggleConfig;
+  threeWayToggles.forEach((toggleConfig) => {
+    const { id, options: threeWayOptions, onChange } = toggleConfig;
     const element = document.getElementById(id);
 
     if (element) {
-      const toggle = initializeThreeWaySwitch(element, threeWayOptions, onChange);
+      const toggle = initializeThreeWaySwitch(
+        element,
+        threeWayOptions,
+        onChange,
+      );
       if (toggle) {
         toggles.threeWay[id] = toggle;
       }
@@ -102,12 +116,12 @@ export function initializeAllToggles(config = {}) {
       const values = {};
 
       // 二元开关状态
-      Object.keys(toggles.binary).forEach(id => {
+      Object.keys(toggles.binary).forEach((id) => {
         values[id] = toggles.binary[id].getValue();
       });
 
       // 三段式开关状态
-      Object.keys(toggles.threeWay).forEach(id => {
+      Object.keys(toggles.threeWay).forEach((id) => {
         values[id] = toggles.threeWay[id].getValue();
       });
 
@@ -120,7 +134,7 @@ export function initializeAllToggles(config = {}) {
      * @param {boolean} triggerChange - 是否触发change事件
      */
     setValues(values, triggerChange = false) {
-      Object.keys(values).forEach(id => {
+      Object.keys(values).forEach((id) => {
         if (toggles.binary[id]) {
           toggles.binary[id].setValue(values[id], triggerChange);
         } else if (toggles.threeWay[id]) {
@@ -133,8 +147,8 @@ export function initializeAllToggles(config = {}) {
      * 销毁所有toggle
      */
     destroyAll() {
-      Object.values(toggles.binary).forEach(toggle => toggle.destroy());
-      Object.values(toggles.threeWay).forEach(toggle => toggle.destroy());
+      Object.values(toggles.binary).forEach((toggle) => toggle.destroy());
+      Object.values(toggles.threeWay).forEach((toggle) => toggle.destroy());
     },
 
     /**
@@ -144,6 +158,6 @@ export function initializeAllToggles(config = {}) {
      */
     getToggle(id) {
       return toggles.binary[id] || toggles.threeWay[id] || null;
-    }
+    },
   };
 }

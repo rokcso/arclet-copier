@@ -85,12 +85,12 @@ class ToastManager {
   }
 
   // 创建toast元素
-  createToast(message, type, title, closable, duration) {
+  createToast(message, __, ___, ____, duration) {
     const toast = document.createElement("div");
     const id =
       "toast-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
     toast.id = id;
-    toast.className = `toast toast-${type}`;
+    toast.className = `toast toast-${this.type}`;
 
     // Arc风格不需要这些变量
 
@@ -108,7 +108,9 @@ class ToastManager {
 
   // 关闭toast
   closeToast(toast) {
-    if (!toast || !toast.parentNode) {return;}
+    if (!toast || !toast.parentNode) {
+      return;
+    }
 
     // 清除定时器
     if (this.timeoutId) {
@@ -151,7 +153,7 @@ class ToastManager {
   }
 
   // Arc风格不需要图标，保留此函数以保持兼容性
-  getTypeIcon(type) {
+  getTypeIcon() {
     return "";
   }
 

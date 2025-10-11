@@ -1,6 +1,11 @@
-const esbuild = require("esbuild");
-const fs = require("fs");
-const path = require("path");
+import esbuild from "esbuild";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// For ES modules, we need to define __dirname manually
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // 获取构建模式
 const isDev = process.argv.includes("--watch");
@@ -8,14 +13,14 @@ const isProduction = !isDev;
 
 // 读取 manifest 版本号
 const manifest = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "..", "manifest.json"), "utf8"),
+  fs.readFileSync(path.join(__dirname, "manifest.json"), "utf8"),
 );
 const version = manifest.version;
 
 // 构建输出目录
 const outdir = isDev
-  ? path.join(__dirname, "..", "dist-dev")
-  : path.join(__dirname, "..", "dist", `arclet-copier-v${version}`);
+  ? path.join(__dirname, "dist-dev")
+  : path.join(__dirname, "dist", `arclet-copier-v${version}`);
 
 console.log(`🚀 Building Arclet Copier v${version}...`);
 console.log(`📦 Mode: ${isDev ? "Development" : "Production"}`);
@@ -363,13 +368,13 @@ const buildOptions = {
                   recursive: true,
                   force: true,
                 });
-              } catch (e) {
+              } catch {
                 // 忽略删除错误
               }
             }
             console.log("📦 Copying static assets...");
 
-            const rootDir = path.join(__dirname, "..");
+            const rootDir = __dirname;
 
             // 复制 HTML 文件到正确的目录结构
             copyFile(
@@ -604,9 +609,8 @@ if (isDev) {
       console.log("✅ Initial build complete!");
 
       // 监听 HTML 和 CSS 文件变化
-      const chokidar = require("fs").watch || null;
       if (fs.watch) {
-        const rootDir = path.join(__dirname, "..");
+        const rootDir = __dirname;
 
         // 需要监听的文件和目录
         const watchPaths = [
