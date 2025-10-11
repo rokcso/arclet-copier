@@ -699,11 +699,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     validateTemplate();
   }
 
+  // Initialize tooltips for variable buttons
+  function initializeVariableTooltips() {
+    const variableButtons = document.querySelectorAll(".variable-btn");
+
+    variableButtons.forEach((button) => {
+      const fieldName = button.dataset.field;
+      const fieldInfo = TEMPLATE_FIELDS[fieldName];
+
+      if (fieldInfo) {
+        // Set tooltip with description and example
+        const tooltip = `${fieldInfo.description}\n示例: ${fieldInfo.example}`;
+        button.setAttribute("title", tooltip);
+      }
+    });
+  }
+
   function initializeTemplateManagement() {
     if (!elements.templateList) {
       console.warn("templateList element not found");
       return;
     }
+
+    // Initialize variable button tooltips
+    initializeVariableTooltips();
 
     // Add template button
     if (elements.addTemplateBtn) {
