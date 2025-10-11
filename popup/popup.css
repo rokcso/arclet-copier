@@ -1062,7 +1062,7 @@ body {
     line-height: 1.4;
     max-height: 100px;
     overflow-y: auto;
-    text-align: center;
+    text-align: left;
     width: 100%;
     box-sizing: border-box;
     order: 3;
