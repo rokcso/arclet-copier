@@ -1272,6 +1272,11 @@ select.setting-control:hover {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .refresh-btn:hover {
@@ -1341,13 +1346,18 @@ select.setting-control:hover {
 
 /* 通用按钮样式 */
 .btn {
-    padding: 12px 24px;
+    padding: 8px 24px;
     border-radius: 10px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     border: 1px solid transparent;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .btn-secondary {
