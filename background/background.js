@@ -44,7 +44,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   // 创建右键菜单 - 同步操作，优先执行
   chrome.contextMenus.create({
     id: "copy-current-url",
-    title: chrome.i18n.getMessage("copyUrl") || "复制 URL",
+    title: chrome.i18n.getMessage("copyUrlShortcut") || "静默复制",
     contexts: [
       "page",
       "frame",
@@ -530,7 +530,9 @@ async function ensureOffscreenDocument() {
       }
 
       // 不健康，需要重建
-      console.debug("Offscreen document exists but is unhealthy, recreating...");
+      console.debug(
+        "Offscreen document exists but is unhealthy, recreating...",
+      );
 
       try {
         await chrome.offscreen.closeDocument();
