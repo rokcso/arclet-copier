@@ -64,7 +64,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
       try {
         await trackInstall(details.reason);
       } catch (error) {
-        console.warn("Failed to track extension installation:", error);
+        console.debug("Failed to track extension installation:", error);
         // 不阻止扩展正常运行
       }
     }, 0);
@@ -91,7 +91,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     copyToClipboard(message.text)
       .then(() => sendResponse({ success: true }))
       .catch((error) => {
-        console.error("Popup copy failed:", error);
+        console.debug("Popup copy failed:", error);
         sendResponse({ success: false, error: error.message });
       });
 
@@ -104,7 +104,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           console.log("Short URL created successfully:", shortUrl);
           sendResponse({ success: true, shortUrl: shortUrl.trim() });
         } else {
-          console.error("Invalid short URL returned:", shortUrl);
+          console.debug("Invalid short URL returned:", shortUrl);
           sendResponse({
             success: false,
             error: "Invalid short URL generated",
@@ -112,7 +112,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
       })
       .catch((error) => {
-        console.error("Short URL creation failed:", error);
+        console.debug("Short URL creation failed:", error);
         sendResponse({ success: false, error: error.message });
       });
 
@@ -152,7 +152,7 @@ async function getPageTitle(tabId, url) {
     const tab = await chrome.tabs.get(tabId);
     return tab.title || new URL(url).hostname || "";
   } catch (error) {
-    console.error("获取页面标题失败:", error);
+    console.debug("获取页面标题失败:", error);
     // 如果获取tab失败，尝试从URL生成标题
     try {
       return new URL(url).hostname || "";
@@ -231,7 +231,7 @@ async function handleCreateShortUrl(longUrl, service) {
 
     return shortUrl;
   } catch (error) {
-    console.error("[Background] Failed to create short URL:", error);
+    console.debug("[Background] Failed to create short URL:", error);
     throw error;
   }
 }
@@ -290,7 +290,7 @@ async function handleCopyUrl() {
               );
               context.shortUrl = shortUrl;
             } catch (error) {
-              console.error("Error generating short URL for template:", error);
+              console.debug("Error generating short URL for template:", error);
               context.shortUrl = await processUrl(
                 tab.url,
                 settings.urlCleaning,
@@ -312,7 +312,7 @@ async function handleCopyUrl() {
             `${result.templateName} copied`
           : getMessage("urlCopied");
       } catch (error) {
-        console.error("Error processing custom template:", error);
+        console.debug("Error processing custom template:", error);
         // 回退到URL复制
         contentToCopy = await processUrl(tab.url, settings.urlCleaning);
         successMessage = getMessage("urlCopied");
@@ -375,7 +375,7 @@ async function handleCopyUrl() {
     };
 
     trackCopy(trackData).catch((error) => {
-      console.warn("Failed to track copy event:", error);
+      console.debug("Failed to track copy event:", error);
     });
 
     // 显示通知
@@ -386,7 +386,7 @@ async function handleCopyUrl() {
       try {
         settings = await getUserSettings();
       } catch (settingsError) {
-        console.error("获取设置失败:", settingsError);
+        console.debug("获取设置失败:", settingsError);
         // 使用默认设置
         settings = { chromeNotifications: true, silentCopyFormat: "url" };
       }
@@ -414,7 +414,7 @@ async function handleCopyUrl() {
 
     // 只有非用户验证错误才打印错误日志
     if (!isUserValidationError) {
-      console.error("复制 URL 失败:", error);
+      console.debug("复制 URL 失败:", error);
     }
 
     // 记录失败的复制事件
@@ -442,7 +442,7 @@ async function handleCopyUrl() {
     };
 
     trackCopy(trackData).catch((trackError) => {
-      console.warn("Failed to track failed copy event:", trackError);
+      console.debug("Failed to track failed copy event:", trackError);
     });
 
     // 显示通知
@@ -473,7 +473,7 @@ async function copyToClipboard(text) {
 
     console.log("Offscreen copy successful");
   } catch (error) {
-    console.error("复制失败:", error);
+    console.debug("复制失败:", error);
     throw new Error("复制操作失败");
   }
 }
@@ -501,7 +501,7 @@ async function checkOffscreenHealth() {
 
     return response?.success === true && response?.ready === true;
   } catch (error) {
-    console.warn("Offscreen health check failed:", error.message);
+    console.debug("Offscreen health check failed:", error.message);
     return false;
   }
 }
@@ -530,13 +530,13 @@ async function ensureOffscreenDocument() {
       }
 
       // 不健康，需要重建
-      console.warn("Offscreen document exists but is unhealthy, recreating...");
+      console.debug("Offscreen document exists but is unhealthy, recreating...");
 
       try {
         await chrome.offscreen.closeDocument();
         console.log("Closed unhealthy offscreen document");
       } catch (closeError) {
-        console.warn("Failed to close offscreen document:", closeError);
+        console.debug("Failed to close offscreen document:", closeError);
         // 继续尝试创建新的
       }
     }
@@ -566,7 +566,7 @@ async function ensureOffscreenDocument() {
 
     await offscreenCreationPromise;
   } catch (error) {
-    console.error("Failed to ensure offscreen document:", error);
+    console.debug("Failed to ensure offscreen document:", error);
     offscreenCreationPromise = null; // 确保失败时也清除锁
     throw error;
   }

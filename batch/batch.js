@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const messages = await response.json();
       return messages;
     } catch (error) {
-      console.error("Failed to load locale messages:", error);
+      console.debug("Failed to load locale messages:", error);
       return {};
     }
   }
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       includeIcons: true,
       clearExisting: true,
       onError: (error) => {
-        console.error("Failed to load custom templates in batch:", error);
+        console.debug("Failed to load custom templates in batch:", error);
       },
     });
 
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           // 重新加载模板到选择器，传递正确的设置值
           loadCustomTemplates(currentValue).catch((error) => {
-            console.error("Failed to reload templates after change:", error);
+            console.debug("Failed to reload templates after change:", error);
           });
         });
 
@@ -348,7 +348,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       currentWindowId = currentWindow.id;
       return windows;
     } catch (error) {
-      console.error("获取窗口失败:", error);
+      console.debug("获取窗口失败:", error);
       return [];
     }
   }
@@ -443,7 +443,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return tabs;
       }
     } catch (error) {
-      console.error("获取标签页失败:", error);
+      console.debug("获取标签页失败:", error);
       return [];
     }
   }
@@ -458,7 +458,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         tab = await chrome.tabs.get(tabId);
       } catch (error) {
-        console.warn(`[Batch] Tab ${tabId} not found:`, error.message);
+        console.debug(`[Batch] Tab ${tabId} not found:`, error.message);
         return { author: "", description: "" };
       }
 
@@ -481,7 +481,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (response && response.success) {
           return response.metadata || { author: "", description: "" };
         } else {
-          console.warn(
+          console.debug(
             `[Batch] Failed to get metadata for tab ${tabId}:`,
             response,
           );
@@ -491,7 +491,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Content script 未加载或页面不支持
         // 注意：批量复制页面无法动态注入 content script（权限限制）
         // 只有在页面加载时通过 manifest 自动注入的 content script 才能使用
-        console.warn(
+        console.debug(
           `[Batch] Content script not available for tab ${tabId}:`,
           sendError.message,
         );
@@ -508,7 +508,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return { author: "", description: "" };
       }
     } catch (error) {
-      console.warn(
+      console.debug(
         `[Batch] Unexpected error getting metadata for tab ${tabId}:`,
         error.message,
       );
@@ -819,7 +819,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // 如果模板不存在（被删除），使用fallback处理
         if (!template) {
-          console.warn(`Template ${templateId} not found, using fallback`);
+          console.debug(`Template ${templateId} not found, using fallback`);
           const urls = await Promise.all(
             tabs.map((tab) => processUrl(tab.url, cleaningMode)),
           );
@@ -872,13 +872,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                         );
                         return shortUrl;
                       } catch (error) {
-                        console.error("短链生成失败:", error);
+                        console.debug("短链生成失败:", error);
                         return cleanedUrl;
                       }
                     });
                 }
               } catch (error) {
-                console.error(
+                console.debug(
                   "Error generating short URL for template:",
                   error,
                 );
@@ -898,7 +898,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         return results.join("\n");
       } catch (error) {
-        console.error("Error processing custom template:", error);
+        console.debug("Error processing custom template:", error);
         // 使用fallback处理
         const urls = await Promise.all(
           tabs.map((tab) => processUrl(tab.url, cleaningMode)),
@@ -957,7 +957,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 await shortUrlCache.set(cleanedUrl, selectedService, shortUrl);
                 return shortUrl;
               } catch (error) {
-                console.error("短链生成失败:", error);
+                console.debug("短链生成失败:", error);
                 return cleanedUrl; // 如果出错则返回清理后的URL
               }
             });
@@ -1052,7 +1052,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       return true;
     } catch (error) {
-      console.error("复制失败:", error);
+      console.debug("复制失败:", error);
       return false;
     }
   }
@@ -1127,7 +1127,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     trackCopy(trackData).catch((error) => {
-      console.warn("Failed to track batch copy:", error);
+      console.debug("Failed to track batch copy:", error);
     });
 
     if (success) {

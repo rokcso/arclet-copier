@@ -44,7 +44,7 @@ export async function sendEvent(eventName, eventData = {}) {
 
     return await sendToUmami(payload);
   } catch (error) {
-    console.warn(`Failed to send event "${eventName}":`, error);
+    console.debug(`Failed to send event "${eventName}":`, error);
     return false;
   }
 }
@@ -92,7 +92,7 @@ async function sendToUmami(payload) {
       throw fetchError;
     }
   } catch (error) {
-    console.warn("Network request failed:", error);
+    console.debug("Network request failed:", error);
     return false;
   }
 }
@@ -180,7 +180,7 @@ async function getUserId() {
     console.log("Generated new user ID:", userId);
     return userId;
   } catch (error) {
-    console.warn("Failed to get/generate user ID:", error);
+    console.debug("Failed to get/generate user ID:", error);
     // Return a temporary user ID as fallback
     return "u_" + crypto.randomUUID().replace(/-/g, "").substring(0, 9);
   }

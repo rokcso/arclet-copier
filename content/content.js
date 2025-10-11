@@ -64,7 +64,7 @@ class SmartPageNotifications {
       console.log("All checks passed, page notifications supported");
       return true;
     } catch (error) {
-      console.error("Environment check failed:", error);
+      console.debug("Environment check failed:", error);
       return false;
     }
   }
@@ -101,7 +101,7 @@ class SmartPageNotifications {
 
       return false;
     } catch (error) {
-      console.error("XML detection failed:", error);
+      console.debug("XML detection failed:", error);
       return false;
     }
   }
@@ -122,7 +122,7 @@ class SmartPageNotifications {
 
       return restrictedProtocols.some((protocol) => url.startsWith(protocol));
     } catch (error) {
-      console.error("Restricted page detection failed:", error);
+      console.debug("Restricted page detection failed:", error);
       return true; // 安全起见，检测失败视为受限
     }
   }
@@ -139,7 +139,7 @@ class SmartPageNotifications {
       // 检查是否至少有一个可用的插入点
       return !!(document.body || document.documentElement || document.head);
     } catch (error) {
-      console.error("DOM structure check failed:", error);
+      console.debug("DOM structure check failed:", error);
       return false;
     }
   }
@@ -158,7 +158,7 @@ class SmartPageNotifications {
 
       console.log("Smart page notifications initialized successfully");
     } catch (error) {
-      console.error("Failed to initialize page notifications:", error);
+      console.debug("Failed to initialize page notifications:", error);
       // 初始化失败时标记为不支持
       this.isSupported = false;
     }
@@ -405,7 +405,7 @@ class SmartPageNotifications {
 
   show(options = {}) {
     if (!this.shadowRoot) {
-      console.error("Shadow DOM not ready, cannot show notification");
+      console.debug("Shadow DOM not ready, cannot show notification");
       return null;
     }
 
@@ -417,7 +417,7 @@ class SmartPageNotifications {
     const container = this.shadowRoot.getElementById("notifications-container");
 
     if (!container) {
-      console.error("Notifications container not found in shadow DOM");
+      console.debug("Notifications container not found in shadow DOM");
       return null;
     }
 
@@ -575,7 +575,7 @@ async function extractPageMetadata() {
     console.log("[Metadata] Document readyState:", document.readyState);
     console.log("[Metadata] Current URL:", location.href);
   } catch (error) {
-    console.error("[Metadata] Failed to extract page metadata:", error);
+    console.debug("[Metadata] Failed to extract page metadata:", error);
   }
 
   return metadata;
@@ -599,7 +599,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const metadata = await extractPageMetadata();
         sendResponse({ success: true, metadata });
       } catch (error) {
-        console.error("[Metadata] Failed to get page metadata:", error);
+        console.debug("[Metadata] Failed to get page metadata:", error);
         sendResponse({ success: false, error: error.message });
       }
     })();
@@ -628,7 +628,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
       }
     } catch (error) {
-      console.error("Failed to show smart page notification:", error);
+      console.debug("Failed to show smart page notification:", error);
       sendResponse({ success: false, error: error.message });
     }
   } else {

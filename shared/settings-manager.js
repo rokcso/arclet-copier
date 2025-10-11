@@ -53,7 +53,7 @@ class SettingsManager {
           try {
             listener(changes);
           } catch (error) {
-            console.error("[SettingsManager] Error in change listener:", error);
+            console.debug("[SettingsManager] Error in change listener:", error);
           }
         });
       }
@@ -147,7 +147,7 @@ class SettingsManager {
 
       return settings;
     } catch (error) {
-      console.error("Failed to load settings:", error);
+      console.debug("Failed to load settings:", error);
       return this.defaults;
     }
   }
@@ -186,7 +186,7 @@ class SettingsManager {
           );
           await shortUrlCache.invalidateOnCleaningModeChange();
         } catch (cacheError) {
-          console.error(
+          console.debug(
             "[SettingsManager] Failed to invalidate short URL cache:",
             cacheError,
           );
@@ -195,7 +195,7 @@ class SettingsManager {
 
       return true;
     } catch (error) {
-      console.error("Failed to update settings:", error);
+      console.debug("Failed to update settings:", error);
       return false;
     }
   }

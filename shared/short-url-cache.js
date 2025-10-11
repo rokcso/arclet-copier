@@ -52,7 +52,7 @@ class PersistentShortUrlCache {
 
       return null;
     } catch (error) {
-      console.error("[ShortUrlCache] 缓存读取失败:", error);
+      console.debug("[ShortUrlCache] 缓存读取失败:", error);
       return null;
     }
   }
@@ -87,7 +87,7 @@ class PersistentShortUrlCache {
       await chrome.storage.local.set({ [this.storageKey]: cache });
       console.log("[ShortUrlCache] 短链已持久化缓存:", shortUrl);
     } catch (error) {
-      console.error("[ShortUrlCache] 缓存保存失败:", error);
+      console.debug("[ShortUrlCache] 缓存保存失败:", error);
     }
   }
 
@@ -111,7 +111,7 @@ class PersistentShortUrlCache {
       await chrome.storage.local.set({ [this.storageKey]: cleanedCache });
       console.log("缓存清理完成");
     } catch (error) {
-      console.error("缓存清理失败:", error);
+      console.debug("缓存清理失败:", error);
     }
   }
 
@@ -124,7 +124,7 @@ class PersistentShortUrlCache {
       await chrome.storage.local.remove([this.storageKey]);
       console.log("缓存已清空");
     } catch (error) {
-      console.error("缓存清空失败:", error);
+      console.debug("缓存清空失败:", error);
     }
   }
 
@@ -147,7 +147,7 @@ class PersistentShortUrlCache {
         );
       }
     } catch (error) {
-      console.error("[ShortUrlCache] Failed to invalidate cache:", error);
+      console.debug("[ShortUrlCache] Failed to invalidate cache:", error);
     }
   }
 }

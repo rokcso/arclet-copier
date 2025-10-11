@@ -37,7 +37,7 @@ class NotificationHelper {
           return false;
       }
     } catch (error) {
-      console.error("Failed to show notification:", error);
+      console.debug("Failed to show notification:", error);
       return false;
     }
   }
@@ -58,7 +58,7 @@ class NotificationHelper {
           notificationOptions,
           (notificationId) => {
             if (chrome.runtime.lastError) {
-              console.error(
+              console.debug(
                 "Chrome notification error:",
                 chrome.runtime.lastError,
               );
@@ -70,7 +70,7 @@ class NotificationHelper {
         );
       });
     } catch (error) {
-      console.error("Failed to show Chrome notification:", error);
+      console.debug("Failed to show Chrome notification:", error);
       return false;
     }
   }
@@ -97,7 +97,7 @@ class NotificationHelper {
         });
       }
     } catch (error) {
-      console.error("Failed to show page notification:", error);
+      console.debug("Failed to show page notification:", error);
       // 失败时回退到Chrome通知
       return await this.showChromeNotification({ title, message, icon });
     }
@@ -145,7 +145,7 @@ class NotificationHelper {
         options,
       );
     } catch (error) {
-      console.error("Failed to send page notification message:", error);
+      console.debug("Failed to send page notification message:", error);
       // 发送消息失败时回退到Chrome通知
       return await this.showChromeNotification(options);
     }
@@ -377,7 +377,7 @@ class NotificationHelper {
 
       return true;
     } catch (error) {
-      console.error("Failed to show extension page notification:", error);
+      console.debug("Failed to show extension page notification:", error);
       return false;
     }
   }

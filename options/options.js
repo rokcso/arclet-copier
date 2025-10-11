@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const messages = await response.json();
       return messages;
     } catch (error) {
-      console.error("Failed to load locale messages:", error);
+      console.debug("Failed to load locale messages:", error);
       return {};
     }
   }
@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       allTemplates = await getAllTemplates();
       renderTemplateList();
     } catch (error) {
-      console.error("Failed to load templates:", error);
+      console.debug("Failed to load templates:", error);
       toast.error("Failed to load templates");
     }
   }
@@ -520,7 +520,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       await loadTemplates();
     } catch (error) {
-      console.error("Failed to delete template:", error);
+      console.debug("Failed to delete template:", error);
       toast.error(getLocalMessage("templateDeleteFailed") || "删除模板失败");
     }
   }
@@ -593,7 +593,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       hideTemplateModal();
       await loadTemplates();
     } catch (error) {
-      console.error("Failed to save template:", error);
+      console.debug("Failed to save template:", error);
       toast.error(getLocalMessage("templateSaveFailed") || "保存模板失败");
     }
   }
@@ -717,7 +717,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function initializeTemplateManagement() {
     if (!elements.templateList) {
-      console.warn("templateList element not found");
+      console.debug("templateList element not found");
       return;
     }
 
@@ -1128,7 +1128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderParamTags("functionalParamsList", rules.functional, "functional");
       console.log("[ParamConfig] Loaded parameter rules:", rules);
     } catch (error) {
-      console.error("[ParamConfig] Failed to load parameter rules:", error);
+      console.debug("[ParamConfig] Failed to load parameter rules:", error);
       toast.show(
         getLocalMessage("loadParamRulesFailed") || "加载参数配置失败",
         "error",
@@ -1341,7 +1341,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
     } catch (error) {
-      console.error("[ParamConfig] Failed to add/edit parameter:", error);
+      console.debug("[ParamConfig] Failed to add/edit parameter:", error);
       toast.show(getLocalMessage("paramAddFailed") || "添加参数失败", "error");
       return false;
     }
@@ -1364,7 +1364,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
       }
     } catch (error) {
-      console.error("[ParamConfig] Failed to remove parameter:", error);
+      console.debug("[ParamConfig] Failed to remove parameter:", error);
       toast.show(
         getLocalMessage("paramRemoveFailed") || "删除参数失败",
         "error",
@@ -1401,7 +1401,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
       }
     } catch (error) {
-      console.error(
+      console.debug(
         "[ParamConfig] Failed to reset tracking parameters:",
         error,
       );
@@ -1441,7 +1441,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
       }
     } catch (error) {
-      console.error(
+      console.debug(
         "[ParamConfig] Failed to reset functional parameters:",
         error,
       );

@@ -29,7 +29,7 @@ export function initializeToggle(element, options = {}) {
     : element;
 
   if (!el) {
-    console.warn(`Toggle element not found: ${element}`);
+    console.debug(`Toggle element not found: ${element}`);
     return null;
   }
 
@@ -42,7 +42,7 @@ export function initializeToggle(element, options = {}) {
     return initializeBinaryToggle(el, options);
   }
   else {
-    console.warn(`Unknown toggle type for element:`, el);
+    console.debug(`Unknown toggle type for element:`, el);
     return null;
   }
 }

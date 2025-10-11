@@ -42,7 +42,7 @@ export function initializeBinaryToggle(element, options = {}) {
     : element;
 
   if (!checkbox) {
-    console.warn(`Binary toggle element not found: ${element}`);
+    console.debug(`Binary toggle element not found: ${element}`);
     return null;
   }
 

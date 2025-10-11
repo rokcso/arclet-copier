@@ -78,7 +78,7 @@ class ShortUrlThrottle {
         try {
           this.progressCallback();
         } catch (callbackError) {
-          console.warn("Progress callback error:", callbackError);
+          console.debug("Progress callback error:", callbackError);
         }
       }
 
@@ -215,7 +215,7 @@ export async function initializeParamRules() {
       console.log("[ParamRules] Initialized with default rules");
     }
   } catch (error) {
-    console.error("[ParamRules] Failed to initialize:", error);
+    console.debug("[ParamRules] Failed to initialize:", error);
   }
 }
 
@@ -240,7 +240,7 @@ export async function getCustomParamRules() {
       functional: [...PARAM_CATEGORIES.FUNCTIONAL],
     };
   } catch (error) {
-    console.error("[ParamRules] Failed to get custom rules:", error);
+    console.debug("[ParamRules] Failed to get custom rules:", error);
     // 出错时返回默认配置
     return {
       tracking: [...PARAM_CATEGORIES.TRACKING],
@@ -270,7 +270,7 @@ export async function saveCustomParamRules(rules) {
     console.log("[ParamRules] Saved custom rules:", saveData);
     return true;
   } catch (error) {
-    console.error("[ParamRules] Failed to save custom rules:", error);
+    console.debug("[ParamRules] Failed to save custom rules:", error);
     return false;
   }
 }
@@ -312,7 +312,7 @@ async function shouldKeepParameter(paramName, cleaningMode) {
       // 未知参数保留（安全策略）
       return true;
     } catch (error) {
-      console.error("[ParamRules] Error in shouldKeepParameter:", error);
+      console.debug("[ParamRules] Error in shouldKeepParameter:", error);
       // 出错时采用安全策略：保留参数
       return true;
     }
@@ -359,7 +359,7 @@ export async function processUrl(url, cleaningMode = "smart") {
 
     return url;
   } catch (error) {
-    console.error("[ParamRules] Error in processUrl:", error);
+    console.debug("[ParamRules] Error in processUrl:", error);
     return url;
   }
 }
@@ -513,7 +513,7 @@ export async function createShortUrlDirect(longUrl, service = "isgd") {
 
     return shortUrl.trim();
   } catch (error) {
-    console.error(`Short URL creation failed for ${service}:`, error);
+    console.debug(`Short URL creation failed for ${service}:`, error);
     throw error;
   }
 }
@@ -636,7 +636,7 @@ export class TemplateEngine {
         const url = new URL(context.url);
         return url.hostname; // 完整主机名，包含子域名，如 www.example.com
       } catch (error) {
-        console.warn(
+        console.debug(
           "TemplateEngine: Invalid URL for hostname field:",
           context.url,
         );
@@ -661,7 +661,7 @@ export class TemplateEngine {
         //      blog.sub.example.com -> example.com
         return parts.slice(-2).join(".");
       } catch (error) {
-        console.warn(
+        console.debug(
           "TemplateEngine: Invalid URL for domain field:",
           context.url,
         );
@@ -728,7 +728,7 @@ export class TemplateEngine {
 
     // 验证输入参数
     if (!context || typeof context !== "object") {
-      console.warn(
+      console.debug(
         "TemplateEngine: Invalid context provided, using empty context",
       );
       context = {};
@@ -755,7 +755,7 @@ export class TemplateEngine {
             result = result.replace(match[0], replacement);
           }
         } catch (error) {
-          console.error(
+          console.debug(
             `TemplateEngine: Error processing field '${match[1]}':`,
             error,
           );
@@ -765,7 +765,7 @@ export class TemplateEngine {
 
       return result;
     } catch (error) {
-      console.error("TemplateEngine: Template processing failed:", error);
+      console.debug("TemplateEngine: Template processing failed:", error);
       return template; // 降级处理，返回原始模板
     }
   }
@@ -821,7 +821,7 @@ export class TemplateEngine {
         fields: [...new Set(fields)], // 去重
       };
     } catch (error) {
-      console.error("TemplateEngine: Template validation failed:", error);
+      console.debug("TemplateEngine: Template validation failed:", error);
       return {
         valid: false,
         errors: ["Template validation failed due to internal error"],
@@ -853,7 +853,7 @@ export async function getCustomTemplates() {
     const result = await chrome.storage.sync.get(["customTemplates"]);
     return result.customTemplates || [];
   } catch (error) {
-    console.error("Failed to load custom templates:", error);
+    console.debug("Failed to load custom templates:", error);
     return [];
   }
 }
@@ -863,7 +863,7 @@ export async function saveCustomTemplates(templates) {
     await chrome.storage.sync.set({ customTemplates: templates });
     return true;
   } catch (error) {
-    console.error("Failed to save custom templates:", error);
+    console.debug("Failed to save custom templates:", error);
     return false;
   }
 }
@@ -908,7 +908,7 @@ export class TemplateChangeNotifier {
     } catch (error) {
       // 忽略无接收者的错误（正常情况，因为不是所有页面都在监听）
       if (!error.message?.includes("Could not establish connection")) {
-        console.error("Failed to notify template change:", error);
+        console.debug("Failed to notify template change:", error);
       }
     }
   }
@@ -917,7 +917,7 @@ export class TemplateChangeNotifier {
 // 通用模板加载函数 - 解决代码重复问题
 export async function loadTemplatesIntoSelect(selectElement, options = {}) {
   if (!selectElement) {
-    console.warn("loadTemplatesIntoSelect: selectElement is null");
+    console.debug("loadTemplatesIntoSelect: selectElement is null");
     return;
   }
 
@@ -950,7 +950,7 @@ export async function loadTemplatesIntoSelect(selectElement, options = {}) {
       `Loaded ${customTemplates.length} custom templates into select`,
     );
   } catch (error) {
-    console.error("Failed to load custom templates:", error);
+    console.debug("Failed to load custom templates:", error);
     if (onError) {
       onError(error);
     }
@@ -965,7 +965,7 @@ export async function validateAndFixSelector(
   saveFunction,
 ) {
   if (!selectElement) {
-    console.warn("validateAndFixSelector: selectElement is null");
+    console.debug("validateAndFixSelector: selectElement is null");
     return false;
   }
 
@@ -1038,7 +1038,7 @@ export async function validateAndFixSelector(
     console.log("[Template] No options available in selector");
     return false;
   } catch (error) {
-    console.error("Error in validateAndFixSelector:", error);
+    console.debug("Error in validateAndFixSelector:", error);
     return false;
   }
 }
@@ -1047,7 +1047,7 @@ export async function validateAndFixSelector(
 export async function findTemplateById(templateId) {
   try {
     if (!templateId) {
-      console.warn("Template ID is required");
+      console.debug("Template ID is required");
       return null;
     }
 
@@ -1055,13 +1055,13 @@ export async function findTemplateById(templateId) {
     const template = customTemplates.find((t) => t.id === templateId);
 
     if (!template) {
-      console.warn(`Template not found: ${templateId}`);
+      console.debug(`Template not found: ${templateId}`);
       return null;
     }
 
     return template;
   } catch (error) {
-    console.error("Failed to find template:", error);
+    console.debug("Failed to find template:", error);
     return null;
   }
 }
@@ -1077,7 +1077,7 @@ export async function processTemplateWithFallback(
 
     // 如果模板不存在（被删除），使用fallback
     if (!template) {
-      console.warn(`Template ${templateId} not found, using fallback`);
+      console.debug(`Template ${templateId} not found, using fallback`);
       const fallback =
         fallbackContent ||
         (context.url ? await processUrl(context.url, context.urlCleaning) : "");
@@ -1092,7 +1092,7 @@ export async function processTemplateWithFallback(
 
     // 如果模板包含shortUrl字段，确保上下文中有shortUrl
     if (template.template.includes("{{shortUrl}}") && !context.shortUrl) {
-      console.warn(
+      console.debug(
         "Template requires shortUrl but context does not provide it",
       );
       // 可以选择生成shortUrl或者使用原URL作为fallback
@@ -1112,7 +1112,7 @@ export async function processTemplateWithFallback(
       templateName: template.name,
     };
   } catch (error) {
-    console.error("Template processing failed:", error);
+    console.debug("Template processing failed:", error);
 
     // 使用fallback内容
     const fallback =

@@ -195,7 +195,7 @@ const buildOptions = {
 
             console.log("✅ Static assets copied successfully!");
           } catch (error) {
-            console.error("❌ Failed to copy assets:", error);
+            console.debug("❌ Failed to copy assets:", error);
             result.errors.push({
               text: `Asset copy failed: ${error.message}`,
             });
@@ -210,17 +210,17 @@ const buildOptions = {
       setup(build) {
         build.onEnd((result) => {
           if (result.errors.length > 0) {
-            console.error("\n❌ Build failed with errors:");
+            console.debug("\n❌ Build failed with errors:");
             result.errors.forEach((error) => {
-              console.error(error);
+              console.debug(error);
             });
             return;
           }
 
           if (result.warnings.length > 0) {
-            console.warn("\n⚠️  Build warnings:");
+            console.debug("\n⚠️  Build warnings:");
             result.warnings.forEach((warning) => {
-              console.warn(warning);
+              console.debug(warning);
             });
           }
 
@@ -408,7 +408,7 @@ if (isDev) {
 
               console.log("✅ Assets copied successfully!");
             } catch (error) {
-              console.error("❌ Failed to copy assets:", error);
+              console.debug("❌ Failed to copy assets:", error);
             }
           }, 100);
         };
@@ -440,13 +440,13 @@ if (isDev) {
       }
     })
     .catch((error) => {
-      console.error("❌ Watch failed:", error);
+      console.debug("❌ Watch failed:", error);
       process.exit(1);
     });
 } else {
   // 生产模式 - 单次构建
   esbuild.build(buildOptions).catch((error) => {
-    console.error("❌ Build failed:", error);
+    console.debug("❌ Build failed:", error);
     process.exit(1);
   });
 }

@@ -43,7 +43,7 @@ export async function trackInstall(installReason = "install") {
 
     return false;
   } catch (error) {
-    console.warn(`Failed to track ${installReason}:`, error);
+    console.debug(`Failed to track ${installReason}:`, error);
     return false;
   }
 }
@@ -110,7 +110,7 @@ export async function trackCopy(copyData) {
 
     return await sendEvent("copy", eventData);
   } catch (error) {
-    console.warn("Failed to track copy:", error);
+    console.debug("Failed to track copy:", error);
     return false;
   }
 }
@@ -137,7 +137,7 @@ export async function trackError(errorType, component, message, metadata = {}) {
       ...metadata,
     });
   } catch (error) {
-    console.warn("Failed to track error:", error);
+    console.debug("Failed to track error:", error);
     return false;
   }
 }

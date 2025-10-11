@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ success: true });
       })
       .catch((error) => {
-        console.error("Offscreen copy failed:", error);
+        console.debug("Offscreen copy failed:", error);
         sendResponse({ success: false, error: error.message });
       });
     return true; // 表示会异步发送响应
@@ -60,7 +60,7 @@ async function handleClipboardWrite(data) {
 
     console.log("Clipboard copy successful using execCommand");
   } catch (error) {
-    console.error("Clipboard copy error:", error);
+    console.debug("Clipboard copy error:", error);
     throw error;
   }
 }

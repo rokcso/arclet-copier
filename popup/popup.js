@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const messages = await response.json();
       return messages;
     } catch (error) {
-      console.error("Failed to load locale messages:", error);
+      console.debug("Failed to load locale messages:", error);
       return {};
     }
   }
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       includeIcons: true,
       clearExisting: true,
       onError: (error) => {
-        console.error("Failed to load custom templates in popup:", error);
+        console.debug("Failed to load custom templates in popup:", error);
       },
     });
 
@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // 重新加载模板并验证
         loadCustomTemplates(currentValue).catch((error) => {
-          console.error("Failed to reload templates after change:", error);
+          console.debug("Failed to reload templates after change:", error);
         });
 
         sendResponse({ received: true });
@@ -270,7 +270,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const tab = await chrome.tabs.get(tabId);
       return tab.title || new URL(url).hostname || "";
     } catch (error) {
-      console.error("获取页面标题失败:", error);
+      console.debug("获取页面标题失败:", error);
       // 如果获取tab失败，尝试从URL生成标题
       try {
         return new URL(url).hostname || "";
@@ -306,7 +306,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
       }
     } catch (error) {
-      console.error("获取 URL 失败:", error);
+      console.debug("获取 URL 失败:", error);
       return {
         success: false,
         error: getLocalMessage("noUrl"),
@@ -417,12 +417,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       };
 
       trackCopy(trackData).catch((error) => {
-        console.warn("Failed to track copy event:", error);
+        console.debug("Failed to track copy event:", error);
       });
 
       showStatus();
     } catch (error) {
-      console.error("复制失败:", error);
+      console.debug("复制失败:", error);
       let fallbackSuccess = false;
 
       // 使用fallback复制方法
@@ -434,7 +434,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         fallbackSuccess = true;
         showStatus();
       } catch (fallbackError) {
-        console.error("降级复制也失败:", fallbackError);
+        console.debug("降级复制也失败:", fallbackError);
       }
 
       // 记录复制事件（成功或失败）
@@ -456,7 +456,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       };
 
       trackCopy(trackData).catch((trackError) => {
-        console.warn("Failed to track copy event:", trackError);
+        console.debug("Failed to track copy event:", trackError);
       });
     } finally {
       // 300ms后重置状态
@@ -512,12 +512,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         errorType: null,
         errorMessage: null,
       }).catch((error) => {
-        console.warn("Failed to track markdown copy event:", error);
+        console.debug("Failed to track markdown copy event:", error);
       });
 
       toast.success(getLocalMessage("markdownCopied"));
     } catch (error) {
-      console.error("Markdown复制失败:", error);
+      console.debug("Markdown复制失败:", error);
       let fallbackSuccess = false;
 
       // 使用fallback复制方法
@@ -527,7 +527,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         fallbackSuccess = true;
         toast.success(getLocalMessage("markdownCopied"));
       } catch (fallbackError) {
-        console.error("Markdown降级复制也失败:", fallbackError);
+        console.debug("Markdown降级复制也失败:", fallbackError);
       }
 
       // 记录复制事件（成功或失败）
@@ -547,7 +547,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         errorType: fallbackSuccess ? null : "clipboard",
         errorMessage: fallbackSuccess ? null : error.message,
       }).catch((trackError) => {
-        console.warn("Failed to track markdown copy event:", trackError);
+        console.debug("Failed to track markdown copy event:", trackError);
       });
     } finally {
       // 300ms后重置状态
@@ -622,7 +622,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             copySuccess = true;
           }
         } catch (error) {
-          console.error("短链复制失败:", error);
+          console.debug("短链复制失败:", error);
         }
 
         // 记录短链复制事件（缓存）
@@ -638,7 +638,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           errorType: copySuccess ? null : "clipboard",
           errorMessage: copySuccess ? null : "Cache copy failed",
         }).catch((error) => {
-          console.warn("Failed to track cached shortUrl copy:", error);
+          console.debug("Failed to track cached shortUrl copy:", error);
         });
 
         // 显示成功通知
@@ -681,7 +681,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             copySuccess = true;
           }
         } catch (error) {
-          console.error("短链复制失败:", error);
+          console.debug("短链复制失败:", error);
         }
 
         // 记录短链复制事件（新生成）
@@ -697,7 +697,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           errorType: copySuccess ? null : "clipboard",
           errorMessage: copySuccess ? null : "Generated copy failed",
         }).catch((error) => {
-          console.warn("Failed to track generated shortUrl copy:", error);
+          console.debug("Failed to track generated shortUrl copy:", error);
         });
 
         // 显示成功通知
@@ -711,7 +711,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error(response.error || "Failed to generate short URL");
       }
     } catch (error) {
-      console.error("生成短链失败:", error);
+      console.debug("生成短链失败:", error);
       toast.error(
         getLocalMessage("shortUrlFailed") || "Failed to generate short URL",
       );
@@ -774,7 +774,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               errorType: null,
               errorMessage: null,
             }).catch((error) => {
-              console.warn("Failed to track QR code copy:", error);
+              console.debug("Failed to track QR code copy:", error);
             });
 
             // 复制成功后立即关闭二维码模态框
@@ -790,7 +790,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             throw new Error("浏览器不支持图片复制功能");
           }
         } catch (error) {
-          console.error("复制二维码图片失败:", error);
+          console.debug("复制二维码图片失败:", error);
 
           // 记录失败的QR码复制事件
           const duration = Date.now() - startTime;
@@ -806,7 +806,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             errorType: "clipboard",
             errorMessage: error.message,
           }).catch((trackError) => {
-            console.warn("Failed to track QR code copy error:", trackError);
+            console.debug("Failed to track QR code copy error:", trackError);
           });
 
           toast.error(
@@ -820,7 +820,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }, "image/png");
     } catch (error) {
-      console.error("处理二维码图片失败:", error);
+      console.debug("处理二维码图片失败:", error);
       toast.error(getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败");
       // 重置状态
       setTimeout(() => {
@@ -966,7 +966,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   } catch (error) {
-    console.error("Popup initialization failed:", error);
+    console.debug("Popup initialization failed:", error);
     console.timeEnd("Popup initialization");
 
     // 即使出错也要确保基本功能可用
