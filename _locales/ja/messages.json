@@ -628,6 +628,12 @@
   "paramExists": {
     "message": "パラメータは既に存在します"
   },
+  "paramExistsInSameCategory": {
+    "message": "このパラメータは既に現在のカテゴリに存在します"
+  },
+  "paramExistsInOtherCategory": {
+    "message": "このパラメータは既に別のカテゴリに存在します"
+  },
   "paramNameEmpty": {
     "message": "パラメータ名を入力してください"
   },

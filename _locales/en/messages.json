@@ -639,6 +639,18 @@
   "paramExists": {
     "message": "Parameter already exists"
   },
+  "paramExistsInSameCategory": {
+    "message": "This parameter already exists in the current category"
+  },
+  "paramExistsInOtherCategory": {
+    "message": "This parameter already exists in another category"
+  },
+  "paramExistsInTracking": {
+    "message": "tracking parameters"
+  },
+  "paramExistsInFunctional": {
+    "message": "functional parameters"
+  },
   "paramNameEmpty": {
     "message": "Parameter name cannot be empty"
   },

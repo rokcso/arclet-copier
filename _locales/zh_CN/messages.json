@@ -614,6 +614,18 @@
   "paramExists": {
     "message": "参数已存在"
   },
+  "paramExistsInSameCategory": {
+    "message": "该参数已存在于当前类别中"
+  },
+  "paramExistsInOtherCategory": {
+    "message": "该参数已存在于另一类别中"
+  },
+  "paramExistsInTracking": {
+    "message": "跟踪参数"
+  },
+  "paramExistsInFunctional": {
+    "message": "功能参数"
+  },
   "paramNameEmpty": {
     "message": "参数名不能为空"
   },

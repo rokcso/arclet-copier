@@ -1360,9 +1360,35 @@ document.addEventListener("DOMContentLoaded", async () => {
           return true;
         }
 
-        // Check if new name already exists
-        if (rules[category].includes(lowerParamName)) {
-          toast.show(getLocalMessage("paramExists") || "参数已存在", "error");
+        // Check if parameter already exists
+        const existsInCurrentCategory =
+          rules[category].includes(lowerParamName);
+        const existsInOtherCategory =
+          category === "tracking"
+            ? rules.functional.includes(lowerParamName)
+            : rules.tracking.includes(lowerParamName);
+
+        if (existsInCurrentCategory) {
+          // Same category duplicate
+          toast.show(
+            getLocalMessage("paramExistsInSameCategory") ||
+              `Parameter "${lowerParamName}" already exists in current category`,
+            "error",
+          );
+          elements.paramNameInput.classList.add("error");
+          return false;
+        } else if (existsInOtherCategory) {
+          // Cross category duplicate
+          const otherCategoryKey =
+            category === "tracking"
+              ? "paramExistsInFunctional"
+              : "paramExistsInTracking";
+          const otherCategory = getLocalMessage(otherCategoryKey);
+          toast.show(
+            getLocalMessage("paramExistsInOtherCategory") ||
+              `Parameter "${lowerParamName}" already exists in ${otherCategory}`,
+            "error",
+          );
           elements.paramNameInput.classList.add("error");
           return false;
         }
@@ -1402,9 +1428,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // Add mode: add new parameter
       else {
-        // Check if parameter already exists in the same category
-        if (rules[category].includes(lowerParamName)) {
-          toast.show(getLocalMessage("paramExists") || "参数已存在", "error");
+        // Check if parameter already exists
+        const existsInCurrentCategory =
+          rules[category].includes(lowerParamName);
+        const existsInOtherCategory =
+          category === "tracking"
+            ? rules.functional.includes(lowerParamName)
+            : rules.tracking.includes(lowerParamName);
+
+        if (existsInCurrentCategory) {
+          // Same category duplicate
+          toast.show(
+            getLocalMessage("paramExistsInSameCategory") ||
+              `Parameter "${lowerParamName}" already exists in current category`,
+            "error",
+          );
+          elements.paramNameInput.classList.add("error");
+          return false;
+        } else if (existsInOtherCategory) {
+          // Cross category duplicate
+          const otherCategoryKey =
+            category === "tracking"
+              ? "paramExistsInFunctional"
+              : "paramExistsInTracking";
+          const otherCategory = getLocalMessage(otherCategoryKey);
+          toast.show(
+            getLocalMessage("paramExistsInOtherCategory") ||
+              `Parameter "${lowerParamName}" already exists in ${otherCategory}`,
+            "error",
+          );
           elements.paramNameInput.classList.add("error");
           return false;
         }

@@ -616,6 +616,12 @@
   "paramExists": {
     "message": "參數已存在"
   },
+  "paramExistsInSameCategory": {
+    "message": "該參數已存在於當前類別中"
+  },
+  "paramExistsInOtherCategory": {
+    "message": "該參數已存在於另一類別中"
+  },
   "paramNameEmpty": {
     "message": "參數名稱不能為空"
   },

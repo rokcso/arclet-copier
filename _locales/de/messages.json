@@ -628,6 +628,12 @@
   "paramExists": {
     "message": "Parameter existiert bereits"
   },
+  "paramExistsInSameCategory": {
+    "message": "Dieser Parameter existiert bereits in der aktuellen Kategorie"
+  },
+  "paramExistsInOtherCategory": {
+    "message": "Dieser Parameter existiert bereits in einer anderen Kategorie"
+  },
   "paramNameEmpty": {
     "message": "Parametername darf nicht leer sein"
   },

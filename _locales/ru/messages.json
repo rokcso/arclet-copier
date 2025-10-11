@@ -628,6 +628,12 @@
   "paramExists": {
     "message": "Параметр уже существует"
   },
+  "paramExistsInSameCategory": {
+    "message": "Этот параметр уже существует в текущей категории"
+  },
+  "paramExistsInOtherCategory": {
+    "message": "Этот параметр уже существует в другой категории"
+  },
   "paramNameEmpty": {
     "message": "Название параметра не может быть пустым"
   },

@@ -628,6 +628,12 @@
   "paramExists": {
     "message": "파라미터가 이미 존재합니다"
   },
+  "paramExistsInSameCategory": {
+    "message": "이 파라미터는 이미 현재 카테고리에 존재합니다"
+  },
+  "paramExistsInOtherCategory": {
+    "message": "이 파라미터는 이미 다른 카테고리에 존재합니다"
+  },
   "paramNameEmpty": {
     "message": "파라미터 이름은 비워둘 수 없습니다"
   },
