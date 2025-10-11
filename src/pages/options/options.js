@@ -1103,10 +1103,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Load parameter rules
   async function loadParamRules() {
+    // Only skip if containers are already populated (prevents flickering during operations)
+    const trackingContainer = document.getElementById("trackingParamsList");
+    const functionalContainer = document.getElementById("functionalParamsList");
+
+    if (
+      trackingContainer &&
+      trackingContainer.children.length > 0 &&
+      functionalContainer &&
+      functionalContainer.children.length > 0
+    ) {
+      console.log("[ParamConfig] Skipping load - containers already populated");
+      return;
+    }
+
     try {
       const rules = await getCustomParamRules();
-      renderParamTags("trackingParamsList", rules.tracking, "tracking");
-      renderParamTags("functionalParamsList", rules.functional, "functional");
+      updateParamTags("trackingParamsList", rules.tracking, "tracking");
+      updateParamTags("functionalParamsList", rules.functional, "functional");
       console.log("[ParamConfig] Loaded parameter rules:", rules);
     } catch (error) {
       console.debug("[ParamConfig] Failed to load parameter rules:", error);
@@ -1117,7 +1131,86 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Render parameter tags
+  // Create single parameter tag element
+  function createParamTag(param, category) {
+    const tag = document.createElement("div");
+    tag.className = "param-tag";
+    tag.setAttribute("data-param", param);
+    tag.setAttribute("data-category", category);
+    tag.innerHTML = `
+      <span class="param-name">${param}</span>
+      <button class="param-remove" data-param="${param}" data-category="${category}" title="${getLocalMessage("removeParam") || "删除"}">×</button>
+    `;
+
+    // Add click event for editing
+    const paramNameSpan = tag.querySelector(".param-name");
+    paramNameSpan.addEventListener("click", () => {
+      showEditParamModal(category, param);
+    });
+    paramNameSpan.style.cursor = "pointer";
+    paramNameSpan.title = getLocalMessage("editParamHint") || "单击编辑";
+
+    // Add remove event listener
+    const removeBtn = tag.querySelector(".param-remove");
+    removeBtn.addEventListener("click", () => {
+      removeParam(category, param);
+    });
+
+    return tag;
+  }
+
+  // Smart incremental update for parameter lists
+  function smartUpdateParamList(containerId, oldParams, newParams, category) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const oldSet = new Set(oldParams);
+    const newSet = new Set(newParams);
+    const sortedNewParams = [...newParams].sort();
+
+    // Remove parameters that no longer exist
+    container.querySelectorAll(".param-tag").forEach((tag) => {
+      const param = tag.getAttribute("data-param");
+      if (!newSet.has(param)) {
+        tag.remove();
+      }
+    });
+
+    // Find existing elements for ordering
+    const existingElements = new Map();
+    container.querySelectorAll(".param-tag").forEach((tag) => {
+      const param = tag.getAttribute("data-param");
+      if (newSet.has(param)) {
+        existingElements.set(param, tag);
+      }
+    });
+
+    // Add new parameters in correct order
+    let beforeElement = container.firstChild;
+    sortedNewParams.forEach((param, index) => {
+      const existingElement = existingElements.get(param);
+      if (existingElement) {
+        // Reorder existing element if needed
+        const nextElement = container.children[index];
+        if (nextElement !== existingElement) {
+          container.insertBefore(existingElement, nextElement || null);
+        }
+      } else {
+        // Create new parameter tag
+        const tag = createParamTag(param, category);
+
+        // Insert at correct position
+        const targetElement = container.children[index];
+        if (targetElement) {
+          container.insertBefore(tag, targetElement);
+        } else {
+          container.appendChild(tag);
+        }
+      }
+    });
+  }
+
+  // Legacy render function (for initial load)
   function renderParamTags(containerId, params, category) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -1128,29 +1221,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     const sortedParams = [...params].sort();
 
     sortedParams.forEach((param) => {
-      const tag = document.createElement("div");
-      tag.className = "param-tag";
-      tag.innerHTML = `
-        <span class="param-name">${param}</span>
-        <button class="param-remove" data-param="${param}" data-category="${category}" title="${getLocalMessage("removeParam") || "删除"}">×</button>
-      `;
-
-      // Add click event for editing
-      const paramNameSpan = tag.querySelector(".param-name");
-      paramNameSpan.addEventListener("click", () => {
-        showEditParamModal(category, param);
-      });
-      paramNameSpan.style.cursor = "pointer";
-      paramNameSpan.title = getLocalMessage("editParamHint") || "单击编辑";
-
-      // Add remove event listener
-      const removeBtn = tag.querySelector(".param-remove");
-      removeBtn.addEventListener("click", () => {
-        removeParam(category, param);
-      });
-
+      const tag = createParamTag(param, category);
       container.appendChild(tag);
     });
+  }
+
+  // Updated parameter list with incremental update
+  function updateParamTags(containerId, params, category) {
+    // Store current state for comparison
+    if (!window.paramListState) {
+      window.paramListState = {};
+    }
+
+    const key = `${containerId}`;
+    const oldParams = window.paramListState[key] || [];
+    const newParams = [...params].sort();
+
+    // First time load, use full render
+    if (oldParams.length === 0) {
+      renderParamTags(containerId, params, category);
+    } else {
+      // Use incremental update
+      smartUpdateParamList(containerId, oldParams, newParams, category);
+    }
+
+    // Update stored state
+    window.paramListState[key] = newParams;
   }
 
   // Show add parameter modal
@@ -1279,8 +1375,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         rules[category].push(lowerParamName);
 
         const success = await saveCustomParamRules(rules);
+
         if (success) {
-          await loadParamRules();
+          // Update only the specific category with incremental update
+          updateParamTags(
+            category === "tracking"
+              ? "trackingParamsList"
+              : "functionalParamsList",
+            rules[category],
+            category,
+          );
           hideAddParamModal();
           toast.show(
             getLocalMessage("paramUpdated") || "参数已更新",
@@ -1295,6 +1399,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           return false;
         }
       }
+
       // Add mode: add new parameter
       else {
         // Check if parameter already exists in the same category
@@ -1306,10 +1411,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Add parameter
         rules[category].push(lowerParamName);
+
         const success = await saveCustomParamRules(rules);
 
         if (success) {
-          await loadParamRules();
+          // Update only the specific category with incremental update
+          updateParamTags(
+            category === "tracking"
+              ? "trackingParamsList"
+              : "functionalParamsList",
+            rules[category],
+            category,
+          );
           hideAddParamModal();
           toast.show(getLocalMessage("paramAdded") || "参数已添加", "success");
           return true;
@@ -1332,11 +1445,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function removeParam(category, paramName) {
     try {
       const rules = await getCustomParamRules();
-      rules[category] = rules[category].filter((p) => p !== paramName);
+      const newParams = rules[category].filter((p) => p !== paramName);
+      rules[category] = newParams;
 
       const success = await saveCustomParamRules(rules);
       if (success) {
-        await loadParamRules();
+        // Update only the specific category with incremental update
+        updateParamTags(
+          category === "tracking"
+            ? "trackingParamsList"
+            : "functionalParamsList",
+          newParams,
+          category,
+        );
         toast.show(getLocalMessage("paramRemoved") || "参数已删除", "success");
       } else {
         toast.show(
@@ -1370,7 +1491,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (success) {
-        await loadParamRules();
+        // Reset state and use full render for reset operations
+        if (window.paramListState) {
+          delete window.paramListState["trackingParamsList"];
+        }
+        renderParamTags("trackingParamsList", rules.tracking, "tracking");
+        updateParamTags(
+          "functionalParamsList",
+          currentRules.functional,
+          "functional",
+        );
         toast.show(
           getLocalMessage("trackingParamsReset") || "跟踪参数已恢复默认",
           "success",
@@ -1410,7 +1540,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (success) {
-        await loadParamRules();
+        // Reset state and use full render for reset operations
+        if (window.paramListState) {
+          delete window.paramListState["functionalParamsList"];
+        }
+        updateParamTags(
+          "trackingParamsList",
+          currentRules.tracking,
+          "tracking",
+        );
+        renderParamTags("functionalParamsList", rules.functional, "functional");
         toast.show(
           getLocalMessage("functionalParamsReset") || "功能参数已恢复默认",
           "success",
@@ -1435,6 +1574,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Initialize parameter configuration
   function initializeParamConfig() {
+    // Note: Removed settings change listener to prevent duplicate updates
+    // In options page, we handle updates manually with our incremental system
+
     // Add tracking parameter button
     elements.addTrackingParamBtn.addEventListener("click", () => {
       showAddParamModal("tracking");
