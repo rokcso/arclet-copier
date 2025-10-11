@@ -29,7 +29,9 @@ class SettingsManager {
    */
   setupStorageListener() {
     chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName !== "sync") {return;}
+      if (areaName !== "sync") {
+        return;
+      }
 
       console.log(
         "[SettingsManager] Storage changed in other context:",
@@ -225,4 +227,6 @@ class SettingsManager {
 // 创建单例实例
 const settingsManager = new SettingsManager();
 
+// 导出类和实例
+export { SettingsManager };
 export default settingsManager;

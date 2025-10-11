@@ -7,7 +7,11 @@
     "dev": "node esbuild.config.js --watch",
     "build": "node esbuild.config.js",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:run": "vitest run"
   },
   "keywords": [
     "chrome-extension",
@@ -28,8 +32,12 @@
   },
   "license": "GPL-3.0",
   "devDependencies": {
-    "esbuild": "^0.25.10",
     "@eslint/js": "^9.0.0",
-    "eslint": "^9.0.0"
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "esbuild": "^0.25.10",
+    "eslint": "^9.0.0",
+    "jsdom": "^27.0.0",
+    "vitest": "^3.2.4"
   }
 }

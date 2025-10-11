@@ -42,3 +42,6 @@ temp/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# 测试覆盖率报告
+coverage/
