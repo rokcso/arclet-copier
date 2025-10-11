@@ -1,0 +1,880 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title data-i18n="optionsTitle">Arclet Copier - 设置</title>
+        <link rel="stylesheet" href="../../shared/themes/theme.css" />
+        <link rel="stylesheet" href="options.css" />
+        <link rel="stylesheet" href="../../shared/components/toast.css" />
+        <link rel="stylesheet" href="../../shared/components/toggle.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <img
+                    src="../../assets/icons/icon256.png"
+                    alt="Arclet Copier"
+                    class="header-icon"
+                />
+                <div class="header-content">
+                    <h1 data-i18n="optionsTitle">Arclet Copier - 设置</h1>
+                    <span class="version" id="version">v1.3.5</span>
+                </div>
+            </div>
+
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h2 data-i18n="generalSettings">常规设置</h2>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span
+                                class="setting-label"
+                                data-i18n="shortUrlService"
+                                >短链服务</span
+                            >
+                            <span
+                                class="setting-description"
+                                data-i18n="shortUrlServiceDesc"
+                                >选择生成短链时使用的服务</span
+                            >
+                        </div>
+                        <select
+                            id="shortUrlServiceSelect"
+                            class="setting-control"
+                        >
+                            <option value="isgd" data-i18n="serviceIsgd">
+                                is.gd
+                            </option>
+                            <option value="tinyurl" data-i18n="serviceTinyurl">
+                                TinyURL
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span
+                                class="setting-label"
+                                data-i18n="notificationType"
+                                >通知方式</span
+                            >
+                            <span
+                                class="setting-description"
+                                data-i18n="notificationTypeDesc"
+                                >选择操作完成后的通知显示方式</span
+                            >
+                        </div>
+                        <div class="setting-control">
+                            <div
+                                class="three-way-switch"
+                                id="notificationSwitch"
+                                data-value="chrome"
+                            >
+                                <div
+                                    class="switch-option"
+                                    data-i18n="notificationOff"
+                                >
+                                    关闭
+                                </div>
+                                <div
+                                    class="switch-option"
+                                    data-i18n="notificationBrowser"
+                                >
+                                    Chrome 通知
+                                </div>
+                                <div
+                                    class="switch-option"
+                                    data-i18n="notificationPage"
+                                >
+                                    页面通知
+                                </div>
+                                <div class="switch-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label" data-i18n="language"
+                                >语言</span
+                            >
+                            <span
+                                class="setting-description"
+                                data-i18n="languageDesc"
+                                >选择界面显示语言</span
+                            >
+                        </div>
+                        <select id="languageSelect" class="setting-control">
+                            <option value="zh_CN" data-i18n="languageZh">
+                                简体中文
+                            </option>
+                            <option value="zh_TW" data-i18n="languageZhTw">
+                                繁體中文
+                            </option>
+                            <option value="en" data-i18n="languageEn">
+                                English
+                            </option>
+                            <option value="es" data-i18n="languageEs">
+                                Español
+                            </option>
+                            <option value="ja" data-i18n="languageJa">
+                                日本語
+                            </option>
+                            <option value="de" data-i18n="languageDe">
+                                Deutsch
+                            </option>
+                            <option value="fr" data-i18n="languageFr">
+                                Français
+                            </option>
+                            <option value="pt" data-i18n="languagePt">
+                                Português
+                            </option>
+                            <option value="ru" data-i18n="languageRu">
+                                Русский
+                            </option>
+                            <option value="ko" data-i18n="languageKo">
+                                한국어
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 data-i18n="appearanceSettings">外观设置</h2>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label" data-i18n="appearance"
+                                >外观</span
+                            >
+                            <span
+                                class="setting-description"
+                                data-i18n="appearanceDesc"
+                                >选择界面主题模式</span
+                            >
+                        </div>
+                        <div class="setting-control">
+                            <div
+                                class="three-way-switch"
+                                id="appearanceSwitch"
+                                data-value="system"
+                            >
+                                <div
+                                    class="switch-option"
+                                    data-i18n="appearanceSystem"
+                                >
+                                    跟随系统
+                                </div>
+                                <div
+                                    class="switch-option"
+                                    data-i18n="appearanceLight"
+                                >
+                                    明亮
+                                </div>
+                                <div
+                                    class="switch-option"
+                                    data-i18n="appearanceDark"
+                                >
+                                    黑暗
+                                </div>
+                                <div class="switch-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label" data-i18n="themeColor"
+                                >主题色</span
+                            >
+                            <span
+                                class="setting-description"
+                                data-i18n="themeColorDesc"
+                                >选择界面主题颜色</span
+                            >
+                        </div>
+                        <div class="setting-control">
+                            <div class="color-picker" id="colorPicker">
+                                <div
+                                    class="color-option"
+                                    data-color="orange"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #f97316,
+                                            #ea580c
+                                        );
+                                    "
+                                ></div>
+                                <div
+                                    class="color-option"
+                                    data-color="yellow"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #eab308,
+                                            #ca8a04
+                                        );
+                                    "
+                                ></div>
+                                <div
+                                    class="color-option"
+                                    data-color="green"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #22c55e,
+                                            #16a34a
+                                        );
+                                    "
+                                ></div>
+                                <div
+                                    class="color-option"
+                                    data-color="blue"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #3b82f6,
+                                            #1d4ed8
+                                        );
+                                    "
+                                ></div>
+                                <div
+                                    class="color-option"
+                                    data-color="purple"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            #8b5cf6,
+                                            #7c3aed
+                                        );
+                                    "
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 data-i18n="copyTemplatesSection">复制格式模板</h2>
+
+                    <!-- 模板列表 -->
+                    <div class="template-list" id="templateList">
+                        <!-- 模板项将通过 JavaScript 动态生成 -->
+                    </div>
+
+                    <!-- 添加模板按钮 -->
+                    <div class="template-add-section">
+                        <button class="template-add-btn" id="addTemplateBtn">
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span data-i18n="addTemplate">创建新模板</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 模板编辑器模态框 -->
+                <div class="template-modal" id="templateModal">
+                    <div class="template-modal-content">
+                        <div class="template-modal-header">
+                            <h3
+                                id="templateModalTitle"
+                                data-i18n="createTemplate"
+                            >
+                                Create Template
+                            </h3>
+                            <button
+                                class="template-modal-close"
+                                id="templateModalClose"
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="template-modal-body">
+                            <div class="template-form-container">
+                                <!-- Template Icon and Name Row -->
+                                <div class="template-form-group">
+                                    <div class="template-icon-name-row">
+                                        <!-- Template Icon -->
+                                        <div class="template-icon-container">
+                                            <label
+                                                for="templateIcon"
+                                                data-i18n="templateIcon"
+                                                >Template Icon</label
+                                            >
+                                            <div
+                                                class="template-icon-selector-wrapper"
+                                            >
+                                                <div
+                                                    class="template-icon-selector"
+                                                >
+                                                    <div
+                                                        class="icon-option active"
+                                                        data-icon="📝"
+                                                    >
+                                                        📝
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    class="emoji-picker-trigger"
+                                                    id="emojiPickerTrigger"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            fill="currentColor"
+                                                            d="M19.5 2.5a1 1 0 1 0-2 0V4H16a1 1 0 1 0 0 2h1.5v1.5a1 1 0 1 0 2 0V6H21a1 1 0 1 0 0-2h-1.5z"
+                                                        />
+                                                        <path
+                                                            fill="currentColor"
+                                                            d="M3.5 12a8 8 0 0 1 8-8a1 1 0 1 0 0-2c-5.523 0-10 4.477-10 10s4.477 10 10 10s10-4.477 10-10a1 1 0 1 0-2 0a8 8 0 1 1-16 0"
+                                                        />
+                                                        <path
+                                                            fill="currentColor"
+                                                            d="m16.849 9.595l.136.53a.5.5 0 0 1-.854.46c-.233-.256-.586-.364-1.079-.326c-.496.04-1.06.226-1.594.468a.5.5 0 0 1-.707-.455c0-.36.212-.657.413-.858c.214-.214.495-.401.793-.547c.578-.283 1.358-.477 2.016-.297c.568.155.791.689.876 1.025M8.751 11.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3"
+                                                        />
+                                                        <path
+                                                            fill="currentColor"
+                                                            fill-rule="evenodd"
+                                                            d="M17.002 14.222a1.105 1.105 0 0 0-.331-1.195a1.24 1.24 0 0 0-1.098-.255c-.235.057-.48.127-.737.2c-1.991.57-3.89.547-5.939.432a93 93 0 0 1-1.54-.1a.75.75 0 0 0-.687 1.153c.258.402.648.746.917.984c.22.194.345.313.412.398a3 3 0 0 1-.064.441a2.4 2.4 0 0 0-.065.552c.007.197.065.443.258.66c.175.198.397.295.576.35c.181.054.389.086.608.107c.44.042 1.068.054 1.939.054c1.875 0 3.19-.46 4.116-1.22c.917-.751 1.36-1.724 1.635-2.561m-5.251.78c1.454 0 2.718-.36 3.578-.607c-.214.466-.498.888-.914 1.229c-.59.484-1.538.879-3.164.879c-.9 0-1.47-.014-1.82-.05c.034-.182.07-.424.07-.7c0-.368-.177-.653-.316-.832c.82.043 1.773.082 2.566.082"
+                                                            clip-rule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                                <div
+                                                    class="emoji-picker"
+                                                    id="emojiPicker"
+                                                >
+                                                    <!-- Content will be dynamically generated -->
+                                                </div>
+                                            </div>
+                                            <input
+                                                type="hidden"
+                                                id="templateIcon"
+                                                value="📝"
+                                            />
+                                        </div>
+
+                                        <!-- Template Name -->
+                                        <div class="template-name-container">
+                                            <label
+                                                for="templateName"
+                                                data-i18n="templateName"
+                                                >Template Name</label
+                                            >
+                                            <input
+                                                type="text"
+                                                id="templateName"
+                                                placeholder="Enter template name..."
+                                                data-i18n-placeholder="templateNamePlaceholder"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Live Preview -->
+                                <div class="template-form-group">
+                                    <div class="preview-header">
+                                        <label data-i18n="templatePreview"
+                                            >Live Preview</label
+                                        >
+                                        <button
+                                            type="button"
+                                            class="refresh-btn"
+                                            id="previewRefreshBtn"
+                                            data-i18n="refreshPreview"
+                                        >
+                                            Refresh Preview
+                                        </button>
+                                    </div>
+                                    <div
+                                        class="preview-content"
+                                        id="templatePreview"
+                                    >
+                                        <span
+                                            class="preview-placeholder"
+                                            data-i18n="previewPlaceholder"
+                                        >
+                                            Enter template content to see live
+                                            preview
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Template Content -->
+                                <div class="template-form-group">
+                                    <label
+                                        for="templateContent"
+                                        data-i18n="templateContent"
+                                        >Template Content</label
+                                    >
+                                    <textarea
+                                        id="templateContent"
+                                        placeholder="Enter template content, use {{url}}, {{title}} and other variables..."
+                                        data-i18n-placeholder="templateContentPlaceholder"
+                                    ></textarea>
+                                </div>
+
+                                <!-- Insert Variable -->
+                                <div class="template-variables">
+                                    <span
+                                        class="variables-label"
+                                        data-i18n="insertVariable"
+                                        >插入变量</span
+                                    >
+                                    <div class="variable-buttons">
+                                        <!-- 核心变量（最常用） -->
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="url"
+                                        >
+                                            {{url}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="title"
+                                        >
+                                            {{title}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="shortUrl"
+                                        >
+                                            {{shortUrl}}
+                                        </button>
+
+                                        <!-- URL 变体 -->
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="originalUrl"
+                                        >
+                                            {{originalUrl}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="hostname"
+                                        >
+                                            {{hostname}}
+                                        </button>
+
+                                        <!-- 时间 -->
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="date"
+                                        >
+                                            {{date}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="time"
+                                        >
+                                            {{time}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="datetime"
+                                        >
+                                            {{datetime}}
+                                        </button>
+
+                                        <!-- 元数据 -->
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="author"
+                                        >
+                                            {{author}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="variable-btn"
+                                            data-field="description"
+                                        >
+                                            {{description}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="template-modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="templateCancelBtn"
+                                data-i18n="cancel"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                id="templateSaveBtn"
+                                data-i18n="saveTemplate"
+                            >
+                                Save Template
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 data-i18n="urlParamConfig">URL 参数配置</h2>
+
+                    <!-- 跟踪参数 -->
+                    <div class="param-config-group">
+                        <div class="param-group-header">
+                            <span class="param-group-icon"
+                                ><svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="28"
+                                    height="28"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        fill="currentColor"
+                                        d="M6.5 1q2.125 0 3.313 1.888T11 7q0 1.025-.213 1.95T10.3 10.6l-7.125 1.425Q2.8 11.3 2.4 10.013T2 7q0-2.575 1.275-4.288T6.5 1m1.375 17Q6.1 18 5.113 16.763T4 13.9l6.45-1.3q.2.425.375.963T11 14.675q0 1.425-.888 2.375T7.876 18M17.5 6q1.95 0 3.225 1.713T22 12q0 1.725-.4 3.013t-.775 2.012L13.7 15.6q-.275-.725-.487-1.65T13 12q0-2.225 1.188-4.112T17.5 6m-1.375 17q-1.35 0-2.238-.95T13 19.675q0-.575.175-1.112t.375-.963l6.425 1.3q-.125 1.625-1.1 2.863T16.125 23"
+                                    /></svg
+                            ></span>
+                            <div class="param-group-info">
+                                <h3 data-i18n="trackingParams">跟踪参数</h3>
+                                <p data-i18n="trackingParamsDesc">
+                                    智能清理模式下，这些参数会被移除
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="param-tags-container"
+                            id="trackingParamsList"
+                        >
+                            <!-- 跟踪参数标签将通过 JavaScript 动态生成 -->
+                        </div>
+                        <div class="param-group-actions">
+                            <button
+                                class="param-add-btn"
+                                id="addTrackingParamBtn"
+                            >
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span data-i18n="addParam">添加参数</span>
+                            </button>
+                            <button
+                                class="param-reset-btn-inline"
+                                id="resetTrackingParamsBtn"
+                            >
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"
+                                    ></path>
+                                    <path d="M21 3v5h-5"></path>
+                                    <path
+                                        d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"
+                                    ></path>
+                                    <path d="M3 21v-5h5"></path>
+                                </svg>
+                                <span data-i18n="resetToDefault">恢复默认</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 功能参数 -->
+                    <div class="param-config-group">
+                        <div class="param-group-header">
+                            <span class="param-group-icon"
+                                ><svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="28"
+                                    height="28"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        fill="currentColor"
+                                        d="M3 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zm0 10a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM13 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1zm0 10a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1z"
+                                    /></svg
+                            ></span>
+                            <div class="param-group-info">
+                                <h3 data-i18n="functionalParams">功能参数</h3>
+                                <p data-i18n="functionalParamsDesc">
+                                    智能清理模式下，这些参数会被保留
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="param-tags-container"
+                            id="functionalParamsList"
+                        >
+                            <!-- 功能参数标签将通过 JavaScript 动态生成 -->
+                        </div>
+                        <div class="param-group-actions">
+                            <button
+                                class="param-add-btn"
+                                id="addFunctionalParamBtn"
+                            >
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span data-i18n="addParam">添加参数</span>
+                            </button>
+                            <button
+                                class="param-reset-btn-inline"
+                                id="resetFunctionalParamsBtn"
+                            >
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"
+                                    ></path>
+                                    <path d="M21 3v5h-5"></path>
+                                    <path
+                                        d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"
+                                    ></path>
+                                    <path d="M3 21v-5h5"></path>
+                                </svg>
+                                <span data-i18n="resetToDefault">恢复默认</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 添加参数输入模态框 -->
+                <div class="param-input-modal" id="paramInputModal">
+                    <div class="param-input-content">
+                        <div class="param-input-header">
+                            <h3 id="paramModalTitle" data-i18n="addParamTitle">
+                                添加参数
+                            </h3>
+                            <button
+                                class="param-input-close"
+                                id="paramInputClose"
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="param-input-body">
+                            <label
+                                for="paramNameInput"
+                                data-i18n="paramNameLabel"
+                                >参数名称</label
+                            >
+                            <input
+                                type="text"
+                                id="paramNameInput"
+                                placeholder="例如：utm_source"
+                                data-i18n-placeholder="paramNamePlaceholder"
+                            />
+                            <p
+                                class="param-input-hint"
+                                data-i18n="paramNameHint"
+                            >
+                                只能包含字母、数字、下划线
+                            </p>
+                        </div>
+                        <div class="param-input-footer">
+                            <button
+                                class="btn btn-secondary"
+                                id="paramCancelBtn"
+                                data-i18n="cancel"
+                            >
+                                取消
+                            </button>
+                            <button
+                                class="btn btn-primary"
+                                id="paramConfirmBtn"
+                                data-i18n="confirm"
+                            >
+                                确定
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 data-i18n="supportSection">支持我们</h2>
+
+                    <!-- 评价引导组件 -->
+                    <div class="support-item rating-card">
+                        <div class="support-icon">
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+                                <path
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                                    fill="currentColor"
+                                    stroke="currentColor"
+                                    stroke-width="1"
+                                />
+                            </svg>
+                        </div>
+                        <div class="support-content">
+                            <h3 data-i18n="ratingTitle">
+                                喜欢 Arclet Copier？
+                            </h3>
+                            <p data-i18n="ratingDescription">
+                                如果这个扩展对您有帮助，请在 Chrome
+                                应用商店给我们一个好评！您的支持是我们前进的动力。
+                            </p>
+                            <button
+                                class="support-btn rating-btn"
+                                id="ratingBtn"
+                                data-i18n="rateNow"
+                            >
+                                立即评价
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 联系开发者组件 -->
+                    <div class="support-item feedback-card">
+                        <div class="support-icon">
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                        </div>
+                        <div class="support-content">
+                            <h3 data-i18n="feedbackTitle">反馈建议</h3>
+                            <p data-i18n="feedbackDescription">
+                                遇到问题或有新功能建议？欢迎通过邮件联系我们，我们会认真回复每一封邮件。
+                            </p>
+                            <button
+                                class="support-btn feedback-btn"
+                                id="feedbackBtn"
+                                data-i18n="contactDeveloper"
+                            >
+                                联系开发者
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 data-i18n="aboutSection">关于</h2>
+
+                    <div class="about-content">
+                        <div class="about-item">
+                            <span class="about-label" data-i18n="version"
+                                >版本</span
+                            >
+                            <span class="about-value" id="aboutVersion"
+                                >v1.3.5</span
+                            >
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label" data-i18n="developer"
+                                >开发者</span
+                            >
+                            <a
+                                href="https://rokcso.com/"
+                                target="_blank"
+                                class="about-value developer-link"
+                                >@rokcso (苏柯蕤)</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Easter Egg - Fixed at bottom -->
+        <div class="easter-egg-wrapper">
+            <div class="easter-egg">
+                Made with ❤️ and powered by 🐈
+                <a
+                    href="https://rokcso.com/p/suisui/"
+                    target="_blank"
+                    class="suisui-link"
+                    >Suisui</a
+                >'s purrs.
+            </div>
+        </div>
+
+        <script type="module" src="options.js"></script>
+    </body>
+</html>

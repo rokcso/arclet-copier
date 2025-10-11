@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title data-i18n="batchTitle">Arclet Copier - 批量复制</title>
+        <link rel="stylesheet" href="../../shared/themes/theme.css" />
+        <link rel="stylesheet" href="batch.css" />
+        <link rel="stylesheet" href="../../shared/components/toast.css" />
+        <link rel="stylesheet" href="../../shared/components/toggle.css" />
+    </head>
+    <body>
+        <div class="container">
+            <!-- 第一层：Header -->
+            <div class="header">
+                <img
+                    src="../../assets/icons/icon256.png"
+                    alt="Arclet Copier"
+                    class="header-icon"
+                />
+                <div class="header-content">
+                    <h1 data-i18n="batchTitle">Arclet Copier - 批量复制 URL</h1>
+                    <span class="version" id="version">v1.4.2</span>
+                </div>
+            </div>
+
+            <!-- 第二层：设置区域 -->
+            <div class="operations-section">
+                <div class="settings-card collapsed">
+                    <div class="settings-header" id="settingsHeader">
+                        <div class="settings-title-area">
+                            <h2
+                                class="settings-title-text"
+                                data-i18n="settings"
+                            >
+                                设置
+                            </h2>
+                        </div>
+                        <svg
+                            class="collapse-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="128"
+                            height="128"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <!-- 折叠状态：向外展开的手势图标（展开提示） -->
+                            <path
+                                class="icon-collapsed"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.5"
+                                d="M19.926 22.252V20.69c0-.403.127-.794.338-1.138c1.494-2.428 1.964-5.033 1.636-6.048c-1.043-2.163-4.524-3.014-6.14-3.217l1.037-5.165c.174-.82-.446-1.644-1.383-1.842s-1.84.306-2.013 1.125l-2.055 9.676l-2.571-1.64s-1.295-1.036-2.335 0c-1.039 1.037 0 2.328 0 2.328l3.909 5.008c.251.322.398.713.42 1.12l.071 1.32M9.867 4.361s.245-2.218 0-2.46m0 0c-.318-.313-2.538-.05-2.538-.05m2.538.05L6.898 4.84M2.11 7.088s-.245 2.218 0 2.46m0 0c.318.313 2.538.049 2.538.049m-2.538-.05L5.08 6.61"
+                            />
+                            <!-- 展开状态：向内汇聚的手势图标（收起提示） -->
+                            <path
+                                class="icon-expanded"
+                                style="display: none"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.5"
+                                d="M19.926 22.25v-1.559c0-.402.127-.793.338-1.136c1.494-2.427 1.964-5.03 1.636-6.043c-1.043-2.16-4.524-3.011-6.14-3.214l1.037-5.16c.174-.818-.446-1.641-1.383-1.84c-.938-.197-1.84.306-2.013 1.124l-2.055 9.666l-2.571-1.637s-1.295-1.036-2.335 0c-1.039 1.035 0 2.325 0 2.325l3.909 5.003c.251.322.398.712.42 1.12l.071 1.317M6.957 2.238s-.252 2.271 0 2.519m0 0c.326.321 2.602.05 2.602.05m-2.602-.05L10 1.748M5.045 9.25s.252-2.271 0-2.519m0 0c-.326-.32-2.602-.05-2.602-.05m2.602.05l-3.044 3.01"
+                            />
+                        </svg>
+                    </div>
+                    <div
+                        class="collapsible-settings-content"
+                        id="collapsibleSettingsContent"
+                    >
+                        <div class="settings-grid">
+                            <!-- 快速设置区域 -->
+                            <div class="settings-section primary-settings">
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="webPagesOnly"
+                                        >Web Pages Only</span
+                                    >
+                                    <div class="setting-control">
+                                        <input
+                                            type="checkbox"
+                                            id="webPagesOnly"
+                                            class="toggle-checkbox"
+                                            checked
+                                        />
+                                        <label
+                                            for="webPagesOnly"
+                                            class="toggle-label"
+                                        >
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="removeDuplicates"
+                                        >Remove Duplicates</span
+                                    >
+                                    <div class="setting-control">
+                                        <input
+                                            type="checkbox"
+                                            id="removeDuplicates"
+                                            class="toggle-checkbox"
+                                            checked
+                                        />
+                                        <label
+                                            for="removeDuplicates"
+                                            class="toggle-label"
+                                        >
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 高级设置区域 -->
+                            <div class="settings-section advanced-settings">
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="copyFormat"
+                                        >Copy Format</span
+                                    >
+                                    <div class="setting-control">
+                                        <select
+                                            id="silentCopyFormat"
+                                            class="format-select"
+                                        >
+                                            <option
+                                                value="url"
+                                                data-i18n="formatUrl"
+                                            >
+                                                URL
+                                            </option>
+                                            <option
+                                                value="markdown"
+                                                data-i18n="formatMarkdown"
+                                            >
+                                                Markdown
+                                            </option>
+                                            <option
+                                                value="shortUrl"
+                                                data-i18n="formatShortUrl"
+                                            >
+                                                Short URL
+                                            </option>
+                                            <!-- Custom templates will be dynamically added here -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="setting-row">
+                                    <span
+                                        class="setting-label"
+                                        data-i18n="urlCleaning"
+                                        >URL Cleaning</span
+                                    >
+                                    <div class="setting-control">
+                                        <div
+                                            class="three-way-switch"
+                                            id="urlCleaningSwitch"
+                                            data-value="smart"
+                                        >
+                                            <div
+                                                class="switch-option"
+                                                data-value="off"
+                                                data-i18n="cleaningOff"
+                                            >
+                                                Off
+                                            </div>
+                                            <div
+                                                class="switch-option"
+                                                data-value="smart"
+                                                data-i18n="cleaningSmart"
+                                            >
+                                                Smart
+                                            </div>
+                                            <div
+                                                class="switch-option"
+                                                data-value="aggressive"
+                                                data-i18n="cleaningAggressive"
+                                            >
+                                                All
+                                            </div>
+                                            <div class="switch-slider"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第三层：URL 展示区域 -->
+            <div class="display-section">
+                <div class="sticky-header">
+                    <!-- 第一层：标题 + 窗口选择 + 刷新按钮 + 数量 -->
+                    <div class="header-layer">
+                        <div class="header-left">
+                            <h2 class="card-title" data-i18n="tabsList">
+                                Tab List
+                            </h2>
+                            <div class="window-scope-selector">
+                                <select
+                                    id="windowScopeSelect"
+                                    class="format-select"
+                                >
+                                    <!-- 选项将通过 JavaScript 动态生成 -->
+                                </select>
+                            </div>
+                            <button
+                                type="button"
+                                class="utility-btn"
+                                id="refreshBtn"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        fill="currentColor"
+                                        d="M12 20q-3.35 0-5.675-2.325T4 12t2.325-5.675T12 4q1.725 0 3.3.712T18 6.75V4h2v7h-7V9h4.2q-.8-1.4-2.187-2.2T12 6Q9.5 6 7.75 7.75T6 12t1.75 4.25T12 18q1.925 0 3.475-1.1T17.65 14h2.1q-.7 2.65-2.85 4.325T12 20"
+                                    />
+                                </svg>
+                                <span data-i18n="refresh">刷新</span>
+                            </button>
+                        </div>
+                        <div class="header-right">
+                            <div class="page-count">
+                                <span class="count primary" id="selectedCount"
+                                    >1</span
+                                >
+                                <span>/</span>
+                                <span class="count" id="totalCount">23</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二层：操作按钮 -->
+                    <div class="controls-layer" id="tabsControls">
+                        <div class="left-controls">
+                            <label class="master-checkbox">
+                                <input type="checkbox" id="masterCheckbox" />
+                                <span class="checkbox-unified"></span>
+                            </label>
+
+                            <button
+                                type="button"
+                                class="utility-btn"
+                                id="invertSelectionBtn"
+                                data-i18n="invertSelection"
+                            >
+                                反选
+                            </button>
+                            <button
+                                type="button"
+                                class="utility-btn"
+                                id="selectNoneBtn"
+                                data-i18n="clearSelection"
+                            >
+                                清空
+                            </button>
+                        </div>
+
+                        <div class="right-controls">
+                            <button
+                                type="button"
+                                class="action-btn"
+                                id="previewBtn"
+                                disabled
+                            >
+                                <span data-i18n="preview">预览</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="action-btn primary"
+                                id="copyBtn"
+                                disabled
+                            >
+                                <span data-i18n="copy">复制</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabs-container" id="tabsContainer">
+                    <div class="loading" id="loading">
+                        <div class="loading-spinner"></div>
+                        <span data-i18n="loadingTabs">正在加载标签页...</span>
+                    </div>
+
+                    <!-- 标签页列表内容 -->
+                    <div class="tabs-list" id="tabsList"></div>
+                </div>
+            </div>
+
+            <!-- 预览模态框 -->
+            <div class="modal" id="previewModal">
+                <div class="modal-overlay" id="previewModalOverlay"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 data-i18n="previewTitle">预览</h3>
+                        <button class="ui-control-btn" id="previewModalClose">
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="preview-stats">
+                            <span
+                                >将复制
+                                <strong id="previewCount">0</strong> 个URL</span
+                            >
+                        </div>
+                        <div class="preview-content">
+                            <pre id="previewText"></pre>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="ui-control-btn"
+                            id="previewCancelBtn"
+                        >
+                            <span data-i18n="cancel">取消</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="action-btn primary"
+                            id="previewCopyBtn"
+                        >
+                            <span data-i18n="copy">复制</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="batch.js"></script>
+    </body>
+</html>
