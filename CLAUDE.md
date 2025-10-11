@@ -11,10 +11,13 @@ Arclet Copier is a Chrome extension for intelligent URL copying and link managem
 ```bash
 # Build the extension for distribution
 npm run build
-# or
-npm run package
 
-# The build output will be in scripts/dist/arclet-copier-v{version}/
+# The build output will be in dist/arclet-copier-v{version}/
+
+# Development mode with file watching and auto-rebuild
+npm run dev
+
+# The dev build output will be in dist-dev/
 ```
 
 **No test suite is currently implemented.** The project relies on manual testing procedures documented in TESTING.md (if it exists).
@@ -94,6 +97,32 @@ The URL cleaning system has three modes implemented in `shared/constants.js`:
 
 Parameter classification uses `PARAM_CATEGORIES.TRACKING` and `PARAM_CATEGORIES.FUNCTIONAL` arrays.
 
+## Build System
+
+The project uses **esbuild** for modern, fast builds:
+
+### Build Configuration (`scripts/esbuild.config.js`)
+- **Entry Points**: All main JS files (background, popup, options, batch, content, offscreen)
+- **Output**: ES modules targeting Chrome 96+
+- **Development Mode**: 
+  - Inline source maps for debugging
+  - File watching with auto-rebuild
+  - Extension name suffixed with " - Dev"
+  - HTML/CSS/asset file watching
+- **Production Mode**:
+  - Code minification and tree shaking
+  - Build analysis with metafile generation
+  - Package size reporting
+
+### Static Asset Handling
+The build system automatically copies:
+- HTML files (popup, options, batch, offscreen)
+- CSS files (all module CSS + shared CSS)
+- Third-party libraries (`shared/lib/`)
+- Assets directory (icons, images)
+- Localization files (`_locales/`)
+- Manifest.json (with dev suffix in dev mode)
+
 ## Internationalization
 
 Uses Chrome i18n API with `_locales/{lang}/messages.json`. Default locale is `zh_CN`. Language switching updates all UI elements dynamically and persists user preference.
@@ -115,9 +144,6 @@ Host permissions for external services:
 - `https://umami.lunarye.com/*` - Analytics tracking
 
 ## Development Notes
-
-### Testing
-Manual testing procedures are available with comprehensive test case coverage in TESTING.md (if present).
 
 ### Debugging
 - Background script logs appear in extension service worker console

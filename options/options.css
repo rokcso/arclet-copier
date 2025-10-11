@@ -1487,12 +1487,11 @@ select.setting-control:hover {
     text-decoration: none;
     position: relative;
     pointer-events: auto;
-    transition: all 0.3s ease;
+    transition: border-bottom-style 0.3s ease;
     border-bottom: 1px dashed currentColor;
 }
 
 .suisui-link:hover {
-    color: var(--arc-primary);
     border-bottom-style: solid;
 }
 
@@ -1524,7 +1523,11 @@ select.setting-control:hover {
 
 /* 参数配置组容器 */
 .param-config-group {
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+}
+
+.param-config-group:last-child {
+    margin-bottom: 0;
 }
 
 /* 参数组头部 */

@@ -1174,7 +1174,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.paramNameInput.classList.remove("error");
     elements.paramInputModal.classList.add("show");
     document.body.classList.add("modal-open");
-    elements.paramNameInput.focus();
+
+    // Delay focus to ensure modal animation completes
+    setTimeout(() => {
+      elements.paramNameInput.focus();
+    }, 100);
   }
 
   // Show edit parameter modal
@@ -1193,9 +1197,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.paramNameInput.classList.remove("error");
     elements.paramInputModal.classList.add("show");
     document.body.classList.add("modal-open");
-    elements.paramNameInput.focus();
-    // Select all text for easy replacement
-    elements.paramNameInput.select();
+
+    // Delay focus and select to ensure modal animation completes
+    setTimeout(() => {
+      elements.paramNameInput.focus();
+      // Select all text for easy replacement
+      elements.paramNameInput.select();
+    }, 100);
   }
 
   // Hide add parameter modal
