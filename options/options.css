@@ -1098,7 +1098,6 @@ select.setting-control:hover {
     border-color: var(--arc-primary);
     background: var(--glow-light);
     color: var(--arc-primary);
-    transform: scale(1.05);
 }
 
 /* Emoji 选择器弹出面板 */
@@ -1207,7 +1206,6 @@ select.setting-control:hover {
 
 .emoji-option:hover {
     background: var(--arc-surface);
-    transform: scale(1.2);
 }
 
 /* 变量插入区域样式 */

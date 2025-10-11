@@ -216,7 +216,7 @@ body {
     width: 100%;
     padding: 8px 20px;
     border: none;
-    border-radius: var(--arc-radius);
+    border-radius: var(--arc-radius-sm);
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
@@ -366,7 +366,7 @@ body {
     width: 100%;
     padding: 8px 16px;
     border: 1px solid var(--arc-border);
-    border-radius: var(--arc-radius);
+    border-radius: var(--arc-radius-sm);
     background: var(--arc-background);
     color: var(--arc-text-secondary);
     font-size: 14px;
@@ -1004,7 +1004,7 @@ body {
     width: 100%;
     padding: 8px 20px;
     border: 1px solid var(--arc-border);
-    border-radius: var(--arc-radius);
+    border-radius: var(--arc-radius-sm);
     background: var(--arc-background);
     color: var(--arc-text-primary);
     font-size: 14px;
