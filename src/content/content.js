@@ -388,7 +388,7 @@ class SmartPageNotifications {
   }
 
   applyTheme() {
-    if (!this.container) return;
+    if (!this.container) {return;}
 
     // 设置主题色和外观
     this.container.setAttribute("data-color", this.themeColor);
@@ -459,7 +459,7 @@ class SmartPageNotifications {
 
   hide(id) {
     const notification = this.notifications.get(id);
-    if (!notification) return;
+    if (!notification) {return;}
 
     // 清除定时器
     if (notification.timeout) {

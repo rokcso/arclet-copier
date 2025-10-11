@@ -235,7 +235,7 @@ class NotificationHelper {
 
   // 检查是否为受限URL
   isRestrictedUrl(url) {
-    if (!url) return true;
+    if (!url) {return true;}
 
     const restrictedProtocols = [
       "chrome://",

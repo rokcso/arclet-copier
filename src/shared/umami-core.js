@@ -104,9 +104,9 @@ async function sendToUmami(payload) {
 function getPlatform() {
   try {
     const userAgent = navigator.userAgent.toLowerCase();
-    if (userAgent.includes("mac")) return "mac";
-    if (userAgent.includes("win")) return "windows";
-    if (userAgent.includes("linux")) return "linux";
+    if (userAgent.includes("mac")) {return "mac";}
+    if (userAgent.includes("win")) {return "windows";}
+    if (userAgent.includes("linux")) {return "linux";}
     return null;
   } catch (error) {
     return null;
@@ -120,9 +120,9 @@ function getPlatform() {
 function getBrowser() {
   try {
     const userAgent = navigator.userAgent.toLowerCase();
-    if (userAgent.includes("edg/")) return "edge";
-    if (userAgent.includes("chrome/")) return "chrome";
-    if (userAgent.includes("firefox/")) return "firefox";
+    if (userAgent.includes("edg/")) {return "edge";}
+    if (userAgent.includes("chrome/")) {return "chrome";}
+    if (userAgent.includes("firefox/")) {return "firefox";}
     return null;
   } catch (error) {
     return null;

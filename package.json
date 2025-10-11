@@ -1,10 +1,13 @@
 {
   "name": "arclet-copier",
   "version": "1.6.6",
+  "type": "module",
   "description": "快速复制当前页面的 URL，支持参数过滤功能",
   "scripts": {
     "dev": "node scripts/esbuild.config.js --watch",
-    "build": "node scripts/esbuild.config.js"
+    "build": "node scripts/esbuild.config.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [
     "chrome-extension",
@@ -25,6 +28,8 @@
   },
   "license": "GPL-3.0",
   "devDependencies": {
-    "esbuild": "^0.25.10"
+    "esbuild": "^0.25.10",
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0"
   }
 }

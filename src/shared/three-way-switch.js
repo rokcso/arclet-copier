@@ -12,7 +12,7 @@
  * @returns {Object} 返回包含 updateSliderPosition 方法的对象
  */
 export function initializeThreeWaySwitch(switchElement, options, onChange) {
-  if (!switchElement) return;
+  if (!switchElement) {return;}
 
   const switchOptions = switchElement.querySelectorAll(".switch-option");
 
@@ -21,7 +21,7 @@ export function initializeThreeWaySwitch(switchElement, options, onChange) {
     const currentValue = switchElement.getAttribute("data-value");
     const currentIndex = options.findIndex((opt) => opt.value === currentValue);
 
-    if (currentIndex === -1) return;
+    if (currentIndex === -1) {return;}
 
     // 清除所有active状态
     switchOptions.forEach((option) => option.classList.remove("active"));
@@ -130,6 +130,6 @@ export function getUrlCleaningOptions() {
  * @param {string} value - 初始值
  */
 export function setThreeWaySwitchValue(switchElement, value) {
-  if (!switchElement) return;
+  if (!switchElement) {return;}
   switchElement.setAttribute("data-value", value);
 }

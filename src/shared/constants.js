@@ -366,7 +366,7 @@ export async function processUrl(url, cleaningMode = "smart") {
 
 // 检查是否为特殊页面的共享函数
 export function isRestrictedPage(url) {
-  if (!url) return true;
+  if (!url) {return true;}
 
   // 受限协议
   const restrictedProtocols = [
@@ -401,7 +401,7 @@ export function isRestrictedPage(url) {
 
 // 检查是否为有效的网页URL（可用于短链生成）
 export function isValidWebUrl(url) {
-  if (!url) return false;
+  if (!url) {return false;}
 
   try {
     const urlObj = new URL(url);
@@ -632,7 +632,7 @@ export class TemplateEngine {
     this.fieldProcessors.set("title", (context) => context.title || "");
     this.fieldProcessors.set("hostname", (context) => {
       try {
-        if (!context.url) return "";
+        if (!context.url) {return "";}
         const url = new URL(context.url);
         return url.hostname; // 完整主机名，包含子域名，如 www.example.com
       } catch (error) {
@@ -645,7 +645,7 @@ export class TemplateEngine {
     });
     this.fieldProcessors.set("domain", (context) => {
       try {
-        if (!context.url) return "";
+        if (!context.url) {return "";}
         const url = new URL(context.url);
         // 提取纯域名（去除子域名）
         const hostname = url.hostname;
@@ -724,7 +724,7 @@ export class TemplateEngine {
 
   // 处理模板，替换所有变量
   async processTemplate(template, context) {
-    if (!template) return "";
+    if (!template) {return "";}
 
     // 验证输入参数
     if (!context || typeof context !== "object") {
@@ -773,7 +773,7 @@ export class TemplateEngine {
   // 验证模板语法
   validateTemplate(template) {
     if (!template)
-      return { valid: false, errors: ["Template is empty"], fields: [] };
+      {return { valid: false, errors: ["Template is empty"], fields: [] };}
 
     if (typeof template !== "string") {
       return {

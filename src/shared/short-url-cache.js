@@ -142,7 +142,7 @@ class PersistentShortUrlCache {
       }
 
       const result = await chrome.storage.local.get([this.storageKey]);
-      let cache = result[this.storageKey] || {};
+      const cache = result[this.storageKey] || {};
 
       // LRU清理：如果缓存已满，删除最旧的项
       const keys = Object.keys(cache);

@@ -108,7 +108,7 @@ class ToastManager {
 
   // 关闭toast
   closeToast(toast) {
-    if (!toast || !toast.parentNode) return;
+    if (!toast || !toast.parentNode) {return;}
 
     // 清除定时器
     if (this.timeoutId) {

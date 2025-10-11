@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const currentValue = switchElement.getAttribute("data-value");
     const currentIndex = options.findIndex((opt) => opt === currentValue);
 
-    if (currentIndex === -1) return;
+    if (currentIndex === -1) {return;}
 
     // 新的三段式开关
     if (switchElement.classList.contains("three-segment-switch")) {
@@ -518,7 +518,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 分类 URL 类型
   function categorizeUrl(url) {
-    if (!url) return "unknown";
+    if (!url) {return "unknown";}
 
     if (
       url.startsWith("chrome://") ||
@@ -688,7 +688,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 事件监听
     div.addEventListener("click", (e) => {
-      if (e.target.classList.contains("watermark-text")) return;
+      if (e.target.classList.contains("watermark-text")) {return;}
       toggleTabSelection(tab.id);
     });
 
@@ -719,7 +719,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 更新标签页元素
   function updateTabElement(tabId) {
     const element = document.querySelector(`[data-tab-id="${tabId}"]`);
-    if (!element) return;
+    if (!element) {return;}
 
     const isSelected = selectedTabs.has(tabId);
     element.classList.toggle("selected", isSelected);
@@ -1060,7 +1060,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 执行复制
   async function performCopy() {
     const selectedTabsList = getSelectedTabs();
-    if (selectedTabsList.length === 0) return;
+    if (selectedTabsList.length === 0) {return;}
 
     const format = document.getElementById("silentCopyFormat").value;
     let success = false;
