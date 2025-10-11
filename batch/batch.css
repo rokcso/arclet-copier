@@ -588,7 +588,7 @@ body {
 
 .format-select,
 .scope-select {
-    padding: 8px 32px 8px 12px;
+    padding: 7px 32px 7px 12px;
     border: 1px solid var(--arc-border);
     border-radius: var(--arc-radius-sm);
     background: var(--arc-background);
@@ -598,7 +598,8 @@ body {
     font-weight: 400;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 100px;
+    height: 36px;
+    line-height: 1.5;
 
     /* 移除浏览器默认样式 */
     appearance: none;

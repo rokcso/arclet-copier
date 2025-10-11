@@ -327,15 +327,16 @@ body {
 }
 
 .format-select {
-    padding: 8px 32px 8px 12px;
+    padding: 7px 32px 7px 12px;
     border: 1.5px solid var(--arc-border);
     border-radius: var(--arc-radius-sm);
     background: var(--arc-background);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
     color: var(--arc-text-primary);
     cursor: pointer;
-    min-width: 100px;
+    height: 36px;
+    line-height: 1.5;
     transition: all 0.2s ease;
 
     /* 移除浏览器默认样式 */
