@@ -1182,7 +1182,7 @@ body {
 
 [data-theme="dark"] .format-select,
 [data-theme="dark"] .scope-select {
-    background: var(--arc-surface);
+    background-color: var(--arc-surface);
     border-color: var(--arc-border);
     color: var(--arc-text-primary);
     /* 暗色主题使用浅色箭头 */
@@ -1265,7 +1265,7 @@ body {
 
     :root:not([data-theme]) .format-select,
     :root:not([data-theme]) .scope-select {
-        background: var(--arc-surface);
+        background-color: var(--arc-surface);
         border-color: var(--arc-border);
         color: var(--arc-text-primary);
         /* 系统暗色主题使用浅色箭头 */

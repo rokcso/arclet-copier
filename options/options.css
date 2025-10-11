@@ -509,7 +509,7 @@ select.setting-control:hover {
 [data-theme="dark"] .rating-btn,
 [data-theme="dark"] .feedback-btn,
 [data-theme="dark"] .about-link {
-    background: var(--arc-surface);
+    background-color: var(--arc-surface);
     border-color: var(--arc-border);
     color: var(--arc-text-primary);
 }
@@ -602,7 +602,7 @@ select.setting-control:hover {
     :root:not([data-theme]) .rating-btn,
     :root:not([data-theme]) .feedback-btn,
     :root:not([data-theme]) .about-link {
-        background: var(--arc-surface);
+        background-color: var(--arc-surface);
         border-color: var(--arc-border);
         color: var(--arc-text-primary);
     }

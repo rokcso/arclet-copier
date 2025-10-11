@@ -636,7 +636,7 @@ body {
 
 [data-theme="dark"] .format-select,
 [data-theme="dark"] .more-settings-btn {
-    background: var(--arc-surface);
+    background-color: var(--arc-surface);
     border-color: var(--arc-border);
 }
 
@@ -822,7 +822,7 @@ body {
 
     :root:not([data-theme]) .format-select,
     :root:not([data-theme]) .more-settings-btn {
-        background: var(--arc-surface);
+        background-color: var(--arc-surface);
         border-color: var(--arc-border);
     }
 
