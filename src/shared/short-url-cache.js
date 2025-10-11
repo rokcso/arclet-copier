@@ -13,35 +13,83 @@ class PersistentShortUrlCache {
   }
 
   /**
-   * 生成缓存键
-   * 修复: 直接使用已清理的URL作为缓存键,而不是原始URL+cleaningMode
-   * 这样可以确保不同清理模式产生不同的缓存键
+   * 生成缓存键 - 增强版本，确保一致性
    *
    * @param {string} cleanedUrl - 已经清理过的URL (调用方负责清理)
    * @param {string} service - 短链服务
    * @returns {string} 缓存键
    */
   getKey(cleanedUrl, service) {
-    // 直接使用已清理的URL,不再重复处理
-    return `${service}:${cleanedUrl}`;
+    // 参数验证
+    if (!cleanedUrl || typeof cleanedUrl !== "string") {
+      throw new Error("Invalid cleanedUrl for cache key generation");
+    }
+    if (!service || typeof service !== "string") {
+      throw new Error("Invalid service for cache key generation");
+    }
+
+    // 标准化URL：移除尾部斜杠，转为小写（协议和域名保持原样）
+    const normalizedUrl = cleanedUrl.replace(/\/$/, "");
+
+    // 生成稳定的缓存键
+    return `${service}:${normalizedUrl}`;
   }
 
   /**
-   * 从缓存获取短链
+   * 验证缓存键格式
+   * @param {string} key - 缓存键
+   * @returns {boolean} 是否有效
+   */
+  isValidKey(key) {
+    return typeof key === "string" && key.includes(":") && key.length > 3;
+  }
+
+  /**
+   * 从缓存获取短链 - 增强版本
    * @param {string} cleanedUrl - 已经清理过的URL
    * @param {string} service - 短链服务
    * @returns {Promise<string|null>} 短链URL或null
    */
   async get(cleanedUrl, service) {
     try {
+      // 参数验证
+      if (!cleanedUrl || !service) {
+        console.debug("[ShortUrlCache] Invalid parameters for get:", {
+          cleanedUrl,
+          service,
+        });
+        return null;
+      }
+
       const key = this.getKey(cleanedUrl, service);
+
+      // 验证生成的键
+      if (!this.isValidKey(key)) {
+        console.debug("[ShortUrlCache] Generated invalid cache key:", key);
+        return null;
+      }
+
       const result = await chrome.storage.local.get([this.storageKey]);
       const cache = result[this.storageKey] || {};
       const item = cache[key];
 
       if (item && Date.now() - item.timestamp < this.ttl) {
-        console.log("[ShortUrlCache] 使用持久化缓存:", item.shortUrl);
-        return item.shortUrl;
+        // 验证缓存的短链有效性
+        if (
+          item.shortUrl &&
+          typeof item.shortUrl === "string" &&
+          item.shortUrl.startsWith("http")
+        ) {
+          console.log("[ShortUrlCache] 使用持久化缓存:", item.shortUrl);
+          return item.shortUrl;
+        } else {
+          console.debug(
+            "[ShortUrlCache] Invalid cached short URL, removing:",
+            item.shortUrl,
+          );
+          delete cache[key];
+          await chrome.storage.local.set({ [this.storageKey]: cache });
+        }
       }
 
       // 清理过期项
@@ -58,15 +106,41 @@ class PersistentShortUrlCache {
   }
 
   /**
-   * 设置缓存项
+   * 设置缓存项 - 增强版本
    * @param {string} cleanedUrl - 已经清理过的URL
    * @param {string} service - 短链服务
    * @param {string} shortUrl - 短链URL
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>} 保存是否成功
    */
   async set(cleanedUrl, service, shortUrl) {
     try {
+      // 参数验证
+      if (!cleanedUrl || !service || !shortUrl) {
+        console.debug("[ShortUrlCache] Invalid parameters for set:", {
+          cleanedUrl,
+          service,
+          shortUrl,
+        });
+        return false;
+      }
+
+      // 验证短链格式
+      if (typeof shortUrl !== "string" || !shortUrl.startsWith("http")) {
+        console.debug("[ShortUrlCache] Invalid short URL format:", shortUrl);
+        return false;
+      }
+
       const key = this.getKey(cleanedUrl, service);
+
+      // 验证生成的键
+      if (!this.isValidKey(key)) {
+        console.debug(
+          "[ShortUrlCache] Generated invalid cache key for set:",
+          key,
+        );
+        return false;
+      }
+
       const result = await chrome.storage.local.get([this.storageKey]);
       let cache = result[this.storageKey] || {};
 
@@ -77,17 +151,22 @@ class PersistentShortUrlCache {
           cache[current].timestamp < cache[oldest].timestamp ? current : oldest,
         );
         delete cache[oldestKey];
+        console.debug("[ShortUrlCache] Removed oldest cache entry:", oldestKey);
       }
 
       cache[key] = {
         shortUrl,
         timestamp: Date.now(),
+        originalUrl: cleanedUrl, // 保存原始URL用于调试
+        service: service, // 保存服务信息用于调试
       };
 
       await chrome.storage.local.set({ [this.storageKey]: cache });
       console.log("[ShortUrlCache] 短链已持久化缓存:", shortUrl);
+      return true;
     } catch (error) {
       console.debug("[ShortUrlCache] 缓存保存失败:", error);
+      return false;
     }
   }
 
@@ -148,6 +227,82 @@ class PersistentShortUrlCache {
       }
     } catch (error) {
       console.debug("[ShortUrlCache] Failed to invalidate cache:", error);
+    }
+  }
+
+  /**
+   * 获取缓存统计信息（用于调试）
+   * @returns {Promise<Object>} 缓存统计
+   */
+  async getStats() {
+    try {
+      const result = await chrome.storage.local.get([this.storageKey]);
+      const cache = result[this.storageKey] || {};
+      const now = Date.now();
+      let validCount = 0;
+      let expiredCount = 0;
+
+      Object.values(cache).forEach((item) => {
+        if (now - item.timestamp < this.ttl) {
+          validCount++;
+        } else {
+          expiredCount++;
+        }
+      });
+
+      return {
+        total: Object.keys(cache).length,
+        valid: validCount,
+        expired: expiredCount,
+        maxSize: this.maxSize,
+        ttl: this.ttl,
+      };
+    } catch (error) {
+      console.debug("[ShortUrlCache] Failed to get cache stats:", error);
+      return {
+        total: 0,
+        valid: 0,
+        expired: 0,
+        maxSize: this.maxSize,
+        ttl: this.ttl,
+      };
+    }
+  }
+
+  /**
+   * 清理所有过期缓存项
+   * @returns {Promise<number>} 清理的项目数量
+   */
+  async cleanupExpired() {
+    try {
+      const result = await chrome.storage.local.get([this.storageKey]);
+      const cache = result[this.storageKey] || {};
+      const now = Date.now();
+      let cleanedCount = 0;
+
+      const cleanedCache = {};
+      Object.entries(cache).forEach(([key, item]) => {
+        if (now - item.timestamp < this.ttl) {
+          cleanedCache[key] = item;
+        } else {
+          cleanedCount++;
+        }
+      });
+
+      if (cleanedCount > 0) {
+        await chrome.storage.local.set({ [this.storageKey]: cleanedCache });
+        console.log(
+          `[ShortUrlCache] Cleaned up ${cleanedCount} expired entries`,
+        );
+      }
+
+      return cleanedCount;
+    } catch (error) {
+      console.debug(
+        "[ShortUrlCache] Failed to cleanup expired entries:",
+        error,
+      );
+      return 0;
     }
   }
 }

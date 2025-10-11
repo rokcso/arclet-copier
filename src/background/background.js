@@ -478,8 +478,9 @@ async function copyToClipboard(text) {
   }
 }
 
-// 并发创建锁
+// 并发创建锁 - 修复并发竞争问题
 let offscreenCreationPromise = null;
+let offscreenCreationQueue = [];
 
 // 健康检查 offscreen document
 async function checkOffscreenHealth() {
@@ -506,70 +507,80 @@ async function checkOffscreenHealth() {
   }
 }
 
-// 确保 offscreen document 存在且可用
+// 确保 offscreen document 存在且可用 - 修复并发版本
 async function ensureOffscreenDocument() {
-  // 如果已有创建操作在进行，等待它完成
+  // 如果已有创建操作在进行，加入队列等待
   if (offscreenCreationPromise) {
-    console.log("Offscreen creation already in progress, waiting...");
-    return offscreenCreationPromise;
+    console.log("Offscreen creation already in progress, queuing request...");
+    return new Promise((resolve, reject) => {
+      offscreenCreationQueue.push({ resolve, reject });
+    });
   }
 
-  try {
-    // 检查是否已存在 offscreen document
-    const existingContexts = await chrome.runtime.getContexts({
-      contextTypes: ["OFFSCREEN_DOCUMENT"],
-    });
+  // 开始创建流程，设置锁
+  offscreenCreationPromise = (async () => {
+    try {
+      // 检查是否已存在 offscreen document
+      const existingContexts = await chrome.runtime.getContexts({
+        contextTypes: ["OFFSCREEN_DOCUMENT"],
+      });
 
-    if (existingContexts.length > 0) {
-      // 存在，但需要验证其可用性
-      const isHealthy = await checkOffscreenHealth();
-
-      if (isHealthy) {
-        console.log("Offscreen document exists and is healthy");
-        return;
-      }
-
-      // 不健康，需要重建
-      console.debug(
-        "Offscreen document exists but is unhealthy, recreating...",
-      );
-
-      try {
-        await chrome.offscreen.closeDocument();
-        console.log("Closed unhealthy offscreen document");
-      } catch (closeError) {
-        console.debug("Failed to close offscreen document:", closeError);
-        // 继续尝试创建新的
-      }
-    }
-
-    // 创建新的 offscreen document（带锁保护）
-    offscreenCreationPromise = (async () => {
-      try {
-        await chrome.offscreen.createDocument({
-          url: chrome.runtime.getURL("offscreen/offscreen.html"),
-          reasons: ["CLIPBOARD"],
-          justification: "复制文本到剪贴板",
-        });
-        console.log("Offscreen document created successfully");
-
-        // 验证新创建的 document 是否可用
+      if (existingContexts.length > 0) {
+        // 存在，但需要验证其可用性
         const isHealthy = await checkOffscreenHealth();
-        if (!isHealthy) {
-          throw new Error("Newly created offscreen document is not responding");
+
+        if (isHealthy) {
+          console.log("Offscreen document exists and is healthy");
+          // 通知所有等待的请求
+          offscreenCreationQueue.forEach(({ resolve }) => resolve());
+          offscreenCreationQueue = [];
+          return;
         }
 
-        return true;
-      } finally {
-        // 清除锁
-        offscreenCreationPromise = null;
-      }
-    })();
+        // 不健康，需要重建
+        console.debug(
+          "Offscreen document exists but is unhealthy, recreating...",
+        );
 
-    await offscreenCreationPromise;
-  } catch (error) {
-    console.debug("Failed to ensure offscreen document:", error);
-    offscreenCreationPromise = null; // 确保失败时也清除锁
-    throw error;
-  }
+        try {
+          await chrome.offscreen.closeDocument();
+          console.log("Closed unhealthy offscreen document");
+        } catch (closeError) {
+          console.debug("Failed to close offscreen document:", closeError);
+          // 继续尝试创建新的
+        }
+      }
+
+      // 创建新的 offscreen document
+      await chrome.offscreen.createDocument({
+        url: chrome.runtime.getURL("offscreen/offscreen.html"),
+        reasons: ["CLIPBOARD"],
+        justification: "复制文本到剪贴板",
+      });
+      console.log("Offscreen document created successfully");
+
+      // 验证新创建的 document 是否可用
+      const isHealthy = await checkOffscreenHealth();
+      if (!isHealthy) {
+        throw new Error("Newly created offscreen document is not responding");
+      }
+
+      // 成功：通知所有等待的请求
+      offscreenCreationQueue.forEach(({ resolve }) => resolve());
+      offscreenCreationQueue = [];
+
+      return true;
+    } catch (error) {
+      console.debug("Failed to ensure offscreen document:", error);
+      // 失败：通知所有等待的请求
+      offscreenCreationQueue.forEach(({ reject }) => reject(error));
+      offscreenCreationQueue = [];
+      throw error;
+    } finally {
+      // 确保锁被清除，无论成功还是失败
+      offscreenCreationPromise = null;
+    }
+  })();
+
+  return offscreenCreationPromise;
 }
