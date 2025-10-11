@@ -202,7 +202,7 @@ function copyFile(src, dest) {
 
 // esbuild 配置
 const buildOptions = {
-  // 入口文件 - 所有 JavaScript 文件
+  // 入口文件 - 所有 JavaScript 和 CSS 文件
   entryPoints: [
     "src/background/background.js",
     "src/pages/popup/popup.js",
@@ -210,6 +210,22 @@ const buildOptions = {
     "src/pages/batch/batch.js",
     "src/content/content.js",
     "src/offscreen/offscreen.js",
+    // CSS 文件
+    "src/styles/pages/popup.css",
+    "src/styles/pages/options.css",
+    "src/styles/pages/batch.css",
+    // shared 目录下的 JS 文件
+    "src/shared/analytics.js",
+    "src/shared/binary-toggle.js",
+    "src/shared/cache-helper.js",
+    "src/shared/constants.js",
+    "src/shared/notification-helper.js",
+    "src/shared/settings-manager.js",
+    "src/shared/short-url-cache.js",
+    "src/shared/three-way-switch.js",
+    "src/shared/toast.js",
+    "src/shared/toggles.js",
+    "src/shared/umami-core.js",
   ],
 
   // 输出配置
@@ -240,6 +256,74 @@ const buildOptions = {
 
   // 插件配置
   plugins: [
+    // CSS 文件路径重定向插件
+    {
+      name: "css-path-redirect",
+      setup(build) {
+        build.onResolve({ filter: /\.css$/ }, (args) => {
+          if (args.kind === "entry-point") {
+            // 修改 CSS 文件的输出路径
+            const fileName = path.basename(args.path, ".css");
+            const pageName = path.basename(path.dirname(args.path));
+
+            return {
+              path: args.path,
+              namespace: "css-redirect",
+              pluginData: {
+                originalPath: args.path,
+                outputPath: `pages/${pageName}/${fileName}.css`,
+              },
+            };
+          }
+        });
+
+        build.onLoad(
+          { filter: /.*/, namespace: "css-redirect" },
+          async (args) => {
+            const contents = await fs.promises.readFile(
+              args.pluginData.originalPath,
+              "utf8",
+            );
+            return {
+              contents,
+              loader: "css",
+            };
+          },
+        );
+
+        build.onEnd((result) => {
+          // 修改输出文件路径
+          if (result.outputFiles) {
+            result.outputFiles.forEach((outputFile) => {
+              const originalPath = outputFile.path;
+              // 检查是否是需要重定向的 CSS 文件
+              if (originalPath.includes("styles/pages/")) {
+                const fileName = path.basename(originalPath, ".css");
+                const pageName = path.basename(path.dirname(originalPath));
+                const newPath = path.join(
+                  path.dirname(originalPath),
+                  "..",
+                  "pages",
+                  pageName,
+                  `${fileName}.css`,
+                );
+
+                // 确保目标目录存在
+                const targetDir = path.dirname(newPath);
+                if (!fs.existsSync(targetDir)) {
+                  fs.mkdirSync(targetDir, { recursive: true });
+                }
+
+                // 移动文件
+                if (fs.existsSync(originalPath)) {
+                  fs.renameSync(originalPath, newPath);
+                }
+              }
+            });
+          }
+        });
+      },
+    },
     // 自定义资源复制插件
     {
       name: "copy-assets",
@@ -250,6 +334,39 @@ const buildOptions = {
           }
 
           try {
+            // 移动 CSS 文件到正确位置
+            const outputStylesDir = path.join(outdir, "styles", "pages");
+            if (fs.existsSync(outputStylesDir)) {
+              const cssFiles = fs
+                .readdirSync(outputStylesDir)
+                .filter((file) => file.endsWith(".css"));
+              cssFiles.forEach((cssFile) => {
+                const pageName = path.basename(cssFile, ".css");
+                const sourcePath = path.join(outputStylesDir, cssFile);
+                const targetDir = path.join(outdir, "pages", pageName);
+                const targetPath = path.join(targetDir, cssFile);
+
+                // 确保目标目录存在
+                if (!fs.existsSync(targetDir)) {
+                  fs.mkdirSync(targetDir, { recursive: true });
+                }
+
+                // 移动文件
+                if (fs.existsSync(sourcePath)) {
+                  fs.renameSync(sourcePath, targetPath);
+                }
+              });
+
+              // 删除空的 styles 目录
+              try {
+                fs.rmSync(path.join(outdir, "styles"), {
+                  recursive: true,
+                  force: true,
+                });
+              } catch (e) {
+                // 忽略删除错误
+              }
+            }
             console.log("📦 Copying static assets...");
 
             const rootDir = path.join(__dirname, "..");
@@ -272,24 +389,31 @@ const buildOptions = {
               path.join(outdir, "offscreen/offscreen.html"),
             );
 
-            // 复制 CSS 文件到正确的目录结构
-            copyFile(
-              path.join(rootDir, "src/styles/pages/popup.css"),
-              path.join(outdir, "pages/popup/popup.css"),
-            );
-            copyFile(
-              path.join(rootDir, "src/styles/pages/options.css"),
-              path.join(outdir, "pages/options/options.css"),
-            );
-            copyFile(
-              path.join(rootDir, "src/styles/pages/batch.css"),
-              path.join(outdir, "pages/batch/batch.css"),
-            );
+            // CSS 文件现在由 esbuild 处理，不需要手动复制
 
-            // 复制 shared 目录 - 包含 JS 和 CSS
+            // 复制 shared 目录 - 只复制 CSS 和其他非 JS 文件
             const sharedSrcDir = path.join(rootDir, "src/shared");
             if (fs.existsSync(sharedSrcDir)) {
-              copyDirectory(sharedSrcDir, path.join(outdir, "shared"));
+              const sharedDestDir = path.join(outdir, "shared");
+              if (!fs.existsSync(sharedDestDir)) {
+                fs.mkdirSync(sharedDestDir, { recursive: true });
+              }
+
+              const entries = fs.readdirSync(sharedSrcDir, {
+                withFileTypes: true,
+              });
+              for (const entry of entries) {
+                const srcPath = path.join(sharedSrcDir, entry.name);
+                const destPath = path.join(sharedDestDir, entry.name);
+
+                if (entry.isDirectory()) {
+                  // 递归复制目录
+                  copyDirectory(srcPath, destPath);
+                } else if (!entry.name.endsWith(".js")) {
+                  // 只复制非 JS 文件（JS 文件由 esbuild 处理）
+                  fs.copyFileSync(srcPath, destPath);
+                }
+              }
             }
 
             // 复制 styles 目录中的组件到 shared
@@ -308,10 +432,26 @@ const buildOptions = {
               }
             }
 
-            // 复制第三方库
+            // 复制第三方库（非 JS 文件）
             const libDir = path.join(rootDir, "src/shared/lib");
             if (fs.existsSync(libDir)) {
-              copyDirectory(libDir, path.join(outdir, "shared/lib"));
+              const libDestDir = path.join(outdir, "shared/lib");
+              if (!fs.existsSync(libDestDir)) {
+                fs.mkdirSync(libDestDir, { recursive: true });
+              }
+
+              const entries = fs.readdirSync(libDir, { withFileTypes: true });
+              for (const entry of entries) {
+                const srcPath = path.join(libDir, entry.name);
+                const destPath = path.join(libDestDir, entry.name);
+
+                if (entry.isDirectory()) {
+                  copyDirectory(srcPath, destPath);
+                } else if (!entry.name.endsWith(".js")) {
+                  // 只复制非 JS 文件
+                  fs.copyFileSync(srcPath, destPath);
+                }
+              }
             }
 
             // 复制资源目录
@@ -501,24 +641,29 @@ if (isDev) {
                 path.join(outdir, "offscreen/offscreen.html"),
               );
 
-              // 复制 CSS 文件到正确的目录结构
-              copyFile(
-                path.join(rootDir, "src/styles/pages/popup.css"),
-                path.join(outdir, "pages/popup/popup.css"),
-              );
-              copyFile(
-                path.join(rootDir, "src/styles/pages/options.css"),
-                path.join(outdir, "pages/options/options.css"),
-              );
-              copyFile(
-                path.join(rootDir, "src/styles/pages/batch.css"),
-                path.join(outdir, "pages/batch/batch.css"),
-              );
+              // CSS 文件现在由 esbuild 处理，不需要手动复制
 
-              // 复制 shared 目录 - 包含 JS 和 CSS
+              // 复制 shared 目录 - 只复制 CSS 和其他非 JS 文件
               const sharedSrcDir = path.join(rootDir, "src/shared");
               if (fs.existsSync(sharedSrcDir)) {
-                copyDirectory(sharedSrcDir, path.join(outdir, "shared"));
+                const sharedDestDir = path.join(outdir, "shared");
+                if (!fs.existsSync(sharedDestDir)) {
+                  fs.mkdirSync(sharedDestDir, { recursive: true });
+                }
+
+                const entries = fs.readdirSync(sharedSrcDir, {
+                  withFileTypes: true,
+                });
+                for (const entry of entries) {
+                  const srcPath = path.join(sharedSrcDir, entry.name);
+                  const destPath = path.join(sharedDestDir, entry.name);
+
+                  if (entry.isDirectory()) {
+                    copyDirectory(srcPath, destPath);
+                  } else if (!entry.name.endsWith(".js")) {
+                    fs.copyFileSync(srcPath, destPath);
+                  }
+                }
               }
 
               // 复制 styles 目录中的组件到 shared
