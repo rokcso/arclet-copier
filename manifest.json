@@ -29,13 +29,17 @@
     {
       "resources": ["assets/icons/*"],
       "matches": ["<all_urls>"]
+    },
+    {
+      "resources": ["pages/*"],
+      "matches": ["<all_urls>"]
     }
   ],
   "background": {
     "service_worker": "background/background.js",
     "type": "module"
   },
-  "options_page": "options/options.html",
+  "options_page": "pages/options/options.html",
   "commands": {
     "copy-url": {
       "suggested_key": {
@@ -46,7 +50,7 @@
     }
   },
   "action": {
-    "default_popup": "popup/popup.html",
+    "default_popup": "pages/popup/popup.html",
     "default_icon": {
       "16": "assets/icons/icon16.png",
       "32": "assets/icons/icon32.png",

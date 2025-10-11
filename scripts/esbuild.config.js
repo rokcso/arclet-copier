@@ -30,6 +30,144 @@ if (fs.existsSync(outdir)) {
 fs.mkdirSync(outdir, { recursive: true });
 
 // 自定义资源复制函数
+// 构建验证函数
+function validateBuild(outdir, manifest) {
+  const errors = [];
+
+  // 验证 background script
+  if (manifest.background?.service_worker) {
+    const backgroundPath = path.join(
+      outdir,
+      manifest.background.service_worker,
+    );
+    if (!fs.existsSync(backgroundPath)) {
+      errors.push(
+        `Background script not found: ${manifest.background.service_worker}`,
+      );
+    }
+  }
+
+  // 验证 content scripts
+  if (manifest.content_scripts) {
+    manifest.content_scripts.forEach((contentScript, index) => {
+      contentScript.js?.forEach((jsFile) => {
+        const jsPath = path.join(outdir, jsFile);
+        if (!fs.existsSync(jsPath)) {
+          errors.push(`Content script ${index} not found: ${jsFile}`);
+        }
+      });
+    });
+  }
+
+  // 验证 options page
+  if (manifest.options_page) {
+    const optionsPath = path.join(outdir, manifest.options_page);
+    if (!fs.existsSync(optionsPath)) {
+      errors.push(`Options page not found: ${manifest.options_page}`);
+    }
+  }
+
+  // 验证 popup
+  if (manifest.action?.default_popup) {
+    const popupPath = path.join(outdir, manifest.action.default_popup);
+    if (!fs.existsSync(popupPath)) {
+      errors.push(`Popup page not found: ${manifest.action.default_popup}`);
+    }
+  }
+
+  // 验证 assets
+  if (manifest.action?.default_icon) {
+    Object.values(manifest.action.default_icon).forEach((icon) => {
+      const iconPath = path.join(outdir, icon);
+      if (!fs.existsSync(iconPath)) {
+        errors.push(`Action icon not found: ${icon}`);
+      }
+    });
+  }
+
+  if (manifest.icons) {
+    Object.values(manifest.icons).forEach((icon) => {
+      const iconPath = path.join(outdir, icon);
+      if (!fs.existsSync(iconPath)) {
+        errors.push(`Extension icon not found: ${icon}`);
+      }
+    });
+  }
+
+  // 验证 HTML 文件中的资源引用
+  const htmlFiles = findFiles(outdir, ".html");
+  htmlFiles.forEach((htmlFile) => {
+    const content = fs.readFileSync(htmlFile, "utf8");
+    const relativePath = path.relative(outdir, htmlFile);
+    const htmlDir = path.dirname(htmlFile);
+
+    // 检查 CSS 引用
+    const cssMatches = content.match(/href=["']([^"']+\.css)["']/g);
+    if (cssMatches) {
+      cssMatches.forEach((match) => {
+        const cssPath = match.match(/href=["']([^"']+\.css)["']/)[1];
+        const resolvedPath = path.resolve(htmlDir, cssPath);
+        if (!fs.existsSync(resolvedPath)) {
+          errors.push(`CSS file not found in ${relativePath}: ${cssPath}`);
+        }
+      });
+    }
+
+    // 检查 JS 引用
+    const jsMatches = content.match(/src=["']([^"']+\.js)["']/g);
+    if (jsMatches) {
+      jsMatches.forEach((match) => {
+        const jsPath = match.match(/src=["']([^"']+\.js)["']/)[1];
+        const resolvedPath = path.resolve(htmlDir, jsPath);
+        if (!fs.existsSync(resolvedPath)) {
+          errors.push(`JS file not found in ${relativePath}: ${jsPath}`);
+        }
+      });
+    }
+
+    // 检查图片引用
+    const imgMatches = content.match(
+      /src=["']([^"']+\.(png|jpg|jpeg|svg|ico))["']/g,
+    );
+    if (imgMatches) {
+      imgMatches.forEach((match) => {
+        const imgPath = match.match(
+          /src=["']([^"']+\.(png|jpg|jpeg|svg|ico))["']/,
+        )[1];
+        const resolvedPath = path.resolve(htmlDir, imgPath);
+        if (!fs.existsSync(resolvedPath)) {
+          errors.push(`Image file not found in ${relativePath}: ${imgPath}`);
+        }
+      });
+    }
+  });
+
+  if (errors.length > 0) {
+    console.error("\n❌ Build validation failed:");
+    errors.forEach((error) => console.error(`   • ${error}`));
+    throw new Error(`Build validation failed with ${errors.length} errors`);
+  } else {
+    console.log("✅ Build validation passed!");
+  }
+}
+
+// 查找指定扩展名的文件
+function findFiles(dir, ext) {
+  const files = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...findFiles(fullPath, ext));
+    } else if (entry.name.endsWith(ext)) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
 function copyDirectory(src, dest) {
   // 创建目标目录
   if (!fs.existsSync(dest)) {
@@ -66,12 +204,12 @@ function copyFile(src, dest) {
 const buildOptions = {
   // 入口文件 - 所有 JavaScript 文件
   entryPoints: [
-    "background/background.js",
-    "popup/popup.js",
-    "options/options.js",
-    "batch/batch.js",
-    "content/content.js",
-    "offscreen/offscreen.js",
+    "src/background/background.js",
+    "src/pages/popup/popup.js",
+    "src/pages/options/options.js",
+    "src/pages/batch/batch.js",
+    "src/content/content.js",
+    "src/offscreen/offscreen.js",
   ],
 
   // 输出配置
@@ -116,51 +254,62 @@ const buildOptions = {
 
             const rootDir = path.join(__dirname, "..");
 
-            // 复制 HTML 文件
+            // 复制 HTML 文件到正确的目录结构
             copyFile(
-              path.join(rootDir, "popup/popup.html"),
-              path.join(outdir, "popup/popup.html"),
+              path.join(rootDir, "src/pages/popup/popup.html"),
+              path.join(outdir, "pages/popup/popup.html"),
             );
             copyFile(
-              path.join(rootDir, "options/options.html"),
-              path.join(outdir, "options/options.html"),
+              path.join(rootDir, "src/pages/options/options.html"),
+              path.join(outdir, "pages/options/options.html"),
             );
             copyFile(
-              path.join(rootDir, "batch/batch.html"),
-              path.join(outdir, "batch/batch.html"),
+              path.join(rootDir, "src/pages/batch/batch.html"),
+              path.join(outdir, "pages/batch/batch.html"),
             );
             copyFile(
-              path.join(rootDir, "offscreen/offscreen.html"),
+              path.join(rootDir, "src/offscreen/offscreen.html"),
               path.join(outdir, "offscreen/offscreen.html"),
             );
 
-            // 复制 CSS 文件
+            // 复制 CSS 文件到正确的目录结构
             copyFile(
-              path.join(rootDir, "popup/popup.css"),
-              path.join(outdir, "popup/popup.css"),
+              path.join(rootDir, "src/styles/pages/popup.css"),
+              path.join(outdir, "pages/popup/popup.css"),
             );
             copyFile(
-              path.join(rootDir, "options/options.css"),
-              path.join(outdir, "options/options.css"),
+              path.join(rootDir, "src/styles/pages/options.css"),
+              path.join(outdir, "pages/options/options.css"),
             );
             copyFile(
-              path.join(rootDir, "batch/batch.css"),
-              path.join(outdir, "batch/batch.css"),
+              path.join(rootDir, "src/styles/pages/batch.css"),
+              path.join(outdir, "pages/batch/batch.css"),
             );
 
-            // 复制 shared CSS 文件
-            const sharedCssFiles = fs
-              .readdirSync(path.join(rootDir, "shared"))
-              .filter((file) => file.endsWith(".css"));
-            sharedCssFiles.forEach((file) => {
-              copyFile(
-                path.join(rootDir, "shared", file),
-                path.join(outdir, "shared", file),
-              );
-            });
+            // 复制 shared 目录 - 包含 JS 和 CSS
+            const sharedSrcDir = path.join(rootDir, "src/shared");
+            if (fs.existsSync(sharedSrcDir)) {
+              copyDirectory(sharedSrcDir, path.join(outdir, "shared"));
+            }
+
+            // 复制 styles 目录中的组件到 shared
+            const stylesDir = path.join(rootDir, "src/styles");
+            if (fs.existsSync(stylesDir)) {
+              const componentsDir = path.join(stylesDir, "components");
+              if (fs.existsSync(componentsDir)) {
+                copyDirectory(
+                  componentsDir,
+                  path.join(outdir, "shared/components"),
+                );
+              }
+              const themesDir = path.join(stylesDir, "themes");
+              if (fs.existsSync(themesDir)) {
+                copyDirectory(themesDir, path.join(outdir, "shared/themes"));
+              }
+            }
 
             // 复制第三方库
-            const libDir = path.join(rootDir, "shared/lib");
+            const libDir = path.join(rootDir, "src/shared/lib");
             if (fs.existsSync(libDir)) {
               copyDirectory(libDir, path.join(outdir, "shared/lib"));
             }
@@ -192,6 +341,10 @@ const buildOptions = {
               path.join(outdir, "manifest.json"),
               JSON.stringify(manifestContent, null, 2),
             );
+
+            // 验证构建后的文件路径完整性
+            console.log("🔍 Validating file paths...");
+            validateBuild(outdir, manifestContent);
 
             console.log("✅ Static assets copied successfully!");
           } catch (error) {
@@ -317,11 +470,7 @@ if (isDev) {
 
         // 需要监听的文件和目录
         const watchPaths = [
-          path.join(rootDir, "popup"),
-          path.join(rootDir, "options"),
-          path.join(rootDir, "batch"),
-          path.join(rootDir, "offscreen"),
-          path.join(rootDir, "shared"),
+          path.join(rootDir, "src"),
           path.join(rootDir, "_locales"),
           path.join(rootDir, "assets"),
           path.join(rootDir, "manifest.json"),
@@ -334,51 +483,62 @@ if (isDev) {
           copyTimeout = setTimeout(() => {
             console.log("\n🔄 Files changed, copying assets...");
             try {
-              // 复制 HTML 文件
+              // 复制 HTML 文件到正确的目录结构
               copyFile(
-                path.join(rootDir, "popup/popup.html"),
-                path.join(outdir, "popup/popup.html"),
+                path.join(rootDir, "src/pages/popup/popup.html"),
+                path.join(outdir, "pages/popup/popup.html"),
               );
               copyFile(
-                path.join(rootDir, "options/options.html"),
-                path.join(outdir, "options/options.html"),
+                path.join(rootDir, "src/pages/options/options.html"),
+                path.join(outdir, "pages/options/options.html"),
               );
               copyFile(
-                path.join(rootDir, "batch/batch.html"),
-                path.join(outdir, "batch/batch.html"),
+                path.join(rootDir, "src/pages/batch/batch.html"),
+                path.join(outdir, "pages/batch/batch.html"),
               );
               copyFile(
-                path.join(rootDir, "offscreen/offscreen.html"),
+                path.join(rootDir, "src/offscreen/offscreen.html"),
                 path.join(outdir, "offscreen/offscreen.html"),
               );
 
-              // 复制 CSS 文件
+              // 复制 CSS 文件到正确的目录结构
               copyFile(
-                path.join(rootDir, "popup/popup.css"),
-                path.join(outdir, "popup/popup.css"),
+                path.join(rootDir, "src/styles/pages/popup.css"),
+                path.join(outdir, "pages/popup/popup.css"),
               );
               copyFile(
-                path.join(rootDir, "options/options.css"),
-                path.join(outdir, "options/options.css"),
+                path.join(rootDir, "src/styles/pages/options.css"),
+                path.join(outdir, "pages/options/options.css"),
               );
               copyFile(
-                path.join(rootDir, "batch/batch.css"),
-                path.join(outdir, "batch/batch.css"),
+                path.join(rootDir, "src/styles/pages/batch.css"),
+                path.join(outdir, "pages/batch/batch.css"),
               );
 
-              // 复制 shared CSS 文件
-              const sharedCssFiles = fs
-                .readdirSync(path.join(rootDir, "shared"))
-                .filter((file) => file.endsWith(".css"));
-              sharedCssFiles.forEach((file) => {
-                copyFile(
-                  path.join(rootDir, "shared", file),
-                  path.join(outdir, "shared", file),
-                );
-              });
+              // 复制 shared 目录 - 包含 JS 和 CSS
+              const sharedSrcDir = path.join(rootDir, "src/shared");
+              if (fs.existsSync(sharedSrcDir)) {
+                copyDirectory(sharedSrcDir, path.join(outdir, "shared"));
+              }
+
+              // 复制 styles 目录中的组件到 shared
+              const stylesDir = path.join(rootDir, "src/styles");
+              if (fs.existsSync(stylesDir)) {
+                const componentsDir = path.join(stylesDir, "components");
+                if (fs.existsSync(componentsDir)) {
+                  copyDirectory(
+                    componentsDir,
+                    path.join(outdir, "shared/components"),
+                  );
+                }
+                const themesDir = path.join(stylesDir, "themes");
+                if (fs.existsSync(themesDir)) {
+                  copyDirectory(themesDir, path.join(outdir, "shared/themes"));
+                }
+              }
 
               // 复制第三方库
-              const libDir = path.join(rootDir, "shared/lib");
+              const libDir = path.join(rootDir, "src/shared/lib");
               if (fs.existsSync(libDir)) {
                 copyDirectory(libDir, path.join(outdir, "shared/lib"));
               }
