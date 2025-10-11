@@ -455,15 +455,10 @@
   "previewPlaceholder": {
     "message": "テンプレート内容を入力してライブプレビューを表示"
   },
-  "insertField": {
+  "insertVariable": {
     "message": "変数を挿入"
   },
-  "basicFields": {
-    "message": "基本変数"
-  },
-  "timeFields": {
-    "message": "時間変数"
-  },
+
   "templateNameRequired": {
     "message": "テンプレート名を入力してください"
   },
@@ -557,42 +552,7 @@
   "emojiCategoryFlags": {
     "message": "旗"
   },
-  "fieldDescUrl": {
-    "message": "現在のページのURL（URLクリーニング設定の影響を受けます）"
-  },
-  "fieldDescTitle": {
-    "message": "現在のページのタイトル"
-  },
-  "fieldDescHostname": {
-    "message": "ウェブサイトのホスト名"
-  },
-  "fieldDescDomain": {
-    "message": "ウェブサイトのドメイン名"
-  },
-  "fieldDescHost": {
-    "message": "ウェブサイトのホスト名"
-  },
-  "fieldDescDate": {
-    "message": "現在の日付 (YYYY-MM-DD)"
-  },
-  "fieldDescTime": {
-    "message": "現在の時刻 (HH:MM:SS)"
-  },
-  "fieldDescTimestamp": {
-    "message": "現在のタイムスタンプ (Unix timestamp)"
-  },
-  "fieldDescOriginalUrl": {
-    "message": "元のURL（完全な未処理バージョン）"
-  },
-  "fieldDescShortUrl": {
-    "message": "短縮URL"
-  },
-  "fieldDescDatetime": {
-    "message": "日付と時刻"
-  },
-  "fieldDescIso": {
-    "message": "ISO時刻形式"
-  },
+
   "deleteTemplate": {
     "message": "削除"
   },

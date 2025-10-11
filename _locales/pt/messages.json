@@ -455,15 +455,10 @@
   "previewPlaceholder": {
     "message": "Digite o conteúdo do modelo para ver a pré-visualização ao vivo"
   },
-  "insertField": {
+  "insertVariable": {
     "message": "Inserir Variável"
   },
-  "basicFields": {
-    "message": "Variáveis Básicas"
-  },
-  "timeFields": {
-    "message": "Variáveis de Tempo"
-  },
+
   "templateNameRequired": {
     "message": "Por favor, insira o nome do modelo"
   },
@@ -557,42 +552,7 @@
   "emojiCategoryFlags": {
     "message": "Bandeiras"
   },
-  "fieldDescUrl": {
-    "message": "URL da página atual (afetada pelas configurações de limpeza de URL)"
-  },
-  "fieldDescTitle": {
-    "message": "Título da página atual"
-  },
-  "fieldDescHostname": {
-    "message": "Nome do host do site"
-  },
-  "fieldDescDomain": {
-    "message": "Nome do domínio do site"
-  },
-  "fieldDescHost": {
-    "message": "Nome do host do site"
-  },
-  "fieldDescDate": {
-    "message": "Data atual (YYYY-MM-DD)"
-  },
-  "fieldDescTime": {
-    "message": "Hora atual (HH:MM:SS)"
-  },
-  "fieldDescTimestamp": {
-    "message": "Timestamp atual (timestamp Unix)"
-  },
-  "fieldDescOriginalUrl": {
-    "message": "URL original (versão completa sem limpeza)"
-  },
-  "fieldDescShortUrl": {
-    "message": "URL curta"
-  },
-  "fieldDescDatetime": {
-    "message": "Data e hora"
-  },
-  "fieldDescIso": {
-    "message": "Formato de tempo ISO"
-  },
+
   "deleteTemplate": {
     "message": "Excluir"
   },

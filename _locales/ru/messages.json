@@ -455,15 +455,10 @@
   "previewPlaceholder": {
     "message": "Введите содержимое шаблона для просмотра в реальном времени"
   },
-  "insertField": {
-    "message": "Вставить Переменную"
+  "insertVariable": {
+    "message": "Вставить переменную"
   },
-  "basicFields": {
-    "message": "Основные Переменные"
-  },
-  "timeFields": {
-    "message": "Переменные Времени"
-  },
+
   "templateNameRequired": {
     "message": "Пожалуйста, введите название шаблона"
   },
@@ -557,42 +552,7 @@
   "emojiCategoryFlags": {
     "message": "Флаги"
   },
-  "fieldDescUrl": {
-    "message": "URL текущей страницы (зависит от настроек очистки URL)"
-  },
-  "fieldDescTitle": {
-    "message": "Заголовок текущей страницы"
-  },
-  "fieldDescHostname": {
-    "message": "Имя хоста веб-сайта"
-  },
-  "fieldDescDomain": {
-    "message": "Доменное имя веб-сайта"
-  },
-  "fieldDescHost": {
-    "message": "Имя хоста веб-сайта"
-  },
-  "fieldDescDate": {
-    "message": "Текущая дата (YYYY-MM-DD)"
-  },
-  "fieldDescTime": {
-    "message": "Текущее время (HH:MM:SS)"
-  },
-  "fieldDescTimestamp": {
-    "message": "Текущая временная метка (Unix timestamp)"
-  },
-  "fieldDescOriginalUrl": {
-    "message": "Исходный URL (полная неочищенная версия)"
-  },
-  "fieldDescShortUrl": {
-    "message": "Короткий URL"
-  },
-  "fieldDescDatetime": {
-    "message": "Дата и время"
-  },
-  "fieldDescIso": {
-    "message": "Формат времени ISO"
-  },
+
   "deleteTemplate": {
     "message": "Удалить"
   },

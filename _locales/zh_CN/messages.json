@@ -453,15 +453,10 @@
   "previewPlaceholder": {
     "message": "输入模板内容以查看预览效果"
   },
-  "insertField": {
+  "insertVariable": {
     "message": "插入变量"
   },
-  "basicFields": {
-    "message": "基础变量"
-  },
-  "timeFields": {
-    "message": "时间变量"
-  },
+
   "templateNameRequired": {
     "message": "请输入模板名称"
   },
@@ -543,39 +538,7 @@
   "emojiCategoryTravel": {
     "message": "交通"
   },
-  "fieldDescUrl": {
-    "message": "当前页面URL (受参数清理设置影响)"
-  },
-  "fieldDescOriginalUrl": {
-    "message": "原始URL (完整未清理版本)"
-  },
-  "fieldDescTitle": {
-    "message": "页面标题"
-  },
-  "fieldDescHostname": {
-    "message": "域名"
-  },
-  "fieldDescDomain": {
-    "message": "完整域名"
-  },
-  "fieldDescShortUrl": {
-    "message": "短链接"
-  },
-  "fieldDescDate": {
-    "message": "当前日期"
-  },
-  "fieldDescTime": {
-    "message": "当前时间"
-  },
-  "fieldDescDatetime": {
-    "message": "日期时间"
-  },
-  "fieldDescTimestamp": {
-    "message": "时间戳"
-  },
-  "fieldDescIso": {
-    "message": "ISO时间"
-  },
+
   "deleteTemplate": {
     "message": "删除"
   },

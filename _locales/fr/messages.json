@@ -455,15 +455,10 @@
   "previewPlaceholder": {
     "message": "Entrez le contenu du modèle pour voir l'aperçu en direct"
   },
-  "insertField": {
-    "message": "Insérer une Variable"
+  "insertVariable": {
+    "message": "Insérer une variable"
   },
-  "basicFields": {
-    "message": "Variables de Base"
-  },
-  "timeFields": {
-    "message": "Variables de Temps"
-  },
+
   "templateNameRequired": {
     "message": "Veuillez entrer le nom du modèle"
   },
@@ -557,42 +552,7 @@
   "emojiCategoryFlags": {
     "message": "Drapeaux"
   },
-  "fieldDescUrl": {
-    "message": "URL de la page actuelle (affectée par les paramètres de nettoyage d'URL)"
-  },
-  "fieldDescTitle": {
-    "message": "Titre de la page actuelle"
-  },
-  "fieldDescHostname": {
-    "message": "Nom d'hôte du site web"
-  },
-  "fieldDescDomain": {
-    "message": "Nom de domaine du site web"
-  },
-  "fieldDescHost": {
-    "message": "Nom d'hôte du site web"
-  },
-  "fieldDescDate": {
-    "message": "Date actuelle (YYYY-MM-DD)"
-  },
-  "fieldDescTime": {
-    "message": "Heure actuelle (HH:MM:SS)"
-  },
-  "fieldDescTimestamp": {
-    "message": "Horodatage actuel (timestamp Unix)"
-  },
-  "fieldDescOriginalUrl": {
-    "message": "URL originale (version complète non nettoyée)"
-  },
-  "fieldDescShortUrl": {
-    "message": "URL courte"
-  },
-  "fieldDescDatetime": {
-    "message": "Date et heure"
-  },
-  "fieldDescIso": {
-    "message": "Format de temps ISO"
-  },
+
   "deleteTemplate": {
     "message": "Supprimer"
   },

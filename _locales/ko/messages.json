@@ -455,15 +455,10 @@
   "previewPlaceholder": {
     "message": "템플릿 내용을 입력하여 실시간 미리보기를 확인하세요"
   },
-  "insertField": {
+  "insertVariable": {
     "message": "변수 삽입"
   },
-  "basicFields": {
-    "message": "기본 변수"
-  },
-  "timeFields": {
-    "message": "시간 변수"
-  },
+
   "templateNameRequired": {
     "message": "템플릿 이름을 입력해주세요"
   },
@@ -557,42 +552,7 @@
   "emojiCategoryFlags": {
     "message": "깃발"
   },
-  "fieldDescUrl": {
-    "message": "현재 페이지의 URL (URL 정리 설정의 영향을 받음)"
-  },
-  "fieldDescTitle": {
-    "message": "현재 페이지의 제목"
-  },
-  "fieldDescHostname": {
-    "message": "웹사이트 호스트명"
-  },
-  "fieldDescDomain": {
-    "message": "웹사이트 도메인 이름"
-  },
-  "fieldDescHost": {
-    "message": "웹사이트 호스트 이름"
-  },
-  "fieldDescDate": {
-    "message": "현재 날짜 (YYYY-MM-DD)"
-  },
-  "fieldDescTime": {
-    "message": "현재 시간 (HH:MM:SS)"
-  },
-  "fieldDescTimestamp": {
-    "message": "현재 타임스탬프 (Unix timestamp)"
-  },
-  "fieldDescOriginalUrl": {
-    "message": "원본 URL (완전한 미정리 버전)"
-  },
-  "fieldDescShortUrl": {
-    "message": "단축 URL"
-  },
-  "fieldDescDatetime": {
-    "message": "날짜와 시간"
-  },
-  "fieldDescIso": {
-    "message": "ISO 시간 형식"
-  },
+
   "deleteTemplate": {
     "message": "삭제"
   },

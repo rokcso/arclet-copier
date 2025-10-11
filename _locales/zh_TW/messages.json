@@ -455,15 +455,10 @@
   "previewPlaceholder": {
     "message": "輸入樣板內容以查看預覽效果"
   },
-  "insertField": {
+  "insertVariable": {
     "message": "插入變數"
   },
-  "basicFields": {
-    "message": "基礎變數"
-  },
-  "timeFields": {
-    "message": "時間變數"
-  },
+
   "templateNameRequired": {
     "message": "請輸入樣板名稱"
   },
@@ -545,39 +540,7 @@
   "emojiCategoryTravel": {
     "message": "交通"
   },
-  "fieldDescUrl": {
-    "message": "當前頁面URL (受參數清理設定影響)"
-  },
-  "fieldDescOriginalUrl": {
-    "message": "原始URL (完整未清理版本)"
-  },
-  "fieldDescTitle": {
-    "message": "頁面標題"
-  },
-  "fieldDescHostname": {
-    "message": "網域名稱"
-  },
-  "fieldDescDomain": {
-    "message": "完整網域名稱"
-  },
-  "fieldDescShortUrl": {
-    "message": "短連結"
-  },
-  "fieldDescDate": {
-    "message": "當前日期"
-  },
-  "fieldDescTime": {
-    "message": "當前時間"
-  },
-  "fieldDescDatetime": {
-    "message": "日期時間"
-  },
-  "fieldDescTimestamp": {
-    "message": "時間戳"
-  },
-  "fieldDescIso": {
-    "message": "ISO時間"
-  },
+
   "deleteTemplate": {
     "message": "刪除"
   },
