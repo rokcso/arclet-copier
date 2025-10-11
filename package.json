@@ -4,8 +4,8 @@
   "type": "module",
   "description": "快速复制当前页面的 URL，支持参数过滤功能",
   "scripts": {
-    "dev": "node scripts/esbuild.config.js --watch",
-    "build": "node scripts/esbuild.config.js",
+    "dev": "node esbuild.config.js --watch",
+    "build": "node esbuild.config.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
