@@ -42,13 +42,16 @@
 }
 
 .toggle-checkbox:checked + .toggle-label {
-    background: #f0f0f0;
-    border-color: #d0d0d0;
+    background: var(--arc-primary);
+    border-color: var(--arc-primary);
 }
 
 .toggle-checkbox:checked + .toggle-label .toggle-slider {
     transform: translateX(20px);
-    background: var(--arc-primary);
+    background: white;
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.15),
+        0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* ============= 三段式开关 (Three-way Switch) - 按图片样式设计 ============= */
@@ -116,12 +119,15 @@
 }
 
 [data-theme="dark"] .toggle-checkbox:checked + .toggle-label {
-    background: #2d2d2d;
-    border-color: #4a4a4a;
+    background: var(--arc-primary);
+    border-color: var(--arc-primary);
 }
 
 [data-theme="dark"] .toggle-checkbox:checked + .toggle-label .toggle-slider {
-    background: var(--arc-primary);
+    background: white;
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* 暗色主题下三段式开关样式 */
@@ -160,15 +166,18 @@
     }
 
     :root:not([data-theme]) .toggle-checkbox:checked + .toggle-label {
-        background: #2d2d2d;
-        border-color: #4a4a4a;
+        background: var(--arc-primary);
+        border-color: var(--arc-primary);
     }
 
     :root:not([data-theme])
         .toggle-checkbox:checked
         + .toggle-label
         .toggle-slider {
-        background: var(--arc-primary);
+        background: white;
+        box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.3),
+            0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     /* 系统暗色主题下三段式开关样式 */
