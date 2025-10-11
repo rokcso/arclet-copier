@@ -585,31 +585,31 @@ export const TEMPLATE_FIELDS = {
   // 时间字段
   date: {
     name: "日期",
-    description: "当前日期",
+    description: "当前日期（本地时区）",
     example: "2024-01-15",
     category: "time",
   },
   time: {
     name: "时间",
-    description: "当前时间",
+    description: "当前时间（本地时区）",
     example: "14:30:25",
     category: "time",
   },
   datetime: {
     name: "日期时间",
-    description: "完整的日期时间",
+    description: "完整的日期时间（本地时区）",
     example: "2024-01-15 14:30:25",
     category: "time",
   },
   timestamp: {
     name: "时间戳",
-    description: "Unix时间戳",
+    description: "Unix时间戳（全球统一）",
     example: "1705315825",
     category: "time",
   },
   iso: {
     name: "ISO时间",
-    description: "ISO格式的时间",
+    description: "ISO格式时间（UTC时区）",
     example: "2024-01-15T14:30:25.000Z",
     category: "time",
   },
@@ -680,7 +680,13 @@ export class TemplateEngine {
     // 时间字段处理器 - 修复：每次调用时获取当前时间
     this.fieldProcessors.set("date", () => {
       const now = new Date();
-      return now.toISOString().split("T")[0];
+      return (
+        now.getFullYear() +
+        "-" +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(now.getDate()).padStart(2, "0")
+      );
     });
 
     this.fieldProcessors.set("time", () => {
