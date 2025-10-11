@@ -94,6 +94,11 @@
     box-sizing: border-box;
 }
 
+html {
+    /* 始终为滚动条保留空间，防止展开/收起设置菜单时页面左右抖动 */
+    scrollbar-gutter: stable;
+}
+
 body {
     margin: 0;
     padding: 0;
