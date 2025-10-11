@@ -108,7 +108,6 @@ body.modal-open {
     border: 1px solid var(--arc-border);
     border-radius: var(--arc-radius-lg);
     padding: 24px;
-    box-shadow: var(--arc-shadow-sm);
 }
 
 .settings-section h2 {
@@ -177,7 +176,6 @@ select.setting-control {
     -moz-appearance: none;
 
     /* 添加阴影 */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
     /* 自定义下拉箭头 */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
@@ -189,9 +187,6 @@ select.setting-control {
 select.setting-control:focus {
     outline: none;
     border-color: var(--arc-primary);
-    box-shadow:
-        0 0 0 3px var(--glow-light),
-        0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 select.setting-control:hover {
@@ -226,7 +221,6 @@ select.setting-control:hover {
         var(--arc-primary-hover)
     );
     color: white;
-    box-shadow: 0 4px 12px var(--glow-medium);
 }
 
 .support-content {
@@ -265,7 +259,6 @@ select.setting-control:hover {
 .feedback-btn:hover {
     background: var(--arc-surface);
     border-color: var(--arc-primary);
-    box-shadow: 0 0 0 2px var(--glow-light);
 }
 
 .color-picker {
@@ -283,25 +276,17 @@ select.setting-control:hover {
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
     overflow: hidden;
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .color-option:hover {
     transform: scale(1.1);
     border-color: var(--arc-primary);
-    box-shadow:
-        0 0 0 3px var(--glow-light),
-        0 2px 6px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .color-option.active {
     border-color: var(--arc-primary);
-    box-shadow:
-        0 0 0 3px var(--glow-light),
-        0 2px 4px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
@@ -384,7 +369,6 @@ select.setting-control:hover {
 .about-link:hover {
     background: var(--arc-surface);
     border-color: var(--arc-primary);
-    box-shadow: 0 0 0 2px var(--glow-light);
 }
 
 /* 主题色定义 */
@@ -924,9 +908,6 @@ select.setting-control:hover {
     max-width: 680px;
     max-height: 90vh;
     overflow: hidden;
-    box-shadow:
-        0 25px 50px -12px rgba(0, 0, 0, 0.25),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
     transform: scale(0.95) translateY(20px);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1027,7 +1008,6 @@ select.setting-control:hover {
     outline: none;
     border-color: var(--arc-primary);
     background: var(--arc-background);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 /* Template Icon and Name Row Layout */
@@ -1090,7 +1070,6 @@ select.setting-control:hover {
 [data-theme="dark"] .template-icon-selector .icon-option.active {
     border-color: #94a3b8;
     background: #334155;
-    box-shadow: 0 0 0 2px #475569;
 }
 
 /* Emoji 选择器触发按钮 */
@@ -1127,7 +1106,6 @@ select.setting-control:hover {
     background: var(--arc-background);
     border: 1px solid var(--arc-border);
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     z-index: 100;
     width: 320px;
     max-height: 400px;
@@ -1646,7 +1624,6 @@ select.setting-control:hover {
 
 .param-tag:hover {
     border-color: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .param-tag .param-name {
@@ -1788,9 +1765,6 @@ select.setting-control:hover {
     max-width: 450px;
     background: var(--arc-background);
     border-radius: var(--arc-radius);
-    box-shadow:
-        0 20px 25px -5px rgba(0, 0, 0, 0.1),
-        0 10px 10px -5px rgba(0, 0, 0, 0.04);
     transform: scale(0.95) translateY(20px);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1863,7 +1837,6 @@ select.setting-control:hover {
 .param-input-body input:focus {
     outline: none;
     border-color: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .param-input-body input.error {
@@ -1871,7 +1844,6 @@ select.setting-control:hover {
 }
 
 .param-input-body input.error:focus {
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
 }
 
 .param-input-hint {
@@ -1926,7 +1898,6 @@ select.setting-control:hover {
 
 .param-input-footer .btn-primary:hover {
     background: var(--arc-primary-hover);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .param-input-footer .btn-primary:disabled {

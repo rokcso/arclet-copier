@@ -388,7 +388,6 @@ body {
     background: var(--arc-surface);
     border-radius: 0 0 var(--arc-radius) var(--arc-radius);
     margin: 0 1px 1px 1px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     border: 1px solid transparent;
     position: relative;
 }
@@ -441,7 +440,6 @@ body {
     background: var(--arc-background);
     position: relative;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--arc-shadow-sm);
     cursor: pointer;
     display: inline-block;
     flex-shrink: 0;
@@ -449,13 +447,11 @@ body {
 
 .checkbox-unified:hover {
     border-color: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .checkbox-unified.checked {
     border-color: var(--arc-primary);
     background: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .checkbox-unified.checked::after {
@@ -473,7 +469,6 @@ body {
 .checkbox-unified.indeterminate {
     border-color: var(--arc-primary);
     background: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .checkbox-unified.indeterminate::after {
@@ -560,7 +555,6 @@ body {
 .format-option input[type="radio"]:checked + .format-custom {
     border-color: var(--arc-primary);
     background: var(--glow-light);
-    box-shadow: 0 0 0 4px var(--glow-light);
 }
 
 .format-custom:hover {
@@ -607,7 +601,6 @@ body {
     -moz-appearance: none;
 
     /* 添加阴影 */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
     /* 自定义下拉箭头 */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
@@ -622,9 +615,6 @@ body {
 .scope-select:hover {
     outline: none;
     border-color: var(--arc-primary);
-    box-shadow:
-        0 0 0 3px var(--glow-light),
-        0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* Display section */
@@ -633,7 +623,6 @@ body {
     border: 1px solid var(--arc-border);
     border-radius: var(--arc-radius);
     overflow: hidden;
-    box-shadow: var(--arc-shadow-sm);
 }
 
 .display-header {
@@ -773,7 +762,6 @@ body {
 .master-checkbox input[type="checkbox"]:checked + .checkbox-unified {
     border-color: var(--arc-primary);
     background: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .master-checkbox input[type="checkbox"]:checked + .checkbox-unified::after {
@@ -791,7 +779,6 @@ body {
 .master-checkbox input[type="checkbox"]:indeterminate + .checkbox-unified {
     border-color: var(--arc-primary);
     background: var(--arc-primary);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .master-checkbox
@@ -935,7 +922,6 @@ body {
 .tab-item.selected {
     border-color: var(--arc-primary);
     background: var(--glow-light);
-    box-shadow: 0 0 0 3px var(--glow-light);
 }
 
 .tab-favicon {
@@ -1036,7 +1022,6 @@ body {
     position: relative;
     background: var(--arc-background);
     border-radius: var(--arc-radius);
-    box-shadow: var(--arc-shadow-lg);
     max-width: 90vw;
     max-height: 90vh;
     width: 700px;
