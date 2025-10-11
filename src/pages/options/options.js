@@ -1491,11 +1491,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (success) {
-        // Reset state and use full render for reset operations
+        // Use full render for reset operations and re-establish state
+        renderParamTags(
+          "trackingParamsList",
+          DEFAULT_PARAM_RULES.tracking,
+          "tracking",
+        );
+        // Re-establish state for the tracking category to enable future incremental updates
         if (window.paramListState) {
-          delete window.paramListState["trackingParamsList"];
+          window.paramListState["trackingParamsList"] = [
+            ...DEFAULT_PARAM_RULES.tracking,
+          ].sort();
         }
-        renderParamTags("trackingParamsList", rules.tracking, "tracking");
         updateParamTags(
           "functionalParamsList",
           currentRules.functional,
@@ -1540,16 +1547,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (success) {
-        // Reset state and use full render for reset operations
-        if (window.paramListState) {
-          delete window.paramListState["functionalParamsList"];
-        }
         updateParamTags(
           "trackingParamsList",
           currentRules.tracking,
           "tracking",
         );
-        renderParamTags("functionalParamsList", rules.functional, "functional");
+        // Use full render for reset operations and re-establish state
+        renderParamTags(
+          "functionalParamsList",
+          DEFAULT_PARAM_RULES.functional,
+          "functional",
+        );
+        // Re-establish state for the functional category to enable future incremental updates
+        if (window.paramListState) {
+          window.paramListState["functionalParamsList"] = [
+            ...DEFAULT_PARAM_RULES.functional,
+          ].sort();
+        }
         toast.show(
           getLocalMessage("functionalParamsReset") || "功能参数已恢复默认",
           "success",
