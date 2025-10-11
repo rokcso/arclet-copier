@@ -448,6 +448,74 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // 获取页面元数据（author 和 description）
+  async function getPageMetadata(tabId) {
+    try {
+      console.log(`[Batch] Requesting metadata for tab ${tabId}`);
+
+      // 首先检查 tab 是否存在
+      let tab;
+      try {
+        tab = await chrome.tabs.get(tabId);
+      } catch (error) {
+        console.warn(`[Batch] Tab ${tabId} not found:`, error.message);
+        return { author: "", description: "" };
+      }
+
+      // 检查是否为受限页面（不能注入 content script 的页面）
+      if (isRestrictedPage(tab.url)) {
+        console.log(
+          `[Batch] Tab ${tabId} is restricted page, skipping metadata`,
+        );
+        return { author: "", description: "" };
+      }
+
+      // 向 content script 发送消息获取元数据
+      try {
+        const response = await chrome.tabs.sendMessage(tabId, {
+          type: "GET_PAGE_METADATA",
+        });
+
+        console.log(`[Batch] Metadata response for tab ${tabId}:`, response);
+
+        if (response && response.success) {
+          return response.metadata || { author: "", description: "" };
+        } else {
+          console.warn(
+            `[Batch] Failed to get metadata for tab ${tabId}:`,
+            response,
+          );
+          return { author: "", description: "" };
+        }
+      } catch (sendError) {
+        // Content script 未加载或页面不支持
+        // 注意：批量复制页面无法动态注入 content script（权限限制）
+        // 只有在页面加载时通过 manifest 自动注入的 content script 才能使用
+        console.warn(
+          `[Batch] Content script not available for tab ${tabId}:`,
+          sendError.message,
+        );
+        console.log(`[Batch] This may happen if:`);
+        console.log(
+          `  1. The tab was opened before the extension was installed/updated - Try refreshing the tab`,
+        );
+        console.log(
+          `  2. The page is a restricted page (chrome://, edge://, etc.)`,
+        );
+        console.log(
+          `  3. The page hasn't finished loading yet - Wait a moment and try again`,
+        );
+        return { author: "", description: "" };
+      }
+    } catch (error) {
+      console.warn(
+        `[Batch] Unexpected error getting metadata for tab ${tabId}:`,
+        error.message,
+      );
+      return { author: "", description: "" };
+    }
+  }
+
   // 分类 URL 类型
   function categorizeUrl(url) {
     if (!url) return "unknown";
@@ -761,11 +829,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 处理多个tab，每个tab一行
         const results = await Promise.all(
           tabs.map(async (tab) => {
+            const metadata = await getPageMetadata(tab.id);
+
             const context = {
               url: tab.url,
               title: tab.title || "",
               urlCleaning: cleaningMode,
               shortUrl: "",
+              author: metadata.author || "",
+              description: metadata.description || "",
             };
 
             // 如果模板包含shortUrl字段，生成短链

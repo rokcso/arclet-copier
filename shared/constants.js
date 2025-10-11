@@ -568,6 +568,20 @@ export const TEMPLATE_FIELDS = {
     category: "basic",
   },
 
+  // 页面元数据字段
+  author: {
+    name: "作者",
+    description: "页面作者（meta标签）",
+    example: "John Doe",
+    category: "metadata",
+  },
+  description: {
+    name: "描述",
+    description: "页面描述（meta标签）",
+    example: "这是一个示例页面的描述信息",
+    category: "metadata",
+  },
+
   // 时间字段
   date: {
     name: "日期",
@@ -642,6 +656,13 @@ export class TemplateEngine {
       }
     });
     this.fieldProcessors.set("shortUrl", (context) => context.shortUrl || "");
+
+    // 页面元数据字段处理器
+    this.fieldProcessors.set("author", (context) => context.author || "");
+    this.fieldProcessors.set(
+      "description",
+      (context) => context.description || "",
+    );
 
     // 时间字段处理器 - 修复：每次调用时获取当前时间
     this.fieldProcessors.set("date", () => {

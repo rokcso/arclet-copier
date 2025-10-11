@@ -162,6 +162,27 @@ async function getPageTitle(tabId, url) {
   }
 }
 
+// 获取页面元数据（author 和 description）
+async function getPageMetadata(tabId) {
+  try {
+    // 向 content script 发送消息获取元数据
+    const response = await chrome.tabs.sendMessage(tabId, {
+      type: "GET_PAGE_METADATA",
+    });
+
+    if (response && response.success) {
+      return response.metadata || { author: "", description: "" };
+    } else {
+      console.log("Failed to get metadata from content script");
+      return { author: "", description: "" };
+    }
+  } catch (error) {
+    // 如果 content script 未加载或页面不支持，返回空值
+    console.log("Could not get page metadata:", error.message);
+    return { author: "", description: "" };
+  }
+}
+
 // 创建 markdown 链接格式
 async function createMarkdownLink(url, title, cleaningMode) {
   const processedUrl = await processUrl(url, cleaningMode);
@@ -243,11 +264,15 @@ async function handleCopyUrl() {
 
       try {
         const title = await getPageTitle(tab.id, tab.url);
+        const metadata = await getPageMetadata(tab.id);
+
         const context = {
           url: tab.url,
           title: title || "",
           urlCleaning: settings.urlCleaning,
           shortUrl: "",
+          author: metadata.author || "",
+          description: metadata.description || "",
         };
 
         // 检查模板是否需要短链并生成

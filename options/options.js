@@ -618,6 +618,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         "Arclet Copier - Clean & Efficient Chrome Extension for Quick URL Copying",
       urlCleaning: "smart",
       shortUrl: "https://is.gd/ArcletCopy",
+      author: "Rokcso",
+      description:
+        "A powerful Chrome extension for intelligent URL copying with custom templates, batch operations, short URLs, and multi-language support.",
     };
 
     templateEngine

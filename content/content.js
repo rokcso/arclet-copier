@@ -489,6 +489,98 @@ class SmartPageNotifications {
 // 创建智能通知管理器
 const smartNotifications = new SmartPageNotifications();
 
+// 提取页面元数据（author 和 description）
+// 支持同步和异步调用，会等待 DOM 加载完成
+async function extractPageMetadata() {
+  const metadata = {
+    author: "",
+    description: "",
+  };
+
+  try {
+    // 如果 DOM 还没加载完成，等待加载
+    if (document.readyState === "loading") {
+      console.log("[Metadata] DOM is loading, waiting for DOMContentLoaded...");
+      await new Promise((resolve) => {
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", resolve, {
+            once: true,
+          });
+        } else {
+          resolve();
+        }
+      });
+      console.log("[Metadata] DOM loaded, proceeding with extraction");
+    }
+
+    // 提取作者信息（优先级从高到低）
+    // 1. <meta name="author"> - 大小写不敏感
+    let authorMeta = document.querySelector('meta[name="author" i]');
+    if (authorMeta && authorMeta.content) {
+      metadata.author = authorMeta.content.trim();
+    }
+
+    // 2. 如果没有找到，尝试其他可能的作者标签
+    if (!metadata.author) {
+      authorMeta = document.querySelector('meta[property="article:author"]');
+      if (authorMeta && authorMeta.content) {
+        metadata.author = authorMeta.content.trim();
+      }
+    }
+
+    // 3. Twitter Card author
+    if (!metadata.author) {
+      authorMeta = document.querySelector('meta[name="twitter:creator"]');
+      if (authorMeta && authorMeta.content) {
+        metadata.author = authorMeta.content.trim();
+      }
+    }
+
+    // 4. DC.creator (Dublin Core)
+    if (!metadata.author) {
+      authorMeta = document.querySelector('meta[name="DC.creator"]');
+      if (authorMeta && authorMeta.content) {
+        metadata.author = authorMeta.content.trim();
+      }
+    }
+
+    // 提取描述信息（优先级从高到低）
+    // 1. <meta name="description"> - 大小写不敏感
+    let descriptionMeta = document.querySelector('meta[name="description" i]');
+    if (descriptionMeta && descriptionMeta.content) {
+      metadata.description = descriptionMeta.content.trim();
+    }
+
+    // 2. Open Graph description
+    if (!metadata.description) {
+      descriptionMeta = document.querySelector(
+        'meta[property="og:description"]',
+      );
+      if (descriptionMeta && descriptionMeta.content) {
+        metadata.description = descriptionMeta.content.trim();
+      }
+    }
+
+    // 3. Twitter Card description
+    if (!metadata.description) {
+      descriptionMeta = document.querySelector(
+        'meta[name="twitter:description"]',
+      );
+      if (descriptionMeta && descriptionMeta.content) {
+        metadata.description = descriptionMeta.content.trim();
+      }
+    }
+
+    console.log("[Metadata] Extracted page metadata:", metadata);
+    console.log("[Metadata] Document readyState:", document.readyState);
+    console.log("[Metadata] Current URL:", location.href);
+  } catch (error) {
+    console.error("[Metadata] Failed to extract page metadata:", error);
+  }
+
+  return metadata;
+}
+
 // 消息监听器 - 智能响应
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log("Smart content script received message:", request);
@@ -497,6 +589,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "PING") {
     sendResponse({ success: true, ready: true });
     return true;
+  }
+
+  // 提取页面元数据
+  if (request.type === "GET_PAGE_METADATA") {
+    // 异步处理
+    (async () => {
+      try {
+        const metadata = await extractPageMetadata();
+        sendResponse({ success: true, metadata });
+      } catch (error) {
+        console.error("[Metadata] Failed to get page metadata:", error);
+        sendResponse({ success: false, error: error.message });
+      }
+    })();
+    return true; // 保持消息通道开放
   }
 
   // 智能显示通知：支持页面通知时显示，否则返回失败让上层回退
