@@ -40,20 +40,23 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   // 初始化参数规则（首次使用时设置默认配置）
   await initializeParamRules();
 
-  // 创建右键菜单 - 同步操作，优先执行
-  chrome.contextMenus.create({
-    id: "copy-current-url",
-    title: chrome.i18n.getMessage("copyUrlShortcut") || "静默复制",
-    contexts: [
-      "page",
-      "frame",
-      "selection",
-      "link",
-      "editable",
-      "image",
-      "video",
-      "audio",
-    ],
+  // 先清除所有已存在的菜单项，避免重复创建导致警告
+  chrome.contextMenus.removeAll(() => {
+    // 创建右键菜单 - 同步操作，优先执行
+    chrome.contextMenus.create({
+      id: "copy-current-url",
+      title: chrome.i18n.getMessage("copyUrlShortcut") || "静默复制",
+      contexts: [
+        "page",
+        "frame",
+        "selection",
+        "link",
+        "editable",
+        "image",
+        "video",
+        "audio",
+      ],
+    });
   });
 
   // 处理扩展安装统计 - 异步执行，不阻塞初始化
