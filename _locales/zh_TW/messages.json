@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Arclet Copier - 智能連結複製工具"
+    "message": "Arclet Copier - 智能URL複製與分享"
   },
   "extDescription": {
     "message": "複製網頁連結，支援批量複製、參數過濾、Markdown 格式、短鏈和二維碼生成。快捷鍵、深色主題。"

@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Arclet Copier - Copiador de URL Inteligente"
+    "message": "Arclet Copier - Copiar y Compartir URLs Inteligente"
   },
   "extDescription": {
     "message": "Copia URLs con soporte batch, filtrado de parámetros, Markdown, URLs cortas y códigos QR. Atajos de teclado y tema oscuro."
