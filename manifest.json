@@ -13,8 +13,7 @@
     "notifications",
     "offscreen",
     "clipboardWrite",
-    "contextMenus",
-    "scripting"
+    "contextMenus"
   ],
   "host_permissions": [
     "https://is.gd/*",

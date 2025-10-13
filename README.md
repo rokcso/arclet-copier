@@ -327,7 +327,6 @@ npm run test:run
 - `activeTab`：获取当前标签页信息（URL、标题）
 - `storage`：保存用户设置
 - `notifications`：显示复制成功通知
-- `scripting`：在网页中注入复制脚本
 - `contextMenus`：创建右键菜单项
 - `clipboardWrite`：直接写入剪贴板
 - `offscreen`：创建后台剪贴板操作文档

@@ -195,7 +195,6 @@ src/
 - `offscreen`: Clipboard operations
 - `clipboardWrite`: Direct clipboard access
 - `contextMenus`: Right-click menu
-- `scripting`: Inject content scripts
 
 ### Host Permissions
 - `https://is.gd/*`: Short URL service
