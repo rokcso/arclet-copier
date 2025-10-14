@@ -1685,6 +1685,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Rating Prompt Functions
   // ============================================
 
+  // 检测浏览器类型
+  function detectBrowser() {
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    // Edge 浏览器检测
+    // Edge 的 UA 包含 "edg/" 或 "edge/"
+    if (userAgent.includes("edg/") || userAgent.includes("edge/")) {
+      return "edge";
+    }
+
+    // Chrome 浏览器检测
+    // Chrome 的 UA 包含 "chrome" 但不包含 "edg"
+    if (userAgent.includes("chrome") && !userAgent.includes("edg")) {
+      return "chrome";
+    }
+
+    // 默认返回 chrome（兜底）
+    return "chrome";
+  }
+
+  // 获取对应浏览器的应用商店 URL
+  function getStoreUrl() {
+    const browser = detectBrowser();
+
+    const storeUrls = {
+      edge: "https://microsoftedge.microsoft.com/addons/detail/flcemgbijffbmbgcmabmmjhankbegdgm",
+      chrome:
+        "https://chromewebstore.google.com/detail/mkflehheaokdfopijachhfdbofkppdil",
+    };
+
+    return storeUrls[browser];
+  }
+
   // 检查是否应该显示评价提示
   async function shouldShowRatingPrompt() {
     try {
@@ -1746,9 +1779,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 处理"去评价"按钮点击
   async function handleRateNow() {
-    // 打开应用商店页面
+    // 根据浏览器类型打开对应的应用商店页面
+    const storeUrl = getStoreUrl();
+    const browser = detectBrowser();
+
+    console.log(`[RatingPrompt] 检测到浏览器: ${browser}`);
+    console.log(`[RatingPrompt] 跳转到: ${storeUrl}`);
+
     chrome.tabs.create({
-      url: "https://chromewebstore.google.com/detail/mkflehheaokdfopijachhfdbofkppdil",
+      url: storeUrl,
     });
 
     // 标记为已永久关闭（用户已经去评价了）
