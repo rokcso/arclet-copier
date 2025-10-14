@@ -272,6 +272,12 @@
   "ratingDescription": {
     "message": "如果這個擴充功能對您有幫助，請在 Chrome 應用程式商店給我們一個好評！您的支援是我們前進的動力。"
   },
+  "ratingDescriptionChrome": {
+    "message": "如果這個擴充功能對您有幫助，請在 Chrome 應用程式商店給我們一個好評！您的支援是我們前進的動力。"
+  },
+  "ratingDescriptionEdge": {
+    "message": "如果這個擴充功能對您有幫助，請在 Edge 附加元件商店給我們一個好評！您的支援是我們前進的動力。"
+  },
   "rateNow": {
     "message": "立即評價"
   },

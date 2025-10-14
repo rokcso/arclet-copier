@@ -272,6 +272,12 @@
   "ratingDescription": {
     "message": "이 확장 프로그램이 도움이 되었다면 Chrome 웹 스토어에 리뷰를 남겨주세요! 여러분의 지원이 저희의 개선 동력이 됩니다."
   },
+  "ratingDescriptionChrome": {
+    "message": "이 확장 프로그램이 도움이 되었다면 Chrome 웹 스토어에 리뷰를 남겨주세요! 여러분의 지원이 저희의 개선 동력이 됩니다."
+  },
+  "ratingDescriptionEdge": {
+    "message": "이 확장 프로그램이 도움이 되었다면 Edge 추가 기능 스토어에 리뷰를 남겨주세요! 여러분의 지원이 저희의 개선 동력이 됩니다."
+  },
   "rateNow": {
     "message": "지금 평가하기"
   },

@@ -272,6 +272,12 @@
   "ratingDescription": {
     "message": "Wenn diese Erweiterung für Sie hilfreich war, hinterlassen Sie bitte eine Bewertung im Chrome Web Store! Ihre Unterstützung motiviert uns, weiter zu verbessern."
   },
+  "ratingDescriptionChrome": {
+    "message": "Wenn diese Erweiterung für Sie hilfreich war, hinterlassen Sie bitte eine Bewertung im Chrome Web Store! Ihre Unterstützung motiviert uns, weiter zu verbessern."
+  },
+  "ratingDescriptionEdge": {
+    "message": "Wenn diese Erweiterung für Sie hilfreich war, hinterlassen Sie bitte eine Bewertung im Edge Add-Ons Store! Ihre Unterstützung motiviert uns, weiter zu verbessern."
+  },
   "rateNow": {
     "message": "Jetzt bewerten"
   },

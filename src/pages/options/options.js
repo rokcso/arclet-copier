@@ -110,7 +110,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const i18nElements = document.querySelectorAll("[data-i18n]");
     i18nElements.forEach((element) => {
       const key = element.getAttribute("data-i18n");
-      const message = getLocalMessage(key);
+
+      // Special handling for ratingDescription - use browser-specific message
+      let message;
+      if (key === "ratingDescription") {
+        const browser = detectBrowser();
+        const browserSpecificKey =
+          browser === "edge"
+            ? "ratingDescriptionEdge"
+            : "ratingDescriptionChrome";
+        message = getLocalMessage(browserSpecificKey);
+      } else {
+        message = getLocalMessage(key);
+      }
+
       if (message && message !== key) {
         if (element.tagName === "INPUT" && element.type === "text") {
           element.placeholder = message;

@@ -272,6 +272,12 @@
   "ratingDescription": {
     "message": "Si esta extensión te ha sido útil, ¡por favor considera dejar una reseña en Chrome Web Store! Tu apoyo nos motiva a seguir mejorando."
   },
+  "ratingDescriptionChrome": {
+    "message": "Si esta extensión te ha sido útil, ¡por favor considera dejar una reseña en Chrome Web Store! Tu apoyo nos motiva a seguir mejorando."
+  },
+  "ratingDescriptionEdge": {
+    "message": "Si esta extensión te ha sido útil, ¡por favor considera dejar una reseña en la Tienda de complementos de Edge! Tu apoyo nos motiva a seguir mejorando."
+  },
   "rateNow": {
     "message": "Calificar ahora"
   },

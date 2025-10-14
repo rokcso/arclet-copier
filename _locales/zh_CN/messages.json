@@ -267,6 +267,12 @@
   "ratingDescription": {
     "message": "如果这个扩展对您有帮助，请在 Chrome 应用商店给我们一个好评！您的支持是我们前进的动力。"
   },
+  "ratingDescriptionChrome": {
+    "message": "如果这个扩展对您有帮助，请在 Chrome 应用商店给我们一个好评！您的支持是我们前进的动力。"
+  },
+  "ratingDescriptionEdge": {
+    "message": "如果这个扩展对您有帮助，请在 Edge 外接程序商店给我们一个好评！您的支持是我们前进的动力。"
+  },
 
   "kofiTitle": {
     "message": "请我喝杯咖啡"
