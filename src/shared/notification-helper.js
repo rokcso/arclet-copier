@@ -13,12 +13,15 @@ class NotificationHelper {
   // @param {number} options.tabId - 明确的标签页ID（可选），用于页面通知
   async show(options = {}) {
     const {
-      title = this.extensionName,
+      title,
       message = "",
       type = "success", // 'success', 'error', 'warning', 'info'
       icon = null,
       tabId = null, // 新增：明确的 tabId
     } = options;
+
+    // 修复: 确保 title 不为 null (Chrome 通知要求 title 必须是非空字符串)
+    const safeTitle = title || this.extensionName;
 
     try {
       const notificationType =
@@ -26,10 +29,14 @@ class NotificationHelper {
 
       switch (notificationType) {
         case "chrome":
-          return await this.showChromeNotification({ title, message, icon });
+          return await this.showChromeNotification({
+            title: safeTitle,
+            message,
+            icon,
+          });
         case "page":
           return await this.showPageNotification({
-            title,
+            title: safeTitle,
             message,
             type,
             icon,
