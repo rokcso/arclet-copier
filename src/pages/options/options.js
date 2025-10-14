@@ -356,6 +356,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
 
+    // Ko-fi button
+    elements.kofiBtn.addEventListener("click", () => {
+      console.log("[Support] 打开 Ko-fi 页面");
+      chrome.tabs.create({
+        url: "https://ko-fi.com/rokcso",
+      });
+    });
+
     // Feedback button
     elements.feedbackBtn.addEventListener("click", () => {
       // Use localized email template from i18n
@@ -1885,6 +1893,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       appearanceSwitch: document.getElementById("appearanceSwitch"),
       colorPicker: document.getElementById("colorPicker"),
       ratingBtn: document.getElementById("ratingBtn"),
+      kofiBtn: document.getElementById("kofiBtn"),
       feedbackBtn: document.getElementById("feedbackBtn"),
 
       // Template management elements

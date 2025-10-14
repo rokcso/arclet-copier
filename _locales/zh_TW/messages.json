@@ -275,6 +275,15 @@
   "rateNow": {
     "message": "立即評價"
   },
+  "kofiTitle": {
+    "message": "請我喝杯咖啡"
+  },
+  "kofiDescription": {
+    "message": "如果您喜歡這個擴充功能，可以透過 Ko-fi 請開發者喝杯咖啡。您的支援將幫助我持續改進和維護這個專案！"
+  },
+  "supportOnKofi": {
+    "message": "在 Ko-fi 上支持"
+  },
   "feedbackTitle": {
     "message": "回饋建議"
   },

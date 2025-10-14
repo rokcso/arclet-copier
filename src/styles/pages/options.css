@@ -243,7 +243,8 @@ select.setting-control:hover {
 }
 
 .rating-btn,
-.feedback-btn {
+.feedback-btn,
+.kofi-btn {
     color: var(--arc-primary);
     background: var(--arc-background);
     border: 1px solid var(--arc-border);
@@ -262,7 +263,8 @@ select.setting-control:hover {
 }
 
 .rating-btn:hover,
-.feedback-btn:hover {
+.feedback-btn:hover,
+.kofi-btn:hover {
     background: var(--arc-surface);
     border-color: var(--arc-primary);
 }
@@ -511,6 +513,7 @@ select.setting-control:hover {
 [data-theme="dark"] select.setting-control,
 [data-theme="dark"] .rating-btn,
 [data-theme="dark"] .feedback-btn,
+[data-theme="dark"] .kofi-btn,
 [data-theme="dark"] .about-link {
     background-color: var(--arc-surface);
     border-color: var(--arc-border);
@@ -524,6 +527,7 @@ select.setting-control:hover {
 
 [data-theme="dark"] .rating-btn:hover,
 [data-theme="dark"] .feedback-btn:hover,
+[data-theme="dark"] .kofi-btn:hover,
 [data-theme="dark"] .about-link:hover {
     background: #334155;
 }
@@ -604,6 +608,7 @@ select.setting-control:hover {
     :root:not([data-theme]) select.setting-control,
     :root:not([data-theme]) .rating-btn,
     :root:not([data-theme]) .feedback-btn,
+    :root:not([data-theme]) .kofi-btn,
     :root:not([data-theme]) .about-link {
         background-color: var(--arc-surface);
         border-color: var(--arc-border);
@@ -617,6 +622,7 @@ select.setting-control:hover {
 
     :root:not([data-theme]) .rating-btn:hover,
     :root:not([data-theme]) .feedback-btn:hover,
+    :root:not([data-theme]) .kofi-btn:hover,
     :root:not([data-theme]) .about-link:hover {
         background: #334155;
     }

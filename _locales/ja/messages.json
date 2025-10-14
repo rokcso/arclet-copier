@@ -275,6 +275,15 @@
   "rateNow": {
     "message": "今すぐ評価"
   },
+  "kofiTitle": {
+    "message": "コーヒーをおごる"
+  },
+  "kofiDescription": {
+    "message": "この拡張機能を気に入っていただけた場合は、Ko-fi で開発者にコーヒーをおごることができます。あなたのサポートがこのプロジェクトの維持と改善に役立ちます！"
+  },
+  "supportOnKofi": {
+    "message": "Ko-fi でサポート"
+  },
   "feedbackTitle": {
     "message": "フィードバックと提案"
   },

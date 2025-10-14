@@ -275,6 +275,15 @@
   "rateNow": {
     "message": "지금 평가하기"
   },
+  "kofiTitle": {
+    "message": "커피 한 잔 사주세요"
+  },
+  "kofiDescription": {
+    "message": "이 확장 프로그램이 마음에 드신다면 Ko-fi에서 개발자에게 커피를 사주실 수 있습니다. 여러분의 지원은 이 프로젝트를 유지하고 개선하는 데 도움이 됩니다!"
+  },
+  "supportOnKofi": {
+    "message": "Ko-fi에서 후원하기"
+  },
   "feedbackTitle": {
     "message": "피드백 및 제안"
   },

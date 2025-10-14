@@ -268,6 +268,16 @@
     "message": "如果这个扩展对您有帮助，请在 Chrome 应用商店给我们一个好评！您的支持是我们前进的动力。"
   },
 
+  "kofiTitle": {
+    "message": "请我喝杯咖啡"
+  },
+  "kofiDescription": {
+    "message": "如果您喜欢这个扩展，可以通过 Ko-fi 请开发者喝杯咖啡。您的支持将帮助我持续改进和维护这个项目！"
+  },
+  "supportOnKofi": {
+    "message": "在 Ko-fi 上支持"
+  },
+
   "feedbackTitle": {
     "message": "反馈建议"
   },

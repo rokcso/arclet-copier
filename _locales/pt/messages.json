@@ -275,6 +275,15 @@
   "rateNow": {
     "message": "Avaliar agora"
   },
+  "kofiTitle": {
+    "message": "Me pague um café"
+  },
+  "kofiDescription": {
+    "message": "Se você gosta desta extensão, pode apoiar o desenvolvedor comprando um café no Ko-fi. Seu apoio ajuda a manter e melhorar este projeto!"
+  },
+  "supportOnKofi": {
+    "message": "Apoiar no Ko-fi"
+  },
   "feedbackTitle": {
     "message": "Feedback e Sugestões"
   },

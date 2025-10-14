@@ -277,6 +277,15 @@
   "ratingDescription": {
     "message": "If this extension has been helpful to you, please consider leaving a review on the Chrome Web Store! Your support motivates us to keep improving."
   },
+  "kofiTitle": {
+    "message": "Buy Me a Coffee"
+  },
+  "kofiDescription": {
+    "message": "If you enjoy this extension, you can support the developer by buying them a coffee on Ko-fi. Your support helps keep this project maintained and improved!"
+  },
+  "supportOnKofi": {
+    "message": "Support on Ko-fi"
+  },
   "feedbackTitle": {
     "message": "Feedback & Suggestions"
   },
