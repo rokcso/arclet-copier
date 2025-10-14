@@ -42,6 +42,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     return chrome.i18n.getMessage(key, substitutions) || key;
   }
 
+  // ============================================
+  // Browser Detection Functions
+  // ============================================
+
+  // 检测浏览器类型
+  function detectBrowser() {
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    // Edge 浏览器检测
+    // Edge 的 UA 包含 "edg/" 或 "edge/"
+    if (userAgent.includes("edg/") || userAgent.includes("edge/")) {
+      return "edge";
+    }
+
+    // Chrome 浏览器检测
+    // Chrome 的 UA 包含 "chrome" 但不包含 "edg"
+    if (userAgent.includes("chrome") && !userAgent.includes("edg")) {
+      return "chrome";
+    }
+
+    // 默认返回 chrome（兜底）
+    return "chrome";
+  }
+
+  // 获取对应浏览器的应用商店 URL
+  function getStoreUrl() {
+    const browser = detectBrowser();
+
+    const storeUrls = {
+      edge: "https://microsoftedge.microsoft.com/addons/detail/flcemgbijffbmbgcmabmmjhankbegdgm",
+      chrome:
+        "https://chromewebstore.google.com/detail/mkflehheaokdfopijachhfdbofkppdil",
+    };
+
+    // 如果检测失败或不是 chrome/edge，默认返回 Chrome 商店
+    return storeUrls[browser] || storeUrls.chrome;
+  }
+
   // DOM elements - will be initialized after DOM is loaded
   let elements = {};
 
@@ -305,10 +343,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     });
 
-    // Rating button
+    // Rating button - 使用浏览器检测跳转到对应商店
     elements.ratingBtn.addEventListener("click", () => {
+      const storeUrl = getStoreUrl();
+      const browser = detectBrowser();
+
+      console.log(`[Support] 检测到浏览器: ${browser}`);
+      console.log(`[Support] 跳转到: ${storeUrl}`);
+
       chrome.tabs.create({
-        url: "https://chromewebstore.google.com/detail/mkflehheaokdfopijachhfdbofkppdil",
+        url: storeUrl,
       });
     });
 
@@ -1684,39 +1728,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ============================================
   // Rating Prompt Functions
   // ============================================
-
-  // 检测浏览器类型
-  function detectBrowser() {
-    const userAgent = navigator.userAgent.toLowerCase();
-
-    // Edge 浏览器检测
-    // Edge 的 UA 包含 "edg/" 或 "edge/"
-    if (userAgent.includes("edg/") || userAgent.includes("edge/")) {
-      return "edge";
-    }
-
-    // Chrome 浏览器检测
-    // Chrome 的 UA 包含 "chrome" 但不包含 "edg"
-    if (userAgent.includes("chrome") && !userAgent.includes("edg")) {
-      return "chrome";
-    }
-
-    // 默认返回 chrome（兜底）
-    return "chrome";
-  }
-
-  // 获取对应浏览器的应用商店 URL
-  function getStoreUrl() {
-    const browser = detectBrowser();
-
-    const storeUrls = {
-      edge: "https://microsoftedge.microsoft.com/addons/detail/flcemgbijffbmbgcmabmmjhankbegdgm",
-      chrome:
-        "https://chromewebstore.google.com/detail/mkflehheaokdfopijachhfdbofkppdil",
-    };
-
-    return storeUrls[browser];
-  }
 
   // 检查是否应该显示评价提示
   async function shouldShowRatingPrompt() {
