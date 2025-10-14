@@ -1981,7 +1981,7 @@ select.setting-control:hover {
 }
 
 #ratingPromptModal .rating-prompt-body {
-    padding: 48px 40px 40px;
+    padding: 48px 40px 32px;
     text-align: center;
     position: relative;
 }
@@ -2046,22 +2046,26 @@ select.setting-control:hover {
     font-size: 15px;
     line-height: 1.6;
     color: var(--arc-text-secondary);
-    margin: 0 0 32px 0;
+    margin: 0 0 28px 0;
 }
 
 /* Action Buttons */
 #ratingPromptModal .rating-prompt-actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-bottom: 24px;
-    flex-wrap: nowrap;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    margin-bottom: 0 !important;
+    flex-wrap: nowrap !important;
 }
 
 #ratingPromptModal .rating-prompt-actions .btn {
-    flex: 0 0 auto;
-    white-space: nowrap;
+    flex: 1 1 auto !important;
+    max-width: 180px !important;
+    min-width: 140px !important;
+    height: 36px !important;
+    white-space: nowrap !important;
+    display: flex !important;
 }
 
 /* Theme-specific styles */
