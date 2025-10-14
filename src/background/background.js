@@ -35,6 +35,18 @@ function debounce(key, fn, delay = 500) {
   debounceMap.set(key, timeoutId);
 }
 
+// 增加复制计数
+async function incrementCopyCount() {
+  try {
+    const result = await chrome.storage.local.get(["copyCount"]);
+    const currentCount = result.copyCount || 0;
+    await chrome.storage.local.set({ copyCount: currentCount + 1 });
+    console.log(`[Background] Copy count incremented to: ${currentCount + 1}`);
+  } catch (error) {
+    console.debug("[Background] Failed to increment copy count:", error);
+  }
+}
+
 // 创建右键菜单和处理扩展安装
 chrome.runtime.onInstalled.addListener(async (details) => {
   // 初始化参数规则（首次使用时设置默认配置）
@@ -379,6 +391,9 @@ async function handleCopyUrl() {
     trackCopy(trackData).catch((error) => {
       console.debug("Failed to track copy event:", error);
     });
+
+    // 增加复制计数
+    await incrementCopyCount();
 
     // 显示通知
     await notificationHelper.success(successMessage);

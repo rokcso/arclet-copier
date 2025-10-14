@@ -862,6 +862,74 @@
             </div>
         </div>
 
+        <!-- Rating Prompt Modal -->
+        <div class="template-modal" id="ratingPromptModal">
+            <div class="template-modal-content rating-prompt-content">
+                <button
+                    class="rating-prompt-close"
+                    id="ratingPromptClose"
+                    aria-label="Close"
+                >
+                    <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    >
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+
+                <div class="rating-prompt-body">
+                    <div class="rating-prompt-stars">
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                    </div>
+
+                    <h3
+                        class="rating-prompt-title"
+                        data-i18n="ratingPromptTitle"
+                    >
+                        感谢您的使用!
+                    </h3>
+
+                    <p
+                        class="rating-prompt-message"
+                        data-i18n="ratingPromptMessage"
+                    >
+                        您已经使用 Arclet Copier 复制了超过 100 次!
+                        如果您觉得这个扩展对您有帮助，能否花几秒钟时间给我们一个好评？这对我们非常重要!
+                    </p>
+
+                    <div class="rating-prompt-actions">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            id="rateLaterBtn"
+                            data-i18n="rateLater"
+                        >
+                            稍后再说
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="rateNowBtn"
+                            data-i18n="rateNow"
+                        >
+                            去评价
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Easter Egg - Fixed at bottom -->
         <div class="easter-egg-wrapper">
             <div class="easter-egg">

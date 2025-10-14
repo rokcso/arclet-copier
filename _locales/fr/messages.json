@@ -666,5 +666,14 @@
   },
   "paramUpdateFailed": {
     "message": "Échec de la mise à jour du paramètre"
+  },
+  "ratingPromptTitle": {
+    "message": "Merci d'utiliser Arclet Copier !"
+  },
+  "ratingPromptMessage": {
+    "message": "Vous avez utilisé Arclet Copier plus de 100 fois ! Si vous trouvez cette extension utile, pourriez-vous prendre quelques secondes pour nous noter ? Cela compte beaucoup pour nous !"
+  },
+  "rateLater": {
+    "message": "Plus tard"
   }
 }

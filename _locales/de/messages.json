@@ -666,5 +666,14 @@
   },
   "paramUpdateFailed": {
     "message": "Fehler beim Aktualisieren des Parameters"
+  },
+  "ratingPromptTitle": {
+    "message": "Vielen Dank für die Nutzung von Arclet Copier!"
+  },
+  "ratingPromptMessage": {
+    "message": "Sie haben Arclet Copier über 100 Mal verwendet! Wenn Sie diese Erweiterung hilfreich finden, würden Sie uns bitte ein paar Sekunden Zeit nehmen, um uns zu bewerten? Es bedeutet uns sehr viel!"
+  },
+  "rateLater": {
+    "message": "Vielleicht später"
   }
 }

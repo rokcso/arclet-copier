@@ -1682,6 +1682,144 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ============================================
+  // Rating Prompt Functions
+  // ============================================
+
+  // 检查是否应该显示评价提示
+  async function shouldShowRatingPrompt() {
+    try {
+      const result = await chrome.storage.local.get([
+        "copyCount",
+        "lastRatingPromptDate",
+        "ratingPromptDismissed",
+      ]);
+
+      const copyCount = result.copyCount || 0;
+      const lastPromptDate = result.lastRatingPromptDate || 0;
+      const dismissed = result.ratingPromptDismissed || false;
+
+      // 如果用户已经选择不再提示，直接返回false
+      if (dismissed) {
+        return false;
+      }
+
+      // 复制次数必须达到100次
+      if (copyCount < 100) {
+        return false;
+      }
+
+      // 检查距离上次提示是否已经过了7天（7天 = 7 * 24 * 60 * 60 * 1000 毫秒）
+      const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+      const now = Date.now();
+
+      if (now - lastPromptDate < sevenDaysInMs) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.debug(
+        "[RatingPrompt] Failed to check rating prompt status:",
+        error,
+      );
+      return false;
+    }
+  }
+
+  // 显示评价提示弹窗
+  function showRatingPrompt() {
+    const modal = document.getElementById("ratingPromptModal");
+    if (modal) {
+      modal.classList.add("show");
+      document.body.classList.add("modal-open");
+    }
+  }
+
+  // 隐藏评价提示弹窗
+  function hideRatingPrompt() {
+    const modal = document.getElementById("ratingPromptModal");
+    if (modal) {
+      modal.classList.remove("show");
+      document.body.classList.remove("modal-open");
+    }
+  }
+
+  // 处理"去评价"按钮点击
+  async function handleRateNow() {
+    // 打开应用商店页面
+    chrome.tabs.create({
+      url: "https://chromewebstore.google.com/detail/mkflehheaokdfopijachhfdbofkppdil",
+    });
+
+    // 标记为已永久关闭（用户已经去评价了）
+    await chrome.storage.local.set({
+      ratingPromptDismissed: true,
+    });
+
+    hideRatingPrompt();
+  }
+
+  // 处理"稍后再说"按钮点击
+  async function handleRateLater() {
+    // 更新上次提示时间为当前时间
+    await chrome.storage.local.set({
+      lastRatingPromptDate: Date.now(),
+    });
+
+    hideRatingPrompt();
+  }
+
+  // 处理"稍后再说"按钮点击
+  async function handleRateLater() {
+    // 更新上次提示时间，7天后再显示
+    await chrome.storage.local.set({
+      lastRatingPromptDate: Date.now(),
+    });
+
+    hideRatingPrompt();
+  }
+
+  // 初始化评价提示
+  async function initializeRatingPrompt() {
+    // 检查是否应该显示
+    const shouldShow = await shouldShowRatingPrompt();
+
+    if (shouldShow) {
+      // 延迟1秒显示，让用户先看到设置页面
+      setTimeout(() => {
+        showRatingPrompt();
+      }, 1000);
+    }
+
+    // 绑定事件监听器
+    const rateNowBtn = document.getElementById("rateNowBtn");
+    const rateLaterBtn = document.getElementById("rateLaterBtn");
+    const ratingPromptClose = document.getElementById("ratingPromptClose");
+
+    if (rateNowBtn) {
+      rateNowBtn.addEventListener("click", handleRateNow);
+    }
+
+    if (rateLaterBtn) {
+      rateLaterBtn.addEventListener("click", handleRateLater);
+    }
+
+    if (ratingPromptClose) {
+      ratingPromptClose.addEventListener("click", handleRateLater);
+    }
+
+    // 点击模态框外部关闭（等同于稍后再说）
+    const modal = document.getElementById("ratingPromptModal");
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          handleRateLater();
+        }
+      });
+    }
+  }
+
+  // ============================================
   // Initialize Function
   // ============================================
 
@@ -1754,6 +1892,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize URL parameter configuration
     initializeParamConfig();
     await loadParamRules();
+
+    // Initialize rating prompt (check and show if needed)
+    await initializeRatingPrompt();
   }
 
   // Start initialization

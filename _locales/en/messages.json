@@ -277,9 +277,6 @@
   "ratingDescription": {
     "message": "If this extension has been helpful to you, please consider leaving a review on the Chrome Web Store! Your support motivates us to keep improving."
   },
-  "rateNow": {
-    "message": "Rate Now"
-  },
   "feedbackTitle": {
     "message": "Feedback & Suggestions"
   },
@@ -683,5 +680,14 @@
   },
   "paramUpdateFailed": {
     "message": "Failed to update parameter"
+  },
+  "ratingPromptTitle": {
+    "message": "Thank You for Using Arclet Copier!"
+  },
+  "ratingPromptMessage": {
+    "message": "You've used Arclet Copier over 100 times! If you find this extension helpful, would you mind taking a few seconds to rate us? It means a lot to us!"
+  },
+  "rateLater": {
+    "message": "Maybe Later"
   }
 }

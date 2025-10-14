@@ -666,5 +666,14 @@
   },
   "paramUpdateFailed": {
     "message": "パラメータの更新に失敗しました"
+  },
+  "ratingPromptTitle": {
+    "message": "Arclet Copierをご利用いただきありがとうございます！"
+  },
+  "ratingPromptMessage": {
+    "message": "Arclet Copierを100回以上使用していただきました！この拡張機能が役に立つと思われましたら、評価をお願いできますでしょうか？私たちにとって大変励みになります！"
+  },
+  "rateLater": {
+    "message": "後で"
   }
 }

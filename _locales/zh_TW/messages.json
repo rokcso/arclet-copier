@@ -654,5 +654,14 @@
   },
   "paramUpdateFailed": {
     "message": "更新參數失敗"
+  },
+  "ratingPromptTitle": {
+    "message": "感謝您的使用！"
+  },
+  "ratingPromptMessage": {
+    "message": "您已經使用 Arclet Copier 複製了超過 100 次！如果您覺得這個擴充功能對您有幫助，能否花幾秒鐘時間給我們一個好評？這對我們非常重要！"
+  },
+  "rateLater": {
+    "message": "稍後再說"
   }
 }

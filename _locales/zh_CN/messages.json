@@ -267,9 +267,7 @@
   "ratingDescription": {
     "message": "如果这个扩展对您有帮助，请在 Chrome 应用商店给我们一个好评！您的支持是我们前进的动力。"
   },
-  "rateNow": {
-    "message": "立即评价"
-  },
+
   "feedbackTitle": {
     "message": "反馈建议"
   },
@@ -658,5 +656,17 @@
   },
   "paramUpdateFailed": {
     "message": "更新参数失败"
+  },
+  "ratingPromptTitle": {
+    "message": "感谢您的使用!"
+  },
+  "ratingPromptMessage": {
+    "message": "您已经使用 Arclet Copier 复制了超过 100 次! 如果您觉得这个扩展对您有帮助，能否花几秒钟时间给我们一个好评？这对我们非常重要!"
+  },
+  "rateNow": {
+    "message": "去评价"
+  },
+  "rateLater": {
+    "message": "稍后再说"
   }
 }
