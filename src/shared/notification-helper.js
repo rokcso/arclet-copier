@@ -9,12 +9,15 @@ class NotificationHelper {
   }
 
   // 显示通知
+  // @param {object} options - 通知选项
+  // @param {number} options.tabId - 明确的标签页ID（可选），用于页面通知
   async show(options = {}) {
     const {
       title = this.extensionName,
       message = "",
       type = "success", // 'success', 'error', 'warning', 'info'
       icon = null,
+      tabId = null, // 新增：明确的 tabId
     } = options;
 
     try {
@@ -30,6 +33,7 @@ class NotificationHelper {
             message,
             type,
             icon,
+            tabId, // 传递 tabId
           });
         case "off":
         default:
@@ -72,7 +76,8 @@ class NotificationHelper {
   }
 
   // 显示页面内通知
-  async showPageNotification({ title, message, type, icon }) {
+  // @param {number} tabId - 明确的标签页ID（可选），避免竞态条件
+  async showPageNotification({ title, message, type, icon, tabId = null }) {
     try {
       // 检查是否在扩展页面内
       if (this.isExtensionPage()) {
@@ -90,6 +95,7 @@ class NotificationHelper {
           message,
           type,
           icon,
+          tabId, // 传递明确的 tabId
         });
       }
     } catch (error) {
@@ -100,19 +106,35 @@ class NotificationHelper {
   }
 
   // 通过 content script 显示页面通知 - 增强版本，带就绪检测和重试
+  // @param {number} tabId - 明确的标签页ID（可选），如果提供则优先使用
   async showPageNotificationViaContentScript(options) {
     try {
-      // 获取当前活跃标签页
-      const tabs = await chrome.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      if (!tabs || tabs.length === 0) {
-        console.log("No active tab found, falling back to Chrome notification");
-        return await this.showChromeNotification(options);
-      }
+      let tab;
 
-      const tab = tabs[0];
+      // 优先使用传入的 tabId，避免竞态条件
+      if (options.tabId) {
+        try {
+          tab = await chrome.tabs.get(options.tabId);
+        } catch (error) {
+          console.log(
+            `Tab ${options.tabId} not found (may be closed), falling back to Chrome notification`,
+          );
+          return await this.showChromeNotification(options);
+        }
+      } else {
+        // 回退到查询当前活跃标签页（用于其他场景）
+        const tabs = await chrome.tabs.query({
+          active: true,
+          currentWindow: true,
+        });
+        if (!tabs || tabs.length === 0) {
+          console.log(
+            "No active tab found, falling back to Chrome notification",
+          );
+          return await this.showChromeNotification(options);
+        }
+        tab = tabs[0];
+      }
 
       // 检查URL限制
       if (this.isRestrictedUrl(tab.url)) {
@@ -442,20 +464,20 @@ class NotificationHelper {
   }
 
   // 便捷方法
-  async success(message, title) {
-    return this.show({ message, title, type: "success" });
+  async success(message, title, tabId = null) {
+    return this.show({ message, title, type: "success", tabId });
   }
 
-  async error(message, title) {
-    return this.show({ message, title, type: "error" });
+  async error(message, title, tabId = null) {
+    return this.show({ message, title, type: "error", tabId });
   }
 
-  async warning(message, title) {
-    return this.show({ message, title, type: "warning" });
+  async warning(message, title, tabId = null) {
+    return this.show({ message, title, type: "warning", tabId });
   }
 
-  async info(message, title) {
-    return this.show({ message, title, type: "info" });
+  async info(message, title, tabId = null) {
+    return this.show({ message, title, type: "info", tabId });
   }
 
   // 复制成功通知

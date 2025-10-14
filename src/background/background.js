@@ -86,16 +86,36 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 });
 
 // 监听右键菜单点击事件
-chrome.contextMenus.onClicked.addListener(async (info) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "copy-current-url") {
-    debounce("contextMenuCopy", () => handleCopyUrl(), 300);
+    // 右键菜单会自动提供 tab 参数，直接使用
+    if (tab && tab.id) {
+      debounce("contextMenuCopy", () => handleCopyUrl(tab.id, tab), 300);
+    } else {
+      console.debug("No tab info from context menu");
+    }
   }
 });
 
 // 监听键盘快捷键命令
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === "copy-url") {
-    debounce("shortcutCopy", () => handleCopyUrl(), 500);
+    // 立即捕获当前活动标签页，避免用户快速关闭标签页导致的竞态条件
+    try {
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+
+      if (tab && tab.id) {
+        // 传递明确的 tabId 和 tab 信息，防止后续异步操作时 tab 已被关闭
+        debounce("shortcutCopy", () => handleCopyUrl(tab.id, tab), 300);
+      } else {
+        console.debug("No active tab found for copy command");
+      }
+    } catch (error) {
+      console.debug("Failed to get tab for copy command:", error);
+    }
   }
 });
 
@@ -134,7 +154,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// 获取当前活动标签页
+// 获取指定标签页（带验证）
+async function getTabById(tabId) {
+  try {
+    const tab = await chrome.tabs.get(tabId);
+
+    if (!tab || !tab.url) {
+      throw new Error(getMessage("noUrl"));
+    }
+
+    return tab;
+  } catch (error) {
+    // Tab 可能已被关闭
+    throw new Error(getMessage("noUrl") || "Tab not found or closed");
+  }
+}
+
+// 获取当前活动标签页（保留用于 popup 等其他场景）
 async function getCurrentTab() {
   const [tab] = await chrome.tabs.query({
     active: true,
@@ -161,12 +197,18 @@ async function getUserSettings() {
 }
 
 // 获取页面标题
-async function getPageTitle(tabId, url) {
+// 优先使用 tab 对象中已有的标题，如果 tab 被关闭则从 URL 提取
+async function getPageTitle(tabId, url, tabSnapshot = null) {
+  // 如果提供了 tab 快照且有标题，直接使用
+  if (tabSnapshot && tabSnapshot.title) {
+    return tabSnapshot.title;
+  }
+
   try {
     const tab = await chrome.tabs.get(tabId);
     return tab.title || new URL(url).hostname || "";
   } catch (error) {
-    console.debug("获取页面标题失败:", error);
+    console.debug("获取页面标题失败 (tab可能已关闭):", error.message);
     // 如果获取tab失败，尝试从URL生成标题
     try {
       return new URL(url).hostname || "";
@@ -177,12 +219,33 @@ async function getPageTitle(tabId, url) {
 }
 
 // 获取页面元数据（author 和 description）
+// 如果 tab 已关闭或不可访问，返回空元数据
 async function getPageMetadata(tabId) {
   try {
-    // 向 content script 发送消息获取元数据
-    const response = await chrome.tabs.sendMessage(tabId, {
-      type: "GET_PAGE_METADATA",
-    });
+    // 先验证 tab 是否存在
+    await chrome.tabs.get(tabId);
+
+    // 向 content script 发送消息获取元数据（带超时保护）
+    const response = await Promise.race([
+      new Promise((resolve, reject) => {
+        chrome.tabs.sendMessage(
+          tabId,
+          {
+            type: "GET_PAGE_METADATA",
+          },
+          (response) => {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve(response);
+            }
+          },
+        );
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Metadata timeout")), 1000),
+      ),
+    ]);
 
     if (response && response.success) {
       return response.metadata || { author: "", description: "" };
@@ -191,7 +254,7 @@ async function getPageMetadata(tabId) {
       return { author: "", description: "" };
     }
   } catch (error) {
-    // 如果 content script 未加载或页面不支持，返回空值
+    // Tab 已关闭、content script 未加载或页面不支持
     console.log("Could not get page metadata:", error.message);
     return { author: "", description: "" };
   }
@@ -251,7 +314,9 @@ async function handleCreateShortUrl(longUrl, service) {
 }
 
 // 处理URL复制功能
-async function handleCopyUrl() {
+// @param {number} tabId - 明确的标签页ID，防止竞态条件
+// @param {object} tabSnapshot - 标签页快照（可选），包含初始URL和标题
+async function handleCopyUrl(tabId = null, tabSnapshot = null) {
   // 防止重复执行
   if (copyOperationStates.copyUrl) {
     return;
@@ -262,7 +327,26 @@ async function handleCopyUrl() {
   const startTime = Date.now();
 
   try {
-    const tab = await getCurrentTab();
+    // 优先使用传入的 tabId 获取最新的 tab 信息，回退到动态查询（用于 popup 等场景）
+    let tab;
+    if (tabId) {
+      try {
+        // 验证 tab 是否仍然存在
+        tab = await getTabById(tabId);
+      } catch (error) {
+        // Tab 已被关闭，使用快照信息（如果有）
+        if (tabSnapshot && tabSnapshot.url) {
+          console.log("[Background] Tab closed, using snapshot data");
+          tab = tabSnapshot;
+        } else {
+          throw new Error(getMessage("noUrl") || "Tab was closed");
+        }
+      }
+    } else {
+      // 回退到动态查询（popup 等场景）
+      tab = await getCurrentTab();
+    }
+
     settings = await getUserSettings();
 
     let contentToCopy;
@@ -277,7 +361,7 @@ async function handleCopyUrl() {
       copyFormat = "custom";
 
       try {
-        const title = await getPageTitle(tab.id, tab.url);
+        const title = await getPageTitle(tab.id, tab.url, tab);
         const metadata = await getPageMetadata(tab.id);
 
         const context = {
@@ -335,7 +419,7 @@ async function handleCopyUrl() {
     } else if (settings.silentCopyFormat === "markdown") {
       copyFormat = "markdown";
       // 获取页面标题并创建 markdown 链接
-      const title = await getPageTitle(tab.id, tab.url);
+      const title = await getPageTitle(tab.id, tab.url, tab);
       contentToCopy = await createMarkdownLink(
         tab.url,
         title,
@@ -396,7 +480,22 @@ async function handleCopyUrl() {
     await incrementCopyCount();
 
     // 显示通知
-    await notificationHelper.success(successMessage);
+    // 策略：只有当原始 tab 仍然存在时才使用页面通知，否则直接使用 Chrome 通知
+    // 这样可以避免在用户已切换到其他 tab 时打扰他们
+    let notificationTabId = null;
+    try {
+      // 验证原始 tab 是否仍然存在
+      await chrome.tabs.get(tab.id);
+      // Tab 仍然存在，可以使用页面通知
+      notificationTabId = tab.id;
+    } catch (error) {
+      // 原始 tab 已关闭，传递 null 让通知系统自动回退到 Chrome 通知
+      console.log(
+        "[Background] Original tab closed, will use Chrome notification",
+      );
+    }
+
+    await notificationHelper.success(successMessage, null, notificationTabId);
   } catch (error) {
     // 如果settings未获取到，尝试重新获取或使用默认设置
     if (!settings) {
@@ -462,7 +561,7 @@ async function handleCopyUrl() {
       console.debug("Failed to track failed copy event:", trackError);
     });
 
-    // 显示通知
+    // 显示通知（错误情况下不传递 tabId，因为 tab 可能已不可用）
     await notificationHelper.success(message);
   } finally {
     // 重置状态
