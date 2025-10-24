@@ -614,7 +614,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       // 添加调试日志
-      console.log("Short URL response:", response);
+      console.log("[Popup] Short URL response:", response);
+
+      // 验证响应有效性
+      if (!response) {
+        throw new Error("No response from background script");
+      }
 
       // 改进响应验证：有短链且无错误就视为成功
       if (response.success || (response.shortUrl && !response.error)) {

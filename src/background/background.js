@@ -131,24 +131,41 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return true; // 表示会异步发送响应
   } else if (message.action === "createShortUrl") {
-    handleCreateShortUrl(message.url, message.service)
-      .then((shortUrl) => {
+    console.log("[Background] Received createShortUrl request:", {
+      url: message.url,
+      service: message.service,
+    });
+
+    // 使用立即执行的异步函数来确保正确处理响应
+    (async () => {
+      try {
+        const shortUrl = await handleCreateShortUrl(
+          message.url,
+          message.service,
+        );
+
         // 验证返回的短链有效性
         if (shortUrl && typeof shortUrl === "string" && shortUrl.trim()) {
-          console.log("Short URL created successfully:", shortUrl);
-          sendResponse({ success: true, shortUrl: shortUrl.trim() });
+          console.log("[Background] Short URL created successfully:", shortUrl);
+          const responseData = { success: true, shortUrl: shortUrl.trim() };
+          console.log("[Background] Sending response:", responseData);
+          sendResponse(responseData);
         } else {
-          console.debug("Invalid short URL returned:", shortUrl);
-          sendResponse({
+          console.debug("[Background] Invalid short URL returned:", shortUrl);
+          const errorResponse = {
             success: false,
             error: "Invalid short URL generated",
-          });
+          };
+          console.log("[Background] Sending error response:", errorResponse);
+          sendResponse(errorResponse);
         }
-      })
-      .catch((error) => {
-        console.debug("Short URL creation failed:", error);
-        sendResponse({ success: false, error: error.message });
-      });
+      } catch (error) {
+        console.debug("[Background] Short URL creation failed:", error);
+        const errorResponse = { success: false, error: error.message };
+        console.log("[Background] Sending error response:", errorResponse);
+        sendResponse(errorResponse);
+      }
+    })();
 
     return true; // 表示会异步发送响应
   }
