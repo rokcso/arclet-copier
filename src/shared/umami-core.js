@@ -1,7 +1,7 @@
 // Layer 1: Generic Umami event sending methods
 
 const WEBSITE_ID = "c0b57f97-5293-42d9-8ec2-4708e4ea68ae";
-const API_URL = "https://umami.lunarye.com";
+const API_URL = "https://umami.coryso.com";
 const TIMEOUT = 5000;
 const USER_ID_STORAGE_KEY = "analytics_user_id";
 

@@ -141,7 +141,7 @@ Key permissions in manifest.json:
 Host permissions for external services:
 - `https://is.gd/*` - is.gd URL shortening service
 - `https://tinyurl.com/*` - TinyURL shortening service  
-- `https://umami.lunarye.com/*` - Analytics tracking
+- `https://umami.coryso.com/*` - Analytics tracking
 
 ## Development Notes
 
