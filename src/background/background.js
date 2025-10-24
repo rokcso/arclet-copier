@@ -2,7 +2,6 @@
 
 import {
   processUrl,
-  getMessage,
   createShortUrl,
   isValidWebUrl,
   getAllTemplates,
@@ -15,6 +14,70 @@ import { trackInstall, trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
 import notificationHelper from "../shared/notification-helper.js";
 import shortUrlCache from "../shared/short-url-cache.js";
+
+// ============================================
+// 多语言支持 - 动态加载用户设置的语言
+// ============================================
+let localeMessages = {};
+let currentLocale = "zh_CN";
+
+// 加载语言文件
+async function loadLocaleMessages(locale) {
+  try {
+    const response = await fetch(
+      chrome.runtime.getURL(`_locales/${locale}/messages.json`),
+    );
+    const messages = await response.json();
+    console.log(`[Background] Loaded locale messages for: ${locale}`);
+    return messages;
+  } catch (error) {
+    console.debug(
+      `[Background] Failed to load locale messages for ${locale}:`,
+      error,
+    );
+    return {};
+  }
+}
+
+// 获取本地化消息
+function getLocalMessage(key, substitutions = []) {
+  if (localeMessages[key] && localeMessages[key].message) {
+    return localeMessages[key].message;
+  }
+  // 回退到 Chrome i18n API
+  return chrome.i18n.getMessage(key, substitutions) || key;
+}
+
+// 初始化国际化
+async function initializeI18n() {
+  try {
+    const settings = await settingsManager.getAllSettings();
+    currentLocale = settings.language || "zh_CN";
+    localeMessages = await loadLocaleMessages(currentLocale);
+    console.log(`[Background] I18n initialized with locale: ${currentLocale}`);
+  } catch (error) {
+    console.debug("[Background] Failed to initialize i18n:", error);
+    // 使用默认语言
+    currentLocale = "zh_CN";
+    localeMessages = await loadLocaleMessages(currentLocale);
+  }
+}
+
+// 监听语言设置变更
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName === "sync" && changes.language) {
+    const newLocale = changes.language.newValue;
+    if (newLocale && newLocale !== currentLocale) {
+      console.log(
+        `[Background] Language changed: ${currentLocale} → ${newLocale}`,
+      );
+      currentLocale = newLocale;
+      loadLocaleMessages(currentLocale).then((messages) => {
+        localeMessages = messages;
+      });
+    }
+  }
+});
 
 // 防抖工具和状态管理
 const debounceMap = new Map();
@@ -49,15 +112,18 @@ async function incrementCopyCount() {
 
 // 创建右键菜单和处理扩展安装
 chrome.runtime.onInstalled.addListener(async (details) => {
+  // 初始化国际化（优先加载，以便后续使用）
+  await initializeI18n();
+
   // 初始化参数规则（首次使用时设置默认配置）
   await initializeParamRules();
 
   // 先清除所有已存在的菜单项，避免重复创建导致警告
   chrome.contextMenus.removeAll(() => {
-    // 创建右键菜单 - 同步操作，优先执行
+    // 创建右键菜单 - 使用动态加载的语言
     chrome.contextMenus.create({
       id: "copy-current-url",
-      title: chrome.i18n.getMessage("copyUrlShortcut") || "静默复制",
+      title: getLocalMessage("copyUrlShortcut") || "静默复制",
       contexts: [
         "page",
         "frame",
@@ -177,13 +243,13 @@ async function getTabById(tabId) {
     const tab = await chrome.tabs.get(tabId);
 
     if (!tab || !tab.url) {
-      throw new Error(getMessage("noUrl"));
+      throw new Error(getLocalMessage("noUrl"));
     }
 
     return tab;
   } catch (error) {
     // Tab 可能已被关闭
-    throw new Error(getMessage("noUrl") || "Tab not found or closed");
+    throw new Error(getLocalMessage("noUrl") || "Tab not found or closed");
   }
 }
 
@@ -195,7 +261,7 @@ async function getCurrentTab() {
   });
 
   if (!tab || !tab.url) {
-    throw new Error(getMessage("noUrl"));
+    throw new Error(getLocalMessage("noUrl"));
   }
 
   return tab;
@@ -290,7 +356,7 @@ async function handleCreateShortUrl(longUrl, service) {
     // 验证URL是否适合生成短链
     if (!isValidWebUrl(longUrl)) {
       throw new Error(
-        getMessage("invalidUrlForShortening") ||
+        getLocalMessage("invalidUrlForShortening") ||
           "URL is not suitable for shortening",
       );
     }
@@ -304,7 +370,7 @@ async function handleCreateShortUrl(longUrl, service) {
     // 验证清理后的URL
     if (!isValidWebUrl(cleanedUrl)) {
       throw new Error(
-        getMessage("invalidUrlForShortening") ||
+        getLocalMessage("invalidUrlForShortening") ||
           "Cleaned URL is not suitable for shortening",
       );
     }
@@ -356,7 +422,7 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
           console.log("[Background] Tab closed, using snapshot data");
           tab = tabSnapshot;
         } else {
-          throw new Error(getMessage("noUrl") || "Tab was closed");
+          throw new Error(getLocalMessage("noUrl") || "Tab was closed");
         }
       }
     } else {
@@ -423,14 +489,14 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
 
         contentToCopy = result.content;
         successMessage = result.success
-          ? getMessage("customTemplateCopied") ||
+          ? getLocalMessage("customTemplateCopied") ||
             `${result.templateName} copied`
-          : getMessage("urlCopied");
+          : getLocalMessage("urlCopied");
       } catch (error) {
         console.debug("Error processing custom template:", error);
         // 回退到URL复制
         contentToCopy = await processUrl(tab.url, settings.urlCleaning);
-        successMessage = getMessage("urlCopied");
+        successMessage = getLocalMessage("urlCopied");
         copyFormat = "url"; // 修正格式类型
       }
     } else if (settings.silentCopyFormat === "markdown") {
@@ -442,13 +508,13 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
         title,
         settings.urlCleaning,
       );
-      successMessage = getMessage("markdownCopied");
+      successMessage = getLocalMessage("markdownCopied");
     } else if (settings.silentCopyFormat === "shortUrl") {
       copyFormat = "shortUrl";
       // 验证URL是否适合生成短链
       if (!isValidWebUrl(tab.url)) {
         throw new Error(
-          getMessage("invalidUrlForShortening") ||
+          getLocalMessage("invalidUrlForShortening") ||
             "URL is not suitable for shortening",
         );
       }
@@ -458,12 +524,12 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
         settings.shortUrlService,
       );
       contentToCopy = shortUrl;
-      successMessage = getMessage("shortUrlCopied");
+      successMessage = getLocalMessage("shortUrlCopied");
     } else {
       copyFormat = "url";
       // 默认复制 URL
       contentToCopy = await processUrl(tab.url, settings.urlCleaning);
-      successMessage = getMessage("urlCopied");
+      successMessage = getLocalMessage("urlCopied");
     }
 
     await copyToClipboard(contentToCopy);
@@ -528,21 +594,21 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
     let message;
     let isUserValidationError = false;
 
-    if (error.message === getMessage("noUrl")) {
-      message = getMessage("noUrl");
+    if (error.message === getLocalMessage("noUrl")) {
+      message = getLocalMessage("noUrl");
     } else if (settings.silentCopyFormat === "shortUrl") {
       // 根据错误类型选择更具体的消息
       if (
-        error.message.includes(getMessage("invalidUrlForShortening")) ||
+        error.message.includes(getLocalMessage("invalidUrlForShortening")) ||
         error.message.includes("URL is not suitable for shortening")
       ) {
-        message = getMessage("invalidUrlForShortening");
+        message = getLocalMessage("invalidUrlForShortening");
         isUserValidationError = true; // 这是用户输入验证错误，不是系统错误
       } else {
-        message = getMessage("shortUrlFailed");
+        message = getLocalMessage("shortUrlFailed");
       }
     } else {
-      message = getMessage("copyFailed");
+      message = getLocalMessage("copyFailed");
     }
 
     // 只有非用户验证错误才打印错误日志
