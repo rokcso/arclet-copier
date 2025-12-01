@@ -13,6 +13,10 @@ import { trackCopy } from "../../shared/analytics.js";
 import settingsManager from "../../shared/settings-manager.js";
 import toast from "../../shared/toast.js";
 import shortUrlCache from "../../shared/short-url-cache.js";
+import {
+  initializeI18n,
+  getLocalMessage,
+} from "../../shared/ui/i18n.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 状态管理
@@ -47,78 +51,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     removeDuplicates: document.getElementById("removeDuplicates"),
   };
 
-  // 国际化相关
-  let currentLocale = "zh_CN";
-  let localeMessages = {};
-
-  // 加载语言包
-  async function loadLocaleMessages(locale) {
-    try {
-      const response = await fetch(
-        chrome.runtime.getURL(`_locales/${locale}/messages.json`),
-      );
-      const messages = await response.json();
-      return messages;
-    } catch (error) {
-      console.debug("Failed to load locale messages:", error);
-      return {};
-    }
-  }
-
-  // i18n 辅助函数
-  function getLocalMessage(key, substitutions = []) {
-    if (localeMessages[key] && localeMessages[key].message) {
-      let message = localeMessages[key].message;
-      // 处理占位符替换
-      substitutions.forEach((substitution, index) => {
-        const placeholder = `$${index + 1}$`;
-        message = message.replace(placeholder, substitution);
-      });
-      // 同时支持命名占位符，如 $count$
-      if (localeMessages[key].placeholders) {
-        Object.keys(localeMessages[key].placeholders).forEach(
-          (placeholderName) => {
-            const placeholder = `$${placeholderName}$`;
-            const placeholderConfig =
-              localeMessages[key].placeholders[placeholderName];
-            if (placeholderConfig && placeholderConfig.content) {
-              const contentIndex =
-                parseInt(placeholderConfig.content.replace("$", "")) - 1;
-              if (substitutions[contentIndex] !== undefined) {
-                message = message.replace(
-                  placeholder,
-                  substitutions[contentIndex],
-                );
-              }
-            }
-          },
-        );
-      }
-      return message;
-    }
-    return chrome.i18n.getMessage(key, substitutions) || key;
-  }
-
-  // 初始化国际化
-  async function initializeI18n() {
-    currentLocale = await settingsManager.getSetting("language");
-
-    localeMessages = await loadLocaleMessages(currentLocale);
-
-    // 应用本地化
-    const i18nElements = document.querySelectorAll("[data-i18n]");
-    i18nElements.forEach((element) => {
-      const key = element.getAttribute("data-i18n");
-      const message = getLocalMessage(key);
-      if (message && message !== key) {
-        if (element.tagName === "INPUT" && element.type === "text") {
-          element.placeholder = message;
-        } else {
-          element.textContent = message;
-        }
-      }
-    });
-  }
 
   // 加载自定义模板到复制格式选择器
   async function loadCustomTemplates(preserveValue = null) {
@@ -1306,7 +1238,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // 初始化
-  await initializeI18n();
+  await initializeI18n({
+    settingsManager,
+    updateDOM: true,
+  });
   loadVersion();
   setupTemplateChangeListener(); // 设置模板变更监听器
 

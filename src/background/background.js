@@ -14,69 +14,19 @@ import { trackInstall, trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
 import notificationHelper from "../shared/notification-helper.js";
 import shortUrlCache from "../shared/short-url-cache.js";
+import {
+  initializeI18n,
+  getLocalMessage,
+  setupLanguageChangeListener,
+} from "../shared/ui/i18n.js";
 
 // ============================================
-// 多语言支持 - 动态加载用户设置的语言
+// 多语言支持 - 使用统一的 i18n 工具
 // ============================================
-let localeMessages = {};
-let currentLocale = "zh_CN";
 
-// 加载语言文件
-async function loadLocaleMessages(locale) {
-  try {
-    const response = await fetch(
-      chrome.runtime.getURL(`_locales/${locale}/messages.json`),
-    );
-    const messages = await response.json();
-    console.log(`[Background] Loaded locale messages for: ${locale}`);
-    return messages;
-  } catch (error) {
-    console.debug(
-      `[Background] Failed to load locale messages for ${locale}:`,
-      error,
-    );
-    return {};
-  }
-}
-
-// 获取本地化消息
-function getLocalMessage(key, substitutions = []) {
-  if (localeMessages[key] && localeMessages[key].message) {
-    return localeMessages[key].message;
-  }
-  // 回退到 Chrome i18n API
-  return chrome.i18n.getMessage(key, substitutions) || key;
-}
-
-// 初始化国际化
-async function initializeI18n() {
-  try {
-    const settings = await settingsManager.getAllSettings();
-    currentLocale = settings.language || "zh_CN";
-    localeMessages = await loadLocaleMessages(currentLocale);
-    console.log(`[Background] I18n initialized with locale: ${currentLocale}`);
-  } catch (error) {
-    console.debug("[Background] Failed to initialize i18n:", error);
-    // 使用默认语言
-    currentLocale = "zh_CN";
-    localeMessages = await loadLocaleMessages(currentLocale);
-  }
-}
-
-// 监听语言设置变更
-chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === "sync" && changes.language) {
-    const newLocale = changes.language.newValue;
-    if (newLocale && newLocale !== currentLocale) {
-      console.log(
-        `[Background] Language changed: ${currentLocale} → ${newLocale}`,
-      );
-      currentLocale = newLocale;
-      loadLocaleMessages(currentLocale).then((messages) => {
-        localeMessages = messages;
-      });
-    }
-  }
+// Set up language change listener with logging
+setupLanguageChangeListener((newLocale) => {
+  console.log(`[Background] Language changed to: ${newLocale}`);
 });
 
 // 防抖工具和状态管理
@@ -113,7 +63,11 @@ async function incrementCopyCount() {
 // 创建右键菜单和处理扩展安装
 chrome.runtime.onInstalled.addListener(async (details) => {
   // 初始化国际化（优先加载，以便后续使用）
-  await initializeI18n();
+  const locale = await initializeI18n({
+    settingsManager,
+    updateDOM: false, // background script doesn't have DOM
+  });
+  console.log(`[Background] I18n initialized with locale: ${locale}`);
 
   // 初始化参数规则（首次使用时设置默认配置）
   await initializeParamRules();

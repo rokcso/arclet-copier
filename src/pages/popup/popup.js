@@ -14,6 +14,10 @@ import {
   initializeThreeWaySwitch,
   getUrlCleaningOptions,
 } from "../../shared/three-way-switch.js";
+import {
+  initializeI18n,
+  getLocalMessage,
+} from "../../shared/ui/i18n.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 复制操作状态管理
@@ -23,33 +27,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     generateShortUrl: false,
     copyQRCode: false,
   };
-
-  // Locale data
-  let currentLocale = "zh_CN";
-  let localeMessages = {};
-
-  // Load locale messages
-  async function loadLocaleMessages(locale) {
-    try {
-      const response = await fetch(
-        chrome.runtime.getURL(`_locales/${locale}/messages.json`),
-      );
-      const messages = await response.json();
-      return messages;
-    } catch (error) {
-      console.debug("Failed to load locale messages:", error);
-      return {};
-    }
-  }
-
-  // i18n helper function (using local one for popup specific behavior)
-  function getLocalMessage(key, substitutions = []) {
-    if (localeMessages[key] && localeMessages[key].message) {
-      return localeMessages[key].message;
-    }
-    // Fallback to Chrome i18n API
-    return chrome.i18n.getMessage(key, substitutions) || key;
-  }
 
   // 加载自定义模板到静默复制格式选择器
   async function loadCustomTemplates(preserveValue = null) {
@@ -125,29 +102,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Initialize localization
-  async function initializeI18n(locale) {
-    if (locale) {
-      currentLocale = locale;
-    }
-
-    // Load messages for current locale
-    localeMessages = await loadLocaleMessages(currentLocale);
-
-    // Apply localization to all elements with data-i18n attribute
-    const i18nElements = document.querySelectorAll("[data-i18n]");
-    i18nElements.forEach((element) => {
-      const key = element.getAttribute("data-i18n");
-      const message = getLocalMessage(key);
-      if (message && message !== key) {
-        if (element.tagName === "INPUT" && element.type === "text") {
-          element.placeholder = message;
-        } else {
-          element.textContent = message;
-        }
-      }
-    });
-  }
 
   // 初始化URL清理选择器
   function initializeUrlCleaningSelect() {
@@ -194,7 +148,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 应用主题和语言设置
     applyTheme(settings.appearance);
     applyThemeColor(settings.themeColor);
-    currentLocale = settings.language;
 
     return {
       silentCopyFormat: settings.silentCopyFormat,
@@ -897,7 +850,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 在获取到设置后，并行执行依赖设置的操作
         const [templateResult, i18nResult] = await Promise.all([
           loadCustomTemplates(settings.silentCopyFormat),
-          initializeI18n(settings.allSettings.language),
+          initializeI18n({
+            locale: settings.allSettings.language,
+            updateDOM: true,
+          }),
         ]);
 
         return { settings, templateResult, i18nResult };
