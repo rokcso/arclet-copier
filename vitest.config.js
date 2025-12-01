@@ -6,12 +6,14 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./test/setup.js'],
     globals: true,
+    include: ['src/**/*.test.js'], // Only test src directory
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
         'dist/',
+        'dist-dev/',
         'test/',
         '**/*.min.js',
         'src/shared/lib/qrcode.min.js'

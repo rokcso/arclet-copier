@@ -1,4 +1,6 @@
-// 统一的短链缓存辅助函数 - 确保缓存一致性
+// Unified short URL cache helper functions - ensures cache consistency
+// This file provides backward compatibility for tests and code that use cache injection pattern
+// Import from constants.js (index file) to allow proper mocking in tests
 import { processUrl, isValidWebUrl, createShortUrl } from "./constants.js";
 
 /**
