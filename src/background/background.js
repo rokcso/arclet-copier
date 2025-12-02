@@ -19,12 +19,32 @@ import {
 import { ContentGeneratorFactory } from "./content-generators/index.js";
 
 // ============================================
+// Service Worker 启动初始化
+// ============================================
+
+// IMPORTANT: Initialize i18n on every service worker startup
+// This ensures the correct language is loaded even after browser restart
+(async () => {
+  try {
+    const locale = await initializeI18n({
+      settingsManager,
+      updateDOM: false, // background script doesn't have DOM
+    });
+    console.log(`[Background] I18n initialized on startup with locale: ${locale}`);
+  } catch (error) {
+    console.debug("[Background] Failed to initialize i18n on startup:", error);
+  }
+})();
+
+// ============================================
 // 多语言支持 - 使用统一的 i18n 工具
 // ============================================
 
 // Set up language change listener with logging
 setupLanguageChangeListener((newLocale) => {
   console.log(`[Background] Language changed to: ${newLocale}`);
+  // Recreate context menus with new language
+  createContextMenus();
 });
 
 // 防抖工具和状态管理
@@ -58,18 +78,8 @@ async function incrementCopyCount() {
   }
 }
 
-// 创建右键菜单和处理扩展安装
-chrome.runtime.onInstalled.addListener(async (details) => {
-  // 初始化国际化（优先加载，以便后续使用）
-  const locale = await initializeI18n({
-    settingsManager,
-    updateDOM: false, // background script doesn't have DOM
-  });
-  console.log(`[Background] I18n initialized with locale: ${locale}`);
-
-  // 初始化参数规则（首次使用时设置默认配置）
-  await initializeParamRules();
-
+// 创建右键菜单
+function createContextMenus() {
   // 先清除所有已存在的菜单项，避免重复创建导致警告
   chrome.contextMenus.removeAll(() => {
     // 创建右键菜单 - 使用动态加载的语言
@@ -87,7 +97,24 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         "audio",
       ],
     });
+    console.log(`[Background] Context menus created with language: ${getLocalMessage("copyUrlShortcut")}`);
   });
+}
+
+// 处理扩展安装和更新
+chrome.runtime.onInstalled.addListener(async (details) => {
+  // 初始化国际化（确保菜单使用正确语言）
+  const locale = await initializeI18n({
+    settingsManager,
+    updateDOM: false, // background script doesn't have DOM
+  });
+  console.log(`[Background] I18n re-initialized on install/update with locale: ${locale}`);
+
+  // 初始化参数规则（首次使用时设置默认配置）
+  await initializeParamRules();
+
+  // 创建右键菜单
+  createContextMenus();
 
   // 处理扩展安装统计 - 异步执行，不阻塞初始化
   if (details.reason === "install" || details.reason === "update") {
