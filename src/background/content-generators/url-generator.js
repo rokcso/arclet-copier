@@ -8,7 +8,7 @@ import { BaseContentGenerator } from "./base-generator.js";
  * Generator for plain URL format
  */
 export class UrlContentGenerator extends BaseContentGenerator {
-  async generate(formatInfo, tab, settings, helpers) {
+  async generate(_formatInfo, tab, settings) {
     return {
       content: await processUrl(tab.url, settings.urlCleaning),
       message: getLocalMessage("urlCopied"),

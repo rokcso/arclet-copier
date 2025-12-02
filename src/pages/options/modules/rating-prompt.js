@@ -3,8 +3,6 @@
  * Handles the rating prompt modal logic for encouraging users to rate the extension
  */
 
-import { getLocalMessage } from '../../../shared/ui/i18n.js';
-
 // Constants
 const MIN_COPY_COUNT = 100;
 const PROMPT_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds

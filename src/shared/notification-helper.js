@@ -122,7 +122,7 @@ class NotificationHelper {
       if (options.tabId) {
         try {
           tab = await chrome.tabs.get(options.tabId);
-        } catch (error) {
+        } catch {
           console.log(
             `Tab ${options.tabId} not found (may be closed), falling back to Chrome notification`,
           );

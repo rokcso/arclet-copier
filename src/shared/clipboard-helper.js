@@ -85,18 +85,10 @@ function copyWithExecCommand(text) {
 }
 
 /**
- * Copy using Offscreen Document (background script only)
- * Note: This function is not used in clipboard-helper.
+ * Note: Offscreen Document copy is not implemented in clipboard-helper.
  * Background scripts should use their own copyToClipboard implementation
  * which properly manages the offscreen document lifecycle.
- * @private
  */
-function copyViaOffscreenNotImplemented() {
-  throw new ClipboardError(
-    'Offscreen copy not implemented in clipboard-helper. Use background.js copyToClipboard instead.',
-    ERROR_TYPES.SYSTEM,
-  );
-}
 
 /**
  * Detect current environment
@@ -235,7 +227,7 @@ export async function copyToClipboard(text, options = {}) {
   // Validate input
   if (!text || typeof text !== 'string') {
     const error = new ClipboardError('Invalid text input', ERROR_TYPES.VALIDATION);
-    if (onError) onError(error);
+    if (onError) {onError(error);}
     return { success: false, error, errorType: ERROR_TYPES.VALIDATION };
   }
 
@@ -346,7 +338,7 @@ export async function copyImageToClipboard(blob, options = {}) {
       toast.success(message);
     }
 
-    if (onSuccess) onSuccess();
+    if (onSuccess) {onSuccess();}
 
     return { success: true };
   } catch (error) {
@@ -357,7 +349,7 @@ export async function copyImageToClipboard(blob, options = {}) {
       toast.error(message);
     }
 
-    if (onError) onError(error);
+    if (onError) {onError(error);}
 
     return { success: false, error };
   }

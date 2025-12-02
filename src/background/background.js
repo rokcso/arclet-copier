@@ -1,10 +1,6 @@
 // Background script for handling keyboard shortcuts and URL copying
 
 import {
-  processUrl,
-  isValidWebUrl,
-  getAllTemplates,
-  processTemplateWithFallback,
   initializeParamRules,
   getOrGenerateShortUrl,
 } from "../shared/constants.js";
@@ -21,9 +17,6 @@ import {
 
 // Import content generators (Strategy Pattern)
 import { ContentGeneratorFactory } from "./content-generators/index.js";
-
-// Import formatters
-import { createMarkdownLink } from "../shared/formatters.js";
 
 // ============================================
 // 多语言支持 - 使用统一的 i18n 工具
@@ -206,7 +199,7 @@ async function getTabById(tabId) {
     }
 
     return tab;
-  } catch (error) {
+  } catch {
     // Tab 可能已被关闭
     throw new Error(getLocalMessage("noUrl") || "Tab not found or closed");
   }
@@ -301,8 +294,6 @@ async function getPageMetadata(tabId) {
     return { author: "", description: "" };
   }
 }
-
-// Note: createMarkdownLink moved to shared/formatters.js for reuse
 
 // 处理短链生成 - unified wrapper using getOrGenerateShortUrl
 async function handleCreateShortUrl(longUrl, service) {
@@ -460,7 +451,7 @@ async function getTabInfo(tabId, tabSnapshot) {
   if (tabId) {
     try {
       return await getTabById(tabId);
-    } catch (error) {
+    } catch {
       if (tabSnapshot && tabSnapshot.url) {
         console.log("[Background] Tab closed, using snapshot data");
         return tabSnapshot;
@@ -510,7 +501,7 @@ async function determineNotificationTarget(tab) {
   try {
     await chrome.tabs.get(tab.id);
     return tab.id;
-  } catch (error) {
+  } catch {
     console.log(
       "[Background] Original tab closed, will use Chrome notification",
     );
@@ -562,8 +553,8 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
     if (!settings) {
       try {
         settings = await getUserSettings();
-      } catch (settingsError) {
-        console.debug("获取设置失败:", settingsError);
+      } catch {
+        console.debug("获取设置失败");
         settings = { chromeNotifications: true, silentCopyFormat: "url" };
       }
     }

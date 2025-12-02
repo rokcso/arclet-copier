@@ -102,7 +102,7 @@ function generateEmojiPickerHTML() {
  */
 export function updateIconSelector(iconValue) {
   const selector = document.querySelector('.template-icon-selector');
-  if (!selector) return;
+  if (!selector) {return;}
 
   // Remove active from all options
   selector.querySelectorAll('.icon-option').forEach((opt) => opt.classList.remove('active'));
@@ -192,7 +192,7 @@ function bindEventListeners(trigger, picker, iconInput) {
         const categoryBtns = picker.querySelectorAll('.emoji-category-btn');
         const sections = picker.querySelectorAll('.emoji-category-section');
 
-        if (!sections.length) return;
+        if (!sections.length) {return;}
 
         const scrollTop = pickerContent.scrollTop;
         let activeCategory = null;
