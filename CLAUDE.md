@@ -182,6 +182,24 @@ src/
 - User can toggle Chrome notifications on/off
 - Toast notifications follow theme colors
 
+### Clipboard Operations Best Practices
+- **Page Environments** (popup, options, batch):
+  - Import `copyToClipboard` from `clipboard-helper.js`
+  - Automatic fallback from Clipboard API to execCommand
+  - Example: `await copyToClipboard(text, { source: 'popup', showNotification: true })`
+- **Background Service Worker**:
+  - DO NOT use `clipboard-helper.js` (it's designed for page environments)
+  - Use background script's own `copyToClipboard()` with offscreen document
+  - Offscreen document lifecycle managed by background script
+- **Copy Operation Manager**:
+  - Prevents duplicate operations with 300ms debounce
+  - Automatically tracks operation state
+  - No manual debounce needed when using `copyToClipboard()`
+- **Error Handling**:
+  - Check `result.success` to determine if copy succeeded
+  - Error types: `validation`, `clipboard`, `timeout`, `system`, `permission`
+  - Custom error class: `ClipboardError` with `type` and `originalError` properties
+
 ## Build System (esbuild)
 
 ### Build Configuration
@@ -285,6 +303,29 @@ Follow the batch page pattern for complex pages:
 - 9 supported languages: zh_CN, en, es, ja, de, fr, pt, ru, ko
 - Use `chrome.i18n.getMessage(key)` or helper `getMessage(key)` from constants.js
 - HTML: `data-i18n` attributes processed by page scripts
+
+## Design Patterns Used
+
+### Strategy Pattern
+- **Content Generators** (`src/background/content-generators/`)
+  - `BaseContentGenerator` - Abstract strategy
+  - Concrete strategies: URL, Markdown, ShortURL, CustomTemplate
+  - `ContentGeneratorFactory` - Factory for creating strategies
+  - Benefits: Easy to add new formats without modifying existing code
+
+### Singleton Pattern
+- **State Managers**: `batchState`, `settingsManager`, `notificationHelper`
+- **Shared Instances**: `globalShortUrlThrottle`, `copyManager`
+- Benefits: Single source of truth, centralized state management
+
+### Factory Pattern
+- **ContentGeneratorFactory**: Creates appropriate generator based on format type
+- Benefits: Encapsulates object creation logic, easy to extend
+
+### Module Pattern
+- **Feature-based modules**: Each page has dedicated modules (state, events, renderers)
+- **Shared utilities**: Common functions in `src/shared/`
+- Benefits: Code organization, reusability, testability
 
 ## Debugging Tips
 
