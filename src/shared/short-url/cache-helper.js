@@ -78,6 +78,7 @@ export async function setCachedShortUrl(
 
 /**
  * Smart short URL retrieval - prioritize cache, generate new on cache miss
+ * 性能优化版：只调用一次 processUrl()，避免重复 URL 清理
  * @param {string} originalUrl - Original URL
  * @param {string} cleaningMode - URL cleaning mode
  * @param {string} service - Short URL service
@@ -99,12 +100,12 @@ export async function getOrGenerateShortUrl(
       throw new Error("URL is not suitable for shortening");
     }
 
-    // Try to get from cache first
-    const cachedUrl = await getCachedShortUrl(
-      originalUrl,
-      cleaningMode,
-      service,
-    );
+    // 优化: 只调用一次 processUrl，然后复用 cleaned URL
+    const cleanedUrl = await processUrl(originalUrl, cleaningMode);
+    console.log("[Performance] URL cleaned once for cache operations");
+
+    // Try to get from cache first (using cleaned URL directly)
+    const cachedUrl = await shortUrlCache.get(cleanedUrl, service);
     if (cachedUrl) {
       console.log("[CacheHelper] Using cached short URL:", cachedUrl);
       return cachedUrl;
@@ -114,8 +115,8 @@ export async function getOrGenerateShortUrl(
     console.log("[CacheHelper] Cache miss, generating new short URL");
     const shortUrl = await createShortUrl(originalUrl, service);
 
-    // Save to cache
-    await setCachedShortUrl(originalUrl, cleaningMode, service, shortUrl);
+    // Save to cache (using cleaned URL directly, no re-processing)
+    await shortUrlCache.set(cleanedUrl, service, shortUrl);
 
     return shortUrl;
   } catch (error) {

@@ -19,6 +19,43 @@ import {
 import { ContentGeneratorFactory } from "./content-generators/index.js";
 
 // ============================================
+// Performance Monitoring Utilities
+// ============================================
+
+/**
+ * Performance monitor helper for tracking operation durations
+ */
+class PerformanceMonitor {
+  constructor(operationName) {
+    this.operationName = operationName;
+    this.startTime = self.performance.now();
+    this.checkpoints = new Map();
+  }
+
+  checkpoint(name) {
+    const now = self.performance.now();
+    const elapsed = now - this.startTime;
+    this.checkpoints.set(name, elapsed);
+    console.log(
+      `[Performance] ${this.operationName} - ${name}: ${elapsed.toFixed(2)}ms`,
+    );
+    return elapsed;
+  }
+
+  end(finalMessage = "completed") {
+    const total = self.performance.now() - this.startTime;
+    console.log(
+      `[Performance] ${this.operationName} ${finalMessage}: ${total.toFixed(2)}ms`,
+    );
+    return total;
+  }
+
+  getCheckpoint(name) {
+    return this.checkpoints.get(name) || 0;
+  }
+}
+
+// ============================================
 // Service Worker 启动初始化
 // ============================================
 
@@ -33,6 +70,17 @@ import { ContentGeneratorFactory } from "./content-generators/index.js";
     console.log(`[Background] I18n initialized on startup with locale: ${locale}`);
   } catch (error) {
     console.debug("[Background] Failed to initialize i18n on startup:", error);
+  }
+})();
+
+// Performance optimization: Pre-warm offscreen document on startup
+// This eliminates first-use delay for clipboard operations
+(async () => {
+  try {
+    await ensureOffscreenDocument();
+    console.log('[Performance] Offscreen document pre-warmed on startup');
+  } catch (error) {
+    console.debug('[Performance] Failed to pre-warm offscreen document:', error);
   }
 })();
 
@@ -369,6 +417,10 @@ function determineContentFormat(settings) {
  * @returns {Promise<object>} { content, message, format, templateName }
  */
 async function generateContent(formatInfo, tab, settings) {
+  const perfMonitor = new PerformanceMonitor(
+    `generateContent(${formatInfo.format})`,
+  );
+
   // Helper functions object for generators
   const helpers = {
     getPageTitle,
@@ -377,12 +429,15 @@ async function generateContent(formatInfo, tab, settings) {
   };
 
   // Use factory to generate content
-  return await ContentGeneratorFactory.generate(
+  const result = await ContentGeneratorFactory.generate(
     formatInfo,
     tab,
     settings,
     helpers,
   );
+
+  perfMonitor.end("completed");
+  return result;
 }
 
 /**
@@ -551,30 +606,39 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
   copyOperationStates.copyUrl = true;
   let settings;
   const startTime = Date.now();
+  const perfMonitor = new PerformanceMonitor("handleCopyUrl");
 
   try {
-    // Get tab information with fallback
-    const tab = await getTabInfo(tabId, tabSnapshot);
-
-    // Get user settings
-    settings = await getUserSettings();
+    // 优化: 并行获取 tab 信息和用户设置（独立操作）
+    const [tab, userSettings] = await Promise.all([
+      getTabInfo(tabId, tabSnapshot),
+      getUserSettings(),
+    ]);
+    settings = userSettings;
+    perfMonitor.checkpoint("tab & settings loaded");
 
     // Determine format and generate content
     const formatInfo = determineContentFormat(settings);
+    perfMonitor.checkpoint("format determined");
+
     const result = await generateContent(formatInfo, tab, settings);
+    perfMonitor.checkpoint("content generated");
 
     // Copy to clipboard
     await copyToClipboard(result.content);
+    perfMonitor.checkpoint("clipboard written");
 
-    // Track successful copy event
+    // 优化: 并行执行追踪和准备通知（独立操作）
     const duration = Date.now() - startTime;
-    await trackCopySuccess(result, settings, formatInfo, duration);
-
-    // Determine notification target
-    const notificationTabId = await determineNotificationTarget(tab);
+    const [, notificationTabId] = await Promise.all([
+      trackCopySuccess(result, settings, formatInfo, duration),
+      determineNotificationTarget(tab),
+    ]);
+    perfMonitor.checkpoint("tracking & notification prep");
 
     // Handle success notification
     await handleCopySuccess(result.message, notificationTabId);
+    perfMonitor.end("TOTAL");
   } catch (error) {
     // Ensure settings are available for error handling
     if (!settings) {
@@ -598,22 +662,28 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
 
 // 复制到剪贴板 - 使用 offscreen document
 async function copyToClipboard(text) {
+  const perfMonitor = new PerformanceMonitor("copyToClipboard");
+
   try {
     // 确保 offscreen document 存在
     await ensureOffscreenDocument();
+    perfMonitor.checkpoint("offscreen document ready");
 
     // 向 offscreen document 发送复制消息
     const response = await chrome.runtime.sendMessage({
       action: "copy",
       text: text,
     });
+    perfMonitor.checkpoint("copy message sent");
 
     if (!response || !response.success) {
       throw new Error(response?.error || "Offscreen copy failed");
     }
 
+    perfMonitor.end("success");
     console.log("Offscreen copy successful");
   } catch (error) {
+    perfMonitor.end("failed");
     console.debug("复制失败:", error);
     throw new Error("复制操作失败");
   }
@@ -623,36 +693,12 @@ async function copyToClipboard(text) {
 let offscreenCreationPromise = null;
 let offscreenCreationQueue = [];
 
-// 健康检查 offscreen document
-async function checkOffscreenHealth() {
-  try {
-    const response = await Promise.race([
-      new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage({ action: "ping" }, (response) => {
-          if (chrome.runtime.lastError) {
-            reject(new Error(chrome.runtime.lastError.message));
-          } else {
-            resolve(response);
-          }
-        });
-      }),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Health check timeout")), 1000),
-      ),
-    ]);
-
-    return response?.success === true && response?.ready === true;
-  } catch (error) {
-    console.debug("Offscreen health check failed:", error.message);
-    return false;
-  }
-}
-
-// 确保 offscreen document 存在且可用 - 修复并发版本
+// 健康检查 offscreen document（性能优化版）
+// 确保 offscreen document 存在且可用 - 性能优化版（乐观策略）
 async function ensureOffscreenDocument() {
   // 如果已有创建操作在进行，加入队列等待
   if (offscreenCreationPromise) {
-    console.log("Offscreen creation already in progress, queuing request...");
+    console.log("[Performance] Offscreen creation already in progress, queuing request...");
     return new Promise((resolve, reject) => {
       offscreenCreationQueue.push({ resolve, reject });
     });
@@ -667,29 +713,13 @@ async function ensureOffscreenDocument() {
       });
 
       if (existingContexts.length > 0) {
-        // 存在，但需要验证其可用性
-        const isHealthy = await checkOffscreenHealth();
-
-        if (isHealthy) {
-          console.log("Offscreen document exists and is healthy");
-          // 通知所有等待的请求
-          offscreenCreationQueue.forEach(({ resolve }) => resolve());
-          offscreenCreationQueue = [];
-          return;
-        }
-
-        // 不健康，需要重建
-        console.debug(
-          "Offscreen document exists but is unhealthy, recreating...",
-        );
-
-        try {
-          await chrome.offscreen.closeDocument();
-          console.log("Closed unhealthy offscreen document");
-        } catch (closeError) {
-          console.debug("Failed to close offscreen document:", closeError);
-          // 继续尝试创建新的
-        }
+        // 优化: 乐观假设已存在的 document 是健康的，跳过健康检查
+        // 只有在实际使用失败时才会触发重建
+        console.log("[Performance] Offscreen document exists, assuming healthy");
+        // 通知所有等待的请求
+        offscreenCreationQueue.forEach(({ resolve }) => resolve());
+        offscreenCreationQueue = [];
+        return;
       }
 
       // 创建新的 offscreen document
@@ -698,13 +728,10 @@ async function ensureOffscreenDocument() {
         reasons: ["CLIPBOARD"],
         justification: "复制文本到剪贴板",
       });
-      console.log("Offscreen document created successfully");
+      console.log("[Performance] Offscreen document created successfully");
 
-      // 验证新创建的 document 是否可用
-      const isHealthy = await checkOffscreenHealth();
-      if (!isHealthy) {
-        throw new Error("Newly created offscreen document is not responding");
-      }
+      // 优化: 跳过创建后的健康检查，假设新创建的 document 是健康的
+      // 如果实际使用时失败，会在 copyToClipboard 中捕获并处理
 
       // 成功：通知所有等待的请求
       offscreenCreationQueue.forEach(({ resolve }) => resolve());

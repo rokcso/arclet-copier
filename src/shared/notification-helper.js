@@ -176,8 +176,8 @@ class NotificationHelper {
     }
   }
 
-  // 确保 content script 就绪 - 带重试机制
-  async ensureContentScriptReady(tabId, maxRetries = 3, retryDelay = 100) {
+  // 确保 content script 就绪 - 带重试机制（性能优化版）
+  async ensureContentScriptReady(tabId, maxRetries = 2, retryDelay = 50) {
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
         const response = await Promise.race([
@@ -191,37 +191,37 @@ class NotificationHelper {
             });
           }),
           new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("PING timeout")), 500),
+            setTimeout(() => reject(new Error("PING timeout")), 200), // 优化: 500ms → 200ms
           ),
         ]);
 
         if (response && response.ready === true) {
           console.log(
-            `Content script ready on tab ${tabId} (attempt ${attempt + 1})`,
+            `[Performance] Content script ready on tab ${tabId} (attempt ${attempt + 1})`,
           );
           return true;
         }
       } catch (error) {
         console.log(
-          `Content script PING failed on tab ${tabId} (attempt ${attempt + 1}): ${error.message}`,
+          `[Performance] Content script PING failed on tab ${tabId} (attempt ${attempt + 1}): ${error.message}`,
         );
 
         // 如果不是最后一次尝试，等待后重试
         if (attempt < maxRetries - 1) {
           await new Promise((resolve) =>
             setTimeout(resolve, retryDelay * (attempt + 1)),
-          ); // 指数退避
+          ); // 优化: 退避延迟更短
         }
       }
     }
 
     console.log(
-      `Content script not ready on tab ${tabId} after ${maxRetries} attempts`,
+      `[Performance] Content script not ready on tab ${tabId} after ${maxRetries} attempts`,
     );
     return false;
   }
 
-  // 发送通知消息 - 带超时保护
+  // 发送通知消息 - 带超时保护（性能优化版）
   async sendNotificationMessage(tabId, message, fallbackOptions) {
     try {
       const response = await Promise.race([
@@ -235,7 +235,7 @@ class NotificationHelper {
           });
         }),
         new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Message timeout")), 1000),
+          setTimeout(() => reject(new Error("Message timeout")), 300), // 优化: 1000ms → 300ms
         ),
       ]);
 

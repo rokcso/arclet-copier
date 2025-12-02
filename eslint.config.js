@@ -46,6 +46,9 @@ export default [
         // Web API globals
         URL: "readonly",
         ClipboardItem: "readonly",
+        // Service Worker globals
+        self: "readonly",
+        performance: "readonly",
         // Extension specific globals
         shortUrlCache: "readonly",
         QRCode: "readonly",

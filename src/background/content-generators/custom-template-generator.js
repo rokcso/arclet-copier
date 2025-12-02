@@ -9,34 +9,50 @@ import { getLocalMessage } from "../../shared/ui/i18n.js";
 import { BaseContentGenerator } from "./base-generator.js";
 
 /**
- * Generator for custom template format
+ * Generator for custom template format（性能优化版 - 懒加载元数据）
  */
 export class CustomTemplateContentGenerator extends BaseContentGenerator {
   async generate(formatInfo, tab, settings, helpers) {
     const { templateId } = formatInfo;
 
     try {
-      const title = await helpers.getPageTitle(tab.id, tab.url, tab);
-      const metadata = await helpers.getPageMetadata(tab.id);
-
-      const context = {
-        url: tab.url,
-        title: title || "",
-        urlCleaning: settings.urlCleaning,
-        shortUrl: "",
-        author: metadata.author || "",
-        description: metadata.description || "",
-      };
-
-      // Check if template needs short URL
+      // 优化: 先获取模板，再决定需要加载哪些数据
       const template = await getAllTemplates().then((templates) =>
         templates.find((t) => t.id === templateId),
       );
 
       let templateName = null;
+      const context = {
+        url: tab.url,
+        title: "",
+        urlCleaning: settings.urlCleaning,
+        shortUrl: "",
+        author: "",
+        description: "",
+      };
+
       if (template) {
         templateName = template.name;
-        if (template.template.includes("{{shortUrl}}")) {
+        const templateStr = template.template;
+
+        // 优化: 只在模板需要时才获取 title
+        if (templateStr.includes("{{title}}")) {
+          context.title = await helpers.getPageTitle(tab.id, tab.url, tab);
+        }
+
+        // 优化: 只在模板需要元数据时才获取（懒加载）
+        if (templateStr.includes("{{author}}") || templateStr.includes("{{description}}")) {
+          console.log("[Performance] Template needs metadata, fetching...");
+          const metadata = await helpers.getPageMetadata(tab.id);
+          context.author = metadata.author || "";
+          context.description = metadata.description || "";
+        } else {
+          console.log("[Performance] Template doesn't need metadata, skipping fetch");
+        }
+
+        // 优化: 只在模板需要短链时才生成
+        if (templateStr.includes("{{shortUrl}}")) {
+          console.log("[Performance] Template needs short URL, generating...");
           try {
             const shortUrl = await helpers.handleCreateShortUrl(
               tab.url,
