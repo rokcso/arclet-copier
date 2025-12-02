@@ -83,39 +83,68 @@ src/
   - Short URL generation with throttling (`ShortUrlThrottle`)
   - Custom parameter rules management
   - Utility functions for URL validation
+- `src/shared/formatters.js` - Common formatting functions (Markdown, list items)
+- `src/shared/clipboard-helper.js` - Unified clipboard operations with automatic fallback
+- `src/shared/ui/i18n.js` - Internationalization helper with `getLocalMessage()`
 
-**2. Message Passing Architecture**
+**2. Strategy Pattern for Content Generation** (Background Service)
+- **Factory Pattern**: `ContentGeneratorFactory` creates appropriate generators
+- **Base Class**: `BaseContentGenerator` defines the interface
+- **Concrete Generators**:
+  - `UrlContentGenerator` - Plain URL processing
+  - `MarkdownContentGenerator` - Markdown link format
+  - `ShortUrlContentGenerator` - Short URL generation
+  - `CustomTemplateContentGenerator` - Custom template processing
+- Location: `src/background/content-generators/`
+- Usage: `ContentGeneratorFactory.generate(formatInfo, tab, settings, helpers)`
+
+**3. Modular Page Architecture** (Batch Page Example)
+- **State Manager**: `batch/state-manager.js` - Centralized state with singleton pattern
+- **Event Handlers**: `batch/event-handlers.js` - UI event processing logic
+- **Format Generators**: `batch/format-generators.js` - Output formatting
+- **Tab Filters**: `batch/tab-filters.js` - Tab filtering and search
+- **Tab Renderer**: `batch/tab-renderer.js` - DOM rendering
+- This pattern separates concerns and improves testability
+
+**4. Message Passing Architecture**
 - Background service worker coordinates between pages
 - Uses `chrome.runtime.sendMessage()` for cross-component communication
 - Template changes broadcast via `TemplateChangeNotifier`
 
-**3. Clipboard Operations**
-- Uses Offscreen Documents API (Manifest V3 requirement) instead of content scripts
-- `offscreen/offscreen.js` handles clipboard writes to bypass CSP restrictions
-- Background script manages offscreen document lifecycle with health checks
+**5. Clipboard Operations**
+- **Unified Helper**: `clipboard-helper.js` handles all copy operations
+  - Automatic fallback: Clipboard API → execCommand
+  - Environment detection (page vs background)
+  - Error handling with custom `ClipboardError` types
+  - Copy operation manager prevents duplicate operations (300ms debounce)
+- **Background Script**: Uses Offscreen Documents API (Manifest V3 requirement)
+  - `offscreen/offscreen.js` handles clipboard writes to bypass CSP restrictions
+  - Background script manages offscreen document lifecycle with health checks
+- **Page Scripts**: Use `copyToClipboard()` from `clipboard-helper.js`
 
-**4. Storage Strategy**
+**6. Storage Strategy**
 - `chrome.storage.sync` for user settings (syncs across devices)
 - `chrome.storage.local` for caches (short URL cache)
 - Settings managed through `settings-manager.js` singleton
 
-**5. Custom Template System**
+**7. Custom Template System**
 - Template engine supports 11 variables: `{{url}}`, `{{title}}`, `{{shortUrl}}`, `{{date}}`, `{{time}}`, etc.
 - Templates stored in `chrome.storage.sync` as `customTemplates` array
 - Real-time validation and preview in options page
 - Async processing required due to URL cleaning dependency
 
-**6. URL Parameter Management**
+**8. URL Parameter Management**
 - Three cleaning modes: `off`, `smart`, `aggressive`
 - Custom parameter rules (tracking vs functional parameters)
 - Async `processUrl()` function - **must be awaited** everywhere
 - Rules stored in `customParamRules` in sync storage
 
-**7. Short URL Caching**
+**9. Short URL Caching**
 - Cache keys based on **cleaned URLs** (post-processing)
 - `ShortUrlThrottle` class limits concurrent requests (max 3)
 - Persistent cache using `chrome.storage.local`
 - Cache helper functions in `constants.js`: `getCachedShortUrl()`, `setCachedShortUrl()`, `getOrGenerateShortUrl()`
+- Progress callback support for batch operations
 
 ## Important Implementation Details
 
@@ -208,6 +237,15 @@ src/
 
 ## Common Patterns
 
+### Adding a New Copy Format
+1. Create new generator class in `src/background/content-generators/`
+   - Extend `BaseContentGenerator`
+   - Implement `generate(formatInfo, tab, settings, helpers)` method
+2. Register generator in `ContentGeneratorFactory.generators`
+3. Add format option to popup/batch UI
+4. Update format selector in respective pages
+5. Add tests for the new generator
+
 ### Adding a New Template Variable
 1. Add field definition to `TEMPLATE_FIELDS` in `constants.js`
 2. Add processor to `TemplateEngine.initializeFieldProcessors()`
@@ -231,6 +269,15 @@ src/
 2. Add entry points to `esbuild.config.js` (JS and CSS)
 3. Update manifest.json if needed (for special pages)
 4. Add copy operations in build script's `copy-assets` plugin
+
+### Refactoring a Page into Modules
+Follow the batch page pattern for complex pages:
+1. **State Manager**: Create `{page}/state-manager.js` - Singleton class for state
+2. **Event Handlers**: Create `{page}/event-handlers.js` - Pure functions for events
+3. **Renderers**: Create `{page}/{component}-renderer.js` - DOM manipulation logic
+4. **Utilities**: Create `{page}/{feature}-helper.js` - Feature-specific logic
+5. Main page file imports and coordinates these modules
+6. Benefits: Better testability, separation of concerns, code reusability
 
 ## Internationalization (i18n)
 

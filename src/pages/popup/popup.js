@@ -6,6 +6,7 @@ import {
   isValidWebUrl,
   getOrGenerateShortUrl,
 } from "../../shared/constants.js";
+import { createMarkdownLink } from "../../shared/formatters.js";
 
 import { trackCopy } from "../../shared/analytics.js";
 import settingsManager from "../../shared/settings-manager.js";
@@ -278,21 +279,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 创建 markdown 链接格式
-  async function createMarkdownLink(url, title) {
-    const cleaningSelect = elements.removeParamsToggle;
-    const cleaningMode = cleaningSelect.getAttribute("data-value");
-    const processedUrl = await processUrl(url, cleaningMode);
-    const linkTitle = title || new URL(url).hostname;
-    return `[${linkTitle}](${processedUrl})`;
-  }
-
   // 复制 markdown 链接
   async function copyMarkdown() {
     await copyManager.execute('copyMarkdown', async () => {
-      const markdownLink = await createMarkdownLink(currentUrl, currentTitle);
       const cleaningSelect = elements.removeParamsToggle;
       const cleaningMode = cleaningSelect.getAttribute("data-value");
+      const markdownLink = await createMarkdownLink(currentUrl, currentTitle, cleaningMode);
 
       const result = await copyToClipboard(markdownLink, {
         source: 'popup',

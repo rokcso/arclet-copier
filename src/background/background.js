@@ -19,6 +19,12 @@ import {
   setupLanguageChangeListener,
 } from "../shared/ui/i18n.js";
 
+// Import content generators (Strategy Pattern)
+import { ContentGeneratorFactory } from "./content-generators/index.js";
+
+// Import formatters
+import { createMarkdownLink } from "../shared/formatters.js";
+
 // ============================================
 // 多语言支持 - 使用统一的 i18n 工具
 // ============================================
@@ -296,12 +302,7 @@ async function getPageMetadata(tabId) {
   }
 }
 
-// 创建 markdown 链接格式
-async function createMarkdownLink(url, title, cleaningMode) {
-  const processedUrl = await processUrl(url, cleaningMode);
-  const linkTitle = title || new URL(url).hostname;
-  return `[${linkTitle}](${processedUrl})`;
-}
+// Note: createMarkdownLink moved to shared/formatters.js for reuse
 
 // 处理短链生成 - unified wrapper using getOrGenerateShortUrl
 async function handleCreateShortUrl(longUrl, service) {
@@ -343,124 +344,27 @@ function determineContentFormat(settings) {
 }
 
 /**
- * Generate content based on format
+ * Generate content based on format using Strategy Pattern
  * @param {object} formatInfo - Format information
  * @param {object} tab - Tab object
  * @param {object} settings - User settings
  * @returns {Promise<object>} { content, message, format, templateName }
  */
 async function generateContent(formatInfo, tab, settings) {
-  const { type, templateId } = formatInfo;
+  // Helper functions object for generators
+  const helpers = {
+    getPageTitle,
+    getPageMetadata,
+    handleCreateShortUrl,
+  };
 
-  switch (type) {
-    case "custom": {
-      try {
-        const title = await getPageTitle(tab.id, tab.url, tab);
-        const metadata = await getPageMetadata(tab.id);
-
-        const context = {
-          url: tab.url,
-          title: title || "",
-          urlCleaning: settings.urlCleaning,
-          shortUrl: "",
-          author: metadata.author || "",
-          description: metadata.description || "",
-        };
-
-        // Check if template needs short URL
-        const template = await getAllTemplates().then((templates) =>
-          templates.find((t) => t.id === templateId),
-        );
-
-        let templateName = null;
-        if (template) {
-          templateName = template.name;
-          if (template.template.includes("{{shortUrl}}")) {
-            try {
-              const shortUrl = await handleCreateShortUrl(
-                tab.url,
-                settings.shortUrlService,
-              );
-              context.shortUrl = shortUrl;
-            } catch (error) {
-              console.debug("Error generating short URL for template:", error);
-              context.shortUrl = await processUrl(
-                tab.url,
-                settings.urlCleaning,
-              );
-            }
-          }
-        }
-
-        const result = await processTemplateWithFallback(
-          templateId,
-          context,
-          await processUrl(tab.url, settings.urlCleaning),
-        );
-
-        return {
-          content: result.content,
-          message: result.success
-            ? getLocalMessage("customTemplateCopied") ||
-              `${result.templateName} copied`
-            : getLocalMessage("urlCopied"),
-          format: "custom",
-          templateName,
-        };
-      } catch (error) {
-        console.debug("Error processing custom template:", error);
-        // Fallback to URL
-        return {
-          content: await processUrl(tab.url, settings.urlCleaning),
-          message: getLocalMessage("urlCopied"),
-          format: "url",
-          templateName: null,
-        };
-      }
-    }
-
-    case "markdown": {
-      const title = await getPageTitle(tab.id, tab.url, tab);
-      return {
-        content: await createMarkdownLink(
-          tab.url,
-          title,
-          settings.urlCleaning,
-        ),
-        message: getLocalMessage("markdownCopied"),
-        format: "markdown",
-        templateName: null,
-      };
-    }
-
-    case "shortUrl": {
-      if (!isValidWebUrl(tab.url)) {
-        throw new Error(
-          getLocalMessage("invalidUrlForShortening") ||
-            "URL is not suitable for shortening",
-        );
-      }
-      const shortUrl = await handleCreateShortUrl(
-        tab.url,
-        settings.shortUrlService,
-      );
-      return {
-        content: shortUrl,
-        message: getLocalMessage("shortUrlCopied"),
-        format: "shortUrl",
-        templateName: null,
-      };
-    }
-
-    default: {
-      return {
-        content: await processUrl(tab.url, settings.urlCleaning),
-        message: getLocalMessage("urlCopied"),
-        format: "url",
-        templateName: null,
-      };
-    }
-  }
+  // Use factory to generate content
+  return await ContentGeneratorFactory.generate(
+    formatInfo,
+    tab,
+    settings,
+    helpers,
+  );
 }
 
 /**
