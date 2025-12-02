@@ -16,6 +16,7 @@ import {
   initializeI18n,
   getLocalMessage,
 } from "../../shared/ui/i18n.js";
+import { copyToClipboard } from "../../shared/clipboard-helper.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 状态管理
@@ -926,29 +927,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.previewModal.classList.remove("show");
   }
 
-  // 复制到剪贴板
-  async function copyToClipboard(text) {
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(text);
-      } else {
-        // 备用方法
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed";
-        textArea.style.left = "-9999px";
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-      }
-      return true;
-    } catch (error) {
-      console.debug("复制失败:", error);
-      return false;
-    }
-  }
-
   // 执行复制
   async function performCopy() {
     const selectedTabsList = getSelectedTabs();
@@ -983,14 +961,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       try {
         const content = await formatOutput(selectedTabsList, format);
-        success = await copyToClipboard(content);
+        const result = await copyToClipboard(content, {
+          source: 'batch',
+          showNotification: false,
+          trackAnalytics: false,  // Will track manually below
+        });
+        success = result.success;
       } finally {
         // 清除进度回调
         globalShortUrlThrottle.clearProgressCallback();
       }
     } else {
       const content = await formatOutput(selectedTabsList, format);
-      success = await copyToClipboard(content);
+      const result = await copyToClipboard(content, {
+        source: 'batch',
+        showNotification: false,
+        trackAnalytics: false,  // Will track manually below
+      });
+      success = result.success;
     }
 
     // 记录批量复制事件

@@ -545,6 +545,81 @@ async function handleCopyError(error, settings, startTime) {
 // 处理URL复制功能
 // @param {number} tabId - 明确的标签页ID，防止竞态条件
 // @param {object} tabSnapshot - 标签页快照（可选），包含初始URL和标题
+/**
+ * Get tab information with snapshot fallback
+ * @param {number|null} tabId - Tab ID to retrieve
+ * @param {Object|null} tabSnapshot - Fallback snapshot if tab is closed
+ * @returns {Promise<Object>} Tab object
+ * @throws {Error} If tab cannot be retrieved and no valid snapshot exists
+ */
+async function getTabInfo(tabId, tabSnapshot) {
+  if (tabId) {
+    try {
+      return await getTabById(tabId);
+    } catch (error) {
+      if (tabSnapshot && tabSnapshot.url) {
+        console.log("[Background] Tab closed, using snapshot data");
+        return tabSnapshot;
+      }
+      throw new Error(getLocalMessage("noUrl") || "Tab was closed");
+    }
+  }
+  return await getCurrentTab();
+}
+
+/**
+ * Track successful copy operation analytics
+ * @param {Object} result - Copy result (format, message, templateName)
+ * @param {Object} settings - User settings
+ * @param {Object} formatInfo - Format information (templateId, etc.)
+ * @param {number} duration - Operation duration in milliseconds
+ * @returns {Promise<void>}
+ */
+async function trackCopySuccess(result, settings, formatInfo, duration) {
+  await trackCopyOperation({
+    format: result.format,
+    source: "shortcut",
+    success: true,
+    duration,
+    urlCleaning:
+      settings.urlCleaning !== undefined ? settings.urlCleaning : null,
+    templateId: formatInfo.templateId || null,
+    templateName: result.templateName || null,
+    shortService:
+      result.format === "shortUrl"
+        ? settings.shortUrlService !== undefined
+          ? settings.shortUrlService
+          : null
+        : null,
+    errorType: null,
+    errorMessage: null,
+  });
+}
+
+/**
+ * Determine notification target tab ID
+ * Checks if the original tab still exists for content script notification
+ * @param {Object} tab - Tab object
+ * @returns {Promise<number|null>} Tab ID if tab exists, null otherwise
+ */
+async function determineNotificationTarget(tab) {
+  try {
+    await chrome.tabs.get(tab.id);
+    return tab.id;
+  } catch (error) {
+    console.log(
+      "[Background] Original tab closed, will use Chrome notification",
+    );
+    return null;
+  }
+}
+
+/**
+ * Handle copy URL request from keyboard shortcut
+ * @param {number|null} tabId - Optional specific tab ID
+ * @param {Object|null} tabSnapshot - Optional tab snapshot for closed tabs
+ * @returns {Promise<void>}
+ */
 async function handleCopyUrl(tabId = null, tabSnapshot = null) {
   // Prevent duplicate execution
   if (copyOperationStates.copyUrl) {
@@ -556,22 +631,8 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
   const startTime = Date.now();
 
   try {
-    // Get tab information
-    let tab;
-    if (tabId) {
-      try {
-        tab = await getTabById(tabId);
-      } catch (error) {
-        if (tabSnapshot && tabSnapshot.url) {
-          console.log("[Background] Tab closed, using snapshot data");
-          tab = tabSnapshot;
-        } else {
-          throw new Error(getLocalMessage("noUrl") || "Tab was closed");
-        }
-      }
-    } else {
-      tab = await getCurrentTab();
-    }
+    // Get tab information with fallback
+    const tab = await getTabInfo(tabId, tabSnapshot);
 
     // Get user settings
     settings = await getUserSettings();
@@ -585,37 +646,12 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
 
     // Track successful copy event
     const duration = Date.now() - startTime;
-    await trackCopyOperation({
-      format: result.format,
-      source: "shortcut",
-      success: true,
-      duration,
-      urlCleaning:
-        settings.urlCleaning !== undefined ? settings.urlCleaning : null,
-      templateId: formatInfo.templateId || null,
-      templateName: result.templateName || null,
-      shortService:
-        result.format === "shortUrl"
-          ? settings.shortUrlService !== undefined
-            ? settings.shortUrlService
-            : null
-          : null,
-      errorType: null,
-      errorMessage: null,
-    });
+    await trackCopySuccess(result, settings, formatInfo, duration);
 
-    // Determine notification tab ID
-    let notificationTabId = null;
-    try {
-      await chrome.tabs.get(tab.id);
-      notificationTabId = tab.id;
-    } catch (error) {
-      console.log(
-        "[Background] Original tab closed, will use Chrome notification",
-      );
-    }
+    // Determine notification target
+    const notificationTabId = await determineNotificationTarget(tab);
 
-    // Handle success
+    // Handle success notification
     await handleCopySuccess(result.message, notificationTabId);
   } catch (error) {
     // Ensure settings are available for error handling

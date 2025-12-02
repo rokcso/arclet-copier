@@ -18,16 +18,9 @@ import {
   initializeI18n,
   getLocalMessage,
 } from "../../shared/ui/i18n.js";
+import { copyToClipboard, copyImageToClipboard, copyManager } from "../../shared/clipboard-helper.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // 复制操作状态管理
-  const copyOperationStates = {
-    copyUrl: false,
-    copyMarkdown: false,
-    generateShortUrl: false,
-    copyQRCode: false,
-  };
-
   // 加载自定义模板到静默复制格式选择器
   async function loadCustomTemplates(preserveValue = null) {
     await loadTemplatesIntoSelect(elements.silentCopyFormat, {
@@ -257,120 +250,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.pageUrl.textContent = processedUrl;
   }
 
-  // 创建临时复制元素
-  function createTempCopyElement(text) {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    textArea.style.left = "-9999px";
-    textArea.style.top = "-9999px";
-    textArea.setAttribute("readonly", "");
-    return textArea;
-  }
-
-  // 使用execCommand复制的备用方法
-  function fallbackCopy(text) {
-    const textArea = createTempCopyElement(text);
-    document.body.appendChild(textArea);
-
-    textArea.select();
-    textArea.setSelectionRange(0, 99999);
-
-    const successful = document.execCommand("copy");
-    document.body.removeChild(textArea);
-
-    if (!successful) {
-      throw new Error("execCommand copy failed");
-    }
-
-    console.log("Popup execCommand copy successful");
-  }
-
   // 复制URL到剪贴板
   async function copyUrl() {
-    if (copyOperationStates.copyUrl) {
-      return; // 防止重复执行
-    }
-
-    copyOperationStates.copyUrl = true;
-    const startTime = Date.now();
-
-    try {
+    await copyManager.execute('copyUrl', async () => {
       const cleaningSelect = elements.removeParamsToggle;
       const cleaningMode = cleaningSelect.getAttribute("data-value");
       const processedUrl = await processUrl(currentUrl, cleaningMode);
 
-      // 首先尝试现代clipboard API
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(processedUrl);
-        console.log("Popup clipboard API copy successful");
-      } else {
-        fallbackCopy(processedUrl);
-      }
-
-      // 记录成功的复制事件
-      const duration = Date.now() - startTime;
-      const trackData = {
-        format: "url",
-        source: "popup",
-        success: true,
-        duration,
-        urlCleaning: cleaningMode !== undefined ? cleaningMode : null,
-        templateId: null,
-        templateName: null,
-        shortService: null,
-        errorType: null,
-        errorMessage: null,
-      };
-
-      trackCopy(trackData).catch((error) => {
-        console.debug("Failed to track copy event:", error);
+      const result = await copyToClipboard(processedUrl, {
+        source: 'popup',
+        showNotification: false,  // 使用 showStatus() 显示通知
+        trackAnalytics: true,
+        analyticsData: {
+          format: 'url',
+          urlCleaning: cleaningMode !== undefined ? cleaningMode : null,
+          templateId: null,
+          templateName: null,
+          shortService: null,
+        },
       });
 
-      showStatus();
-    } catch (error) {
-      console.debug("复制失败:", error);
-      let fallbackSuccess = false;
-
-      // 使用fallback复制方法
-      try {
-        const cleaningSelect = elements.removeParamsToggle;
-        const cleaningMode = cleaningSelect.getAttribute("data-value");
-        const processedUrl = await processUrl(currentUrl, cleaningMode);
-        fallbackCopy(processedUrl);
-        fallbackSuccess = true;
+      if (result.success) {
         showStatus();
-      } catch (fallbackError) {
-        console.debug("降级复制也失败:", fallbackError);
       }
 
-      // 记录复制事件（成功或失败）
-      const duration = Date.now() - startTime;
-      const cleaningSelect = elements.removeParamsToggle;
-      const cleaningMode = cleaningSelect.getAttribute("data-value");
-
-      const trackData = {
-        format: "url",
-        source: "popup",
-        success: fallbackSuccess,
-        duration,
-        urlCleaning: cleaningMode !== undefined ? cleaningMode : null,
-        templateId: null,
-        templateName: null,
-        shortService: null,
-        errorType: fallbackSuccess ? null : "clipboard",
-        errorMessage: fallbackSuccess ? null : error.message,
-      };
-
-      trackCopy(trackData).catch((trackError) => {
-        console.debug("Failed to track copy event:", trackError);
-      });
-    } finally {
-      // 300ms后重置状态
-      setTimeout(() => {
-        copyOperationStates.copyUrl = false;
-      }, 300);
-    }
+      return result;
+    });
   }
 
   // 创建 markdown 链接格式
@@ -384,93 +289,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 复制 markdown 链接
   async function copyMarkdown() {
-    if (copyOperationStates.copyMarkdown) {
-      return; // 防止重复执行
-    }
-
-    copyOperationStates.copyMarkdown = true;
-    const startTime = Date.now();
-
-    try {
+    await copyManager.execute('copyMarkdown', async () => {
       const markdownLink = await createMarkdownLink(currentUrl, currentTitle);
-
-      // 首先尝试现代clipboard API
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(markdownLink);
-        console.log("Popup markdown clipboard API copy successful");
-      } else {
-        fallbackCopy(markdownLink);
-      }
-
-      // 记录成功的复制事件
-      const duration = Date.now() - startTime;
       const cleaningSelect = elements.removeParamsToggle;
       const cleaningMode = cleaningSelect.getAttribute("data-value");
 
-      trackCopy({
-        format: "markdown",
-        source: "popup",
-        success: true,
-        duration,
-        urlCleaning: cleaningMode !== undefined ? cleaningMode : null,
-        templateId: null,
-        templateName: null,
-        shortService: null,
-        errorType: null,
-        errorMessage: null,
-      }).catch((error) => {
-        console.debug("Failed to track markdown copy event:", error);
+      const result = await copyToClipboard(markdownLink, {
+        source: 'popup',
+        showNotification: true,
+        successMessage: getLocalMessage("markdownCopied"),
+        trackAnalytics: true,
+        analyticsData: {
+          format: 'markdown',
+          urlCleaning: cleaningMode !== undefined ? cleaningMode : null,
+          templateId: null,
+          templateName: null,
+          shortService: null,
+        },
       });
 
-      toast.success(getLocalMessage("markdownCopied"));
-    } catch (error) {
-      console.debug("Markdown复制失败:", error);
-      let fallbackSuccess = false;
-
-      // 使用fallback复制方法
-      try {
-        const markdownLink = createMarkdownLink(currentUrl, currentTitle);
-        fallbackCopy(markdownLink);
-        fallbackSuccess = true;
-        toast.success(getLocalMessage("markdownCopied"));
-      } catch (fallbackError) {
-        console.debug("Markdown降级复制也失败:", fallbackError);
-      }
-
-      // 记录复制事件（成功或失败）
-      const duration = Date.now() - startTime;
-      const cleaningSelect = elements.removeParamsToggle;
-      const cleaningMode = cleaningSelect.getAttribute("data-value");
-
-      trackCopy({
-        format: "markdown",
-        source: "popup",
-        success: fallbackSuccess,
-        duration,
-        urlCleaning: cleaningMode !== undefined ? cleaningMode : null,
-        templateId: null,
-        templateName: null,
-        shortService: null,
-        errorType: fallbackSuccess ? null : "clipboard",
-        errorMessage: fallbackSuccess ? null : error.message,
-      }).catch((trackError) => {
-        console.debug("Failed to track markdown copy event:", trackError);
-      });
-    } finally {
-      // 300ms后重置状态
-      setTimeout(() => {
-        copyOperationStates.copyMarkdown = false;
-      }, 300);
-    }
+      return result;
+    });
   }
 
   // 生成短链 - simplified using getOrGenerateShortUrl
   async function generateShortUrl() {
-    // Prevent duplicate execution
-    if (copyOperationStates.generateShortUrl) {
-      return;
-    }
-
     if (!currentUrl) {
       toast.warning(getLocalMessage("noUrl") || "No URL available");
       return;
@@ -485,81 +328,60 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    copyOperationStates.generateShortUrl = true;
-    const startTime = Date.now();
+    await copyManager.execute('generateShortUrl', async () => {
+      // Show loading state
+      const originalText = elements.shortUrlBtn.querySelector("span").textContent;
+      const loadingText = getLocalMessage("generating") || "Generating...";
+      elements.shortUrlBtn.querySelector("span").textContent = loadingText;
+      elements.shortUrlBtn.disabled = true;
 
-    // Show loading state
-    const originalText = elements.shortUrlBtn.querySelector("span").textContent;
-    const loadingText = getLocalMessage("generating") || "Generating...";
-    elements.shortUrlBtn.querySelector("span").textContent = loadingText;
-    elements.shortUrlBtn.disabled = true;
-
-    try {
-      // Get settings
-      const result = await chrome.storage.sync.get(["shortUrlService"]);
-      const selectedService = result.shortUrlService || "isgd";
-
-      const cleaningSelect = elements.removeParamsToggle;
-      const cleaningMode = cleaningSelect.getAttribute("data-value");
-
-      // Use unified helper function - handles caching, cleaning, generation
-      const shortUrl = await getOrGenerateShortUrl(
-        currentUrl,
-        cleaningMode,
-        selectedService,
-      );
-
-      // Copy to clipboard
-      let copySuccess = false;
       try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(shortUrl);
-          copySuccess = true;
-        } else {
-          fallbackCopy(shortUrl);
-          copySuccess = true;
-        }
+        // Get settings
+        const result = await chrome.storage.sync.get(["shortUrlService"]);
+        const selectedService = result.shortUrlService || "isgd";
+
+        const cleaningSelect = elements.removeParamsToggle;
+        const cleaningMode = cleaningSelect.getAttribute("data-value");
+
+        // Use unified helper function - handles caching, cleaning, generation
+        const shortUrl = await getOrGenerateShortUrl(
+          currentUrl,
+          cleaningMode,
+          selectedService,
+        );
+
+        // Copy to clipboard using clipboard helper
+        const serviceName =
+          SHORT_URL_SERVICES[selectedService]?.name || selectedService;
+
+        const copyResult = await copyToClipboard(shortUrl, {
+          source: 'popup',
+          showNotification: true,
+          successMessage: getLocalMessage("shortUrlGenerated") ||
+            `Short URL generated and copied! (${serviceName})`,
+          trackAnalytics: true,
+          analyticsData: {
+            format: 'shortUrl',
+            urlCleaning: null,
+            templateId: null,
+            templateName: null,
+            shortService: selectedService !== undefined ? selectedService : null,
+          },
+        });
+
+        return copyResult;
       } catch (error) {
-        console.debug("短链复制失败:", error);
+        console.debug("生成短链失败:", error);
+        toast.error(
+          getLocalMessage("shortUrlFailed") || "Failed to generate short URL",
+        );
+        throw error;
+      } finally {
+        // Restore button state
+        elements.shortUrlBtn.querySelector("span").textContent = originalText;
+        elements.shortUrlBtn.disabled = false;
       }
-
-      // Track copy event
-      trackCopy({
-        format: "shortUrl",
-        source: "popup",
-        success: copySuccess,
-        duration: Date.now() - startTime,
-        urlCleaning: null,
-        templateId: null,
-        templateName: null,
-        shortService: selectedService !== undefined ? selectedService : null,
-        errorType: copySuccess ? null : "clipboard",
-        errorMessage: copySuccess ? null : "Copy failed",
-      }).catch((error) => {
-        console.debug("Failed to track shortUrl copy:", error);
-      });
-
-      // Show success notification
-      const serviceName =
-        SHORT_URL_SERVICES[selectedService]?.name || selectedService;
-      toast.success(
-        getLocalMessage("shortUrlGenerated") ||
-          `Short URL generated and copied! (${serviceName})`,
-      );
-    } catch (error) {
-      console.debug("生成短链失败:", error);
-      toast.error(
-        getLocalMessage("shortUrlFailed") || "Failed to generate short URL",
-      );
-    } finally {
-      // Restore button state
-      elements.shortUrlBtn.querySelector("span").textContent = originalText;
-      elements.shortUrlBtn.disabled = false;
-
-      setTimeout(() => {
-        copyOperationStates.generateShortUrl = false;
-      }, 1000);
-    }
+    }, 1000); // Use 1000ms debounce for short URL generation
   }
 
   // 显示复制成功状态
@@ -570,98 +392,75 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 复制二维码图片到剪贴板
   async function copyQRCodeImage() {
-    if (copyOperationStates.copyQRCode) {
-      return; // 防止重复执行
-    }
-
-    copyOperationStates.copyQRCode = true;
-    const startTime = Date.now();
-
-    try {
+    await copyManager.execute('copyQRCode', async () => {
       const canvas = elements.qrCodeContainer.querySelector("canvas");
       if (!canvas) {
-        throw new Error("未找到二维码canvas元素");
+        toast.error("未找到二维码canvas元素");
+        return { success: false };
       }
 
-      // 将canvas转换为blob
-      canvas.toBlob(async (blob) => {
-        if (!blob) {
-          throw new Error("无法生成二维码图片");
-        }
-
-        try {
-          // 使用现代clipboard API复制图片
-          if (navigator.clipboard && navigator.clipboard.write) {
-            const clipboardItem = new ClipboardItem({ "image/png": blob });
-            await navigator.clipboard.write([clipboardItem]);
-
-            // 记录成功的QR码复制事件
-            const duration = Date.now() - startTime;
-            trackCopy({
-              format: "qrcode",
-              source: "popup",
-              success: true,
-              duration,
-              urlCleaning: null,
-              templateId: null,
-              templateName: null,
-              shortService: null,
-              errorType: null,
-              errorMessage: null,
-            }).catch((error) => {
-              console.debug("Failed to track QR code copy:", error);
-            });
-
-            // 复制成功后立即关闭二维码模态框
-            hideQRModal();
-
-            // 关闭弹窗后显示成功通知
-            setTimeout(() => {
-              toast.success(
-                getLocalMessage("qrCodeCopied") || "二维码图片已复制",
-              );
-            }, 200);
-          } else {
-            throw new Error("浏览器不支持图片复制功能");
+      // Convert canvas to blob
+      return new Promise((resolve) => {
+        canvas.toBlob(async (blob) => {
+          if (!blob) {
+            toast.error("无法生成二维码图片");
+            resolve({ success: false });
+            return;
           }
-        } catch (error) {
-          console.debug("复制二维码图片失败:", error);
 
-          // 记录失败的QR码复制事件
-          const duration = Date.now() - startTime;
-          trackCopy({
-            format: "qrcode",
-            source: "popup",
-            success: false,
-            duration,
-            urlCleaning: null,
-            templateId: null,
-            templateName: null,
-            shortService: null,
-            errorType: "clipboard",
-            errorMessage: error.message,
-          }).catch((trackError) => {
-            console.debug("Failed to track QR code copy error:", trackError);
+          const result = await copyImageToClipboard(blob, {
+            source: 'popup',
+            showNotification: false,  // Handle notification manually
+            onSuccess: () => {
+              // Track analytics
+              trackCopy({
+                format: 'qrcode',
+                source: 'popup',
+                success: true,
+                urlCleaning: null,
+                templateId: null,
+                templateName: null,
+                shortService: null,
+              }).catch((error) => {
+                console.debug('Failed to track QR code copy:', error);
+              });
+
+              // Close modal immediately
+              hideQRModal();
+
+              // Show success notification after closing modal
+              setTimeout(() => {
+                toast.success(
+                  getLocalMessage('qrCodeCopied') || '二维码图片已复制',
+                );
+              }, 200);
+            },
+            onError: (error) => {
+              // Track error
+              trackCopy({
+                format: 'qrcode',
+                source: 'popup',
+                success: false,
+                errorType: 'clipboard',
+                errorMessage: error.message,
+                urlCleaning: null,
+                templateId: null,
+                templateName: null,
+                shortService: null,
+              }).catch((trackError) => {
+                console.debug('Failed to track QR code copy error:', trackError);
+              });
+
+              toast.error(
+                getLocalMessage('qrCodeCopyFailed') || '二维码图片复制失败',
+              );
+            },
           });
 
-          toast.error(
-            getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败",
-          );
-        } finally {
-          // 重置状态
-          setTimeout(() => {
-            copyOperationStates.copyQRCode = false;
-          }, 300);
-        }
-      }, "image/png");
-    } catch (error) {
-      console.debug("处理二维码图片失败:", error);
-      toast.error(getLocalMessage("qrCodeCopyFailed") || "二维码图片复制失败");
-      // 重置状态
-      setTimeout(() => {
-        copyOperationStates.copyQRCode = false;
-      }, 300);
-    }
+          resolve(result);
+        }, 'image/png');
+      });
+    });
   }
 
   // 生成二维码
