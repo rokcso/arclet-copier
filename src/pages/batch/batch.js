@@ -1,18 +1,17 @@
 import {
   processUrl,
   isRestrictedPage,
-  createShortUrlDirect,
-  globalShortUrlThrottle,
   loadTemplatesIntoSelect,
   processTemplateWithFallback,
   findTemplateById,
   validateAndFixSelector,
+  getOrGenerateShortUrl,
+  globalShortUrlThrottle,
 } from "../../shared/constants.js";
 
 import { trackCopy } from "../../shared/analytics.js";
 import settingsManager from "../../shared/settings-manager.js";
 import toast from "../../shared/toast.js";
-import shortUrlCache from "../../shared/short-url-cache.js";
 import {
   initializeI18n,
   getLocalMessage,
@@ -780,38 +779,12 @@ document.addEventListener("DOMContentLoaded", async () => {
               try {
                 const selectedService =
                   await settingsManager.getSetting("shortUrlService");
-                // 修复: 先清理URL
-                const cleanedUrl = await processUrl(tab.url, cleaningMode);
-
-                // 修复: 使用清理后的URL检查缓存
-                const cachedUrl = await shortUrlCache.get(
-                  cleanedUrl,
+                // Use unified helper function - handles caching, cleaning, generation
+                context.shortUrl = await getOrGenerateShortUrl(
+                  tab.url,
+                  cleaningMode,
                   selectedService,
                 );
-                if (cachedUrl) {
-                  context.shortUrl = cachedUrl;
-                } else {
-                  // 生成新的短链
-                  context.shortUrl =
-                    await globalShortUrlThrottle.throttledRequest(async () => {
-                      try {
-                        const shortUrl = await createShortUrlDirect(
-                          cleanedUrl,
-                          selectedService,
-                        );
-                        // 修复: 使用清理后的URL保存到缓存
-                        await shortUrlCache.set(
-                          cleanedUrl,
-                          selectedService,
-                          shortUrl,
-                        );
-                        return shortUrl;
-                      } catch (error) {
-                        console.debug("短链生成失败:", error);
-                        return cleanedUrl;
-                      }
-                    });
-                }
               } catch (error) {
                 console.debug(
                   "Error generating short URL for template:",
@@ -865,37 +838,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         const selectedService =
           await settingsManager.getSetting("shortUrlService");
 
-        // 批量生成短链，使用限流器
+        // 批量生成短链 - using unified helper
         const shortUrls = await Promise.all(
           tabs.map(async (tab) => {
-            // 修复: 先清理URL
-            const cleanedUrl = await processUrl(tab.url, cleaningMode);
-
-            // 修复: 使用清理后的URL检查缓存
-            const cachedUrl = await shortUrlCache.get(
-              cleanedUrl,
-              selectedService,
-            );
-            if (cachedUrl) {
-              return cachedUrl;
+            try {
+              // Use unified helper function - handles caching, cleaning, throttling
+              return await getOrGenerateShortUrl(
+                tab.url,
+                cleaningMode,
+                selectedService,
+              );
+            } catch (error) {
+              console.debug("短链生成失败:", error);
+              // Fallback to cleaned URL on error
+              return await processUrl(tab.url, cleaningMode);
             }
-
-            // 使用全局限流器处理请求
-            return await globalShortUrlThrottle.throttledRequest(async () => {
-              try {
-                const shortUrl = await createShortUrlDirect(
-                  cleanedUrl,
-                  selectedService,
-                );
-
-                // 修复: 使用清理后的URL保存到缓存
-                await shortUrlCache.set(cleanedUrl, selectedService, shortUrl);
-                return shortUrl;
-              } catch (error) {
-                console.debug("短链生成失败:", error);
-                return cleanedUrl; // 如果出错则返回清理后的URL
-              }
-            });
           }),
         );
         return shortUrls.join("\n");

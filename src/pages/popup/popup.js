@@ -4,12 +4,12 @@ import {
   loadTemplatesIntoSelect,
   validateAndFixSelector,
   isValidWebUrl,
+  getOrGenerateShortUrl,
 } from "../../shared/constants.js";
 
 import { trackCopy } from "../../shared/analytics.js";
 import settingsManager from "../../shared/settings-manager.js";
 import toast from "../../shared/toast.js";
-import shortUrlCache from "../../shared/short-url-cache.js";
 import {
   initializeThreeWaySwitch,
   getUrlCleaningOptions,
@@ -464,9 +464,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 生成短链
+  // 生成短链 - simplified using getOrGenerateShortUrl
   async function generateShortUrl() {
-    // 强化防抖：如果正在生成短链，直接返回
+    // Prevent duplicate execution
     if (copyOperationStates.generateShortUrl) {
       return;
     }
@@ -476,7 +476,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // 验证URL是否适合生成短链
+    // Validate URL is suitable for shortening
     if (!isValidWebUrl(currentUrl)) {
       toast.warning(
         getLocalMessage("invalidUrlForShortening") ||
@@ -485,154 +485,77 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // 设置防抖状态
     copyOperationStates.generateShortUrl = true;
-
-    // 记录开始时间用于追踪
     const startTime = Date.now();
 
-    // 显示加载状态
+    // Show loading state
     const originalText = elements.shortUrlBtn.querySelector("span").textContent;
     const loadingText = getLocalMessage("generating") || "Generating...";
     elements.shortUrlBtn.querySelector("span").textContent = loadingText;
     elements.shortUrlBtn.disabled = true;
 
     try {
-      // Get short URL service from storage
+      // Get settings
       const result = await chrome.storage.sync.get(["shortUrlService"]);
       const selectedService = result.shortUrlService || "isgd";
 
-      // 获取当前的URL清理模式
       const cleaningSelect = elements.removeParamsToggle;
       const cleaningMode = cleaningSelect.getAttribute("data-value");
 
-      // 修复: 先清理URL
-      const cleanedUrl = await processUrl(currentUrl, cleaningMode);
-
-      // 修复: 使用清理后的URL检查缓存
-      const cachedShortUrl = await shortUrlCache.get(
-        cleanedUrl,
+      // Use unified helper function - handles caching, cleaning, generation
+      const shortUrl = await getOrGenerateShortUrl(
+        currentUrl,
+        cleaningMode,
         selectedService,
       );
-      if (cachedShortUrl) {
-        // 使用缓存的短链
-        console.log("[Popup] 使用缓存的短链:", cachedShortUrl);
 
-        // 复制短链到剪贴板
-        let copySuccess = false;
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(cachedShortUrl);
-            copySuccess = true;
-          } else {
-            fallbackCopy(cachedShortUrl);
-            copySuccess = true;
-          }
-        } catch (error) {
-          console.debug("短链复制失败:", error);
+      // Copy to clipboard
+      let copySuccess = false;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(shortUrl);
+          copySuccess = true;
+        } else {
+          fallbackCopy(shortUrl);
+          copySuccess = true;
         }
-
-        // 记录短链复制事件（缓存）
-        trackCopy({
-          format: "shortUrl",
-          source: "popup",
-          success: copySuccess,
-          duration: Date.now() - startTime,
-          urlCleaning: null,
-          templateId: null,
-          templateName: null,
-          shortService: selectedService !== undefined ? selectedService : null,
-          errorType: copySuccess ? null : "clipboard",
-          errorMessage: copySuccess ? null : "Cache copy failed",
-        }).catch((error) => {
-          console.debug("Failed to track cached shortUrl copy:", error);
-        });
-
-        // 显示成功通知
-        const serviceName =
-          SHORT_URL_SERVICES[selectedService]?.name || selectedService;
-        toast.success(
-          getLocalMessage("shortUrlGenerated") ||
-            `Short URL generated and copied! (${serviceName})`,
-        );
-
-        return; // 直接返回，不需要发送API请求
+      } catch (error) {
+        console.debug("短链复制失败:", error);
       }
 
-      // 通过 background script 生成短链
-      const response = await chrome.runtime.sendMessage({
-        action: "createShortUrl",
-        url: currentUrl,
-        service: selectedService,
+      // Track copy event
+      trackCopy({
+        format: "shortUrl",
+        source: "popup",
+        success: copySuccess,
+        duration: Date.now() - startTime,
+        urlCleaning: null,
+        templateId: null,
+        templateName: null,
+        shortService: selectedService !== undefined ? selectedService : null,
+        errorType: copySuccess ? null : "clipboard",
+        errorMessage: copySuccess ? null : "Copy failed",
+      }).catch((error) => {
+        console.debug("Failed to track shortUrl copy:", error);
       });
 
-      // 添加调试日志
-      console.log("[Popup] Short URL response:", response);
-
-      // 验证响应有效性
-      if (!response) {
-        throw new Error("No response from background script");
-      }
-
-      // 改进响应验证：有短链且无错误就视为成功
-      if (response.success || (response.shortUrl && !response.error)) {
-        // 确保成功标记正确
-        response.success = true;
-        // 修复: 使用清理后的URL保存到缓存
-        await shortUrlCache.set(cleanedUrl, selectedService, response.shortUrl);
-        console.log("[Popup] 短链已缓存:", response.shortUrl);
-
-        // 复制短链到剪贴板
-        let copySuccess = false;
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(response.shortUrl);
-            copySuccess = true;
-          } else {
-            fallbackCopy(response.shortUrl);
-            copySuccess = true;
-          }
-        } catch (error) {
-          console.debug("短链复制失败:", error);
-        }
-
-        // 记录短链复制事件（新生成）
-        trackCopy({
-          format: "shortUrl",
-          source: "popup",
-          success: copySuccess,
-          duration: Date.now() - startTime,
-          urlCleaning: null,
-          templateId: null,
-          templateName: null,
-          shortService: selectedService !== undefined ? selectedService : null,
-          errorType: copySuccess ? null : "clipboard",
-          errorMessage: copySuccess ? null : "Generated copy failed",
-        }).catch((error) => {
-          console.debug("Failed to track generated shortUrl copy:", error);
-        });
-
-        // 显示成功通知
-        const serviceName =
-          SHORT_URL_SERVICES[selectedService]?.name || selectedService;
-        toast.success(
-          getLocalMessage("shortUrlGenerated") ||
-            `Short URL generated and copied! (${serviceName})`,
-        );
-      } else {
-        throw new Error(response.error || "Failed to generate short URL");
-      }
+      // Show success notification
+      const serviceName =
+        SHORT_URL_SERVICES[selectedService]?.name || selectedService;
+      toast.success(
+        getLocalMessage("shortUrlGenerated") ||
+          `Short URL generated and copied! (${serviceName})`,
+      );
     } catch (error) {
       console.debug("生成短链失败:", error);
       toast.error(
         getLocalMessage("shortUrlFailed") || "Failed to generate short URL",
       );
     } finally {
-      // 恢复按钮状态
+      // Restore button state
       elements.shortUrlBtn.querySelector("span").textContent = originalText;
       elements.shortUrlBtn.disabled = false;
 
-      // 重置防抖状态（使用更长的延迟避免重复请求）
       setTimeout(() => {
         copyOperationStates.generateShortUrl = false;
       }, 1000);

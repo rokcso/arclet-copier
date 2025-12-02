@@ -2,18 +2,17 @@
 
 import {
   processUrl,
-  createShortUrl,
   isValidWebUrl,
   getAllTemplates,
   processTemplateWithFallback,
   initializeParamRules,
+  getOrGenerateShortUrl,
 } from "../shared/constants.js";
 
 // 导入分析模块
 import { trackInstall, trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
 import notificationHelper from "../shared/notification-helper.js";
-import shortUrlCache from "../shared/short-url-cache.js";
 import {
   initializeI18n,
   getLocalMessage,
@@ -304,99 +303,57 @@ async function createMarkdownLink(url, title, cleaningMode) {
   return `[${linkTitle}](${processedUrl})`;
 }
 
-// 处理短链生成
+// 处理短链生成 - unified wrapper using getOrGenerateShortUrl
 async function handleCreateShortUrl(longUrl, service) {
   try {
-    // 验证URL是否适合生成短链
-    if (!isValidWebUrl(longUrl)) {
-      throw new Error(
-        getLocalMessage("invalidUrlForShortening") ||
-          "URL is not suitable for shortening",
-      );
-    }
-
     const settings = await getUserSettings();
     const serviceToUse = service || settings.shortUrlService;
 
-    // 修复: 先应用URL清理规则,再检查缓存
-    const cleanedUrl = await processUrl(longUrl, settings.urlCleaning);
-
-    // 验证清理后的URL
-    if (!isValidWebUrl(cleanedUrl)) {
-      throw new Error(
-        getLocalMessage("invalidUrlForShortening") ||
-          "Cleaned URL is not suitable for shortening",
-      );
-    }
-
-    // 修复: 使用清理后的URL检查缓存
-    const cachedShortUrl = await shortUrlCache.get(cleanedUrl, serviceToUse);
-    if (cachedShortUrl) {
-      console.log("[Background] 使用缓存的短链:", cachedShortUrl);
-      return cachedShortUrl;
-    }
-
-    // 生成短链
-    const shortUrl = await createShortUrl(cleanedUrl, serviceToUse);
-
-    // 修复: 使用清理后的URL保存到缓存
-    await shortUrlCache.set(cleanedUrl, serviceToUse, shortUrl);
-    console.log(`[Background] Short URL created and cached: ${shortUrl}`);
-
-    return shortUrl;
+    // Use unified helper function that handles all caching logic
+    return await getOrGenerateShortUrl(
+      longUrl,
+      settings.urlCleaning,
+      serviceToUse,
+    );
   } catch (error) {
     console.debug("[Background] Failed to create short URL:", error);
     throw error;
   }
 }
 
-// 处理URL复制功能
-// @param {number} tabId - 明确的标签页ID，防止竞态条件
-// @param {object} tabSnapshot - 标签页快照（可选），包含初始URL和标题
-async function handleCopyUrl(tabId = null, tabSnapshot = null) {
-  // 防止重复执行
-  if (copyOperationStates.copyUrl) {
-    return;
+/**
+ * Determine content format from settings
+ * @param {object} settings - User settings
+ * @returns {object} Format info { type, templateId, templateName }
+ */
+function determineContentFormat(settings) {
+  if (settings.silentCopyFormat.startsWith("custom:")) {
+    return {
+      type: "custom",
+      templateId: settings.silentCopyFormat.substring(7),
+      templateName: null,
+    };
+  } else if (settings.silentCopyFormat === "markdown") {
+    return { type: "markdown", templateId: null, templateName: null };
+  } else if (settings.silentCopyFormat === "shortUrl") {
+    return { type: "shortUrl", templateId: null, templateName: null };
+  } else {
+    return { type: "url", templateId: null, templateName: null };
   }
+}
 
-  copyOperationStates.copyUrl = true;
-  let settings;
-  const startTime = Date.now();
+/**
+ * Generate content based on format
+ * @param {object} formatInfo - Format information
+ * @param {object} tab - Tab object
+ * @param {object} settings - User settings
+ * @returns {Promise<object>} { content, message, format, templateName }
+ */
+async function generateContent(formatInfo, tab, settings) {
+  const { type, templateId } = formatInfo;
 
-  try {
-    // 优先使用传入的 tabId 获取最新的 tab 信息，回退到动态查询（用于 popup 等场景）
-    let tab;
-    if (tabId) {
-      try {
-        // 验证 tab 是否仍然存在
-        tab = await getTabById(tabId);
-      } catch (error) {
-        // Tab 已被关闭，使用快照信息（如果有）
-        if (tabSnapshot && tabSnapshot.url) {
-          console.log("[Background] Tab closed, using snapshot data");
-          tab = tabSnapshot;
-        } else {
-          throw new Error(getLocalMessage("noUrl") || "Tab was closed");
-        }
-      }
-    } else {
-      // 回退到动态查询（popup 等场景）
-      tab = await getCurrentTab();
-    }
-
-    settings = await getUserSettings();
-
-    let contentToCopy;
-    let successMessage;
-    let copyFormat;
-    let templateId = null;
-    let templateName = null;
-
-    // 检查是否是自定义模板
-    if (settings.silentCopyFormat.startsWith("custom:")) {
-      templateId = settings.silentCopyFormat.substring(7); // 移除 'custom:' 前缀
-      copyFormat = "custom";
-
+  switch (type) {
+    case "custom": {
       try {
         const title = await getPageTitle(tab.id, tab.url, tab);
         const metadata = await getPageMetadata(tab.id);
@@ -410,11 +367,12 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
           description: metadata.description || "",
         };
 
-        // 检查模板是否需要短链并生成
+        // Check if template needs short URL
         const template = await getAllTemplates().then((templates) =>
           templates.find((t) => t.id === templateId),
         );
 
+        let templateName = null;
         if (template) {
           templateName = template.name;
           if (template.template.includes("{{shortUrl}}")) {
@@ -434,174 +392,246 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
           }
         }
 
-        // 使用标准化处理函数
         const result = await processTemplateWithFallback(
           templateId,
           context,
           await processUrl(tab.url, settings.urlCleaning),
         );
 
-        contentToCopy = result.content;
-        successMessage = result.success
-          ? getLocalMessage("customTemplateCopied") ||
-            `${result.templateName} copied`
-          : getLocalMessage("urlCopied");
+        return {
+          content: result.content,
+          message: result.success
+            ? getLocalMessage("customTemplateCopied") ||
+              `${result.templateName} copied`
+            : getLocalMessage("urlCopied"),
+          format: "custom",
+          templateName,
+        };
       } catch (error) {
         console.debug("Error processing custom template:", error);
-        // 回退到URL复制
-        contentToCopy = await processUrl(tab.url, settings.urlCleaning);
-        successMessage = getLocalMessage("urlCopied");
-        copyFormat = "url"; // 修正格式类型
+        // Fallback to URL
+        return {
+          content: await processUrl(tab.url, settings.urlCleaning),
+          message: getLocalMessage("urlCopied"),
+          format: "url",
+          templateName: null,
+        };
       }
-    } else if (settings.silentCopyFormat === "markdown") {
-      copyFormat = "markdown";
-      // 获取页面标题并创建 markdown 链接
+    }
+
+    case "markdown": {
       const title = await getPageTitle(tab.id, tab.url, tab);
-      contentToCopy = await createMarkdownLink(
-        tab.url,
-        title,
-        settings.urlCleaning,
-      );
-      successMessage = getLocalMessage("markdownCopied");
-    } else if (settings.silentCopyFormat === "shortUrl") {
-      copyFormat = "shortUrl";
-      // 验证URL是否适合生成短链
+      return {
+        content: await createMarkdownLink(
+          tab.url,
+          title,
+          settings.urlCleaning,
+        ),
+        message: getLocalMessage("markdownCopied"),
+        format: "markdown",
+        templateName: null,
+      };
+    }
+
+    case "shortUrl": {
       if (!isValidWebUrl(tab.url)) {
         throw new Error(
           getLocalMessage("invalidUrlForShortening") ||
             "URL is not suitable for shortening",
         );
       }
-      // 生成短链
       const shortUrl = await handleCreateShortUrl(
         tab.url,
         settings.shortUrlService,
       );
-      contentToCopy = shortUrl;
-      successMessage = getLocalMessage("shortUrlCopied");
-    } else {
-      copyFormat = "url";
-      // 默认复制 URL
-      contentToCopy = await processUrl(tab.url, settings.urlCleaning);
-      successMessage = getLocalMessage("urlCopied");
+      return {
+        content: shortUrl,
+        message: getLocalMessage("shortUrlCopied"),
+        format: "shortUrl",
+        templateName: null,
+      };
     }
 
-    await copyToClipboard(contentToCopy);
+    default: {
+      return {
+        content: await processUrl(tab.url, settings.urlCleaning),
+        message: getLocalMessage("urlCopied"),
+        format: "url",
+        templateName: null,
+      };
+    }
+  }
+}
 
-    // 记录成功的复制事件
+/**
+ * Track copy operation with analytics
+ * @param {object} data - Tracking data
+ */
+async function trackCopyOperation(data) {
+  try {
+    await trackCopy(data);
+  } catch (error) {
+    console.debug("Failed to track copy event:", error);
+  }
+}
+
+/**
+ * Handle successful copy operation
+ * @param {string} message - Success message
+ * @param {number|null} tabId - Tab ID for notification
+ */
+async function handleCopySuccess(message, tabId) {
+  await incrementCopyCount();
+  await notificationHelper.success(message, null, tabId);
+}
+
+/**
+ * Handle copy operation error
+ * @param {Error} error - Error object
+ * @param {object} settings - User settings
+ * @param {number} startTime - Operation start time
+ */
+async function handleCopyError(error, settings, startTime) {
+  let message;
+  let isUserValidationError = false;
+
+  if (error.message === getLocalMessage("noUrl")) {
+    message = getLocalMessage("noUrl");
+  } else if (settings.silentCopyFormat === "shortUrl") {
+    if (
+      error.message.includes(getLocalMessage("invalidUrlForShortening")) ||
+      error.message.includes("URL is not suitable for shortening")
+    ) {
+      message = getLocalMessage("invalidUrlForShortening");
+      isUserValidationError = true;
+    } else {
+      message = getLocalMessage("shortUrlFailed");
+    }
+  } else {
+    message = getLocalMessage("copyFailed");
+  }
+
+  if (!isUserValidationError) {
+    console.debug("复制 URL 失败:", error);
+  }
+
+  // Track failed copy event
+  const duration = Date.now() - startTime;
+  const errorType = isUserValidationError ? "validation" : "system";
+  const failedFormat = settings.silentCopyFormat || "url";
+
+  await trackCopyOperation({
+    format: failedFormat,
+    source: "shortcut",
+    success: false,
+    duration,
+    urlCleaning:
+      settings.urlCleaning !== undefined ? settings.urlCleaning : null,
+    templateId: null,
+    templateName: null,
+    shortService:
+      failedFormat === "shortUrl"
+        ? settings.shortUrlService !== undefined
+          ? settings.shortUrlService
+          : null
+        : null,
+    errorType,
+    errorMessage: error.message,
+  });
+
+  await notificationHelper.success(message);
+}
+
+// 处理URL复制功能
+// @param {number} tabId - 明确的标签页ID，防止竞态条件
+// @param {object} tabSnapshot - 标签页快照（可选），包含初始URL和标题
+async function handleCopyUrl(tabId = null, tabSnapshot = null) {
+  // Prevent duplicate execution
+  if (copyOperationStates.copyUrl) {
+    return;
+  }
+
+  copyOperationStates.copyUrl = true;
+  let settings;
+  const startTime = Date.now();
+
+  try {
+    // Get tab information
+    let tab;
+    if (tabId) {
+      try {
+        tab = await getTabById(tabId);
+      } catch (error) {
+        if (tabSnapshot && tabSnapshot.url) {
+          console.log("[Background] Tab closed, using snapshot data");
+          tab = tabSnapshot;
+        } else {
+          throw new Error(getLocalMessage("noUrl") || "Tab was closed");
+        }
+      }
+    } else {
+      tab = await getCurrentTab();
+    }
+
+    // Get user settings
+    settings = await getUserSettings();
+
+    // Determine format and generate content
+    const formatInfo = determineContentFormat(settings);
+    const result = await generateContent(formatInfo, tab, settings);
+
+    // Copy to clipboard
+    await copyToClipboard(result.content);
+
+    // Track successful copy event
     const duration = Date.now() - startTime;
-    const trackData = {
-      format: copyFormat,
+    await trackCopyOperation({
+      format: result.format,
       source: "shortcut",
       success: true,
       duration,
       urlCleaning:
         settings.urlCleaning !== undefined ? settings.urlCleaning : null,
-      templateId: templateId !== undefined ? templateId : null,
-      templateName: templateName !== undefined ? templateName : null,
+      templateId: formatInfo.templateId || null,
+      templateName: result.templateName || null,
       shortService:
-        copyFormat === "shortUrl"
+        result.format === "shortUrl"
           ? settings.shortUrlService !== undefined
             ? settings.shortUrlService
             : null
           : null,
       errorType: null,
       errorMessage: null,
-    };
-
-    trackCopy(trackData).catch((error) => {
-      console.debug("Failed to track copy event:", error);
     });
 
-    // 增加复制计数
-    await incrementCopyCount();
-
-    // 显示通知
-    // 策略：只有当原始 tab 仍然存在时才使用页面通知，否则直接使用 Chrome 通知
-    // 这样可以避免在用户已切换到其他 tab 时打扰他们
+    // Determine notification tab ID
     let notificationTabId = null;
     try {
-      // 验证原始 tab 是否仍然存在
       await chrome.tabs.get(tab.id);
-      // Tab 仍然存在，可以使用页面通知
       notificationTabId = tab.id;
     } catch (error) {
-      // 原始 tab 已关闭，传递 null 让通知系统自动回退到 Chrome 通知
       console.log(
         "[Background] Original tab closed, will use Chrome notification",
       );
     }
 
-    await notificationHelper.success(successMessage, null, notificationTabId);
+    // Handle success
+    await handleCopySuccess(result.message, notificationTabId);
   } catch (error) {
-    // 如果settings未获取到，尝试重新获取或使用默认设置
+    // Ensure settings are available for error handling
     if (!settings) {
       try {
         settings = await getUserSettings();
       } catch (settingsError) {
         console.debug("获取设置失败:", settingsError);
-        // 使用默认设置
         settings = { chromeNotifications: true, silentCopyFormat: "url" };
       }
     }
 
-    let message;
-    let isUserValidationError = false;
-
-    if (error.message === getLocalMessage("noUrl")) {
-      message = getLocalMessage("noUrl");
-    } else if (settings.silentCopyFormat === "shortUrl") {
-      // 根据错误类型选择更具体的消息
-      if (
-        error.message.includes(getLocalMessage("invalidUrlForShortening")) ||
-        error.message.includes("URL is not suitable for shortening")
-      ) {
-        message = getLocalMessage("invalidUrlForShortening");
-        isUserValidationError = true; // 这是用户输入验证错误，不是系统错误
-      } else {
-        message = getLocalMessage("shortUrlFailed");
-      }
-    } else {
-      message = getLocalMessage("copyFailed");
-    }
-
-    // 只有非用户验证错误才打印错误日志
-    if (!isUserValidationError) {
-      console.debug("复制 URL 失败:", error);
-    }
-
-    // 记录失败的复制事件
-    const duration = Date.now() - startTime;
-    const errorType = isUserValidationError ? "validation" : "system";
-    const failedFormat = settings.silentCopyFormat || "url";
-
-    const trackData = {
-      format: failedFormat,
-      source: "shortcut",
-      success: false,
-      duration,
-      urlCleaning:
-        settings.urlCleaning !== undefined ? settings.urlCleaning : null,
-      templateId: null,
-      templateName: null,
-      shortService:
-        failedFormat === "shortUrl"
-          ? settings.shortUrlService !== undefined
-            ? settings.shortUrlService
-            : null
-          : null,
-      errorType,
-      errorMessage: error.message,
-    };
-
-    trackCopy(trackData).catch((trackError) => {
-      console.debug("Failed to track failed copy event:", trackError);
-    });
-
-    // 显示通知（错误情况下不传递 tabId，因为 tab 可能已不可用）
-    await notificationHelper.success(message);
+    // Handle error
+    await handleCopyError(error, settings, startTime);
   } finally {
-    // 重置状态
+    // Reset state
     setTimeout(() => {
       copyOperationStates.copyUrl = false;
     }, 500);

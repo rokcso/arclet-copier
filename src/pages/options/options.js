@@ -1793,16 +1793,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     hideRatingPrompt();
   }
 
-  // 处理"稍后再说"按钮点击
-  async function handleRateLater() {
-    // 更新上次提示时间，7天后再显示
-    await chrome.storage.local.set({
-      lastRatingPromptDate: Date.now(),
-    });
-
-    hideRatingPrompt();
-  }
-
   // 初始化评价提示
   async function initializeRatingPrompt() {
     // 检查是否应该显示
