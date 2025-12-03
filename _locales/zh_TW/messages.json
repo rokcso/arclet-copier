@@ -167,6 +167,12 @@
   "qrCodeCopyFailed": {
     "message": "二維碼圖片複製失敗"
   },
+  "qrCanvasNotFound": {
+    "message": "未找到二維碼canvas元素"
+  },
+  "qrImageGenerationFailed": {
+    "message": "無法生成二維碼圖片"
+  },
   "themeColor": {
     "message": "主題色"
   },
@@ -483,8 +489,14 @@
   "templateValid": {
     "message": "樣板格式正確"
   },
+  "templateLoadFailed": {
+    "message": "載入樣板失敗"
+  },
   "templateSaveFailed": {
     "message": "儲存樣板失敗，請重試"
+  },
+  "templateValidationError": {
+    "message": "樣板驗證錯誤"
   },
   "templateCreated": {
     "message": "樣板建立成功"

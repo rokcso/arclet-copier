@@ -171,6 +171,12 @@
   "qrCodeCopyFailed": {
     "message": "Failed to copy QR code image"
   },
+  "qrCanvasNotFound": {
+    "message": "QR code canvas element not found"
+  },
+  "qrImageGenerationFailed": {
+    "message": "Failed to generate QR code image"
+  },
 
   "themeColor": {
     "message": "Theme Color"
@@ -492,8 +498,14 @@
   "templateValid": {
     "message": "Template format is valid"
   },
+  "templateLoadFailed": {
+    "message": "Failed to load templates"
+  },
   "templateSaveFailed": {
     "message": "Failed to save template, please try again"
+  },
+  "templateValidationError": {
+    "message": "Template validation error"
   },
   "templateCreated": {
     "message": "Template created successfully"

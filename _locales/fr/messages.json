@@ -167,6 +167,12 @@
   "qrCodeCopyFailed": {
     "message": "Échec de la copie de l'image du code QR"
   },
+  "qrCanvasNotFound": {
+    "message": "Élément canvas du code QR introuvable"
+  },
+  "qrImageGenerationFailed": {
+    "message": "Impossible de générer l'image du code QR"
+  },
   "themeColor": {
     "message": "Couleur du Thème"
   },
@@ -483,8 +489,14 @@
   "templateValid": {
     "message": "Le format du modèle est valide"
   },
+  "templateLoadFailed": {
+    "message": "Échec du chargement des modèles"
+  },
   "templateSaveFailed": {
     "message": "Échec de la sauvegarde du modèle, veuillez réessayer"
+  },
+  "templateValidationError": {
+    "message": "Erreur de validation du modèle"
   },
   "templateCreated": {
     "message": "Modèle créé avec succès"

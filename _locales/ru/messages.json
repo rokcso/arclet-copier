@@ -167,6 +167,12 @@
   "qrCodeCopyFailed": {
     "message": "Ошибка копирования изображения QR-кода"
   },
+  "qrCanvasNotFound": {
+    "message": "Элемент canvas QR-кода не найден"
+  },
+  "qrImageGenerationFailed": {
+    "message": "Не удалось создать изображение QR-кода"
+  },
   "themeColor": {
     "message": "Цвет Темы"
   },
@@ -483,8 +489,14 @@
   "templateValid": {
     "message": "Формат шаблона корректен"
   },
+  "templateLoadFailed": {
+    "message": "Ошибка загрузки шаблонов"
+  },
   "templateSaveFailed": {
     "message": "Ошибка сохранения шаблона, попробуйте снова"
+  },
+  "templateValidationError": {
+    "message": "Ошибка проверки шаблона"
   },
   "templateCreated": {
     "message": "Шаблон успешно создан"

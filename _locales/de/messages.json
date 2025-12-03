@@ -167,6 +167,12 @@
   "qrCodeCopyFailed": {
     "message": "Kopieren des QR-Code-Bildes fehlgeschlagen"
   },
+  "qrCanvasNotFound": {
+    "message": "QR-Code-Canvas-Element nicht gefunden"
+  },
+  "qrImageGenerationFailed": {
+    "message": "QR-Code-Bild konnte nicht generiert werden"
+  },
   "themeColor": {
     "message": "Design-Farbe"
   },
@@ -483,8 +489,14 @@
   "templateValid": {
     "message": "Vorlagenformat ist gültig"
   },
+  "templateLoadFailed": {
+    "message": "Fehler beim Laden der Vorlagen"
+  },
   "templateSaveFailed": {
     "message": "Speichern der Vorlage fehlgeschlagen, bitte erneut versuchen"
+  },
+  "templateValidationError": {
+    "message": "Vorlagenvalidierungsfehler"
   },
   "templateCreated": {
     "message": "Vorlage erfolgreich erstellt"

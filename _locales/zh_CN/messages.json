@@ -168,6 +168,12 @@
   "qrCodeCopyFailed": {
     "message": "二维码复制失败"
   },
+  "qrCanvasNotFound": {
+    "message": "未找到二维码canvas元素"
+  },
+  "qrImageGenerationFailed": {
+    "message": "无法生成二维码图片"
+  },
   "themeColor": {
     "message": "主题色"
   },
@@ -480,8 +486,14 @@
   "templateValid": {
     "message": "模板格式正确"
   },
+  "templateLoadFailed": {
+    "message": "加载模板失败"
+  },
   "templateSaveFailed": {
     "message": "保存模板失败，请重试"
+  },
+  "templateValidationError": {
+    "message": "模板验证错误"
   },
   "templateCreated": {
     "message": "模板创建成功"

@@ -167,6 +167,12 @@
   "qrCodeCopyFailed": {
     "message": "Error al copiar la imagen del código QR"
   },
+  "qrCanvasNotFound": {
+    "message": "Elemento canvas del código QR no encontrado"
+  },
+  "qrImageGenerationFailed": {
+    "message": "No se pudo generar la imagen del código QR"
+  },
   "themeColor": {
     "message": "Color del Tema"
   },
@@ -483,8 +489,14 @@
   "templateValid": {
     "message": "El formato de la plantilla es válido"
   },
+  "templateLoadFailed": {
+    "message": "Error al cargar las plantillas"
+  },
   "templateSaveFailed": {
     "message": "Error al guardar la plantilla, inténtalo de nuevo"
+  },
+  "templateValidationError": {
+    "message": "Error de validación de plantilla"
   },
   "templateCreated": {
     "message": "Plantilla creada exitosamente"

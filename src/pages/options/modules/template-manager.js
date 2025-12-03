@@ -41,7 +41,7 @@ async function loadTemplates() {
     renderTemplateList();
   } catch (error) {
     console.debug('Failed to load templates:', error);
-    toast.error('Failed to load templates');
+    toast.error(getLocalMessage('templateLoadFailed') || 'Failed to load templates');
   }
 }
 
@@ -227,7 +227,8 @@ async function saveTemplate() {
 
   const validation = templateEngine.validateTemplate(content);
   if (!validation.valid) {
-    toast.error(validation.errors.join(', '));
+    const errorPrefix = getLocalMessage('templateValidationError') || 'Template validation error';
+    toast.error(`${errorPrefix}: ${validation.errors.join(', ')}`);
     return;
   }
 

@@ -167,6 +167,12 @@
   "qrCodeCopyFailed": {
     "message": "QRコード画像のコピーに失敗しました"
   },
+  "qrCanvasNotFound": {
+    "message": "QRコードのcanvas要素が見つかりません"
+  },
+  "qrImageGenerationFailed": {
+    "message": "QRコード画像を生成できません"
+  },
   "themeColor": {
     "message": "テーマカラー"
   },
@@ -483,8 +489,14 @@
   "templateValid": {
     "message": "テンプレート形式が有効です"
   },
+  "templateLoadFailed": {
+    "message": "テンプレートの読み込みに失敗しました"
+  },
   "templateSaveFailed": {
     "message": "テンプレートの保存に失敗しました。再試行してください"
+  },
+  "templateValidationError": {
+    "message": "テンプレート検証エラー"
   },
   "templateCreated": {
     "message": "テンプレートが正常に作成されました"

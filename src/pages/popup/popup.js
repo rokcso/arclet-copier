@@ -376,7 +376,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await copyManager.execute('copyQRCode', async () => {
       const canvas = elements.qrCodeContainer.querySelector("canvas");
       if (!canvas) {
-        toast.error("未找到二维码canvas元素");
+        toast.error(getLocalMessage("qrCanvasNotFound") || "QR code canvas element not found");
         return { success: false };
       }
 
@@ -384,7 +384,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return new Promise((resolve) => {
         canvas.toBlob(async (blob) => {
           if (!blob) {
-            toast.error("无法生成二维码图片");
+            toast.error(getLocalMessage("qrImageGenerationFailed") || "Failed to generate QR code image");
             resolve({ success: false });
             return;
           }
