@@ -300,27 +300,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       const currentOption = document.createElement("option");
       currentOption.value = "current";
       const currentText = getLocalMessage("currentWindow");
-      const filtered = await calculateFilteredTabs(currentWindow.tabs);
-      const countText = getLocalMessage("windowTabsCount", [
-        filtered.length.toString(),
-      ]);
-      currentOption.textContent = `${currentText} (${countText})`;
+      currentOption.textContent = currentText;
       select.appendChild(currentOption);
     }
 
     // Add all windows option
     const allOption = document.createElement("option");
     allOption.value = "all";
-    const allTabsFromWindows = allWindows.reduce(
-      (acc, w) => [...acc, ...w.tabs],
-      [],
-    );
-    const filtered = await calculateFilteredTabs(allTabsFromWindows);
     const allText = getLocalMessage("allWindows");
-    const totalCountText = getLocalMessage("windowTabsCount", [
-      filtered.length.toString(),
-    ]);
-    allOption.textContent = `${allText} (${totalCountText})`;
+    allOption.textContent = allText;
     select.appendChild(allOption);
 
     select.value = currentValue || "current";
