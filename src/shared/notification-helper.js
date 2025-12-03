@@ -177,7 +177,7 @@ class NotificationHelper {
   }
 
   // 确保 content script 就绪 - 带重试机制（性能优化版）
-  async ensureContentScriptReady(tabId, maxRetries = 2, retryDelay = 50) {
+  async ensureContentScriptReady(tabId, maxRetries = 2, retryDelay = 20) {
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
         const response = await Promise.race([
@@ -191,7 +191,7 @@ class NotificationHelper {
             });
           }),
           new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("PING timeout")), 200), // 优化: 500ms → 200ms
+            setTimeout(() => reject(new Error("PING timeout")), 80), // 优化: 200ms → 80ms
           ),
         ]);
 
@@ -235,7 +235,7 @@ class NotificationHelper {
           });
         }),
         new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Message timeout")), 300), // 优化: 1000ms → 300ms
+          setTimeout(() => reject(new Error("Message timeout")), 150), // 优化: 300ms → 150ms
         ),
       ]);
 

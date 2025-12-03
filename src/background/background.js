@@ -202,7 +202,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 
       if (tab && tab.id) {
         // 传递明确的 tabId 和 tab 信息，防止后续异步操作时 tab 已被关闭
-        debounce("shortcutCopy", () => handleCopyUrl(tab.id, tab), 300);
+        debounce("shortcutCopy", () => handleCopyUrl(tab.id, tab), 150);
       } else {
         console.debug("No active tab found for copy command");
       }
@@ -497,7 +497,8 @@ async function handleCopyError(error, settings, startTime) {
   const errorType = isUserValidationError ? "validation" : "system";
   const failedFormat = settings.silentCopyFormat || "url";
 
-  await trackCopyOperation({
+  // Fire-and-forget: 统计追踪在后台执行，不阻塞通知
+  trackCopyOperation({
     format: failedFormat,
     source: "shortcut",
     success: false,
@@ -514,6 +515,8 @@ async function handleCopyError(error, settings, startTime) {
         : null,
     errorType,
     errorMessage: error.message,
+  }).catch(err => {
+    console.debug("Background analytics tracking failed:", err);
   });
 
   await notificationHelper.success(message);
@@ -625,16 +628,23 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
     perfMonitor.checkpoint("content generated");
 
     // Copy to clipboard
+    const clipboardStartTime = performance.now();
     await copyToClipboard(result.content);
+    const clipboardEndTime = performance.now();
+    console.log(`[Performance] Clipboard operation alone: ${(clipboardEndTime - clipboardStartTime).toFixed(2)}ms`);
     perfMonitor.checkpoint("clipboard written");
 
-    // 优化: 并行执行追踪和准备通知（独立操作）
+    // 优化: 异步追踪（不等待），立即准备通知
     const duration = Date.now() - startTime;
-    const [, notificationTabId] = await Promise.all([
-      trackCopySuccess(result, settings, formatInfo, duration),
-      determineNotificationTarget(tab),
-    ]);
-    perfMonitor.checkpoint("tracking & notification prep");
+
+    // Fire-and-forget: 统计追踪在后台执行，不阻塞通知
+    trackCopySuccess(result, settings, formatInfo, duration).catch(error => {
+      console.debug("Background analytics tracking failed:", error);
+    });
+
+    // 立即准备通知，不等待追踪完成
+    const notificationTabId = await determineNotificationTarget(tab);
+    perfMonitor.checkpoint("notification prep (analytics in background)");
 
     // Handle success notification
     await handleCopySuccess(result.message, notificationTabId);
