@@ -269,6 +269,41 @@ select.setting-control:hover {
     border-color: var(--arc-primary);
 }
 
+.links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid var(--arc-border);
+    border-radius: 8px;
+    background: var(--arc-background);
+    color: var(--arc-text-primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    height: 36px;
+    box-sizing: border-box;
+}
+
+.link-btn:hover {
+    background: var(--arc-surface);
+    border-color: var(--arc-primary);
+    color: var(--arc-primary);
+}
+
+.link-btn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
 .color-picker {
     display: flex;
     gap: 12px;
@@ -335,6 +370,48 @@ select.setting-control:hover {
     font-size: 14px;
     color: var(--arc-text-primary);
     font-weight: 500;
+}
+
+.about-item.about-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.about-links-container {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.about-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--arc-border);
+    border-radius: 6px;
+    background: var(--arc-background);
+    color: var(--arc-text-primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    height: 32px;
+    box-sizing: border-box;
+}
+
+.about-link-btn:hover {
+    background: var(--arc-surface);
+    border-color: var(--arc-primary);
+    color: var(--arc-primary);
+}
+
+.about-link-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
 }
 
 .about-value.developer-link {

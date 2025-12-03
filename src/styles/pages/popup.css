@@ -51,8 +51,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
-    padding-bottom: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--arc-border);
 }
 
@@ -92,33 +92,33 @@ body {
     letter-spacing: 0.02em;
 }
 
-.developer-info {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-}
-
-.dev-link {
+.header-settings-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
     color: var(--arc-text-muted);
-    text-decoration: none;
+    cursor: pointer;
     transition: all 0.2s ease;
-    opacity: 0.7;
+    flex-shrink: 0;
 }
 
-.dev-link:hover {
+.header-settings-btn:hover {
+    background: var(--arc-surface);
     color: var(--arc-primary);
-    opacity: 1;
 }
 
-.dev-link svg {
-    width: 16px;
-    height: 16px;
+.header-settings-btn:active {
+    transform: scale(0.95);
+}
+
+.header-settings-btn .settings-icon {
+    width: 20px;
+    height: 20px;
 }
 
 .url-section {
@@ -358,37 +358,6 @@ body {
     border-color: var(--arc-primary);
 }
 
-.more-settings-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 8px 16px;
-    border: 1px solid var(--arc-border);
-    border-radius: var(--arc-radius-sm);
-    background: var(--arc-background);
-    color: var(--arc-text-secondary);
-    font-size: 14px;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    height: 36px;
-    box-sizing: border-box;
-}
-
-.more-settings-btn:hover {
-    background: var(--arc-surface);
-    border-color: var(--arc-primary);
-    color: var(--arc-primary);
-}
-
-.more-settings-btn:active {
-    transform: translateY(1px);
-}
-
-.settings-icon,
 .button-icon,
 .markdown-icon,
 .qr-icon {
@@ -631,13 +600,9 @@ body {
     color: var(--arc-primary);
 }
 
-[data-theme="dark"] .format-select,
-[data-theme="dark"] .more-settings-btn {
+[data-theme="dark"] .format-select {
     background-color: var(--arc-surface);
     border-color: var(--arc-border);
-}
-
-[data-theme="dark"] .format-select {
     color: var(--arc-text-primary);
     /* 暗色主题使用浅色箭头 */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
@@ -651,13 +616,8 @@ body {
     border-color: var(--arc-primary);
 }
 
-[data-theme="dark"] .more-settings-btn {
-    color: var(--arc-text-secondary);
-}
-
-[data-theme="dark"] .more-settings-btn:hover {
-    background: #334155;
-    border-color: var(--arc-primary);
+[data-theme="dark"] .header-settings-btn:hover {
+    background: var(--arc-surface);
     color: var(--arc-primary);
 }
 
@@ -817,13 +777,9 @@ body {
         color: var(--arc-primary);
     }
 
-    :root:not([data-theme]) .format-select,
-    :root:not([data-theme]) .more-settings-btn {
+    :root:not([data-theme]) .format-select {
         background-color: var(--arc-surface);
         border-color: var(--arc-border);
-    }
-
-    :root:not([data-theme]) .format-select {
         color: var(--arc-text-primary);
         /* 系统暗色主题使用浅色箭头 */
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
@@ -837,13 +793,8 @@ body {
         border-color: var(--arc-primary);
     }
 
-    :root:not([data-theme]) .more-settings-btn {
-        color: var(--arc-text-secondary);
-    }
-
-    :root:not([data-theme]) .more-settings-btn:hover {
-        background: #334155;
-        border-color: var(--arc-primary);
+    :root:not([data-theme]) .header-settings-btn:hover {
+        background: var(--arc-surface);
         color: var(--arc-primary);
     }
 

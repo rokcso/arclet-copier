@@ -75,7 +75,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     batchBtn: document.getElementById("batchBtn"),
     removeParamsToggle: document.getElementById("removeParamsToggle"),
     silentCopyFormat: document.getElementById("silentCopyFormat"),
-    version: document.getElementById("version"),
     qrModal: document.getElementById("qrModal"),
     qrModalOverlay: document.getElementById("qrModalOverlay"),
     qrModalClose: document.getElementById("qrModalClose"),
@@ -87,15 +86,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let currentUrl = "";
   let currentTitle = "";
-
-  // Load version from manifest
-  function loadVersion() {
-    const manifest = chrome.runtime.getManifest();
-    if (manifest && manifest.version) {
-      elements.version.textContent = `v${manifest.version}`;
-    }
-  }
-
 
   // 初始化URL清理选择器
   function initializeUrlCleaningSelect() {
@@ -549,7 +539,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.time("Popup initialization");
 
   // 同步操作 - 不需要等待
-  loadVersion(); // Load version from manifest
   const urlCleaningSwitch = initializeUrlCleaningSelect();
   initializeQRModal(); // Initialize QR modal
   setupTemplateChangeListener(); // 设置模板变更监听器
