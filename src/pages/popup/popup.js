@@ -8,7 +8,6 @@ import {
 } from "../../shared/constants.js";
 import { createMarkdownLink } from "../../shared/formatters.js";
 
-import { trackCopy } from "../../shared/analytics.js";
 import settingsManager from "../../shared/settings-manager.js";
 import toast from "../../shared/toast.js";
 import {
@@ -394,19 +393,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             source: 'popup',
             showNotification: false,  // Handle notification manually
             onSuccess: () => {
-              // Track analytics
-              trackCopy({
-                format: 'qrcode',
-                source: 'popup',
-                success: true,
-                urlCleaning: null,
-                templateId: null,
-                templateName: null,
-                shortService: null,
-              }).catch((error) => {
-                console.debug('Failed to track QR code copy:', error);
-              });
-
               // Close modal immediately
               hideQRModal();
 
@@ -418,21 +404,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               }, 200);
             },
             onError: (error) => {
-              // Track error
-              trackCopy({
-                format: 'qrcode',
-                source: 'popup',
-                success: false,
-                errorType: 'clipboard',
-                errorMessage: error.message,
-                urlCleaning: null,
-                templateId: null,
-                templateName: null,
-                shortService: null,
-              }).catch((trackError) => {
-                console.debug('Failed to track QR code copy error:', trackError);
-              });
-
               toast.error(
                 getLocalMessage('qrCodeCopyFailed') || '二维码图片复制失败',
               );

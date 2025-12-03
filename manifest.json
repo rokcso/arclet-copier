@@ -17,8 +17,7 @@
   ],
   "host_permissions": [
     "https://is.gd/*",
-    "https://tinyurl.com/*",
-    "https://umami.coryso.com/*"
+    "https://tinyurl.com/*"
   ],
   "web_accessible_resources": [
     {

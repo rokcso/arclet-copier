@@ -220,7 +220,6 @@ const buildOptions = {
     "src/styles/pages/options.css",
     "src/styles/pages/batch.css",
     // shared 目录下的 JS 文件
-    "src/shared/analytics.js",
     "src/shared/binary-toggle.js",
     "src/shared/cache-helper.js",
     "src/shared/constants.js",
@@ -230,7 +229,6 @@ const buildOptions = {
     "src/shared/three-way-switch.js",
     "src/shared/toast.js",
     "src/shared/toggles.js",
-    "src/shared/umami-core.js",
   ],
 
   // 输出配置

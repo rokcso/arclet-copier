@@ -246,7 +246,6 @@ src/
 ### Host Permissions
 - `https://is.gd/*`: Short URL service
 - `https://tinyurl.com/*`: Alternative short URL service
-- `https://umami.coryso.com/*`: Analytics (optional)
 
 ### Content Security Policy
 - Uses Offscreen Documents to bypass CSP restrictions on web pages

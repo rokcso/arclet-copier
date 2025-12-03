@@ -42,8 +42,6 @@ The codebase uses a functional module architecture where each directory represen
   - `binary-toggle.js` - Two-state toggle component
   - `toggles.js` - General toggle utilities
   - `notification-helper.js` - Chrome notification wrapper
-  - `analytics.js` - Usage analytics (Umami integration)
-  - `umami-core.js` - Umami analytics core functionality
 
 ### Key Architectural Patterns
 
@@ -140,8 +138,7 @@ Key permissions in manifest.json:
 
 Host permissions for external services:
 - `https://is.gd/*` - is.gd URL shortening service
-- `https://tinyurl.com/*` - TinyURL shortening service  
-- `https://umami.coryso.com/*` - Analytics tracking
+- `https://tinyurl.com/*` - TinyURL shortening service
 
 ## Development Notes
 

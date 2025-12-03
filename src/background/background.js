@@ -5,8 +5,6 @@ import {
   getOrGenerateShortUrl,
 } from "../shared/constants.js";
 
-// 导入分析模块
-import { trackInstall, trackCopy } from "../shared/analytics.js";
 import settingsManager from "../shared/settings-manager.js";
 import notificationHelper from "../shared/notification-helper.js";
 import {
@@ -166,15 +164,8 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
   // 处理扩展安装统计 - 异步执行，不阻塞初始化
   if (details.reason === "install" || details.reason === "update") {
-    // 使用 setTimeout 确保不阻塞扩展启动
-    setTimeout(async () => {
-      try {
-        await trackInstall(details.reason);
-      } catch (error) {
-        console.debug("Failed to track extension installation:", error);
-        // 不阻止扩展正常运行
-      }
-    }, 0);
+    // Extension installed or updated
+    console.log(`Extension ${details.reason} completed`);
   }
 });
 
@@ -440,17 +431,6 @@ async function generateContent(formatInfo, tab, settings) {
   return result;
 }
 
-/**
- * Track copy operation with analytics
- * @param {object} data - Tracking data
- */
-async function trackCopyOperation(data) {
-  try {
-    await trackCopy(data);
-  } catch (error) {
-    console.debug("Failed to track copy event:", error);
-  }
-}
 
 /**
  * Handle successful copy operation
@@ -492,33 +472,6 @@ async function handleCopyError(error, settings, startTime) {
     console.debug("复制 URL 失败:", error);
   }
 
-  // Track failed copy event
-  const duration = Date.now() - startTime;
-  const errorType = isUserValidationError ? "validation" : "system";
-  const failedFormat = settings.silentCopyFormat || "url";
-
-  // Fire-and-forget: 统计追踪在后台执行，不阻塞通知
-  trackCopyOperation({
-    format: failedFormat,
-    source: "shortcut",
-    success: false,
-    duration,
-    urlCleaning:
-      settings.urlCleaning !== undefined ? settings.urlCleaning : null,
-    templateId: null,
-    templateName: null,
-    shortService:
-      failedFormat === "shortUrl"
-        ? settings.shortUrlService !== undefined
-          ? settings.shortUrlService
-          : null
-        : null,
-    errorType,
-    errorMessage: error.message,
-  }).catch(err => {
-    console.debug("Background analytics tracking failed:", err);
-  });
-
   await notificationHelper.success(message);
 }
 
@@ -547,34 +500,6 @@ async function getTabInfo(tabId, tabSnapshot) {
   return await getCurrentTab();
 }
 
-/**
- * Track successful copy operation analytics
- * @param {Object} result - Copy result (format, message, templateName)
- * @param {Object} settings - User settings
- * @param {Object} formatInfo - Format information (templateId, etc.)
- * @param {number} duration - Operation duration in milliseconds
- * @returns {Promise<void>}
- */
-async function trackCopySuccess(result, settings, formatInfo, duration) {
-  await trackCopyOperation({
-    format: result.format,
-    source: "shortcut",
-    success: true,
-    duration,
-    urlCleaning:
-      settings.urlCleaning !== undefined ? settings.urlCleaning : null,
-    templateId: formatInfo.templateId || null,
-    templateName: result.templateName || null,
-    shortService:
-      result.format === "shortUrl"
-        ? settings.shortUrlService !== undefined
-          ? settings.shortUrlService
-          : null
-        : null,
-    errorType: null,
-    errorMessage: null,
-  });
-}
 
 /**
  * Determine notification target tab ID
@@ -634,17 +559,9 @@ async function handleCopyUrl(tabId = null, tabSnapshot = null) {
     console.log(`[Performance] Clipboard operation alone: ${(clipboardEndTime - clipboardStartTime).toFixed(2)}ms`);
     perfMonitor.checkpoint("clipboard written");
 
-    // 优化: 异步追踪（不等待），立即准备通知
-    const duration = Date.now() - startTime;
-
-    // Fire-and-forget: 统计追踪在后台执行，不阻塞通知
-    trackCopySuccess(result, settings, formatInfo, duration).catch(error => {
-      console.debug("Background analytics tracking failed:", error);
-    });
-
-    // 立即准备通知，不等待追踪完成
+    // Prepare notification
     const notificationTabId = await determineNotificationTarget(tab);
-    perfMonitor.checkpoint("notification prep (analytics in background)");
+    perfMonitor.checkpoint("notification prep");
 
     // Handle success notification
     await handleCopySuccess(result.message, notificationTabId);

@@ -1,7 +1,6 @@
 // Event handlers for batch page
 
 import { globalShortUrlThrottle } from "../../shared/constants.js";
-import { trackCopy } from "../../shared/analytics.js";
 import toast from "../../shared/toast.js";
 import { getLocalMessage } from "../../shared/ui/i18n.js";
 import { copyToClipboard } from "../../shared/clipboard-helper.js";
@@ -136,28 +135,6 @@ export async function performCopy(selectedTabs, format, cleaningMode) {
       ?.getAttribute("data-value") || "off";
   const shortService =
     document.getElementById("shortUrlService")?.value || "isgd";
-
-  const trackData = {
-    format: format === "silentCopyFormat" ? "url" : format,
-    source: "batch",
-    success: success,
-    duration: duration,
-    urlCleaning: urlCleaning !== undefined ? urlCleaning : null,
-    templateId: null,
-    templateName: null,
-    shortService:
-      format === "shortUrl"
-        ? shortService !== undefined
-          ? shortService
-          : null
-        : null,
-    errorType: success ? null : "clipboard",
-    errorMessage: success ? null : "Batch copy failed",
-  };
-
-  trackCopy(trackData).catch((error) => {
-    console.debug("Failed to track batch copy:", error);
-  });
 
   if (success) {
     toast.success(

@@ -6,7 +6,6 @@
 import toast from './toast.js';
 import notificationHelper from './notification-helper.js';
 import { getLocalMessage } from './ui/i18n.js';
-import { trackCopy } from './analytics.js';
 
 // Error types
 export const ERROR_TYPES = {
@@ -235,20 +234,6 @@ export async function copyToClipboard(text, options = {}) {
     // Perform copy with fallback
     const result = await copyWithFallback(text, source);
 
-    // Track analytics
-    if (trackAnalytics) {
-      trackCopy({
-        success: true,
-        method: result.method,
-        source: source,
-        contentLength: text.length,
-        duration: result.duration,
-        ...analyticsData,
-      }).catch((error) => {
-        console.debug('[ClipboardHelper] Failed to track copy event:', error);
-      });
-    }
-
     // Show notification
     if (showNotification) {
       const message = successMessage || getLocalMessage('copySuccess') || 'Copied successfully!';
@@ -274,20 +259,6 @@ export async function copyToClipboard(text, options = {}) {
     };
   } catch (error) {
     console.debug('[ClipboardHelper] Copy failed:', error);
-
-    // Track analytics for failure
-    if (trackAnalytics) {
-      trackCopy({
-        success: false,
-        errorType: error.type || ERROR_TYPES.SYSTEM,
-        source: source,
-        contentLength: text.length,
-        duration: Date.now() - startTime,
-        ...analyticsData,
-      }).catch((err) => {
-        console.debug('[ClipboardHelper] Failed to track copy error:', err);
-      });
-    }
 
     // Show error notification
     if (showNotification) {
