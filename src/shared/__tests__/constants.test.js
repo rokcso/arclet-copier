@@ -5,7 +5,9 @@ import {
   isRestrictedPage,
   isValidWebUrl,
   SHORT_URL_SERVICES,
+  AUTO_FALLBACK_ORDER,
   createShortUrlDirect,
+  createShortUrlAuto,
   createShortUrl,
   ShortUrlThrottle,
   globalShortUrlThrottle,
@@ -216,6 +218,75 @@ describe("constants.js", () => {
 
     it("should throw on invalid CleanURI response", () => {
       expect(() => SHORT_URL_SERVICES.cleanuri.parse("{}")).toThrow();
+    });
+  });
+
+  describe("AUTO_FALLBACK_ORDER", () => {
+    it("should have the correct fallback priority", () => {
+      expect(AUTO_FALLBACK_ORDER).toEqual(["tinyurl", "dagd", "cleanuri", "isgd"]);
+    });
+
+    it("should only contain keys that exist in SHORT_URL_SERVICES", () => {
+      for (const service of AUTO_FALLBACK_ORDER) {
+        expect(SHORT_URL_SERVICES[service]).toBeDefined();
+      }
+    });
+  });
+
+  describe("createShortUrlAuto", () => {
+    beforeEach(() => {
+      global.fetch = vi.fn();
+    });
+
+    it("should return result from first successful service", async () => {
+      fetch
+        .mockResolvedValueOnce({
+          ok: true,
+          text: () => Promise.resolve("https://tinyurl.com/abc123"),
+        });
+
+      const result = await createShortUrlAuto("https://example.com");
+      expect(result).toBe("https://tinyurl.com/abc123");
+    });
+
+    it("should fallback to next service on failure", async () => {
+      // tinyurl fails
+      fetch
+        .mockResolvedValueOnce({ ok: false, status: 500, statusText: "Error" });
+      // dagd succeeds
+      fetch
+        .mockResolvedValueOnce({
+          ok: true,
+          text: () => Promise.resolve("https://da.gd/xyz789"),
+        });
+
+      const result = await createShortUrlAuto("https://example.com");
+      expect(result).toBe("https://da.gd/xyz789");
+      expect(fetch).toHaveBeenCalledTimes(2);
+    });
+
+    it("should throw when all services fail", async () => {
+      // All four services fail
+      for (let i = 0; i < 4; i++) {
+        fetch.mockResolvedValueOnce({ ok: false, status: 500, statusText: "Error" });
+      }
+
+      await expect(
+        createShortUrlAuto("https://example.com"),
+      ).rejects.toThrow("All short URL providers failed");
+      expect(fetch).toHaveBeenCalledTimes(4);
+    });
+
+    it("should stop after first success", async () => {
+      fetch
+        .mockResolvedValueOnce({
+          ok: true,
+          text: () => Promise.resolve("https://tinyurl.com/first"),
+        });
+
+      const result = await createShortUrlAuto("https://example.com");
+      expect(result).toBe("https://tinyurl.com/first");
+      expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -203,6 +203,9 @@
   "shortUrlService": {
     "message": "Service d'URL Courte"
   },
+  "serviceAuto": {
+    "message": "Auto"
+  },
   "serviceIsgd": {
     "message": "is.gd"
   },

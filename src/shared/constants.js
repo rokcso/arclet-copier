@@ -33,7 +33,9 @@ export {
 export {
   // Services
   SHORT_URL_SERVICES,
+  AUTO_FALLBACK_ORDER,
   createShortUrlDirect,
+  createShortUrlAuto,
 } from "./short-url/services.js";
 
 export {

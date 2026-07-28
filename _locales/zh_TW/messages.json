@@ -203,6 +203,9 @@
   "shortUrlService": {
     "message": "短鏈服務"
   },
+  "serviceAuto": {
+    "message": "自動"
+  },
   "serviceIsgd": {
     "message": "is.gd"
   },

@@ -5,6 +5,9 @@
 //   headers()    → extra headers merged into the fetch call
 //   parse(text)  → custom response parser (default: return trimmed text)
 
+// Priority order used by the "auto" mode to fall back through services
+export const AUTO_FALLBACK_ORDER = ["tinyurl", "dagd", "cleanuri", "isgd"];
+
 export const SHORT_URL_SERVICES = {
   isgd: {
     name: "is.gd",
@@ -46,12 +49,42 @@ export const SHORT_URL_SERVICES = {
 };
 
 /**
+ * Try each service in AUTO_FALLBACK_ORDER, returning the first successful result.
+ * Throws an aggregated error only if every service fails.
+ * @param {string} longUrl - Long URL to shorten
+ * @returns {Promise<string>} Short URL from the first succeeding service
+ */
+export async function createShortUrlAuto(longUrl) {
+  const errors = [];
+
+  for (const service of AUTO_FALLBACK_ORDER) {
+    try {
+      const result = await createShortUrlDirect(longUrl, service);
+      console.debug(`[Auto] Short URL generated via ${service}: ${result}`);
+      return result;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.debug(`[Auto] ${service} failed: ${message}`);
+      errors.push(`${service}: ${message}`);
+    }
+  }
+
+  throw new Error(
+    `All short URL providers failed: ${errors.join("; ")}`,
+  );
+}
+
+/**
  * Create short URL (no throttling, for custom throttling scenarios)
  * @param {string} longUrl - Long URL to shorten
- * @param {string} service - Service name
+ * @param {string} service - Service name or "auto" to try services in fallback order
  * @returns {Promise<string>} Short URL
  */
 export async function createShortUrlDirect(longUrl, service = "isgd") {
+  if (service === "auto") {
+    return createShortUrlAuto(longUrl);
+  }
+
   const serviceConfig = SHORT_URL_SERVICES[service];
   if (!serviceConfig) {
     throw new Error(`Unknown short URL service: ${service}`);

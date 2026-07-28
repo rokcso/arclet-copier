@@ -207,6 +207,9 @@
   "shortUrlService": {
     "message": "短链服务"
   },
+  "serviceAuto": {
+    "message": "自动"
+  },
   "serviceIsgd": {
     "message": "is.gd"
   },

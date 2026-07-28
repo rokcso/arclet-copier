@@ -333,7 +333,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Copy to clipboard using clipboard helper
         const serviceName =
-          SHORT_URL_SERVICES[selectedService]?.name || selectedService;
+          selectedService === "auto"
+            ? getLocalMessage("serviceAuto") || "Auto"
+            : SHORT_URL_SERVICES[selectedService]?.name || selectedService;
 
         const copyResult = await copyToClipboard(shortUrl, {
           source: 'popup',
