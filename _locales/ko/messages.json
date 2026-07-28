@@ -278,6 +278,18 @@
   "developer": {
     "message": "개발자"
   },
+  "foldlinkSection": {
+    "message": "FoldLink 만나보기"
+  },
+  "foldlinkTitle": {
+    "message": "FoldLink를 소개합니다"
+  },
+  "foldlinkIntro": {
+    "message": "Arclet Copier의 차세대 버전 — 더 빠르고, 더 예쁘고, 더 많은 단축 링크 서비스를 지원합니다."
+  },
+  "foldlinkGetIt": {
+    "message": "확인하기 →"
+  },
   "supportSection": {
     "message": "지원하기"
   },

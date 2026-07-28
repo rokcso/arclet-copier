@@ -278,6 +278,18 @@
   "developer": {
     "message": "開発者"
   },
+  "foldlinkSection": {
+    "message": "FoldLink を発見"
+  },
+  "foldlinkTitle": {
+    "message": "FoldLink をはじめよう"
+  },
+  "foldlinkIntro": {
+    "message": "Arclet Copier の次世代版が登場 — より速く、より美しく、より多くの短縮URLサービスに対応。"
+  },
+  "foldlinkGetIt": {
+    "message": "チェックする →"
+  },
   "supportSection": {
     "message": "サポートする"
   },

@@ -278,6 +278,18 @@
   "developer": {
     "message": "開發者"
   },
+  "foldlinkSection": {
+    "message": "發現 FoldLink"
+  },
+  "foldlinkTitle": {
+    "message": "發現 FoldLink"
+  },
+  "foldlinkIntro": {
+    "message": "Arclet Copier 的繼任者來了 —— 更快、更好看、支援更多短鏈服務。"
+  },
+  "foldlinkGetIt": {
+    "message": "去看看 →"
+  },
   "supportSection": {
     "message": "支援我們"
   },

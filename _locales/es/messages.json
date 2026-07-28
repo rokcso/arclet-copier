@@ -278,6 +278,18 @@
   "developer": {
     "message": "Desarrollador"
   },
+  "foldlinkSection": {
+    "message": "Descubre FoldLink"
+  },
+  "foldlinkTitle": {
+    "message": "Conoce FoldLink"
+  },
+  "foldlinkIntro": {
+    "message": "La nueva generación de Arclet Copier — más rápido, más bonito, con más servicios de enlaces cortos."
+  },
+  "foldlinkGetIt": {
+    "message": "Descúbrelo →"
+  },
   "supportSection": {
     "message": "Apóyanos"
   },
