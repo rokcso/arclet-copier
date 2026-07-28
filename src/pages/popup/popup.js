@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         // Get settings
         const result = await chrome.storage.sync.get(["shortUrlService"]);
-        const selectedService = result.shortUrlService || "isgd";
+        const selectedService = result.shortUrlService || "auto";
 
         const cleaningSelect = elements.removeParamsToggle;
         const cleaningMode = cleaningSelect.getAttribute("data-value");

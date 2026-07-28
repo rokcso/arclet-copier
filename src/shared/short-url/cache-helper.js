@@ -12,7 +12,7 @@ import { createShortUrlDirect } from "./services.js";
  * @param {string} service - Service name
  * @returns {Promise<string>} Short URL
  */
-function createShortUrl(longUrl, service = "isgd") {
+function createShortUrl(longUrl, service = "auto") {
   return globalShortUrlThrottle.throttledRequest(() =>
     createShortUrlDirect(longUrl, service),
   );

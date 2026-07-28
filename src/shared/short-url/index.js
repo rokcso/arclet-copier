@@ -17,7 +17,7 @@ import { createShortUrlDirect } from "./services.js";
  * @param {string} service - Service name
  * @returns {Promise<string>} Short URL
  */
-export async function createShortUrl(longUrl, service = "isgd") {
+export async function createShortUrl(longUrl, service = "auto") {
   return globalShortUrlThrottle.throttledRequest(() =>
     createShortUrlDirect(longUrl, service),
   );

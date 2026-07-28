@@ -134,7 +134,7 @@ export async function performCopy(selectedTabs, format, cleaningMode) {
       .getElementById("removeParamsToggle")
       ?.getAttribute("data-value") || "off";
   const shortService =
-    document.getElementById("shortUrlService")?.value || "isgd";
+    document.getElementById("shortUrlService")?.value || "auto";
 
   if (success) {
     toast.success(

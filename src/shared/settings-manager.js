@@ -16,7 +16,7 @@ class SettingsManager {
       language: this.detectDefaultLanguage(),
       themeColor: "green",
       notificationType: "page", // 'off', 'chrome', 'page'
-      shortUrlService: "isgd",
+      shortUrlService: "auto",
       removeParams: false, // 向后兼容
     };
 
