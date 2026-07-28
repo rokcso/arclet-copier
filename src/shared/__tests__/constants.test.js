@@ -164,6 +164,26 @@ describe("constants.js", () => {
       });
     });
 
+    it("should have da.gd service config", () => {
+      expect(SHORT_URL_SERVICES.dagd).toEqual({
+        name: "da.gd",
+        endpoint: "https://da.gd/s",
+        method: "GET",
+        params: expect.any(Function),
+      });
+    });
+
+    it("should have CleanURI service config", () => {
+      expect(SHORT_URL_SERVICES.cleanuri).toEqual({
+        name: "CleanURI",
+        endpoint: "https://cleanuri.com/api/v1/shorten",
+        method: "POST",
+        body: expect.any(Function),
+        headers: expect.any(Function),
+        parse: expect.any(Function),
+      });
+    });
+
     it("should generate correct params for is.gd", () => {
       const params = SHORT_URL_SERVICES.isgd.params("https://example.com");
       expect(params).toEqual({ format: "simple", url: "https://example.com" });
@@ -172,6 +192,30 @@ describe("constants.js", () => {
     it("should generate correct params for TinyURL", () => {
       const params = SHORT_URL_SERVICES.tinyurl.params("https://example.com");
       expect(params).toEqual({ url: "https://example.com" });
+    });
+
+    it("should generate correct params for da.gd", () => {
+      const params = SHORT_URL_SERVICES.dagd.params("https://example.com");
+      expect(params).toEqual({ url: "https://example.com" });
+    });
+
+    it("should generate correct body for CleanURI", () => {
+      const body = SHORT_URL_SERVICES.cleanuri.body("https://example.com");
+      expect(body).toBe('{"url":"https://example.com"}');
+    });
+
+    it("should generate correct headers for CleanURI", () => {
+      const headers = SHORT_URL_SERVICES.cleanuri.headers();
+      expect(headers).toEqual({ "Content-Type": "application/json" });
+    });
+
+    it("should parse CleanURI response correctly", () => {
+      const result = SHORT_URL_SERVICES.cleanuri.parse('{"result_url":"https://cleanuri.com/abc123"}');
+      expect(result).toBe("https://cleanuri.com/abc123");
+    });
+
+    it("should throw on invalid CleanURI response", () => {
+      expect(() => SHORT_URL_SERVICES.cleanuri.parse("{}")).toThrow();
     });
   });
 

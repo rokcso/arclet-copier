@@ -209,6 +209,12 @@
   "serviceTinyurl": {
     "message": "TinyURL"
   },
+  "serviceDagd": {
+    "message": "da.gd"
+  },
+  "serviceCleanuri": {
+    "message": "CleanURI"
+  },
   "shortUrlServiceChanged": {
     "message": "단축 URL 서비스가 변경되었습니다"
   },

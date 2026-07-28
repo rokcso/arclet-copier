@@ -214,6 +214,12 @@
   "serviceTinyurl": {
     "message": "TinyURL"
   },
+  "serviceDagd": {
+    "message": "da.gd"
+  },
+  "serviceCleanuri": {
+    "message": "CleanURI"
+  },
   "shortUrlServiceChanged": {
     "message": "Short URL service changed"
   },

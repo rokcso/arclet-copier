@@ -17,7 +17,9 @@
   ],
   "host_permissions": [
     "https://is.gd/*",
-    "https://tinyurl.com/*"
+    "https://tinyurl.com/*",
+    "https://da.gd/*",
+    "https://cleanuri.com/*"
   ],
   "web_accessible_resources": [
     {
