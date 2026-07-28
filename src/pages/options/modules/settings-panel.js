@@ -328,7 +328,7 @@ function bindEventListeners() {
       // Use localized email template from i18n
       const subject = encodeURIComponent(getLocalMessage('feedbackEmailSubject'));
       const body = encodeURIComponent(getLocalMessage('feedbackEmailBody'));
-      const mailtoUrl = `mailto:hi@rokcso.com?subject=${subject}&body=${body}`;
+      const mailtoUrl = `mailto:foldlink@piib.io?subject=${subject}&body=${body}`;
       chrome.tabs.create({ url: mailtoUrl });
     });
   }
